@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
@@ -37,7 +39,7 @@ function Handle({ show }: StageProps) {
                 />
             </div>
 
-            <button className="mt-3 hover:scale-[1.03] transition w-full bg-gray-700 hover:bg-gray-600 text-lg py-3 px-4 rounded-md text-white font-bold">
+            <button className="mt-3 hover:scale-[1.01] duration-500 transition w-full bg-indigo-600 hover:bg-indigo-700 text-lg py-3 px-4 rounded-md text-white font-bold">
                 Create Handle
             </button>
         </>

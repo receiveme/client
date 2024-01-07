@@ -1,29 +1,16 @@
-import { FormatTitle } from "@/helpers/title";
+"use client";
+
 import { IconRocket } from "@tabler/icons-react";
-import Head from "next/head";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 
-const user = {
-    name: "fakes1lent",
+export default function User() {
+    const path = usePathname();
 
-    links: {},
-
-    wallets: {},
-
-    profile: {},
-};
-
-export default function Profile(object: any) {
-    console.log(object);
-    const router = useRouter();
-    const username = router.query.username;
+    const username = path.replace("/@", "");
 
     return (
         <>
-            <Head>
-                <title>{FormatTitle(`${username}`)}</title>
-            </Head>
             <main className="">
                 <div className="w-full bg-gradient-to-b from-yellow-300 to-slate-900 p-2 flex justify-center flex-wrap flex-col gap-2 items-center h-screen">
                     <div className="max-w-[580px] w-[580px] flex flex-col items-center mb-24">
@@ -67,7 +54,7 @@ export default function Profile(object: any) {
                                         ETH
                                     </p>
                                     <span className="text-xs font-light">
-                                        0x8186b214A917fb4922Eb984fb80CFAfA30EE8810
+                                        0x032123213
                                     </span>
                                 </div>
                                 <div className="ml-auto mr-1 flex gap-1.5">
@@ -100,5 +87,3 @@ export default function Profile(object: any) {
         </>
     );
 }
-
-Profile.blank = true;

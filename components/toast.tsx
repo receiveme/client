@@ -1,3 +1,5 @@
+"use client";
+
 import { Fragment, useState } from "react";
 import { Transition } from "@headlessui/react";
 import {
@@ -54,9 +56,6 @@ export default function Toast({ show, title, desc, type }: ToastProps) {
                                         <button
                                             type="button"
                                             className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                            onClick={() => {
-                                                setShow(false);
-                                            }}
                                         >
                                             <span className="sr-only">
                                                 Close
