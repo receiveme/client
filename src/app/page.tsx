@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Home() {
     return (
         <main>
-            <Navbar></Navbar>
+
             <Link href="/login" className="text-green-500 underline block">
                 /login
             </Link>
