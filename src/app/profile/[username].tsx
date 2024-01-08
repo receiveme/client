@@ -6,7 +6,9 @@ import Image from "next/image";
 const user = { // TODO: add more properties to placeholder user
     name: "fakes1lent",
 
-    links: {},
+    links: {
+        
+    },
 
     wallets: {},
 

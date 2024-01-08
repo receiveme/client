@@ -18,10 +18,10 @@ export default function App({ Component, pageProps }: any) {
                     <div className="min-h-screen flex justify-center">
                         <div className="py-4 px-4 lg:px-0 lg:max-w-[85%] w-full">
                             {!hideNavbar && <Navbar />}
-                            <Component {...pageProps} />
+                            <Component {...pageProps} /> 
                         </div>
                     </div>
-                ) : (
+                ) : ( 
                     <Component {...pageProps} />
                 )}
 
