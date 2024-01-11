@@ -2,6 +2,10 @@ import { IconRocket } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 
+export const metadata = {
+    title: "Login",
+};
+
 export default function Login() {
     return (
         <main className="flex justify-center items-center min-h-screen">
@@ -82,7 +86,7 @@ export default function Login() {
                                 alt="Google"
                                 className="mr-2 h-4 w-4"
                             />
-                            Login With Google
+                            Login with Google
                         </button>
                     </div>
 
@@ -93,7 +97,41 @@ export default function Login() {
                                 alt="Google"
                                 className="mr-1.5 h-5 w-5"
                             />
-                            Login With Apple
+                            Login with Apple
+                        </button>
+                    </div>
+
+                    <div className="flex gap-4">
+                        <button className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
+                            <img
+                                src="/img/3p/metamask.png"
+                                alt="Google"
+                                className="h-5 w-5"
+                            />
+                        </button>
+
+                        <button className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
+                            <img
+                                src="/img/3p/solana.png"
+                                alt="Google"
+                                className="h-5 w-5"
+                            />
+                        </button>
+
+                        <button className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
+                            <img
+                                src="/img/3p/tron.png"
+                                alt="Google"
+                                className="h-5 w-5"
+                            />
+                        </button>
+
+                        <button className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
+                            <img
+                                src="/img/3p/algorand.png"
+                                alt="Google"
+                                className="h-4 w-4"
+                            />
                         </button>
                     </div>
 

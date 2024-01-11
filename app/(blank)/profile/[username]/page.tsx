@@ -1,13 +1,15 @@
-"use client";
-
 import { IconRocket } from "@tabler/icons-react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { headers } from "next/headers";
 
-export default function User() {
-    const path = usePathname();
+export function generateMetadata({ params }: { params: any }) {
+    return {
+        title: params.username,
+    };
+}
 
-    const username = path.replace("/@", "");
+export default function Profile({ params }: any) {
+    const username = params.username;
 
     return (
         <>

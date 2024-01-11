@@ -9,8 +9,10 @@ import "../globals.css";
 const archivo = Archivo({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "receive.me",
-    description: "receive.me",
+    title: {
+        template: "%s :: receive.me",
+        default: "receive.me",
+    },
 };
 
 export default function RootLayout({

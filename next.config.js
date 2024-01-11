@@ -3,8 +3,8 @@ const nextConfig = {
     async rewrites() {
         return [
             {
-                source: '/(@[a-zA-Z0-9]+)/:username*',
-                destination: "/profile/:username*",
+                source: '/@:username',
+                destination: "/profile/:username",
             }
         ]
     },

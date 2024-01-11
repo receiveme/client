@@ -2,6 +2,10 @@ import { IconRocket } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 
+export const metadata = {
+    title: "Sign Up",
+};
+
 export default function Register() {
     return (
         <main className="flex justify-center items-center min-h-screen">
@@ -104,7 +108,7 @@ export default function Register() {
                             href="/login"
                             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
                         >
-                            Sign Up
+                            Login
                         </Link>
                     </p>
                 </div>
