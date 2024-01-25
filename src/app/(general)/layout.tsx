@@ -5,8 +5,8 @@ import { Archivo } from "next/font/google";
 import Providers from "../providers";
 
 import "../globals.css";
-import Navbar from "@/components/navbar";
-import Toast from "@/components/toast";
+import Navbar from "@/src/components/navbar";
+import Toast from "@/src/components/toast";
 
 const archivo = Archivo({ subsets: ["latin"] });
 

@@ -104,8 +104,16 @@ export default function Login() {
                     <div className="flex gap-4">
                         <button className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
                             <img
+                                src="/img/3p/algorand.png"
+                                alt="Login with Algorand"
+                                className="h-4 w-4"
+                            />
+                        </button>
+
+                        <button className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
+                            <img
                                 src="/img/3p/metamask.png"
-                                alt="Google"
+                                alt="Login with Metamask"
                                 className="h-5 w-5"
                             />
                         </button>
@@ -113,7 +121,7 @@ export default function Login() {
                         <button className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/solana.png"
-                                alt="Google"
+                                alt="Login with Solana"
                                 className="h-5 w-5"
                             />
                         </button>
@@ -121,16 +129,8 @@ export default function Login() {
                         <button className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/tron.png"
-                                alt="Google"
+                                alt="Login with Tron"
                                 className="h-5 w-5"
-                            />
-                        </button>
-
-                        <button className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
-                            <img
-                                src="/img/3p/algorand.png"
-                                alt="Google"
-                                className="h-4 w-4"
                             />
                         </button>
                     </div>
