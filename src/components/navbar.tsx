@@ -164,8 +164,8 @@ export default function Navbar() {
                     </a>
                 </Popover.Group>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                    <a
-                        href="#"
+                    <Link
+                        href="/login"
                         className="text-sm font-semibold leading-6 text-gray-200 hover:text-gray-100 transition"
                     >
                         Login
@@ -173,7 +173,7 @@ export default function Navbar() {
                             className="inline-block ml-1"
                             size="20"
                         />
-                    </a>
+                    </Link>
                 </div>
             </nav>
             <Dialog

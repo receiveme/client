@@ -1,10 +1,12 @@
 "use client";
+
 import React from "react";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
+import { AppStateProvider } from "../lib/context";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
-        <>
+        <AppStateProvider>
             {children}
             <ProgressBar
                 height="4px"
@@ -12,7 +14,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
                 options={{ showSpinner: false }}
                 shallowRouting
             />
-        </>
+        </AppStateProvider>
     );
 };
 

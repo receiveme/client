@@ -1,28 +1,59 @@
 import { IconRocket } from "@tabler/icons-react";
 import Image from "next/image";
 import { headers } from "next/headers";
+import { useEffect } from "react";
+import { supabase } from "@/src/lib/supabase";
 
 export function generateMetadata({ params }: { params: any }) {
     return {
-        title: params.username,
+        title: params.handle,
     };
 }
 
-export default function Profile({ params }: any) {
-    const username = params.username;
+async function getHandleData(handle: string) {
+    // const q = await supabase.from("handles").select("*, ");
+
+    const query = await supabase
+        .from("handles")
+        .select(
+            `
+            *,
+            profiles (
+                theme,
+                banner
+            )
+        `,
+        )
+        .eq("handle", "abzy")
+        .single();
+
+    return query.data;
+}
+
+export default async function Profile({ params }: any) {
+    const handle = params.handle;
+    const data = await getHandleData(handle);
+
+    if (!data) {
+        return <>could not find</>;
+    }
 
     return (
         <>
             <main className="">
-                <div className="w-full bg-gradient-to-b from-yellow-300 to-slate-900 p-2 flex justify-center flex-wrap flex-col gap-2 items-center h-screen">
+                <div
+                    className={`w-full bg-gradient-to-b from-${data.profiles.theme} to-slate-900 p-2 flex justify-center flex-wrap flex-col gap-2 items-center h-screen`}
+                >
                     <div className="max-w-[580px] w-[580px] flex flex-col items-center mb-24">
-                        <div className="my-6 relative">
+                        <div
+                            className={`my-6 relative bg-${data.profiles.banner} rounded-xl`}
+                        >
                             <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
                                 <span className="text-3xl text-white font-bold">
                                     <span className="text-gray-400 font-normal">
                                         @
                                     </span>
-                                    {username}
+                                    {handle}
                                 </span>
 
                                 <div className="flex gap-2 items-center">
@@ -39,7 +70,7 @@ export default function Profile({ params }: any) {
                             </div>
                             <img
                                 src="/img/profile/WhaleNew.png"
-                                className="rounded-xl shadow-md"
+                                className={`rounded-xl shadow-md`}
                             />
                         </div>
 

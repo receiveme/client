@@ -1,5 +1,6 @@
 "use client";
 
+import { supabase } from "@/src/lib/supabase";
 import {
     IconCircleCheck,
     IconCircleCheckFilled,
@@ -9,7 +10,7 @@ import {
     IconLoader2,
     IconLoader3,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 type StageProps = {
@@ -267,7 +268,7 @@ function Link({ handle, show, next }: StageProps) {
                             <IconLoader2 className="animate-spin" />
                         </>
                     ) : (
-                        <>Done</>
+                        <>Next</>
                     )}
                 </button>
             </div>
@@ -275,27 +276,226 @@ function Link({ handle, show, next }: StageProps) {
     );
 }
 
-function Profile({ show }: StageProps) {
+function Profile({ handle, next, setProfile, show }: StageProps) {
+    const [theme, setTheme] = useState("yellow-300");
+    const [banner, setBanner] = useState("white");
+
+    function nextStage() {
+        setProfile({ theme, banner });
+        next();
+    }
+
     if (!show) {
         return <></>;
     }
 
-    return <></>;
+    return (
+        <>
+            <div className="flex flex-col gap-4">
+                <div
+                    className={`mt-6 p-6 rounded-xl bg-gradient-to-b from-${theme} to-slate-900`}
+                >
+                    <div className={`relative rounded-xl bg-${banner}`}>
+                        <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
+                            <span className="text-3xl text-white font-bold">
+                                <span className="text-gray-400 font-normal">
+                                    @
+                                </span>
+                                {handle}
+                            </span>
+                        </div>
+                        <img
+                            src="/img/profile/WhaleNew.png"
+                            className="rounded-xl shadow-md"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <h2 className="font-semibold text-lg">Theme</h2>
+
+                    <h3 className="font-regular text-sm">
+                        Choose a theme for your profile.
+                    </h3>
+
+                    <div className="flex gap-4 mt-2">
+                        <div
+                            onClick={() => setTheme("yellow-300")}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-yellow-300 to-slate-900 transition cursor-pointer border-2 ${
+                                theme === "yellow-300"
+                                    ? "border-indigo-600"
+                                    : "border-gray-200 hover:border-indigo-600"
+                            }`}
+                        ></div>
+                        <div
+                            onClick={() => setTheme("green-300")}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-green-300 to-slate-900 transition cursor-pointer border-2 ${
+                                theme === "green-300"
+                                    ? "border-indigo-600"
+                                    : "border-gray-200 hover:border-indigo-600"
+                            }`}
+                        ></div>
+                        <div
+                            onClick={() => setTheme("blue-400")}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-blue-400 to-slate-900 transition cursor-pointer border-2 ${
+                                theme === "blue-400"
+                                    ? "border-indigo-600"
+                                    : "border-gray-200 hover:border-indigo-600"
+                            }`}
+                        ></div>
+                        <div
+                            onClick={() => setTheme("red-500")}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-red-500 to-slate-900 transition cursor-pointer border-2 ${
+                                theme === "red-500"
+                                    ? "border-indigo-600"
+                                    : "border-gray-200 hover:border-indigo-600"
+                            }`}
+                        ></div>
+                        <div
+                            onClick={() => setTheme("orange-600")}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-orange-600 to-slate-900 transition cursor-pointer border-2 ${
+                                theme === "orange-600"
+                                    ? "border-indigo-600"
+                                    : "border-gray-200 hover:border-indigo-600"
+                            }`}
+                        ></div>
+                    </div>
+
+                    <h2 className="font-semibold text-lg mt-6">Banner</h2>
+
+                    <h3 className="font-regular text-sm">
+                        Choose a banner for your profile.
+                    </h3>
+
+                    <div className="flex gap-4 mt-2">
+                        <img
+                            className={`flex-grow-1 w-full h-12 rounded-md border-2 transition cursor-pointer ${
+                                banner === "white"
+                                    ? "border-indigo-600"
+                                    : "border-gray-200 hover:border-indigo-600"
+                            }`}
+                            src="/img/profile/WhaleNew.png"
+                            onClick={() => setBanner("white")}
+                            alt="whale banner"
+                        />
+                        <img
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
+                                banner === "green-400"
+                                    ? "border-indigo-600"
+                                    : "border-gray-200 hover:border-indigo-600"
+                            } bg-green-400`}
+                            src="/img/profile/WhaleNew.png"
+                            onClick={() => setBanner("green-400")}
+                            alt="whale banner green"
+                        />
+                        <img
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
+                                banner === "blue-300"
+                                    ? "border-indigo-600"
+                                    : "border-gray-200 hover:border-indigo-600"
+                            } bg-blue-300`}
+                            src="/img/profile/WhaleNew.png"
+                            onClick={() => setBanner("blue-300")}
+                            alt="whale banner blue"
+                        />
+                        <img
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
+                                banner === "red-500"
+                                    ? "border-indigo-600"
+                                    : "border-gray-200 hover:border-indigo-600"
+                            } bg-red-500`}
+                            src="/img/profile/WhaleNew.png"
+                            onClick={() => setBanner("red-500")}
+                            alt="whale banner red"
+                        />
+                        <img
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
+                                banner === "orange-400"
+                                    ? "border-indigo-600"
+                                    : "border-gray-200 hover:border-indigo-600"
+                            } bg-orange-400`}
+                            src="/img/profile/WhaleNew.png"
+                            onClick={() => setBanner("orange-400")}
+                            alt="whale banner orange"
+                        />
+                    </div>
+                </div>
+
+                <button
+                    className="mt-3 hover:scale-[1.01] duration-500 transition w-full bg-indigo-600 hover:bg-indigo-700 text-lg py-3 px-4 rounded-md text-white font-bold flex items-center justify-center"
+                    onClick={nextStage}
+                >
+                    Next
+                </button>
+            </div>
+        </>
+    );
+}
+
+function Preview({ handle, links, profile, show, complete }: StageProps) {
+    if (!show) {
+        return <></>;
+    }
+
+    return (
+        <>
+            <div className="flex flex-col gap-4">
+                <div
+                    className={`mt-6 p-6 rounded-xl bg-gradient-to-b from-${profile.theme} to-slate-900`}
+                >
+                    <div className={`relative rounded-xl bg-${profile.banner}`}>
+                        <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
+                            <span className="text-3xl text-white font-bold">
+                                <span className="text-gray-400 font-normal">
+                                    @
+                                </span>
+                                {handle}
+                            </span>
+                        </div>
+                        <img
+                            src="/img/profile/WhaleNew.png"
+                            className="rounded-xl shadow-md"
+                        />
+                    </div>
+                </div>
+
+                <button
+                    onClick={complete}
+                    className="mt-3 hover:scale-[1.01] duration-500 transition w-full bg-indigo-600 hover:bg-indigo-700 text-lg py-3 px-4 rounded-md text-white font-bold flex items-center justify-center"
+                >
+                    Complete
+                </button>
+            </div>
+        </>
+    );
 }
 
 export default function Onboard() {
     const [handle, setHandle] = useState("");
+    const [links, setLinks] = useState({});
+    const [profile, setProfile] = useState<any>({});
+
     const [stage, setStage] = useState<Stage>("handle");
 
     const nextStage = () => {
         if (stage === "handle") setStage("link");
         else if (stage === "link") setStage("profile");
-        else setStage("completed");
+        else setStage("preview");
     };
 
     const previousStage = () => {
-        if (stage === "profile") setStage("link");
+        if (stage === "preview") setStage("profile");
+        else if (stage === "profile") setStage("link");
         else if (stage === "link") setStage("handle");
+    };
+
+    const complete = async () => {
+        await supabase.from("handles").insert({ handle: handle });
+        await supabase
+            .from("profiles")
+            .insert({ theme: profile.theme, banner: profile.banner });
+
+        alert("done!");
     };
 
     return (
@@ -307,7 +507,9 @@ export default function Onboard() {
                             ? "First things first..."
                             : stage === "link"
                             ? "Next, link up your wallets & socials"
-                            : stage === "profile"}
+                            : stage === "profile"
+                            ? "Finally, customize your profile"
+                            : "Preview your profile"}
                     </h1>
 
                     <div>
@@ -317,7 +519,13 @@ export default function Onboard() {
                                     className="h-2 rounded-full bg-indigo-600 transition-all ease-in-out duration-700"
                                     style={{
                                         width:
-                                            stage === "handle" ? "0%" : "25%",
+                                            stage === "handle"
+                                                ? "0%"
+                                                : stage === "link"
+                                                ? "30%"
+                                                : stage === "profile"
+                                                ? "60%"
+                                                : "85%",
                                     }}
                                 />
                             </div>
@@ -334,7 +542,19 @@ export default function Onboard() {
                         handle={handle}
                         next={nextStage}
                     />
-                    <Profile show={stage === "profile"} />
+                    <Profile
+                        show={stage === "profile"}
+                        handle={handle}
+                        setProfile={setProfile}
+                        next={nextStage}
+                    />
+                    <Preview
+                        show={stage === "preview"}
+                        handle={handle}
+                        links={links}
+                        profile={profile}
+                        complete={complete}
+                    />
                 </div>
             </main>
         </>
