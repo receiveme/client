@@ -33,18 +33,11 @@ export default function Home() {
                 /onboard
             </Link>
             <Link
-                href="/@nickmura"
-                as="/@nickmura"
+                href="/abzy"
+                as="/abzy"
                 className="text-green-500 underline block mt-2"
             >
-                /@nickmura
-            </Link>
-            <Link
-                href="/@fakes1lent"
-                as="/@fakes1lent"
-                className="text-green-500 underline block mt-2"
-            >
-                /@fakes1lent
+                /abzy
             </Link>
 
             <h3 className="mt-3 font-bold text-xl">Debug Info</h3>

@@ -11,8 +11,6 @@ export function generateMetadata({ params }: { params: any }) {
 }
 
 async function getHandleData(handle: string) {
-    // const q = await supabase.from("handles").select("*, ");
-
     const query = await supabase
         .from("handles")
         .select(
@@ -24,8 +22,10 @@ async function getHandleData(handle: string) {
             )
         `,
         )
-        .eq("handle", "abzy")
+        .eq("handle", handle)
         .single();
+
+    console.log(query.data);
 
     return query.data;
 }
@@ -35,6 +35,7 @@ export default async function Profile({ params }: any) {
     const data = await getHandleData(handle);
 
     if (!data) {
+        // Render 404
         return <>could not find</>;
     }
 
