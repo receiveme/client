@@ -21,7 +21,6 @@ export const AppStateProvider = ({
             const {
                 data: { user },
             } = await supabase.auth.getUser();
-            console.log("user", user);
 
             if (user) {
                 setAppState({ user: user });

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { headers } from "next/headers";
 import { useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
+import { Wallet } from "@/src/components/handle/Wallet";
 
 export function generateMetadata({ params }: { params: any }) {
     return {
@@ -25,8 +26,6 @@ async function getHandleData(handle: string) {
         .eq("handle", handle)
         .single();
 
-    console.log(query.data);
-
     return query.data;
 }
 
@@ -45,7 +44,7 @@ export default async function Profile({ params }: any) {
                 <div
                     className={`w-full bg-gradient-to-b from-${data.profiles.theme} to-slate-900 p-2 flex justify-center flex-wrap flex-col gap-2 items-center h-screen`}
                 >
-                    <div className="max-w-[580px] w-[580px] flex flex-col items-center mb-24">
+                    <div className="max-w-[580px] w-full px-5 flex flex-col items-center mb-24">
                         <div
                             className={`my-6 relative bg-${data.profiles.banner} rounded-xl`}
                         >
@@ -76,38 +75,10 @@ export default async function Profile({ params }: any) {
                         </div>
 
                         <div className="w-full flex flex-col gap-4 max-w-[650px]">
-                            <div className="flex bg-white rounded-lg shadow-sm py-2 px-1">
-                                <div className="flex items-center justify-center ml-2">
-                                    <img
-                                        src="/img/3p/eth.png"
-                                        className={`w-[28px] h-[auto]`}
-                                    />
-                                </div>
-                                <div className="ml-3 w-full flex flex-col flex-shrink-1">
-                                    <p className="text-sm font-bold overflow-ellipsis">
-                                        ETH
-                                    </p>
-                                    <span className="text-xs font-light">
-                                        0x032123213
-                                    </span>
-                                </div>
-                                <div className="ml-auto mr-1 flex gap-1.5">
-                                    <button className="bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full">
-                                        <img
-                                            src="https://img.icons8.com/?size=256&amp;id=86216&amp;format=png"
-                                            alt="add"
-                                            className="w-[24px]"
-                                        />
-                                    </button>
-                                    <button className="bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full">
-                                        <img
-                                            src="https://img.icons8.com/?size=256&amp;id=85970&amp;format=png"
-                                            alt="add"
-                                            className="w-[24px]"
-                                        />
-                                    </button>
-                                </div>
-                            </div>
+                            <Wallet
+                                network="eth"
+                                address="0xc49C0eEd65b1d4C757Bd064dC83e10f88DF16BB1"
+                            />
                         </div>
 
                         <div className="mt-4">

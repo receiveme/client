@@ -33,11 +33,9 @@ export default function Login() {
 
         console.log(data, error);
 
-        console.log(data, error);
-
         if (data.user) {
             setAppState({ user: data.user });
-            // If no handle go to onboard
+
             router.push("/");
         }
     }

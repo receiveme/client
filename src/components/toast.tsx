@@ -3,19 +3,19 @@
 import { Fragment, useState } from "react";
 import { Transition } from "@headlessui/react";
 import {
-    IconCheck as CheckCircleIcon,
+    IconCircleCheck,
+    IconCircleX,
     IconX as XMarkIcon,
 } from "@tabler/icons-react";
 
 type ToastProps = {
     show: boolean;
-    setShow: () => {};
+    setShow: any;
     type?: "success" | "error";
     title: string;
-    desc?: string;
 };
 
-export default function Toast({ show, title, desc, type }: ToastProps) {
+export default function Toast({ show, setShow, title, type }: ToastProps) {
     return (
         <>
             {/* Global notification live region, render this permanently at the end of the document */}
@@ -37,19 +37,23 @@ export default function Toast({ show, title, desc, type }: ToastProps) {
                     >
                         <div className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
                             <div className="p-4">
-                                <div className="flex items-start">
+                                <div className="flex items-center">
                                     <div className="flex-shrink-0">
-                                        <CheckCircleIcon
-                                            className="h-6 w-6 text-green-400"
-                                            aria-hidden="true"
-                                        />
+                                        {type === "success" ? (
+                                            <IconCircleCheck
+                                                className="h-6 w-6 text-green-400"
+                                                aria-hidden="true"
+                                            />
+                                        ) : (
+                                            <IconCircleX
+                                                className="h-6 w-6 text-red-500"
+                                                aria-hidden="true"
+                                            />
+                                        )}
                                     </div>
                                     <div className="ml-3 w-0 flex-1 pt-0.5">
                                         <p className="text-sm font-medium text-gray-900">
                                             {title}
-                                        </p>
-                                        <p className="mt-1 text-sm text-gray-500">
-                                            {desc}
                                         </p>
                                     </div>
                                     <div className="ml-4 flex flex-shrink-0">
@@ -63,6 +67,7 @@ export default function Toast({ show, title, desc, type }: ToastProps) {
                                             <XMarkIcon
                                                 className="h-5 w-5"
                                                 aria-hidden="true"
+                                                onClick={() => setShow(false)}
                                             />
                                         </button>
                                     </div>
