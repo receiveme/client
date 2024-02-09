@@ -2,7 +2,7 @@
 
 import React from "react";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
-import { AppStateProvider } from "../lib/context";
+import { AppStateProvider } from "../lib/context_particle";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
