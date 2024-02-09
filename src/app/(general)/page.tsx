@@ -20,6 +20,9 @@ export default function Home() {
             <Link href="/login" className="text-green-500 underline block">
                 /login
             </Link>
+            <Link href="/draft-auth" className="text-green-500 underline block">
+                /draft-auth
+            </Link>
             <Link
                 href="/register"
                 className="text-green-500 underline block mt-2"
