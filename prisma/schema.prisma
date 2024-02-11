@@ -13,7 +13,7 @@ datasource db {
 model User {
   id      String    @id @default(uuid())
   created DateTime  @default(now())
-  handle  String? // Optional field
+  handle  String    @unique
   Profile Profile[]
   Social  Social[]
   Wallet  Wallet[]

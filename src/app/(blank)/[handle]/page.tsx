@@ -2,8 +2,8 @@ import { IconRocket } from "@tabler/icons-react";
 import Image from "next/image";
 import { headers } from "next/headers";
 import { useEffect } from "react";
-import { supabase } from "@/src/lib/supabase";
 import { Wallet } from "@/src/components/handle/Wallet";
+import { prisma } from "@/lib/prisma";
 
 export function generateMetadata({ params }: { params: any }) {
     return {
@@ -11,27 +11,34 @@ export function generateMetadata({ params }: { params: any }) {
     };
 }
 
-async function getHandleData(handle: string) {
-    const query = await supabase
-        .from("handles")
-        .select(
-            `
-            *,
-            profiles (
-                theme,
-                banner
-            )
-        `,
-        )
-        .eq("handle", handle)
-        .single();
+async function getUserByHandle(handle: string) {
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                handle: handle
+            },
+            include: {
+                Profile: {
+                    select: {
+                        theme: true,
+                        background: true
+                    }
+                }
+            }
+        });
 
-    return query.data;
+        console.log(user);
+        return user;
+    } catch (error) {
+        console.error("Failed to fetch user:", error);
+    } finally {
+        await prisma.$disconnect();
+    }
 }
 
 export default async function Profile({ params }: any) {
     const handle = params.handle;
-    const data = await getHandleData(handle);
+    const data = await getUserByHandle(handle);
 
     if (!data) {
         // Render 404

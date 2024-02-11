@@ -1,7 +1,6 @@
 
 import { createContext, useEffect, useState } from "react";
 import { AppState } from "../types/state/app-state.type";
-import { supabase } from "./supabase";
 import { AuthCoreContextProvider } from '@particle-network/auth-core-modal';
 
 import { ModalProvider } from "@particle-network/connect-react-ui";
@@ -17,4 +16,4 @@ export const _AuthCoreContextProvider = () => {
 
     }
 
- }
+}

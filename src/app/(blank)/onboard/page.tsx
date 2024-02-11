@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@/src/lib/supabase";
+import { prisma } from "@/lib/prisma";
 import {
     IconCircleCheck,
     IconCircleCheckFilled,
@@ -321,43 +321,38 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                     <div className="flex gap-4 mt-2">
                         <div
                             onClick={() => setTheme("yellow-300")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-yellow-300 to-slate-900 transition cursor-pointer border-2 ${
-                                theme === "yellow-300"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-yellow-300 to-slate-900 transition cursor-pointer border-2 ${theme === "yellow-300"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                         ></div>
                         <div
                             onClick={() => setTheme("green-300")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-green-300 to-slate-900 transition cursor-pointer border-2 ${
-                                theme === "green-300"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-green-300 to-slate-900 transition cursor-pointer border-2 ${theme === "green-300"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                         ></div>
                         <div
                             onClick={() => setTheme("blue-400")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-blue-400 to-slate-900 transition cursor-pointer border-2 ${
-                                theme === "blue-400"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-blue-400 to-slate-900 transition cursor-pointer border-2 ${theme === "blue-400"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                         ></div>
                         <div
                             onClick={() => setTheme("red-500")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-red-500 to-slate-900 transition cursor-pointer border-2 ${
-                                theme === "red-500"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-red-500 to-slate-900 transition cursor-pointer border-2 ${theme === "red-500"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                         ></div>
                         <div
                             onClick={() => setTheme("orange-600")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-orange-600 to-slate-900 transition cursor-pointer border-2 ${
-                                theme === "orange-600"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-orange-600 to-slate-900 transition cursor-pointer border-2 ${theme === "orange-600"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                         ></div>
                     </div>
 
@@ -369,51 +364,46 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
 
                     <div className="flex gap-4 mt-2">
                         <img
-                            className={`flex-grow-1 w-full h-12 rounded-md border-2 transition cursor-pointer ${
-                                banner === "white"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md border-2 transition cursor-pointer ${banner === "white"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                             src="/img/profile/WhaleNew.png"
                             onClick={() => setBanner("white")}
                             alt="whale banner"
                         />
                         <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
-                                banner === "green-400"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            } bg-green-400`}
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "green-400"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                } bg-green-400`}
                             src="/img/profile/WhaleNew.png"
                             onClick={() => setBanner("green-400")}
                             alt="whale banner green"
                         />
                         <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
-                                banner === "blue-300"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            } bg-blue-300`}
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "blue-300"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                } bg-blue-300`}
                             src="/img/profile/WhaleNew.png"
                             onClick={() => setBanner("blue-300")}
                             alt="whale banner blue"
                         />
                         <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
-                                banner === "red-500"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            } bg-red-500`}
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "red-500"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                } bg-red-500`}
                             src="/img/profile/WhaleNew.png"
                             onClick={() => setBanner("red-500")}
                             alt="whale banner red"
                         />
                         <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
-                                banner === "orange-400"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            } bg-orange-400`}
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "orange-400"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                } bg-orange-400`}
                             src="/img/profile/WhaleNew.png"
                             onClick={() => setBanner("orange-400")}
                             alt="whale banner orange"
@@ -489,15 +479,28 @@ export default function Onboard() {
         else if (stage === "link") setStage("handle");
     };
 
+
     const complete = async () => {
-        await supabase.from("handles").insert({ handle: handle });
-        await supabase
-            .from("profiles")
-            .insert({ theme: profile.theme, banner: profile.banner });
+        try {
+            const user = await prisma.user.create({
+                data: {
+                    handle: handle,
+                    Profile: {
+                        create: [{
+                            theme: profile.theme,
+                            background: profile.banner,
+                        }],
+                    },
+                },
+            });
 
-        alert("done!");
+            console.log("User and profile created:", user);
+            alert("done!");
+        } catch (error) {
+            console.error("Failed to create user and profile:", error);
+            alert("Failed to complete the operation.");
+        }
     };
-
     return (
         <>
             <main className="flex justify-center items-center min-h-screen">
@@ -506,10 +509,10 @@ export default function Onboard() {
                         {stage === "handle"
                             ? "First things first..."
                             : stage === "link"
-                            ? "Next, link up your wallets & socials"
-                            : stage === "profile"
-                            ? "Finally, customize your profile"
-                            : "Preview your profile"}
+                                ? "Next, link up your wallets & socials"
+                                : stage === "profile"
+                                    ? "Finally, customize your profile"
+                                    : "Preview your profile"}
                     </h1>
 
                     <div>
@@ -522,10 +525,10 @@ export default function Onboard() {
                                             stage === "handle"
                                                 ? "0%"
                                                 : stage === "link"
-                                                ? "30%"
-                                                : stage === "profile"
-                                                ? "60%"
-                                                : "85%",
+                                                    ? "30%"
+                                                    : stage === "profile"
+                                                        ? "60%"
+                                                        : "85%",
                                     }}
                                 />
                             </div>

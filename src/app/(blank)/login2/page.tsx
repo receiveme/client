@@ -26,18 +26,18 @@ export default function Login() {
             return;
         }
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
-        });
+        // const { data, error } = await supabase.auth.signInWithPassword({
+        //     email,
+        //     password
+        // });
 
-        console.log(data, error);
+        // console.log(data, error);
 
-        if (data.user) {
-            setAppState({ user: data.user });
+        // if (data.user) {
+        //     setAppState({ user: data.user });
 
-            router.push("/");
-        }
+        //     router.push("/");
+        // }
     }
 
     return (
