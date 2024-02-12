@@ -6,14 +6,16 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styles  from '../../Home.module.css'
 
-import { ConnectButton, } from '@particle-network/connect-react-ui';
+import { ConnectButton, useConnectKit } from '@particle-network/connect-react-ui';
 
 const Home: NextPage = () => {
     const { connect, disconnect, connectionStatus } = useConnect();
 
     // use for evm chains
     const { address, chainId, provider, sendTransaction, signMessage, signTypedData } = useEthereum();
-
+    const connectKit = useConnectKit()
+    
+    console.log(connectKit.particle.auth.getUserInfo())
     // use for solana chains
     const { address: solanaAddress, signAndSendTransaction } = useSolana();
 
