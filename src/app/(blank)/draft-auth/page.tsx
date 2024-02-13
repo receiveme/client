@@ -6,19 +6,42 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styles  from '../../Home.module.css'
 
+import { Avalanche } from '@particle-network/chains';
+
 import { ConnectButton, useConnectKit } from '@particle-network/connect-react-ui';
+import { ParticleNetwork } from '@particle-network/auth';
 
+
+const particle = new ParticleNetwork({
+    projectId: process.env.NEXT_PUBLIC_PROJECT_ID as string,
+    clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY as string,
+    appId: process.env.NEXT_PUBLIC_APP_ID as string,
+    chainName: Avalanche.name,
+    chainId: Avalanche.id,
+    wallet: {
+      displayWalletEntry: true,
+      uiMode: "dark"
+    },
+  });
+
+  
 const Home: NextPage = () => {
-    const { connect, disconnect, connectionStatus } = useConnect();
-
-    // use for evm chains
+    const { connect, disconnect, connectionStatus } = useConnect(); // for auth-core-modal
     const { address, chainId, provider, sendTransaction, signMessage, signTypedData } = useEthereum();
-    const connectKit = useConnectKit()
-    
+
+
+    const connectKit = useConnectKit() // for connect-react-ui
     console.log(connectKit.particle.auth.getUserInfo())
     // use for solana chains
-    const { address: solanaAddress, signAndSendTransaction } = useSolana();
 
+
+    const { address: solanaAddress, signAndSendTransaction } = useSolana();
+    
+    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'discord' | 'github' | 'apple') => { // for specific login
+        const user = !particle.auth.isLogin() ? await particle.auth.login({preferredAuthType}) : particle.auth.getUserInfo();
+        console.log(user)
+
+      }
     const handleConnect = async () => {
         try {
             await connect();
@@ -48,7 +71,21 @@ const Home: NextPage = () => {
                         </button>
                     </>
                 )}
+                        <button className={styles.btn} onClick={(e)=>handleLogin('twitter')}>
+                            Twitter Login
+                        </button>
+                        
+                        <button className={styles.btn} onClick={(e)=>handleLogin('github')}>
+                            GitHub Login
+                        </button>
 
+                        <button className={styles.btn} onClick={(e)=>handleLogin('apple')}>
+                            Apple Login
+                        </button>
+
+                        <button className={styles.btn} onClick={(e)=>handleLogin('discord')}>
+                            Discord Login
+                        </button>
                 {connectionStatus === 'connected' && (
                     <>
                         <button className={styles.btn} onClick={handleDisconnect}>
@@ -93,3 +130,7 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+function setUserInfo(user: import("@particle-network/auth").UserInfo | null) {
+    throw new Error('Function not implemented.');
+}
+
