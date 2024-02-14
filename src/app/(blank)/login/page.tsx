@@ -35,8 +35,7 @@ export default function Login() {
 
         if (data.user) {
             setAppState({ user: data.user });
-
-            router.push("/");
+            router.push("/onboard");
         }
     }
 

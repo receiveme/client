@@ -151,18 +151,17 @@ function Link({ handle, show, next }: StageProps) {
         return <></>;
     }
 
-    const fetchAvaxBalance = async (address: string) => {
-        const balanceWei = await window.web3.eth.getBalance(address);
-        setAvaxBalance(window.web3.utils.fromWei(balanceWei, 'ether'))
-    };
-
-    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'github') => {
-        const user = !particle.auth.isLogin() ? await particle.auth.login({ preferredAuthType }) : particle.auth.getUserInfo();
+    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'github' | 'discord' | 'instagram') => {
+        const user = await particle.auth.login({ preferredAuthType })
         setUserInfo(user);
-        console.log("USER", user)
-        const accounts = await window.web3.eth.getAccounts();
-        fetchAvaxBalance(accounts[0]);
+        //store the specific auth type uesr info in different storage items
+        sessionStorage.setItem(`{${preferredAuthType}}`, JSON.stringify({ userInfo: user }));
     }
+
+    // use when manually triggering logout
+    // const handleLogout = () => {
+    //     return particle.auth.logout()
+    // }
 
     return (
         <>
@@ -179,7 +178,6 @@ function Link({ handle, show, next }: StageProps) {
                         className="rounded-xl shadow-md"
                     />
                 </div>
-
                 <div className="w-full">
                     <h1 className="font-semibold text-lg" >Socials</h1>
 
@@ -198,7 +196,7 @@ function Link({ handle, show, next }: StageProps) {
                             <span className="text-sm font-semibold">
                                 Link Discord
                             </span>
-                        </span>
+                        </button>
                         <button onClick={() => handleLogin('github')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/github.png"

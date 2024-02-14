@@ -68,8 +68,9 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                     'email',
                     'google',
                     'apple',
-                    'github'
-
+                    'github',
+                    'discord',
+                    'instagram'
                 ]}>
 
                 <AppContext.Provider value={{ appState, setAppState }}>
