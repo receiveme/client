@@ -1,47 +1,44 @@
 'use client'
 import '@particle-network/connect-react-ui/dist/index.css';
-import { useConnect, useEthereum, useSolana } from '@particle-network/auth-core-modal';
+// import { useConnect, useEthereum, useSolana } from '@particle-network/auth-core-modal';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import styles  from '../../Home.module.css'
+import styles from '../../Home.module.css'
 
 import { ConnectButton, useConnectKit } from '@particle-network/connect-react-ui';
 
 const Home: NextPage = () => {
-    const { connect, disconnect, connectionStatus } = useConnect();
+    // const { connect, disconnect, connectionStatus } = useConnect();
 
     // use for evm chains
-    const { address, chainId, provider, sendTransaction, signMessage, signTypedData } = useEthereum();
+    // const { address, chainId, provider, sendTransaction, signMessage, signTypedData } = useEthereum();
     const connectKit = useConnectKit()
-    
+
     console.log(connectKit.particle.auth.getUserInfo())
     // use for solana chains
-    const { address: solanaAddress, signAndSendTransaction } = useSolana();
+    // const { address: solanaAddress, signAndSendTransaction } = useSolana();
 
-    const handleConnect = async () => {
-        try {
-            await connect();
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    // const handleConnect = async () => {
+    //     try {
+    //         await connect();
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
-    const handleDisconnect = async () => {
-        try {
-            await disconnect();
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    // const handleDisconnect = async () => {
+    //     try {
+    //         await disconnect();
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     return (
         <div className='overflow-auto'>
-            <ConnectButton>
-                
-            </ConnectButton>
             <main className={styles.main}>
-                {connectionStatus !== 'connected' && (
+                {/* {connectionStatus !== 'connected' && (
                     <>
                         <button className={styles.btn} onClick={handleConnect}>
                             {connectionStatus === 'disconnected' ? 'CONNECT' : connectionStatus.toUpperCase()}
@@ -55,7 +52,7 @@ const Home: NextPage = () => {
                             DISCONNECT
                         </button>
                     </>
-                )}
+                )} */}
 
                 <h1 className={styles.title}>
                     <a href="https://particle.network">Particle Network!</a>

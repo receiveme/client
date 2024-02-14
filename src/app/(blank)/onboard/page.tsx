@@ -11,11 +11,31 @@ import {
     IconLoader3,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import { ParticleNetwork } from '@particle-network/auth';
+import { Avalanche } from '@particle-network/chains';
+import { ParticleProvider } from '@particle-network/provider';
+import Web3 from 'web3';
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 type StageProps = {
     show: boolean;
 } & Record<string, any>;
+
+const particle = new ParticleNetwork({
+    projectId: "19880450-9512-4857-a7a9-c29d16110034",
+    clientKey: "cbIQ6bvFEBm8ZgVkpox4q0mpxJtxAgqj3ra4VQtf",
+    appId: "124f61c4-f5ca-486c-a686-ae80b6966b72",
+    chainName: Avalanche.name,
+    chainId: Avalanche.id,
+    wallet: {
+        displayWalletEntry: true,
+        uiMode: "dark"
+    },
+});
+
+if (!window.web3) {
+    window.web3 = new Web3(new ParticleProvider(particle.auth));
+}
 
 function Handle({ show, updateHandle, next }: StageProps) {
     const [handleInput, setHandleInput] = useState("");
@@ -124,9 +144,24 @@ function Handle({ show, updateHandle, next }: StageProps) {
 
 function Link({ handle, show, next }: StageProps) {
     const [isLoading, setLoading] = useState(false);
+    const [userInfo, setUserInfo] = useState(null)
+    const [avaxBalance, setAvaxBalance] = useState<string | null>(null);
 
     if (!show) {
         return <></>;
+    }
+
+    const fetchAvaxBalance = async (address: string) => {
+        const balanceWei = await window.web3.eth.getBalance(address);
+        setAvaxBalance(window.web3.utils.fromWei(balanceWei, 'ether'))
+    };
+
+    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'github') => {
+        const user = !particle.auth.isLogin() ? await particle.auth.login({ preferredAuthType }) : particle.auth.getUserInfo();
+        setUserInfo(user);
+        console.log("USER", user)
+        const accounts = await window.web3.eth.getAccounts();
+        fetchAvaxBalance(accounts[0]);
     }
 
     return (
@@ -146,14 +181,14 @@ function Link({ handle, show, next }: StageProps) {
                 </div>
 
                 <div className="w-full">
-                    <h2 className="font-semibold text-lg">Socials</h2>
+                    <h1 className="font-semibold text-lg" >Socials</h1>
 
                     <h3 className="font-regular text-sm mt-1">
                         Link your socials to display them on your profile.
                     </h3>
 
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
-                        <button className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                        <button onClick={() => handleLogin('discord')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/discord.png"
                                 alt="Link Discord"
@@ -163,8 +198,8 @@ function Link({ handle, show, next }: StageProps) {
                             <span className="text-sm font-semibold">
                                 Link Discord
                             </span>
-                        </button>
-                        <button className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                        </span>
+                        <button onClick={() => handleLogin('github')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/github.png"
                                 alt="Link Github"
@@ -175,7 +210,7 @@ function Link({ handle, show, next }: StageProps) {
                                 Link Github
                             </span>
                         </button>
-                        <button className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                        <button onClick={() => handleLogin('instagram')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/instagram.png"
                                 alt="Google"
@@ -186,7 +221,7 @@ function Link({ handle, show, next }: StageProps) {
                                 Link Instagram
                             </span>
                         </button>
-                        <button className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                        <button onClick={() => handleLogin('twitter')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/twitter.png"
                                 alt="Google"
@@ -321,43 +356,38 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                     <div className="flex gap-4 mt-2">
                         <div
                             onClick={() => setTheme("yellow-300")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-yellow-300 to-slate-900 transition cursor-pointer border-2 ${
-                                theme === "yellow-300"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-yellow-300 to-slate-900 transition cursor-pointer border-2 ${theme === "yellow-300"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                         ></div>
                         <div
                             onClick={() => setTheme("green-300")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-green-300 to-slate-900 transition cursor-pointer border-2 ${
-                                theme === "green-300"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-green-300 to-slate-900 transition cursor-pointer border-2 ${theme === "green-300"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                         ></div>
                         <div
                             onClick={() => setTheme("blue-400")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-blue-400 to-slate-900 transition cursor-pointer border-2 ${
-                                theme === "blue-400"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-blue-400 to-slate-900 transition cursor-pointer border-2 ${theme === "blue-400"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                         ></div>
                         <div
                             onClick={() => setTheme("red-500")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-red-500 to-slate-900 transition cursor-pointer border-2 ${
-                                theme === "red-500"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-red-500 to-slate-900 transition cursor-pointer border-2 ${theme === "red-500"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                         ></div>
                         <div
                             onClick={() => setTheme("orange-600")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-orange-600 to-slate-900 transition cursor-pointer border-2 ${
-                                theme === "orange-600"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-orange-600 to-slate-900 transition cursor-pointer border-2 ${theme === "orange-600"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                         ></div>
                     </div>
 
@@ -369,51 +399,46 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
 
                     <div className="flex gap-4 mt-2">
                         <img
-                            className={`flex-grow-1 w-full h-12 rounded-md border-2 transition cursor-pointer ${
-                                banner === "white"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                            className={`flex-grow-1 w-full h-12 rounded-md border-2 transition cursor-pointer ${banner === "white"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                }`}
                             src="/img/profile/WhaleNew.png"
                             onClick={() => setBanner("white")}
                             alt="whale banner"
                         />
                         <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
-                                banner === "green-400"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            } bg-green-400`}
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "green-400"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                } bg-green-400`}
                             src="/img/profile/WhaleNew.png"
                             onClick={() => setBanner("green-400")}
                             alt="whale banner green"
                         />
                         <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
-                                banner === "blue-300"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            } bg-blue-300`}
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "blue-300"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                } bg-blue-300`}
                             src="/img/profile/WhaleNew.png"
                             onClick={() => setBanner("blue-300")}
                             alt="whale banner blue"
                         />
                         <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
-                                banner === "red-500"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            } bg-red-500`}
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "red-500"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                } bg-red-500`}
                             src="/img/profile/WhaleNew.png"
                             onClick={() => setBanner("red-500")}
                             alt="whale banner red"
                         />
                         <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${
-                                banner === "orange-400"
-                                    ? "border-indigo-600"
-                                    : "border-gray-200 hover:border-indigo-600"
-                            } bg-orange-400`}
+                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "orange-400"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                                } bg-orange-400`}
                             src="/img/profile/WhaleNew.png"
                             onClick={() => setBanner("orange-400")}
                             alt="whale banner orange"
@@ -506,10 +531,10 @@ export default function Onboard() {
                         {stage === "handle"
                             ? "First things first..."
                             : stage === "link"
-                            ? "Next, link up your wallets & socials"
-                            : stage === "profile"
-                            ? "Finally, customize your profile"
-                            : "Preview your profile"}
+                                ? "Next, link up your wallets & socials"
+                                : stage === "profile"
+                                    ? "Finally, customize your profile"
+                                    : "Preview your profile"}
                     </h1>
 
                     <div>
@@ -522,10 +547,10 @@ export default function Onboard() {
                                             stage === "handle"
                                                 ? "0%"
                                                 : stage === "link"
-                                                ? "30%"
-                                                : stage === "profile"
-                                                ? "60%"
-                                                : "85%",
+                                                    ? "30%"
+                                                    : stage === "profile"
+                                                        ? "60%"
+                                                        : "85%",
                                     }}
                                 />
                             </div>

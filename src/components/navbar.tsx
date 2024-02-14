@@ -15,6 +15,8 @@ import {
     IconQrcode,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import '@particle-network/connect-react-ui/dist/index.css';
+import { ConnectButton } from '@particle-network/connect-react-ui';
 
 const features = [
     {
@@ -54,8 +56,10 @@ function classNames(...classes: any) {
 export default function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+
     return (
         <header className="w-full mb-4">
+
             <nav
                 className="bg-gradient-to-r from-indigo-500 to-indigo-600 w-full rounded-2xl shadow-md flex items-center justify-between p-4 lg:px-6"
                 aria-label="Global"
@@ -70,6 +74,7 @@ export default function Navbar() {
                         />
                     </Link>
                 </div>
+                <ConnectButton />
                 <div className="flex lg:hidden">
                     <button
                         type="button"

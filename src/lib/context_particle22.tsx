@@ -3,7 +3,6 @@ import { createContext, useEffect, useState } from "react";
 import { AppState } from "../types/state/app-state.type";
 import { supabase } from "./supabase";
 import { AuthCoreContextProvider } from '@particle-network/auth-core-modal';
-
 import { ModalProvider } from "@particle-network/connect-react-ui";
 import { WalletEntryPosition } from '@particle-network/auth';
 import { Ethereum, EthereumGoerli, Avalanche, AvalancheTestnet, ArbitrumGoerli, ArbitrumNova } from '@particle-network/chains';
@@ -19,13 +18,13 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
 }) => {
     const [appState, setAppState] = useState<AppState>({ user: null });
     return (
-        <AuthCoreContextProvider
-            options={{
-                projectId: process.env.NEXT_PUBLIC_PROJECT_ID as string,
-                clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY as string,
-                appId: process.env.NEXT_PUBLIC_APP_ID as string,
-            }}>
-            <ModalProvider
+        // <AuthCoreContextProvider
+        //     options={{
+        //         projectId: process.env.NEXT_PUBLIC_PROJECT_ID as string,
+        //         clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY as string,
+        //         appId: process.env.NEXT_PUBLIC_APP_ID as string,
+        //     }}>
+        <ModalProvider
             options={{
                 projectId: process.env.NEXT_PUBLIC_PROJECT_ID as string,
                 clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY as string,
@@ -40,7 +39,7 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                 particleWalletEntry: {    //optional: particle wallet config
                     displayWalletEntry: true, //display wallet button when connect particle success.
                     defaultWalletEntryPosition: WalletEntryPosition.BR,
-                    supportChains:[
+                    supportChains: [
                         Ethereum,
                         EthereumGoerli,
                         Avalanche,
@@ -48,7 +47,7 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                         ArbitrumNova
                     ],
                     customStyle: {
-                        
+
                     }, //optional: custom wallet style
                 },
                 securityAccount: { //optional: particle security account config
@@ -57,10 +56,10 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                     //prompt set master password. 0: None(default), 1: Once, 2: Always
                     promptMasterPasswordSettingWhenLogin: 0
                 },
-                wallets: evmWallets({ 
+                wallets: evmWallets({
                     projectId: '08e47732f28f0dcaf3411492b7c269ab', //replace with walletconnect projectId
                     showQrModal: false
-                 }),
+                }),
             }}
             theme={'auto'}
             language={'en'}   //optional：localize, default en
@@ -70,17 +69,17 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                 'google',
                 'apple',
                 'github'
-                
+
             ]}>
-        
-                <AppContext.Provider value={{ appState, setAppState }}>
-                    {children}
-                </AppContext.Provider>
+
+            <AppContext.Provider value={{ appState, setAppState }}>
+                {children}
+            </AppContext.Provider>
 
         </ModalProvider>
 
-            
-        </AuthCoreContextProvider>
+
+        // </AuthCoreContextProvider>
 
 
     );
