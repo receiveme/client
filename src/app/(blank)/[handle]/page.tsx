@@ -14,15 +14,11 @@ export function generateMetadata({ params }: { params: any }) {
 async function getHandleData(handle: string) {
     const query = await supabase
         .from("handles")
-        .select(
-            `
+        .select(`
             *,
             profiles (
                 theme,
-                banner
-            )
-        `,
-        )
+                banner)`)
         .eq("handle", handle)
         .single();
 
