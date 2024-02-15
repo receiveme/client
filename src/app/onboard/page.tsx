@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@/src/lib/supabase";
+import { prisma } from "@/lib/prisma";
 import {
     IconCircleCheck,
     IconCircleCheckFilled,
@@ -625,15 +625,28 @@ export default function Onboard() {
         else if (stage === "link") setStage("handle");
     };
 
+
     const complete = async () => {
-        await supabase.from("handles").insert({ handle: handle });
-        await supabase
-            .from("profiles")
-            .insert({ theme: profile.theme, banner: profile.banner });
+        try {
+            const user = await prisma.user.create({
+                data: {
+                    handle: handle,
+                    Profile: {
+                        create: [{
+                            theme: profile.theme,
+                            background: profile.banner,
+                        }],
+                    },
+                },
+            });
 
-        alert("done!");
+            console.log("User and profile created:", user);
+            alert("done!");
+        } catch (error) {
+            console.error("Failed to create user and profile:", error);
+            alert("Failed to complete the operation.");
+        }
     };
-
     return (
         <>
             <main className="flex justify-center items-center min-h-screen">

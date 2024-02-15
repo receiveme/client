@@ -10,10 +10,10 @@ export default function Home() {
     const router = useRouter();
     const [appState, setAppState] = useAppState();
 
-    async function signOut() {
-        await supabase.auth.signOut();
-        setAppState({ user: null });
-    }
+    // async function signOut() {
+    //     await supabase.auth.signOut();
+    //     setAppState({ user: null });
+    // }
 
     return (
         <main>

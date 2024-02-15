@@ -26,29 +26,29 @@ export default function Login() {
             return;
         }
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
+        // const { data, error } = await supabase.auth.signInWithPassword({
+        //     email,
+        //     password,
+        // });
 
-        console.log(data, error);
+        // console.log(data, error);
 
-        if (data.user) {
-            setAppState({ user: data.user });
-            router.push("/onboard");
-        }
+        // if (data.user) {
+        //     setAppState({ user: data.user });
+        //     router.push("/onboard");
+        // }
     }
 
     function connectMetamask() {
         return new Promise(async (resolve, reject) => {
             const chainId = await window["ethereum"]?.request({ method: 'eth_chainId' });
             const accounts = await window["ethereum"]?.
-                request({method: 'eth_requestAccounts'})//@ts-ignore
-                .catch(e => { 
+                request({ method: 'eth_requestAccounts' })//@ts-ignore
+                .catch(e => {
                     console.error(e);
                     return reject();
                 });
-        
+
             // After connection
             if (accounts?.length && accounts[0] && chainId) {
                 // Get chain name by chain ID
@@ -168,7 +168,7 @@ export default function Login() {
                             />
                         </button>
 
-                        <button onClick={()=>connectMetamask()} className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
+                        <button onClick={() => connectMetamask()} className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/metamask.png"
                                 alt="Login with Metamask"

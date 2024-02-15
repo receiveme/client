@@ -36,17 +36,17 @@ export default function Register() {
             return;
         }
 
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-        });
+        // const { data, error } = await supabase.auth.signUp({
+        //     email,
+        //     password,
+        // });
 
-        console.log(data, error);
+        // console.log(data, error);
 
-        if (data.user) {
-            setAppState({ user: data.user });
-            router.push("/onboard");
-        }
+        // if (data.user) {
+        //     setAppState({ user: data.user });
+        //     router.push("/onboard");
+        // }
     }
 
     return (
