@@ -40,8 +40,8 @@ function Handle({ show, updateHandle, next }: StageProps) {
     const [isLoading, setLoading] = useState(false);
 
     // Once input hasn't been changed for 200-500ms,
-    // check with server/db if handle is available.
-    // If not, let user know.
+
+
     const [available, setAvailable] = useState<boolean | null>(null);
     const [inputTimeout, setInputTimeout] = useState<any>(null);
 
@@ -148,7 +148,7 @@ function Link({ handle, show, next }: StageProps) {
     const [avaxBalance, setAvaxBalance] = useState<string | null>(null);
     const [ tronlinkAddress, setTronlinkAddress ] = useState<string | null>()
     const [ metamaskAddress, setMetamaskAddress ] = useState<string | null>()
-
+    const [ algorandAddress, setAlgorandAddress ] = useState<string | null>()
     if (!show) {
         return <></>;
     }
@@ -160,6 +160,7 @@ function Link({ handle, show, next }: StageProps) {
         sessionStorage.setItem(preferredAuthType, JSON.stringify({ userInfo: user }));
     }
 
+    
     function connectMetamask() {
         return new Promise(async (resolve, reject) => {
             const chainId = await window["ethereum"]?.request({ method: 'eth_chainId' });
@@ -284,6 +285,8 @@ function Link({ handle, show, next }: StageProps) {
                     </h3>
 
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
+                        {!metamaskAddress ? 
+                        <>
                         <button onClick={()  => connectMetamask()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/metamask.png"
@@ -291,10 +294,35 @@ function Link({ handle, show, next }: StageProps) {
                                 className="mr-2 h-5 w-5"
                             />
 
-                            <span className="text-sm font-semibold">
+                            <span onClick={connectMetamask} className="text-sm font-semibold">
                                 Link Metamask
                             </span>
                         </button>
+                        </>
+                        : 
+
+                        <>
+                                                
+                            <button onClick={()  => connectMetamask()} className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/metamask.png"
+                                    alt="Link Metamask"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span onClick={connectMetamask} className="text-sm font-semibold">
+                                    Link Metamask
+                                </span>
+
+                                <span className="ml-1.5 text-xs text-gray-600 truncate ">
+                                    {metamaskAddress.substring(0,5)}...{metamaskAddress.substring(35,42)}
+                                </span>
+                            </button>
+                        </>
+                        
+                        
+                        }
+
                         {/* <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/algorand.png"
@@ -336,7 +364,26 @@ function Link({ handle, show, next }: StageProps) {
                                 Link Solana
                             </span>
                         </button>
-                        <button onClick={()=>connectTronlink()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+
+
+                        {!tronlinkAddress ?
+                        <>                       
+                            <button onClick={()=>connectTronlink()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/tron.png"
+                                    alt="Link Tron"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Tronlink
+                                </span>
+                            </button>
+
+                        </> 
+                        :
+                        <>
+                        <button onClick={()=>connectTronlink()} className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/tron.png"
                                 alt="Link Tron"
@@ -346,7 +393,15 @@ function Link({ handle, show, next }: StageProps) {
                             <span className="text-sm font-semibold">
                                 Link Tronlink
                             </span>
+
+                            <span className="ml-1.5 text-xs text-gray-600 truncate">
+                                {tronlinkAddress.substring(0,5)}...{tronlinkAddress.substring(35,41)}
+                            </span>
                         </button>
+                        </>
+                        
+                        }
+
                     </div>
                 </div>
 
