@@ -10,6 +10,24 @@ export function generateMetadata({ params }: { params: any }) {
         title: params.handle,
     };
 }
+function metamaskConnect() {
+    return new Promise(async (resolve, reject) => {
+        const chainId = await window["ethereum"]?.request({ method: 'eth_chainId' });
+        const accounts = await window["ethereum"]?.
+            request({method: 'eth_requestAccounts'})//@ts-ignore
+            .catch(e => { 
+                console.error(e);
+                return reject();
+            });
+    
+        // After connection
+        if (accounts?.length && accounts[0] && chainId) {
+            // Get chain name by chain ID
+
+
+        }
+    })
+}
 
 async function getHandleData(handle: string) {
     const query = await supabase

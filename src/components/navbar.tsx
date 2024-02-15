@@ -45,6 +45,8 @@ const features = [
         icon: IconGraph,
     },
 ];
+
+
 const callsToAction = [
     { name: "See demo", href: "#", icon: IconStack },
     { name: "Start Now", href: "#", icon: IconBolt },
@@ -56,6 +58,8 @@ function classNames(...classes: any) {
 
 export default function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [tronlinkAddress, setTronlinkAddress] = useState(false);
+
     const account = useAccount() || null
     const connectKit = useConnectKit()
     const userInfo = connectKit.particle.auth.getUserInfo()
@@ -66,7 +70,7 @@ export default function Navbar() {
         if (!account && !userInfo) {
             sessionStorage.removeItem("userInfo")
         }
-
+        //@ts-ignore
         if (!JSON.parse(sessionStorage.getItem("userInfo")) && account && userInfo) {
             console.log('ISNDEII')
             sessionStorage.setItem("userInfo", JSON.stringify([{ accountInfo: account, info: userInfo }]));

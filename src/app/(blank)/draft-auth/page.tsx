@@ -1,13 +1,16 @@
 'use client'
 import '@particle-network/connect-react-ui/dist/index.css';
-// import { useConnect, useEthereum, useSolana } from '@particle-network/auth-core-modal';
+import { useConnect, useEthereum, useSolana } from '@particle-network/auth-core-modal';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import styles from '../../Home.module.css'
+import styles  from '../../Home.module.css'
+
 import { Avalanche } from '@particle-network/chains';
-import { useConnectKit } from '@particle-network/connect-react-ui';
+
+import { ConnectButton, useConnectKit } from '@particle-network/connect-react-ui';
 import { ParticleNetwork } from '@particle-network/auth';
+
 
 const particle = new ParticleNetwork({
     projectId: process.env.NEXT_PUBLIC_PROJECT_ID as string,
@@ -16,26 +19,29 @@ const particle = new ParticleNetwork({
     chainName: Avalanche.name,
     chainId: Avalanche.id,
     wallet: {
-        displayWalletEntry: true,
-        uiMode: "dark"
+      displayWalletEntry: true,
+      uiMode: "dark"
     },
-});
+  });
 
+  
 const Home: NextPage = () => {
     const { connect, disconnect, connectionStatus } = useConnect(); // for auth-core-modal
     const { address, chainId, provider, sendTransaction, signMessage, signTypedData } = useEthereum();
+
+
     const connectKit = useConnectKit() // for connect-react-ui
     console.log(connectKit.particle.auth.getUserInfo())
     // use for solana chains
 
 
     const { address: solanaAddress, signAndSendTransaction } = useSolana();
-
-    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'discord' | 'github' | 'apple') => { // for specific login
-        const user = !particle.auth.isLogin() ? await particle.auth.login({ preferredAuthType }) : particle.auth.getUserInfo();
+    
+    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'discord' | 'github' | 'apple' ) => { // for specific login
+        const user = !particle.auth.isLogin() ? await particle.auth.login({preferredAuthType}) : particle.auth.getUserInfo();
         console.log(user)
 
-    }
+      }
     const handleConnect = async () => {
         try {
             await connect();
@@ -43,19 +49,41 @@ const Home: NextPage = () => {
             console.log(error);
         }
     };
+    
 
-    // const handleDisconnect = async () => {
-    //     try {
-    //         await disconnect();
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+    const handleDisconnect = async () => {
+        try {
+            await disconnect();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    function metamaskConnect() {
+        return new Promise(async (resolve, reject) => {
+            const chainId = await window["ethereum"]?.request({ method: 'eth_chainId' });
+            const accounts = await window["ethereum"]?.
+                request({method: 'eth_requestAccounts'})//@ts-ignore
+                .catch(e => { 
+                    console.error(e);
+                    return reject();
+                });
+        
+            // After connection
+            if (accounts?.length && accounts[0] && chainId) {
+                // Get chain name by chain ID
+
+
+            }
+        })
+    }
 
     return (
         <div className='overflow-auto'>
+            <ConnectButton>
+                
+            </ConnectButton>
             <main className={styles.main}>
-                {/* {connectionStatus !== 'connected' && (
+                {connectionStatus !== 'connected' && (
                     <>
                         <button className={styles.btn} onClick={handleConnect}>
                             {connectionStatus === 'disconnected' ? 'CONNECT' : connectionStatus.toUpperCase()}
@@ -83,7 +111,7 @@ const Home: NextPage = () => {
                             DISCONNECT
                         </button>
                     </>
-                )} */}
+                )}
 
                 <h1 className={styles.title}>
                     <a href="https://particle.network">Particle Network!</a>

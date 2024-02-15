@@ -28,7 +28,8 @@
     "react": "^18",
     "react-dom": "^18",
     "readable-stream": "^4.5.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "web3": "^4.5.0"
   },
   "devDependencies": {
     "@types/node": "^20",

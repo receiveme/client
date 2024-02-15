@@ -70,7 +70,7 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                     'apple',
                     'github',
                     'discord',
-                    'instagram'
+                    
                 ]}>
 
                 <AppContext.Provider value={{ appState, setAppState }}>

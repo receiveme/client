@@ -39,6 +39,26 @@ export default function Login() {
         }
     }
 
+    function connectMetamask() {
+        return new Promise(async (resolve, reject) => {
+            const chainId = await window["ethereum"]?.request({ method: 'eth_chainId' });
+            const accounts = await window["ethereum"]?.
+                request({method: 'eth_requestAccounts'})//@ts-ignore
+                .catch(e => { 
+                    console.error(e);
+                    return reject();
+                });
+        
+            // After connection
+            if (accounts?.length && accounts[0] && chainId) {
+                // Get chain name by chain ID
+
+
+            }
+        })
+    }
+
+
     return (
         <main className="flex justify-center items-center min-h-screen">
             <div className="w-full p-4 sm:w-[400px] sm:p-3">
@@ -148,7 +168,7 @@ export default function Login() {
                             />
                         </button>
 
-                        <button className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
+                        <button onClick={()=>connectMetamask()} className="transition-all hover:bg-gray-200 mt-3 flex w-full justify-center items-center rounded-md bg-gray-100 text-sm font-semibold leading-6 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/metamask.png"
                                 alt="Login with Metamask"

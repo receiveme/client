@@ -11,12 +11,12 @@ import {
     IconLoader3,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { ParticleNetwork } from '@particle-network/auth';
+import { ParticleNetwork, UserInfo } from '@particle-network/auth';
 import { Avalanche } from '@particle-network/chains';
 import { ParticleProvider } from '@particle-network/provider';
-import Web3 from 'web3';
-
+import { ethers } from "ethers";
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
+
 type StageProps = {
     show: boolean;
 } & Record<string, any>;
@@ -33,9 +33,7 @@ const particle = new ParticleNetwork({
     },
 });
 
-if (!window.web3) {
-    window.web3 = new Web3(new ParticleProvider(particle.auth));
-}
+
 
 function Handle({ show, updateHandle, next }: StageProps) {
     const [handleInput, setHandleInput] = useState("");
@@ -68,6 +66,8 @@ function Handle({ show, updateHandle, next }: StageProps) {
     if (!show) {
         return <></>;
     }
+
+
 
     return (
         <>
@@ -142,26 +142,69 @@ function Handle({ show, updateHandle, next }: StageProps) {
     );
 }
 
-function Link({ handle, show, next }: StageProps) {
+function Link({ handle, show, next }: StageProps) { 
     const [isLoading, setLoading] = useState(false);
-    const [userInfo, setUserInfo] = useState(null)
+    const [userInfo, setUserInfo] = useState<UserInfo>()
     const [avaxBalance, setAvaxBalance] = useState<string | null>(null);
+    const [ tronlinkAddress, setTronlinkAddress ] = useState<string | null>()
+    const [ metamaskAddress, setMetamaskAddress ] = useState<string | null>()
 
     if (!show) {
         return <></>;
     }
 
-    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'github' | 'discord' | 'instagram') => {
+    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'github' | 'discord' ) => {
         const user = await particle.auth.login({ preferredAuthType })
-        setUserInfo(user);
+        setUserInfo(user)
         //store the specific auth type uesr info in different storage items
-        sessionStorage.setItem(`{${preferredAuthType}}`, JSON.stringify({ userInfo: user }));
+        sessionStorage.setItem(preferredAuthType, JSON.stringify({ userInfo: user }));
     }
 
-    // use when manually triggering logout
-    // const handleLogout = () => {
-    //     return particle.auth.logout()
-    // }
+    function connectMetamask() {
+        return new Promise(async (resolve, reject) => {
+            const chainId = await window["ethereum"]?.request({ method: 'eth_chainId' });
+            const accounts = await window["ethereum"]?.
+                request({method: 'eth_requestAccounts'}) // @ts-ignore
+                .catch(e => {
+                    console.error(e);
+                    return reject();
+                });
+        
+            // After connection
+
+
+            if (accounts?.length && accounts[0] && chainId) {
+                setMetamaskAddress(accounts[0])
+            } else return reject();
+        })
+    }
+
+
+    function connectTronlink() {
+        return new Promise(async (resolve, reject) => {
+            try { //@ts-ignore
+                await window["tronLink"]?.request({
+                    method: "tron_requestAccounts",
+                    params: {
+            
+                        websiteName: "receive.me"
+                    }
+                }) //@ts-ignore
+                let tronLink = {... (await window["tronLink"])};
+                let account = tronLink.tronWeb.defaultAddress.base58;
+                setTronlinkAddress(account)
+
+                if (!account) return reject();
+                return resolve({ account, chain: "tron" });
+            } catch (e) {
+                console.log(e)
+                return reject();
+            }
+        })
+    }
+
+
+    
 
     return (
         <>
@@ -208,7 +251,7 @@ function Link({ handle, show, next }: StageProps) {
                                 Link Github
                             </span>
                         </button>
-                        <button onClick={() => handleLogin('instagram')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                        <button disabled type="button" className="transition-all opacity-60 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/instagram.png"
                                 alt="Google"
@@ -241,7 +284,7 @@ function Link({ handle, show, next }: StageProps) {
                     </h3>
 
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
-                        <button className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                        <button onClick={()  => connectMetamask()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/metamask.png"
                                 alt="Link Metamask"
@@ -252,7 +295,7 @@ function Link({ handle, show, next }: StageProps) {
                                 Link Metamask
                             </span>
                         </button>
-                        <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                        {/* <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/algorand.png"
                                 alt="Linked Algorand"
@@ -266,6 +309,21 @@ function Link({ handle, show, next }: StageProps) {
                             <span className="ml-1.5 text-xs text-gray-600">
                                 5WCIZNG...L6F2E
                             </span>
+                        </button> */}
+                        <button className="transition-all border-2  hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                            <img
+                                src="/img/3p/algorand.png"
+                                alt="Linked Algorand"
+                                className="mr-2 h-5 w-5"
+                            />
+
+                            <span className="text-sm font-semibold">
+                                Link Algorand
+                            </span>
+
+                            <span className="ml-1.5 text-xs text-gray-600">
+                                
+                            </span>
                         </button>
                         <button className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
@@ -278,7 +336,7 @@ function Link({ handle, show, next }: StageProps) {
                                 Link Solana
                             </span>
                         </button>
-                        <button className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                        <button onClick={()=>connectTronlink()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/tron.png"
                                 alt="Link Tron"
@@ -286,7 +344,7 @@ function Link({ handle, show, next }: StageProps) {
                             />
 
                             <span className="text-sm font-semibold">
-                                Link Tron
+                                Link Tronlink
                             </span>
                         </button>
                     </div>
