@@ -35,13 +35,6 @@ export default function Home() {
             >
                 /onboard
             </Link>
-            <Link
-                href="/abzy"
-                as="/abzy"
-                className="text-green-500 underline block mt-2"
-            >
-                /abzy
-            </Link>
 
             <h3 className="mt-3 font-bold text-xl">Debug Info</h3>
 
