@@ -46,7 +46,6 @@ const features = [
     },
 ];
 
-
 const callsToAction = [
     { name: "See demo", href: "#", icon: IconStack },
     { name: "Start Now", href: "#", icon: IconBolt },
@@ -66,13 +65,11 @@ export default function Navbar() {
     const router = useRouter()
 
     useEffect(() => {
-        console.log('TEST', userInfo, account, sessionStorage.getItem("userInfo"))
         if (!account && !userInfo) {
             sessionStorage.removeItem("userInfo")
         }
         //@ts-ignore
         if (!JSON.parse(sessionStorage.getItem("userInfo")) && account && userInfo) {
-            console.log('ISNDEII')
             sessionStorage.setItem("userInfo", JSON.stringify([{ accountInfo: account, info: userInfo }]));
             router.push("/onboard")
         }

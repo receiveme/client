@@ -1,17 +1,19 @@
+
 import { IconRocket } from "@tabler/icons-react";
 import Image from "next/image";
 import { headers } from "next/headers";
 import { useEffect } from "react";
 import { Wallet } from "@/src/components/handle/Wallet";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
-export function generateMetadata({ params }: { params: any }) {
+export async function generateMetadata({ params }: { params: any }) {
     return {
-        title: params.handle,
+        title: params,
     };
 }
 
 async function getUserByHandle(handle: string) {
+    console.log("GETUSER", handle)
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -31,14 +33,12 @@ async function getUserByHandle(handle: string) {
         return user;
     } catch (error) {
         console.error("Failed to fetch user:", error);
-    } finally {
-        await prisma.$disconnect();
     }
 }
 
 export default async function Profile({ params }: any) {
-    const handle = params.handle;
-    const data = await getUserByHandle(handle);
+    // const handle = JSON.parse(JSON.stringify(sessionStorage.getItem("handle")))
+    const data = await getUserByHandle("test");
 
     if (!data) {
         // Render 404
