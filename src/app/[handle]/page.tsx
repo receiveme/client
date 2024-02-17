@@ -1,19 +1,26 @@
-
+'use client'
 import { IconRocket } from "@tabler/icons-react";
-import Image from "next/image";
 import { headers } from "next/headers";
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+
 import { Wallet } from "@/src/components/handle/Wallet";
 import prisma from "@/lib/prisma";
 
-export async function generateMetadata({ params }: { params: any }) {
-    return {
-        title: params,
-    };
-}
+import "../globals.css";
+
+
+// export async function generateMetadata({ params }: { params: any }) {
+//     return {
+//         title: params,
+//     };
+// }
+
+
 
 async function getUserByHandle(handle: string) {
-    console.log("GETUSER", handle)
+    
+
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -23,12 +30,15 @@ async function getUserByHandle(handle: string) {
                 Profile: {
                     select: {
                         theme: true,
-                        background: true
+                        background: true,
+
                     }
                 }
             }
         });
 
+
+        user.profiles = user.Profile[0]
         console.log(user);
         return user;
     } catch (error) {
@@ -36,9 +46,11 @@ async function getUserByHandle(handle: string) {
     }
 }
 
-export default async function Profile({ params }: any) {
-    // const handle = JSON.parse(JSON.stringify(sessionStorage.getItem("handle")))
-    const data = await getUserByHandle("test");
+export default async function Profile() {
+    const pathName = usePathname().replace('/', '')
+
+    console.log("GETUSER", pathName)
+    const data = await getUserByHandle(pathName);
 
     if (!data) {
         // Render 404
@@ -60,7 +72,7 @@ export default async function Profile({ params }: any) {
                                     <span className="text-gray-400 font-normal">
                                         @
                                     </span>
-                                    {handle}
+                                    {data.handle}
                                 </span>
 
                                 <div className="flex gap-2 items-center">

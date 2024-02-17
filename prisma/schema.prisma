@@ -48,7 +48,7 @@ model Social {
 model Wallet {
   id       String    @id @default(uuid())
   userid   String
-  address  String    @unique
+  address  String    
   network  String?   // Optional field
   created  DateTime? @default(now())
   user     User      @relation(fields: [userid], references: [id], onDelete: Cascade)

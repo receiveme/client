@@ -148,7 +148,7 @@ function Link({ handle, show, next }: StageProps) {
         return <></>;
     }
 
-    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'github' | 'discord' | 'instagram') => {
+    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'github' | 'discord' ) => {
         const user = await particle.auth.login({ preferredAuthType })
 
 
@@ -516,7 +516,7 @@ export default function Onboard() {
     const [handle, setHandle] = useState("");
     const [links, setLinks] = useState({});
     const [profile, setProfile] = useState<any>({});
-    const router = useRouter();
+    // const router = useRouter();
     const [stage, setStage] = useState<Stage>("handle");
 
     const nextStage = () => {
@@ -549,7 +549,7 @@ export default function Onboard() {
         await createUserProfile(userInfo, handle, profile); // Assuming this is an async function
 
         // Correct navigation after async operation
-        router.push(`/app/${handle}/page`);
+        // router.push(`/app/${handle}/page`);
     };
     return (
         <>
