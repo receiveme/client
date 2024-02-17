@@ -37,7 +37,7 @@ const Home: NextPage = () => {
 
     const { address: solanaAddress, signAndSendTransaction } = useSolana();
     
-    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'discord' | 'github' | 'apple' ) => { // for specific login
+    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'discord' | 'github' | 'apple' | 'linkedin') => { // for specific login
         const user = !particle.auth.isLogin() ? await particle.auth.login({preferredAuthType}) : particle.auth.getUserInfo();
         console.log(user)
 

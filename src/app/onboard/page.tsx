@@ -153,7 +153,7 @@ function Link({ handle, show, next }: StageProps) {
         return <></>;
     }
 
-    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'twitch' | 'github' | 'discord' ) => {
+    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'twitch' | 'github' | 'discord' | 'linkedin') => {
         const user = await particle.auth.login({ preferredAuthType })
         setUserInfo(user)
         //store the specific auth type uesr info in different storage items
@@ -348,32 +348,80 @@ function Link({ handle, show, next }: StageProps) {
                             </button>
                         </>}
 
-                        {/* {sessionStorage.getItem('twitter') ? <>
-                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 
+                        {sessionStorage.getItem('linkedin') ? <>
+                            <button onClick={() => handleLogin('linkedin')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 
                                 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                 <img
-                                    src="/img/3p/twitter.png"
+                                    src="/img/3p/linkedin.png"
                                     alt="Google"
                                     className="mr-2 h-5 w-5"
                                 />
 
                                 <span className="text-sm font-semibold">
-                                    Link Twitter
+                                    Link LinkedIn
                                 </span>
                             </button>
                         </> : <>
-                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                            <button onClick={() => handleLogin('linkedin')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                 <img
-                                    src="/img/3p/twitter.png"
+                                    src="/img/3p/linkedin.png"
                                     alt="Google"
                                     className="mr-2 h-5 w-5"
                                 />
 
                                 <span className="text-sm font-semibold">
-                                    Link Twitter
+                                    Link LinkedIn
                                 </span>
                             </button>
-                        </>} */}
+                        </>}
+
+                        <button disabled  type="button" className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60">
+                                <img
+                                    src="/img/3p/paypal.png"
+                                    alt="Google"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                            <span className="text-sm font-semibold">
+                                Link PayPal
+                            </span>
+                        </button>
+                        
+                        <button disabled type="button" className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60">
+                                <img
+                                    src="/img/3p/instagram.png"
+                                    alt="Google"
+                                    className="mr-2 h-5 w-5 rounded-md"
+                                />
+
+                            <span className="text-sm font-semibold">
+                                Link Instagram
+                            </span>
+                        </button>
+
+                        <button disabled type="button" className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60">
+                                <img
+                                    src="/img/3p/snapchat.png"
+                                    alt="Google"
+                                    className="mr-2 h-5 w-5 rounded-md"
+                                />
+
+                            <span className="text-sm font-semibold">
+                                Link Snapchat
+                            </span>
+                        </button>
+
+                        <button disabled onClick={() => handleLogin('twitter')} type="button" className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60">
+                                <img
+                                    src="/img/3p/unstoppabledomains.png"
+                                    alt="Google"
+                                    className="mr-2 h-5 w-5 rounded-md"
+                                />
+
+                            <span className="text-sm font-semibold">
+                                Unstoppable Domains
+                            </span>
+                        </button>
 
                     </div>
                 </div>
