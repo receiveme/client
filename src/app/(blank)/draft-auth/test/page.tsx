@@ -2,7 +2,7 @@ import { IconRocket } from "@tabler/icons-react";
 import Image from "next/image";
 import { headers } from "next/headers";
 import { useEffect } from "react";
-import { supabase } from "@/src/lib/supabase";
+
 import { Wallet } from "@/src/components/handle/Wallet";
 
 export function generateMetadata({ params }: { params: any }) {

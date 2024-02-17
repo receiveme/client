@@ -15,8 +15,12 @@ import {
     IconQrcode,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import '@particle-network/connect-react-ui/dist/index.css';
-import { ConnectButton, useAccount, useConnectKit } from '@particle-network/connect-react-ui';
+import "@particle-network/connect-react-ui/dist/index.css";
+import {
+    ConnectButton,
+    useAccount,
+    useConnectKit,
+} from "@particle-network/connect-react-ui";
 import { useRouter } from "next/navigation";
 
 const features = [
@@ -59,21 +63,36 @@ export default function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [tronlinkAddress, setTronlinkAddress] = useState(false);
 
-    const account = useAccount() || null
-    const connectKit = useConnectKit()
-    const userInfo = connectKit.particle.auth.getUserInfo()
-    const router = useRouter()
+    const account = useAccount() || null;
+    const connectKit = useConnectKit();
+    const userInfo = connectKit.particle.auth.getUserInfo();
+    const router = useRouter();
 
-    useEffect(() => {
+    useEffect(() => { // Seems non-functional, eventually will be replaced by endpoint
+        console.log(
+            "TEST",
+            userInfo,
+            account,
+            sessionStorage.getItem("userInfo"),
+        );
         if (!account && !userInfo) {
-            sessionStorage.removeItem("userInfo")
+            sessionStorage.removeItem("userInfo");
         }
-        //@ts-ignore
-        if (!JSON.parse(sessionStorage.getItem("userInfo")) && account && userInfo) {
-            sessionStorage.setItem("userInfo", JSON.stringify([{ accountInfo: account, info: userInfo }]));
-            router.push("/onboard")
+        if (
+            //@ts-ignore
+            !JSON.parse(sessionStorage.getItem("userInfo")) &&
+            account &&
+            userInfo
+        ) {
+            console.log("ISNDEII");
+            sessionStorage.setItem(
+                "userInfo",
+                JSON.stringify([{ accountInfo: account, info: userInfo }]),
+            );
+            
+            router.push("/onboard");
         }
-    }, [account, userInfo])
+    }, [account, userInfo]);
 
     return (
         <header className="w-full mb-4">
@@ -93,17 +112,6 @@ export default function Navbar() {
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
                     <ConnectButton />
-                    <button
-                        type="button"
-                        className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-                        onClick={() => setMobileMenuOpen(true)}
-                    >
-                        <span className="sr-only">Open main menu</span>
-                        <IconChevronDown
-                            className="h-6 w-6"
-                            aria-hidden="true"
-                        />
-                    </button>
                 </div>
             </nav>
             <Dialog

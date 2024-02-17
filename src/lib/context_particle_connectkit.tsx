@@ -3,7 +3,7 @@ import { createContext, useEffect, useState } from "react";
 import { AppState } from "../types/state/app-state.type";
 import { supabase } from "./supabase";
 import { AuthCoreContextProvider } from '@particle-network/auth-core-modal';
-import { ModalProvider } from "@particle-network/connect-react-ui";
+import { ModalProvider } from "@particle-network/connectkit";
 import { WalletEntryPosition } from '@particle-network/auth';
 import { Ethereum, EthereumGoerli, Avalanche, AvalancheTestnet, ArbitrumGoerli, ArbitrumNova } from '@particle-network/chains';
 import { evmWallets } from '@particle-network/connect';
@@ -31,46 +31,31 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                 appId: process.env.NEXT_PUBLIC_APP_ID as string,
                 chains: [
                     Ethereum,
-                    EthereumGoerli,
-                    Avalanche,
-                    AvalancheTestnet,
-                    ArbitrumNova
+                    EthereumGoerli
                 ],
-                particleWalletEntry: {    //optional: particle wallet config
-                    displayWalletEntry: true, //display wallet button when connect particle success.
-                    defaultWalletEntryPosition: WalletEntryPosition.BR,
-                    supportChains: [
-                        Ethereum,
-                        EthereumGoerli,
-                        Avalanche,
-                        AvalancheTestnet,
-                        ArbitrumNova
-                    ],
-                    customStyle: {
-
-                    }, //optional: custom wallet style
+                wallet: {    //optional: particle wallet config
+                    visible: true, //display wallet button when connect particle success.
+                    // supportChains:[
+                    //     Ethereum,
+                    //     EthereumGoerli
+                    // ],
+                    customStyle: {}, //optional: custom wallet style
                 },
-                securityAccount: { //optional: particle security account config
+                promptSettingConfig: { //optional: particle security account config
                     //prompt set payment password. 0: None, 1: Once(default), 2: Always
-                    promptSettingWhenSign: 1,
+                    promptPaymentPasswordSettingWhenSign: 1,
                     //prompt set master password. 0: None(default), 1: Once, 2: Always
-                    promptMasterPasswordSettingWhenLogin: 0
+                    promptMasterPasswordSettingWhenLogin: 1
                 },
-                wallets: evmWallets({
+                connectors: evmWallets({
                     projectId: '08e47732f28f0dcaf3411492b7c269ab', //replace with walletconnect projectId
                     showQrModal: false
                 }),
             }}
-            theme={'auto'}
+            theme={'light'}
             language={'en'}   //optional：localize, default en
-            walletSort={['Particle Auth', 'Wallet']} //optional：walelt order
-            particleAuthSort={[    //optional：display particle auth items and order
-                'email',
-                'google',
-                'apple',
-                'github'
-
-            ]}>
+            walletSort={['Particle Auth', 'Wallet']} //optional：walelt orde
+            >
 
             <AppContext.Provider value={{ appState, setAppState }}>
                 {children}
