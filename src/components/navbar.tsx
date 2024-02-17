@@ -68,7 +68,7 @@ export default function Navbar() {
     const userInfo = connectKit.particle.auth.getUserInfo();
     const router = useRouter();
 
-    useEffect(() => {
+    useEffect(() => { // Seems non-functional, eventually will be replaced by endpoint
         console.log(
             "TEST",
             userInfo,
@@ -89,6 +89,7 @@ export default function Navbar() {
                 "userInfo",
                 JSON.stringify([{ accountInfo: account, info: userInfo }]),
             );
+            
             router.push("/onboard");
         }
     }, [account, userInfo]);

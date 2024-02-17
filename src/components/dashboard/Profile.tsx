@@ -7,7 +7,9 @@ export function DashboardProfile() {
     const [banner, setBanner] = useState("white");
     const handle = "hello";
 
-    async function save() {}
+    async function save() {
+
+    }
 
     return (
         <div className="flex flex-col gap-4 w-full">
@@ -62,7 +64,7 @@ export function DashboardProfile() {
                                 : "border-gray-200 hover:border-indigo-600"
                         }`}
                     ></div>
-                    <div
+                    <div    
                         onClick={() => setTheme("red-500")}
                         className={`w-full h-auto rounded-md bg-gradient-to-b from-red-500 to-slate-900 transition cursor-pointer border-2 ${
                             theme === "red-500"
