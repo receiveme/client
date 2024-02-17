@@ -153,7 +153,7 @@ function Link({ handle, show, next }: StageProps) {
         return <></>;
     }
 
-    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'github' | 'discord' ) => {
+    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'twitch' | 'github' | 'discord' ) => {
         const user = await particle.auth.login({ preferredAuthType })
         setUserInfo(user)
         //store the specific auth type uesr info in different storage items
@@ -230,6 +230,24 @@ function Link({ handle, show, next }: StageProps) {
                     </h3>
 
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
+                    {sessionStorage.getItem('discord') ? <>
+                        <button onClick={() => handleLogin('discord')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                            <img
+                                src="/img/3p/discord.png"
+                                alt="Link Discord"
+                                className="mr-2 h-auto w-5"
+                            />
+
+                            <span className="text-sm font-semibold">
+                                Link Discord
+                            </span>
+                            <span className="ml-1.5 text-xs text-gray-600 truncate ">
+                                    {/**TODO */}
+                            </span>
+                            
+                        </button>
+                        </> : <>
+
                         <button onClick={() => handleLogin('discord')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/discord.png"
@@ -240,40 +258,123 @@ function Link({ handle, show, next }: StageProps) {
                             <span className="text-sm font-semibold">
                                 Link Discord
                             </span>
-                        </button>
-                        <button onClick={() => handleLogin('github')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                            <img
-                                src="/img/3p/github.png"
-                                alt="Link Github"
-                                className="mr-2 h-5 w-5"
-                            />
 
-                            <span className="text-sm font-semibold">
-                                Link Github
-                            </span>
-                        </button>
-                        <button disabled type="button" className="transition-all opacity-60 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                            <img
-                                src="/img/3p/instagram.png"
-                                alt="Google"
-                                className="mr-2 h-5 w-5"
-                            />
 
-                            <span className="text-sm font-semibold">
-                                Link Instagram
-                            </span>
                         </button>
-                        <button onClick={() => handleLogin('twitter')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                            <img
-                                src="/img/3p/twitter.png"
-                                alt="Google"
-                                className="mr-2 h-5 w-5"
-                            />
+                        </>}
 
-                            <span className="text-sm font-semibold">
-                                Link Twitter
-                            </span>
-                        </button>
+
+                        {sessionStorage.getItem('github') ? <>
+                            <button onClick={() => handleLogin('github')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/github.png"
+                                    alt="Link Github"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Github
+                                </span>
+
+
+                            </button>
+                        </> : <> 
+                            <button onClick={() => handleLogin('github')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/github.png"
+                                    alt="Link Github"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Github
+                                </span>
+                            </button>
+                        </>}
+
+                        {sessionStorage.getItem('twitch') ? <>
+                            <button onClick={()=>handleLogin('twitch')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3v">
+                                <img
+                                    src="/img/3p/twitch.png"
+                                    alt="Twitch"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Twitch
+                                </span>
+                            </button>
+
+                        </> : <>
+                            <button onClick={()=>handleLogin('twitch')} type="button" className="transition-all opacity-100 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/twitch.png"
+                                    alt="Twitch"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Twitch
+                                </span>
+                            </button>
+
+                        </>}
+
+
+                        {sessionStorage.getItem('twitter') ? <>
+                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 
+                                flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/twitter.png"
+                                    alt="Google"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Twitter
+                                </span>
+                            </button>
+                        </> : <>
+                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/twitter.png"
+                                    alt="Google"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Twitter
+                                </span>
+                            </button>
+                        </>}
+
+                        {/* {sessionStorage.getItem('twitter') ? <>
+                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 
+                                flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/twitter.png"
+                                    alt="Google"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Twitter
+                                </span>
+                            </button>
+                        </> : <>
+                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/twitter.png"
+                                    alt="Google"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Twitter
+                                </span>
+                            </button>
+                        </>} */}
+
                     </div>
                 </div>
 
@@ -629,10 +730,13 @@ export default function Onboard() {
         await supabase.from("handles").insert({ handle: handle });
         await supabase
             .from("profiles")
-            .insert({ theme: profile.theme, banner: profile.banner });
+            .insert({ theme: profile.theme, banner: profile.banner })
+
 
         alert("done!");
     };
+    
+
 
     return (
         <>
