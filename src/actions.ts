@@ -6,7 +6,7 @@ import prisma from "@/lib/prisma"
 
 
 
-export async function createUserProfile(userInfo: Object, handle: String, profile: Object) {
+export async function  createUserProfile(userInfo: Object, handle: String, profile: Object) {
 
     const { theme, banner } = profile
     const { chain_name, public_address } = userInfo[0].info.wallets[0]

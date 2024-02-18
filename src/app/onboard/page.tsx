@@ -11,7 +11,7 @@ import {
     IconLoader3,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { ParticleNetwork, UserInfo } from '@particle-network/auth';
+import { ParticleNetwork, ThirdpartyUserInfo, UserInfo } from '@particle-network/auth';
 import { Avalanche } from '@particle-network/chains';
 import { createUserProfile } from "@/src/actions";
 import { useRouter } from 'next/router';
@@ -20,6 +20,7 @@ type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 type StageProps = {
     show: boolean;
 } & Record<string, any>;
+
 
 const particle = new ParticleNetwork({
     projectId: "19880450-9512-4857-a7a9-c29d16110034",
@@ -147,8 +148,48 @@ function Link({ handle, show, next }: StageProps) {
     const [ metamaskAddress, setMetamaskAddress ] = useState<string | null>()
 
     const [ tronlinkAddress, setTronlinkAddress ] = useState<string | null>()
+
+    const [ discordUserInfo, setDiscordUserInfo ] = useState<UserInfo | null>()
+    const [ githubUserInfo, setGithubUserInfo ] = useState<UserInfo | null>()
+    const [ twitchUserInfo, setTwitchUserInfo ] = useState<UserInfo | null>()
+    const [ twitterUserInfo, setTwitterUserInfo ] = useState<UserInfo | null>()
+
     if (!show) {
         return <></>;
+    }
+    type ThirdPartyUserInfo = {
+        provider: string
+        user_info: { id: string, name: string, email: string, picture: string}
+
+    }
+    async function getMissingGitHubProperties(thirdparty:ThirdpartyUserInfo) {
+        if (thirdparty.provider == 'github') {
+            if (thirdparty.user_info.name == null && thirdparty.user_info.id) {
+                let _thirdparty = thirdparty;
+    
+                let id = _thirdparty.user_info.id
+                let res = await fetch(`https://api.github.com/user/${id}`);
+                if (!res.ok) throw new Error('bad')
+                res = await res.json(); //@ts-ignore
+                _thirdparty.user_info.name = res.login
+                console.log(_thirdparty.user_info)
+                return _thirdparty
+            } 
+        } else if (thirdparty.provider == 'twitch') {
+            //TODO
+        } else if (thirdparty.provider == 'twitter') {
+            //TODO
+        }
+    }
+    
+    function getMissingDiscordProperties(thirdparty_user_info:ThirdpartyUserInfo) {
+
+    }
+    function getMissingTwitchProperties(thirdparty_user_info:ThirdpartyUserInfo) {
+
+    }
+    function getMissingTwitterProperties(thirdparty_user_info:ThirdpartyUserInfo) {
+
     }
 
     const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'twitch' | 'github' | 'discord' | 'linkedin') => {
@@ -157,17 +198,33 @@ function Link({ handle, show, next }: StageProps) {
 
         setUserInfo(user);
         const socialUsername = user.name
-        const provider = user.thirdparty_user_info?.provider
-        // const profileImg = user.thirdparty_user_info?
-        const socialInfo  = sessionStorage.getItem(preferredAuthType)
+        let thirdpartyinfo = user.thirdparty_user_info
 
-        if (socialInfo) {
-            return 0
+        if (thirdpartyinfo) {
+            let provider = thirdpartyinfo?.provider
+            if (provider == 'discord') { // TODO
+                let _thirdpartyinfo = getMissingDiscordProperties(thirdpartyinfo) 
+                setDiscordUserInfo(user)
+            } else if (provider == 'github') {
+                let _thirdpartyinfo = await getMissingGitHubProperties(thirdpartyinfo)
+                user.thirdparty_user_info = _thirdpartyinfo
+                setGithubUserInfo(user)
+                console.log(githubUserInfo)
+            } else if (provider == 'twitch') { // TODO
+                let _thirdpartyinfo = getMissingTwitchProperties(thirdpartyinfo) 
+                setTwitchUserInfo(user)
+
+            } else if (provider == 'twitter') { // TODO
+                let _thirdpartyinfo = getMissingTwitterProperties(thirdpartyinfo) 
+                setTwitchUserInfo(user)
+            }
         }
-        // socialInfo.push({ socialUsername: socialUsername, provider: provider })
-        //store the specific auth type user info in different storage items
-        //sessionStorage.setItem('socialInfo', JSON.stringify(socialInfo));
-        sessionStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
+
+
+
+
+
+
     }
 
     // use when manually triggering logout
@@ -774,8 +831,10 @@ export default function Onboard() {
 
     const nextStage = () => {
         if (stage === "handle") setStage("link");
-        else if (stage === "link") setStage("profile");
-        else setStage("preview");
+        else if (stage === "link") {
+            console.log('test 123')
+            setStage("profile");
+        } else setStage("preview");
     };
 
     const previousStage = () => {
