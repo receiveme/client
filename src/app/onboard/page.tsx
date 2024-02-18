@@ -1,6 +1,6 @@
 "use client";
 
-import prisma from "../../../lib/prisma"
+import prisma from "../../../lib/prisma";
 import {
     IconCircleCheck,
     IconCircleCheckFilled,
@@ -11,10 +11,12 @@ import {
     IconLoader3,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { ParticleNetwork, UserInfo } from '@particle-network/auth';
-import { Avalanche } from '@particle-network/chains';
+import { ParticleNetwork, UserInfo } from "@particle-network/auth";
+import { Avalanche } from "@particle-network/chains";
 import { createUserProfile } from "@/src/actions";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
+import { ThemeOption } from "@/src/components/profile/ThemeOption";
+import { BannerOption } from "@/src/components/profile/BannerOption";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 type StageProps = {
@@ -29,10 +31,9 @@ const particle = new ParticleNetwork({
     chainId: Avalanche.id,
     wallet: {
         displayWalletEntry: true,
-        uiMode: "dark"
+        uiMode: "dark",
     },
 });
-
 
 function Handle({ show, updateHandle, next }: StageProps) {
     const [handleInput, setHandleInput] = useState("");
@@ -140,32 +141,40 @@ function Handle({ show, updateHandle, next }: StageProps) {
 
 function Link({ handle, show, next }: StageProps) {
     const [isLoading, setLoading] = useState(false);
-    const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
     const [avaxBalance, setAvaxBalance] = useState<string | null>(null);
 
-    const [metamaskAddress, setMetamaskAddress] = useState<string | null>()
-    const [tronlinkAddress, setTronlinkAddress] = useState<string | null>()
+    const [metamaskAddress, setMetamaskAddress] = useState<string | null>();
+    const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
 
     if (!show) {
         return <></>;
     }
 
-    const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'twitch' | 'github' | 'discord' | 'linkedin') => {
-        const user = await particle.auth.login({ preferredAuthType })
+    const handleLogin = async (
+        preferredAuthType:
+            | "google"
+            | "twitter"
+            | "twitch"
+            | "github"
+            | "discord"
+            | "linkedin",
+    ) => {
+        const user = await particle.auth.login({ preferredAuthType });
 
         setUserInfo(user);
 
         // const profileImg = user.thirdparty_user_info?
-        const socialInfo = sessionStorage.getItem(preferredAuthType)
+        const socialInfo = sessionStorage.getItem(preferredAuthType);
 
         if (socialInfo) {
-            return 0
+            return 0;
         }
         // socialInfo.push({ socialUsername: socialUsername, provider: provider })
         //store the specific auth type user info in different storage items
         //sessionStorage.setItem('socialInfo', JSON.stringify(socialInfo));
         sessionStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
-    }
+    };
 
     // use when manually triggering logout
     // const handleLogout = () => {
@@ -187,48 +196,63 @@ function Link({ handle, show, next }: StageProps) {
 
     function connectMetamask() {
         return new Promise(async (resolve, reject) => {
-            const chainId = await window["ethereum"]?.request({ method: 'eth_chainId' });
-            const accounts = await window["ethereum"]?.
-                request({ method: 'eth_requestAccounts' }) // @ts-ignore
-                .catch(e => {
+            const chainId = await window["ethereum"]?.request({
+                method: "eth_chainId",
+            });
+            const accounts = await window["ethereum"]
+                ?.request({ method: "eth_requestAccounts" }) // @ts-ignore
+                .catch((e) => {
                     console.error("METAMASK ERR:", e);
                     return reject();
                 });
             // After connection
             if (accounts?.length && accounts[0] && chainId) {
-                setMetamaskAddress(accounts[0])
-                const wallets = Array.isArray(JSON.parse(JSON.stringify("wallets"))) ? JSON.parse(JSON.stringify("wallets")) : []
-                wallets.push({ walletProvider: "metamask", walletaAddress: accounts[0] })
-                sessionStorage.setItem("wallets", wallets)
+                setMetamaskAddress(accounts[0]);
+                const wallets = Array.isArray(
+                    JSON.parse(JSON.stringify("wallets")),
+                )
+                    ? JSON.parse(JSON.stringify("wallets"))
+                    : [];
+                wallets.push({
+                    walletProvider: "metamask",
+                    walletaAddress: accounts[0],
+                });
+                sessionStorage.setItem("wallets", wallets);
             } else return reject();
-        })
+        });
     }
-
 
     function connectTronlink() {
         return new Promise(async (resolve, reject) => {
-            try { //@ts-ignore
+            try {
+                //@ts-ignore
                 await window["tronLink"]?.request({
                     method: "tron_requestAccounts",
                     params: {
-
-                        websiteName: "receive.me"
-                    }
-                }) //@ts-ignore
-                let tronLink = { ... (await window["tronLink"]) };
-                console.log("TRON", tronLink)
+                        websiteName: "receive.me",
+                    },
+                }); //@ts-ignore
+                let tronLink = { ...(await window["tronLink"]) };
+                console.log("TRON", tronLink);
                 let account = tronLink.tronWeb.defaultAddress.base58;
-                setTronlinkAddress(account)
-                const wallets = Array.isArray(JSON.parse(JSON.stringify("wallets"))) ? JSON.parse(JSON.stringify("wallets")) : []
-                wallets.push({ walletProvider: "tron", walletaAddress: account })
-                sessionStorage.setItem("wallets", wallets)
+                setTronlinkAddress(account);
+                const wallets = Array.isArray(
+                    JSON.parse(JSON.stringify("wallets")),
+                )
+                    ? JSON.parse(JSON.stringify("wallets"))
+                    : [];
+                wallets.push({
+                    walletProvider: "tron",
+                    walletaAddress: account,
+                });
+                sessionStorage.setItem("wallets", wallets);
                 if (!account) return reject();
                 return resolve({ account, chain: "tron" });
             } catch (e) {
-                console.log(e)
+                console.log(e);
                 return reject();
             }
-        })
+        });
     }
 
     return (
@@ -247,158 +271,212 @@ function Link({ handle, show, next }: StageProps) {
                     />
                 </div>
                 <div className="w-full">
-                    <h1 className="font-semibold text-lg" >Socials</h1>
+                    <h1 className="font-semibold text-lg">Socials</h1>
 
                     <h3 className="font-regular text-sm mt-1">
                         Link your socials to display them on your profile.
                     </h3>
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
-                        {sessionStorage.getItem('discord') ? <>
-                            <button onClick={() => handleLogin('discord')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/discord.png"
-                                    alt="Link Discord"
-                                    className="mr-2 h-auto w-5"
-                                />
+                        {sessionStorage.getItem("discord") ? (
+                            <>
+                                <button
+                                    onClick={() => handleLogin("discord")}
+                                    type="button"
+                                    className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
+                                    <img
+                                        src="/img/3p/discord.png"
+                                        alt="Link Discord"
+                                        className="mr-2 h-auto w-5"
+                                    />
 
-                                <span className="text-sm font-semibold">
-                                    Link Discord
-                                </span>
-                                <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                    {/**TODO */}
-                                </span>
+                                    <span className="text-sm font-semibold">
+                                        Link Discord
+                                    </span>
+                                    <span className="ml-1.5 text-xs text-gray-600 truncate ">
+                                        {/**TODO */}
+                                    </span>
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={() => handleLogin("discord")}
+                                    type="button"
+                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
+                                    <img
+                                        src="/img/3p/discord.png"
+                                        alt="Link Discord"
+                                        className="mr-2 h-auto w-5"
+                                    />
 
-                            </button>
-                        </> : <>
+                                    <span className="text-sm font-semibold">
+                                        Link Discord
+                                    </span>
+                                </button>
+                            </>
+                        )}
 
-                            <button onClick={() => handleLogin('discord')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/discord.png"
-                                    alt="Link Discord"
-                                    className="mr-2 h-auto w-5"
-                                />
+                        {sessionStorage.getItem("github") ? (
+                            <>
+                                <button
+                                    onClick={() => handleLogin("github")}
+                                    type="button"
+                                    className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
+                                    <img
+                                        src="/img/3p/github.png"
+                                        alt="Link Github"
+                                        className="mr-2 h-5 w-5"
+                                    />
 
-                                <span className="text-sm font-semibold">
-                                    Link Discord
-                                </span>
+                                    <span className="text-sm font-semibold">
+                                        Link Github
+                                    </span>
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={() => handleLogin("github")}
+                                    type="button"
+                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
+                                    <img
+                                        src="/img/3p/github.png"
+                                        alt="Link Github"
+                                        className="mr-2 h-5 w-5"
+                                    />
 
+                                    <span className="text-sm font-semibold">
+                                        Link Github
+                                    </span>
+                                </button>
+                            </>
+                        )}
 
-                            </button>
-                        </>}
+                        {sessionStorage.getItem("twitch") ? (
+                            <>
+                                <button
+                                    onClick={() => handleLogin("twitch")}
+                                    type="button"
+                                    className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3v"
+                                >
+                                    <img
+                                        src="/img/3p/twitch.png"
+                                        alt="Twitch"
+                                        className="mr-2 h-5 w-5"
+                                    />
 
+                                    <span className="text-sm font-semibold">
+                                        Link Twitch
+                                    </span>
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={() => handleLogin("twitch")}
+                                    type="button"
+                                    className="transition-all opacity-100 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
+                                    <img
+                                        src="/img/3p/twitch.png"
+                                        alt="Twitch"
+                                        className="mr-2 h-5 w-5"
+                                    />
 
-                        {sessionStorage.getItem('github') ? <>
-                            <button onClick={() => handleLogin('github')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/github.png"
-                                    alt="Link Github"
-                                    className="mr-2 h-5 w-5"
-                                />
+                                    <span className="text-sm font-semibold">
+                                        Link Twitch
+                                    </span>
+                                </button>
+                            </>
+                        )}
 
-                                <span className="text-sm font-semibold">
-                                    Link Github
-                                </span>
+                        {sessionStorage.getItem("twitter") ? (
+                            <>
+                                <button
+                                    onClick={() => handleLogin("twitter")}
+                                    type="button"
+                                    className="transition-all border-2 border-green-500 hover:bg-gray-200 
+                                flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
+                                    <img
+                                        src="/img/3p/twitter.png"
+                                        alt="Google"
+                                        className="mr-2 h-5 w-5"
+                                    />
 
+                                    <span className="text-sm font-semibold">
+                                        Link Twitter
+                                    </span>
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={() => handleLogin("twitter")}
+                                    type="button"
+                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
+                                    <img
+                                        src="/img/3p/twitter.png"
+                                        alt="Google"
+                                        className="mr-2 h-5 w-5"
+                                    />
 
-                            </button>
-                        </> : <>
-                            <button onClick={() => handleLogin('github')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/github.png"
-                                    alt="Link Github"
-                                    className="mr-2 h-5 w-5"
-                                />
+                                    <span className="text-sm font-semibold">
+                                        Link Twitter
+                                    </span>
+                                </button>
+                            </>
+                        )}
 
-                                <span className="text-sm font-semibold">
-                                    Link Github
-                                </span>
-                            </button>
-                        </>}
+                        {sessionStorage.getItem("linkedin") ? (
+                            <>
+                                <button
+                                    onClick={() => handleLogin("linkedin")}
+                                    type="button"
+                                    className="transition-all border-2 border-green-500 hover:bg-gray-200 
+                                flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
+                                    <img
+                                        src="/img/3p/linkedin.png"
+                                        alt="Google"
+                                        className="mr-2 h-5 w-5"
+                                    />
 
-                        {sessionStorage.getItem('twitch') ? <>
-                            <button onClick={() => handleLogin('twitch')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3v">
-                                <img
-                                    src="/img/3p/twitch.png"
-                                    alt="Twitch"
-                                    className="mr-2 h-5 w-5"
-                                />
+                                    <span className="text-sm font-semibold">
+                                        Link LinkedIn
+                                    </span>
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={() => handleLogin("linkedin")}
+                                    type="button"
+                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
+                                    <img
+                                        src="/img/3p/linkedin.png"
+                                        alt="Google"
+                                        className="mr-2 h-5 w-5"
+                                    />
 
-                                <span className="text-sm font-semibold">
-                                    Link Twitch
-                                </span>
-                            </button>
+                                    <span className="text-sm font-semibold">
+                                        Link LinkedIn
+                                    </span>
+                                </button>
+                            </>
+                        )}
 
-                        </> : <>
-                            <button onClick={() => handleLogin('twitch')} type="button" className="transition-all opacity-100 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/twitch.png"
-                                    alt="Twitch"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span className="text-sm font-semibold">
-                                    Link Twitch
-                                </span>
-                            </button>
-
-                        </>}
-
-
-                        {sessionStorage.getItem('twitter') ? <>
-                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 
-                                flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/twitter.png"
-                                    alt="Google"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span className="text-sm font-semibold">
-                                    Link Twitter
-                                </span>
-                            </button>
-                        </> : <>
-                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/twitter.png"
-                                    alt="Google"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span className="text-sm font-semibold">
-                                    Link Twitter
-                                </span>
-                            </button>
-                        </>}
-
-                        {sessionStorage.getItem('linkedin') ? <>
-                            <button onClick={() => handleLogin('linkedin')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 
-                                flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/linkedin.png"
-                                    alt="Google"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span className="text-sm font-semibold">
-                                    Link LinkedIn
-                                </span>
-                            </button>
-                        </> : <>
-                            <button onClick={() => handleLogin('linkedin')} type="button" className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/linkedin.png"
-                                    alt="Google"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span className="text-sm font-semibold">
-                                    Link LinkedIn
-                                </span>
-                            </button>
-                        </>}
-
-                        <button disabled type="button" className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60">
+                        <button
+                            disabled
+                            type="button"
+                            className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60"
+                        >
                             <img
                                 src="/img/3p/paypal.png"
                                 alt="Google"
@@ -410,7 +488,11 @@ function Link({ handle, show, next }: StageProps) {
                             </span>
                         </button>
 
-                        <button disabled type="button" className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60">
+                        <button
+                            disabled
+                            type="button"
+                            className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60"
+                        >
                             <img
                                 src="/img/3p/instagram.png"
                                 alt="Google"
@@ -421,10 +503,6 @@ function Link({ handle, show, next }: StageProps) {
                                 Link Instagram
                             </span>
                         </button>
-
-
-
-
                     </div>
                 </div>
 
@@ -436,43 +514,52 @@ function Link({ handle, show, next }: StageProps) {
                     </h3>
 
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
-                        {!metamaskAddress ?
+                        {!metamaskAddress ? (
                             <>
-                                <button onClick={() => connectMetamask()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button
+                                    onClick={() => connectMetamask()}
+                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
                                     <img
                                         src="/img/3p/metamask.png"
                                         alt="Link Metamask"
                                         className="mr-2 h-5 w-5"
                                     />
 
-                                    <span onClick={connectMetamask} className="text-sm font-semibold">
+                                    <span
+                                        onClick={connectMetamask}
+                                        className="text-sm font-semibold"
+                                    >
                                         Link Metamask
                                     </span>
                                 </button>
                             </>
-                            :
-
+                        ) : (
                             <>
-
-                                <button onClick={() => connectMetamask()} className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button
+                                    onClick={() => connectMetamask()}
+                                    className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
                                     <img
                                         src="/img/3p/metamask.png"
                                         alt="Link Metamask"
                                         className="mr-2 h-5 w-5"
                                     />
 
-                                    <span onClick={connectMetamask} className="text-sm font-semibold">
+                                    <span
+                                        onClick={connectMetamask}
+                                        className="text-sm font-semibold"
+                                    >
                                         Link Metamask
                                     </span>
 
                                     <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                        {metamaskAddress.substring(0, 5)}...{metamaskAddress.substring(35, 42)}
+                                        {metamaskAddress.substring(0, 5)}...
+                                        {metamaskAddress.substring(35, 42)}
                                     </span>
                                 </button>
                             </>
-
-
-                        }
+                        )}
                         {/* <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
                                 src="/img/3p/algorand.png"
@@ -499,9 +586,7 @@ function Link({ handle, show, next }: StageProps) {
                                 Link Algorand
                             </span>
 
-                            <span className="ml-1.5 text-xs text-gray-600">
-
-                            </span>
+                            <span className="ml-1.5 text-xs text-gray-600"></span>
                         </button>
                         <button className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                             <img
@@ -514,9 +599,12 @@ function Link({ handle, show, next }: StageProps) {
                                 Link Solana
                             </span>
                         </button>
-                        {!tronlinkAddress ?
+                        {!tronlinkAddress ? (
                             <>
-                                <button onClick={() => connectTronlink()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button
+                                    onClick={() => connectTronlink()}
+                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
                                     <img
                                         src="/img/3p/tron.png"
                                         alt="Link Tron"
@@ -527,11 +615,13 @@ function Link({ handle, show, next }: StageProps) {
                                         Link Tronlink
                                     </span>
                                 </button>
-
                             </>
-                            :
+                        ) : (
                             <>
-                                <button onClick={() => connectTronlink()} className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button
+                                    onClick={() => connectTronlink()}
+                                    className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
                                     <img
                                         src="/img/3p/tron.png"
                                         alt="Link Tron"
@@ -543,15 +633,19 @@ function Link({ handle, show, next }: StageProps) {
                                     </span>
 
                                     <span className="ml-1.5 text-xs text-gray-600 truncate">
-                                        {tronlinkAddress.substring(0, 5)}...{tronlinkAddress.substring(35, 41)}
+                                        {tronlinkAddress.substring(0, 5)}...
+                                        {tronlinkAddress.substring(35, 41)}
                                     </span>
                                 </button>
                             </>
+                        )}
 
-                        }
-
-
-                        <button disabled onClick={() => handleLogin('twitter')} type="button" className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60">
+                        <button
+                            disabled
+                            onClick={() => handleLogin("twitter")}
+                            type="button"
+                            className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60"
+                        >
                             <img
                                 src="/img/3p/unstoppabledomains.png"
                                 alt="Google"
@@ -583,8 +677,8 @@ function Link({ handle, show, next }: StageProps) {
 }
 
 function Profile({ handle, next, setProfile, show }: StageProps) {
-    const [theme, setTheme] = useState("yellow-300");
-    const [banner, setBanner] = useState("white");
+    const [theme, setTheme] = useState("yellow-300/none");
+    const [banner, setBanner] = useState("whale/white");
 
     function nextStage() {
         setProfile({ theme, banner });
@@ -599,9 +693,15 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
         <>
             <div className="flex flex-col gap-4">
                 <div
-                    className={`mt-6 p-6 rounded-xl bg-gradient-to-b from-${theme} to-slate-900`}
+                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${
+                        theme.split("/")[0]
+                    } background-animate to-slate-900`}
                 >
-                    <div className={`relative rounded-xl bg-${banner}`}>
+                    <div
+                        className={`relative rounded-xl bg-${
+                            banner.split("/")[1]
+                        }`}
+                    >
                         <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
                             <span className="text-3xl text-white font-bold">
                                 <span className="text-gray-400 font-normal">
@@ -611,8 +711,21 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                             </span>
                         </div>
                         <img
-                            src="/img/profile/WhaleNew.png"
-                            className="rounded-xl shadow-md"
+                            src={
+                                banner.split("/")[0] === "whale"
+                                    ? "/img/profile/WhaleNew.png"
+                                    : `/img/profile/Waves${
+                                          banner
+                                              .split("/")[1][0]
+                                              .toUpperCase() +
+                                          banner
+                                              .split("/")[1]
+                                              .slice(1)
+                                              .toLowerCase()
+                                      }.png`
+                            }
+                            style={{ objectFit: "contain" }}
+                            className="rounded-xl shadow-md w-full"
                         />
                     </div>
                 </div>
@@ -625,94 +738,102 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                     </h3>
 
                     <div className="flex gap-4 mt-2">
-                        <div
-                            onClick={() => setTheme("yellow-300")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-yellow-300 to-slate-900 transition cursor-pointer border-2 ${theme === "yellow-300"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                        ></div>
-                        <div
-                            onClick={() => setTheme("green-300")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-green-300 to-slate-900 transition cursor-pointer border-2 ${theme === "green-300"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                        ></div>
-                        <div
-                            onClick={() => setTheme("blue-400")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-blue-400 to-slate-900 transition cursor-pointer border-2 ${theme === "blue-400"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                        ></div>
-                        <div
-                            onClick={() => setTheme("red-500")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-red-500 to-slate-900 transition cursor-pointer border-2 ${theme === "red-500"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                        ></div>
-                        <div
-                            onClick={() => setTheme("orange-600")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-orange-600 to-slate-900 transition cursor-pointer border-2 ${theme === "orange-600"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                        ></div>
+                        <ThemeOption
+                            color="yellow-300"
+                            theme={theme}
+                            setTheme={setTheme}
+                        />
+                        <ThemeOption
+                            color="green-300"
+                            theme={theme}
+                            setTheme={setTheme}
+                        />
+                        <ThemeOption
+                            color="blue-400"
+                            theme={theme}
+                            setTheme={setTheme}
+                        />
+                        <ThemeOption
+                            color="red-500"
+                            theme={theme}
+                            setTheme={setTheme}
+                        />
+                        <ThemeOption
+                            color="orange-600"
+                            theme={theme}
+                            setTheme={setTheme}
+                        />
                     </div>
 
-                    <h2 className="font-semibold text-lg mt-6">Banner</h2>
+                    <h2 className="font-semibold text-lg mt-4">Banner</h2>
 
                     <h3 className="font-regular text-sm">
                         Choose a banner for your profile.
                     </h3>
 
-                    <div className="flex gap-4 mt-2">
-                        <img
-                            className={`flex-grow-1 w-full h-12 rounded-md border-2 transition cursor-pointer ${banner === "white"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                            src="/img/profile/WhaleNew.png"
-                            onClick={() => setBanner("white")}
-                            alt="whale banner"
+                    <div className="flex justify-between mt-2 w-full">
+                        <BannerOption
+                            type="whale"
+                            color="white"
+                            banner={banner}
+                            setBanner={setBanner}
                         />
-                        <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "green-400"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                } bg-green-400`}
-                            src="/img/profile/WhaleNew.png"
-                            onClick={() => setBanner("green-400")}
-                            alt="whale banner green"
+                        <BannerOption
+                            type="whale"
+                            color="green-400"
+                            banner={banner}
+                            setBanner={setBanner}
                         />
-                        <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "blue-300"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                } bg-blue-300`}
-                            src="/img/profile/WhaleNew.png"
-                            onClick={() => setBanner("blue-300")}
-                            alt="whale banner blue"
+                        <BannerOption
+                            type="whale"
+                            color="blue-300"
+                            banner={banner}
+                            setBanner={setBanner}
                         />
-                        <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "red-500"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                } bg-red-500`}
-                            src="/img/profile/WhaleNew.png"
-                            onClick={() => setBanner("red-500")}
-                            alt="whale banner red"
+                        <BannerOption
+                            type="whale"
+                            color="red-500"
+                            banner={banner}
+                            setBanner={setBanner}
                         />
-                        <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "orange-400"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                } bg-orange-400`}
-                            src="/img/profile/WhaleNew.png"
-                            onClick={() => setBanner("orange-400")}
-                            alt="whale banner orange"
+                        <BannerOption
+                            type="whale"
+                            color="orange-400"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                    </div>
+
+                    <div className="flex justify-between mt-2 w-full">
+                        <BannerOption
+                            type="waves"
+                            color="blue"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                        <BannerOption
+                            type="waves"
+                            color="pink"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                        <BannerOption
+                            type="waves"
+                            color="red"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                        <BannerOption
+                            type="waves"
+                            color="turquoise"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                        <BannerOption
+                            type="waves"
+                            color="yellow"
+                            banner={banner}
+                            setBanner={setBanner}
                         />
                     </div>
                 </div>
@@ -733,13 +854,21 @@ function Preview({ handle, links, profile, show, complete }: StageProps) {
         return <></>;
     }
 
+    const { theme, banner } = profile;
+
     return (
         <>
             <div className="flex flex-col gap-4">
                 <div
-                    className={`mt-6 p-6 rounded-xl bg-gradient-to-b from-${profile.theme} to-slate-900`}
+                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${
+                        theme.split("/")[0]
+                    } background-animate to-slate-900`}
                 >
-                    <div className={`relative rounded-xl bg-${profile.banner}`}>
+                    <div
+                        className={`relative rounded-xl bg-${
+                            banner.split("/")[1]
+                        }`}
+                    >
                         <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
                             <span className="text-3xl text-white font-bold">
                                 <span className="text-gray-400 font-normal">
@@ -749,8 +878,21 @@ function Preview({ handle, links, profile, show, complete }: StageProps) {
                             </span>
                         </div>
                         <img
-                            src="/img/profile/WhaleNew.png"
-                            className="rounded-xl shadow-md"
+                            src={
+                                banner.split("/")[0] === "whale"
+                                    ? "/img/profile/WhaleNew.png"
+                                    : `/img/profile/Waves${
+                                          banner
+                                              .split("/")[1][0]
+                                              .toUpperCase() +
+                                          banner
+                                              .split("/")[1]
+                                              .slice(1)
+                                              .toLowerCase()
+                                      }.png`
+                            }
+                            style={{ objectFit: "contain" }}
+                            className="rounded-xl shadow-md w-full"
                         />
                     </div>
                 </div>
@@ -792,7 +934,7 @@ export default function Onboard() {
 
         sessionStorage.setItem("handle", handle);
         // console.log("SOCIALS", linkedWallets)
-        await createUserProfile(userInfo, handle, profile); // Assuming this is an async function
+        const user = await createUserProfile(userInfo, handle, profile); // Assuming this is an async function
 
         // Correct navigation after async operation
         // router.push(`/app/${handle}/page`);
@@ -806,10 +948,10 @@ export default function Onboard() {
                         {stage === "handle"
                             ? "First things first..."
                             : stage === "link"
-                                ? "Next, link up your wallets & socials"
-                                : stage === "profile"
-                                    ? "Finally, customize your profile"
-                                    : "Preview your profile"}
+                            ? "Next, link up your wallets & socials"
+                            : stage === "profile"
+                            ? "Finally, customize your profile"
+                            : "Preview your profile"}
                     </h1>
 
                     <div>
@@ -822,10 +964,10 @@ export default function Onboard() {
                                             stage === "handle"
                                                 ? "0%"
                                                 : stage === "link"
-                                                    ? "30%"
-                                                    : stage === "profile"
-                                                        ? "60%"
-                                                        : "85%",
+                                                ? "30%"
+                                                : stage === "profile"
+                                                ? "60%"
+                                                : "85%",
                                     }}
                                 />
                             </div>
