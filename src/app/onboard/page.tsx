@@ -788,17 +788,17 @@ export default function Onboard() {
         const userInfo = JSON.parse(sessionStorage.getItem("userInfo")); // sucks
         const wallets = JSON.parse(sessionStorage.getItem("wallets"));
         const socials = JSON.parse(sessionStorage.getItem("socials"));
-
+        console.log("SOICL CLI", socials)
         const fetchSocialDetails = async () => {
             for (let i = 0; i < socials.length; i++) {
                 if (socials[i].authType == 'github') {
-                    if (socials[i].socialUsername === "" && socials[i].socialId) {
+                    if ((socials[i].socialUsername === "" || socials[i].socialUsername) && socials[i].socialId) {
                         let id = socials[i].socialId
                         let res = await fetch(`https://api.github.com/user/${id}`);
                         if (!res.ok) throw new Error('bad')
                         res = await res.json(); //@ts-ignore
-                        console.log("RES", res)
                         socials[i].socialUsername = res.login
+                        socials[i].socialImg = res.avatar_url
                     }
                 } else if (socials[i].authType == 'twitch') {
                     //TODO

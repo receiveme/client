@@ -91,7 +91,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                 background: banner, // Optional, specify the background if provided
             },
         });
-
+        console.log("SOCIALS", socials)
         for (let i = 0; i < socials.length; i++) {
             try {
                 await prisma.social.create({
@@ -102,7 +102,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                         particle_token: String(info_id),
                         particle_uuid: String(uuid),
                         name: socials[i].socialUsername ? socials[i].socialUsername : "",
-                        imageurl: socials[i].socialImage ? socials[i].socialImage : ""
+                        imageurl: socials[i].socialImage ? socials[i].socialImg : ""
                     },
                 });
                 console.log(`Social inserted successfully.`);
