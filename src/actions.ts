@@ -71,8 +71,8 @@ export async function getUserWallets(userId) {
 }
 
 
-export async function createUserProfile(socials: any, wallets: any, userInfo: Object, handle: String, profile: any) { // TODO; seperate socials & wallets
-    console.log("PROFILE", profile)
+export async function createUserProfile(socials: any, wallets: any, userInfo: Array, handle: String, profile: any) { // TODO; seperate socials & wallets
+    console.log("PROFILE", userInfo)
     const { theme, banner } = profile
     const { chain_name, public_address } = userInfo[0].info.wallets[0]
     const infoObj = userInfo[0].info.thirdparty_user_info.user_info.id
@@ -101,7 +101,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: Ob
                         userid: user.id,
                         platform: socials[i].authType,
                         networkid: socials[i].socialId,
-                        particletoken: infoObj.token,
+                        particle_token: infoObj.token,
                         particle_uuid: infoObj.uuid,
                         name: socials[i].socialUsername,
                         imageurl: socials[i].socialImage

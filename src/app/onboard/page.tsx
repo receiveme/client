@@ -199,7 +199,7 @@ function Link({ handle, show, next }: StageProps) {
             if (accounts?.length && accounts[0] && chainId) {
                 setMetamaskAddress(accounts[0])
                 const wallets = Array.isArray(JSON.parse(JSON.stringify("wallets"))) ? JSON.parse(JSON.stringify("wallets")) : []
-                wallets.push({ walletProvider: "metamask", walletaAddress: accounts[0] })
+                wallets.push({ walletProvider: "metamask", walletAddress: accounts[0] })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
             } else return reject();
         })
@@ -790,7 +790,7 @@ export default function Onboard() {
         const wallets = JSON.parse(sessionStorage.getItem("wallets"));
         const socials = JSON.parse(sessionStorage.getItem("socials"));
         console.log("PROFILE", profile)
-        await createUserProfile(wallets, socials, userInfo, handle, profile); // Assuming this is an async function
+        await createUserProfile(socials, wallets, userInfo, handle, profile); // Assuming this is an async function
         sessionStorage.clear()
     };
 
