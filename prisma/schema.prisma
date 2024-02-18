@@ -11,12 +11,13 @@ datasource db {
 }
 
 model User {
-  id      String    @id @default(uuid())
-  created DateTime  @default(now())
-  handle  String    @unique
-  Profile Profile[]
-  Social  Social[]
-  Wallet  Wallet[]
+  id          String    @id @default(uuid())
+  created     DateTime  @default(now())
+  handle      String    @unique
+  authuuid    String?
+  Profile     Profile[]
+  Social      Social[]
+  Wallet      Wallet[]
 
   @@map("users")
 }

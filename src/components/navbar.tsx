@@ -69,12 +69,6 @@ export default function Navbar() {
     const router = useRouter();
 
     useEffect(() => { // Seems non-functional, eventually will be replaced by endpoint
-        console.log(
-            "TEST",
-            userInfo,
-            account,
-            sessionStorage.getItem("userInfo"),
-        );
         if (!account && !userInfo) {
             sessionStorage.removeItem("userInfo");
         }
@@ -84,12 +78,11 @@ export default function Navbar() {
             account &&
             userInfo
         ) {
-            console.log("ISNDEII");
             sessionStorage.setItem(
                 "userInfo",
                 JSON.stringify([{ accountInfo: account, info: userInfo }]),
             );
-            
+
             router.push("/onboard");
         }
     }, [account, userInfo]);
@@ -111,7 +104,32 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
-                    <ConnectButton />
+                    {/* <ConnectButton /> */}
+                    <ConnectButton.Custom>
+                        {({ account, chain, openAccountModal, openConnectModal, openChainModal, accountLoading }) => {
+                            return (
+                                <div>
+                                    <button onClick={openConnectModal} disabled={!!account}>
+                                        Open Connect
+                                    </button>
+                                    <br />
+                                    <br />
+                                    <button onClick={openAccountModal} disabled={!account}>
+                                        Open Account
+                                    </button>
+                                    <br />
+                                    <br />
+                                    <button onClick={openChainModal} disabled={!account}>
+                                        Open Switch Network
+                                    </button>
+                                    <div>
+                                        <h3>account</h3>
+                                        <p>{account}</p>
+                                    </div>
+                                </div>
+                            );
+                        }}
+                    </ConnectButton.Custom>
                 </div>
             </nav>
             <Dialog

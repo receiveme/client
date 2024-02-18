@@ -1,14 +1,8 @@
 "use client";
 
-import prisma from "../../../lib/prisma"
 import {
-    IconCircleCheck,
-    IconCircleCheckFilled,
     IconCircleXFilled,
-    IconFidgetSpinner,
-    IconLoader,
     IconLoader2,
-    IconLoader3,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { ParticleNetwork, UserInfo } from '@particle-network/auth';
@@ -33,7 +27,6 @@ const particle = new ParticleNetwork({
     },
 });
 
-
 function Handle({ show, updateHandle, next }: StageProps) {
     const [handleInput, setHandleInput] = useState("");
     const [isLoading, setLoading] = useState(false);
@@ -42,18 +35,14 @@ function Handle({ show, updateHandle, next }: StageProps) {
     // check with server/db if handle is available.
     // If not, let user know.
     const [available, setAvailable] = useState<boolean | null>(null);
-    const [inputTimeout, setInputTimeout] = useState<any>(null);
 
     function changeHandle(value: string) {
         setHandleInput(value);
         updateHandle(value);
-
-        // setAvailable(Math.random() < 0.7);
     }
 
     function createHandle() {
         // Call to server
-
         setLoading(true);
 
         setTimeout(() => {
@@ -142,6 +131,7 @@ function Link({ handle, show, next }: StageProps) {
     const [isLoading, setLoading] = useState(false);
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
     const [avaxBalance, setAvaxBalance] = useState<string | null>(null);
+    const router = useRouter()
 
     const [metamaskAddress, setMetamaskAddress] = useState<string | null>()
     const [tronlinkAddress, setTronlinkAddress] = useState<string | null>()
@@ -151,6 +141,10 @@ function Link({ handle, show, next }: StageProps) {
     }
 
     const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'twitch' | 'github' | 'discord' | 'linkedin') => {
+        if (!sessionStorage.getItem("userInfo")) {
+            router.push('/')
+        }
+
         const user = await particle.auth.login({ preferredAuthType })
         sessionStorage.setItem("wallets", JSON.stringify([]))
         const socials = Array.isArray(JSON.parse(sessionStorage.getItem("socials"))) ?
@@ -161,7 +155,8 @@ function Link({ handle, show, next }: StageProps) {
         if (sessionStorage.getItem(preferredAuthType)) {
             return 0
         }
-        socials.push({ authType: preferredAuthType, socialUsername: user.thirdparty_user_info.user_info.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
+
+        socials.push({ authType: preferredAuthType, socialUuid: user.uuid, socialUsername: user.thirdparty_user_info.user_info.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
         //store the specific auth type user info in different storage items
         sessionStorage.setItem('socials', JSON.stringify(socials));
         sessionStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
@@ -197,7 +192,7 @@ function Link({ handle, show, next }: StageProps) {
             // After connection
             if (accounts?.length && accounts[0] && chainId) {
                 setMetamaskAddress(accounts[0])
-                const wallets = Array.isArray(JSON.parse(sessionStorage.getItem("wallets"))) ? JSON.parse(sessionStorage.getItem("wallets")) : []
+                const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
                 wallets.push({ walletProvider: "metamask", walletAddress: accounts[0] })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
             } else return reject();
@@ -217,7 +212,7 @@ function Link({ handle, show, next }: StageProps) {
                 let tronLink = { ... (await window["tronLink"]) };
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account)
-                const wallets = Array.isArray(JSON.parse(sessionStorage.getItem("wallets"))) ? JSON.parse(sessionStorage.getItem("wallets")) : []
+                const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
                 wallets.push({ walletProvider: "tron", walletaAddress: account })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
                 if (!account) return reject();
@@ -432,7 +427,84 @@ function Link({ handle, show, next }: StageProps) {
                     <h3 className="font-regular text-sm mt-1">
                         Link your wallets and start getting paid.
                     </h3>
+                    {!metamaskAddress ?
+                        <>
+                            <button onClick={() => connectMetamask()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/metamask.png"
+                                    alt="Link Metamask"
+                                    className="mr-2 h-5 w-5"
+                                />
 
+                                <span onClick={connectMetamask} className="text-sm font-semibold">
+                                    Link Metamask
+                                </span>
+                            </button>
+                        </>
+                        :
+
+                        <>
+
+                            <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/metamask.png"
+                                    alt="Link Metamask"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span onClick={connectMetamask} className="text-sm font-semibold">
+                                    Link Metamask
+                                </span>
+
+                                <span className="ml-1.5 text-xs text-gray-600 truncate ">
+                                    {metamaskAddress.substring(0, 5)}...{metamaskAddress.substring(35, 42)}
+                                </span>
+                            </button>
+                        </>
+
+
+                    }
+
+
+
+
+
+                    3:34
+                    {!tronlinkAddress ?
+                        <>
+                            <button onClick={() => connectTronlink()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/tron.png"
+                                    alt="Link Tron"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Tronlink
+                                </span>
+                            </button>
+
+                        </>
+                        :
+                        <>
+                            <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/tron.png"
+                                    alt="Link Tron"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                    Link Tronlink
+                                </span>
+
+                                <span className="ml-1.5 text-xs text-gray-600 truncate">
+                                    {tronlinkAddress.substring(0, 5)}...{tronlinkAddress.substring(35, 41)}
+                                </span>
+                            </button>
+                        </>
+
+                    }
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
                         {!metamaskAddress ?
                             <>
@@ -452,7 +524,7 @@ function Link({ handle, show, next }: StageProps) {
 
                             <>
 
-                                <button onClick={() => connectMetamask()} className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                     <img
                                         src="/img/3p/metamask.png"
                                         alt="Link Metamask"
@@ -467,51 +539,9 @@ function Link({ handle, show, next }: StageProps) {
                                         {metamaskAddress.substring(0, 5)}...{metamaskAddress.substring(35, 42)}
                                     </span>
                                 </button>
-                            </>
+                            </>}
 
 
-                        }
-                        {/* <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                            <img
-                                src="/img/3p/algorand.png"
-                                alt="Linked Algorand"
-                                className="mr-2 h-5 w-5"
-                            />
-
-                            <span className="text-sm font-semibold">
-                                Linked Algorand
-                            </span>
-
-                            <span className="ml-1.5 text-xs text-gray-600">
-                                5WCIZNG...L6F2E
-                            </span>
-                        </button> */}
-                        <button className="transition-all border-2  hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                            <img
-                                src="/img/3p/algorand.png"
-                                alt="Linked Algorand"
-                                className="mr-2 h-5 w-5"
-                            />
-
-                            <span className="text-sm font-semibold">
-                                Link Algorand
-                            </span>
-
-                            <span className="ml-1.5 text-xs text-gray-600">
-
-                            </span>
-                        </button>
-                        <button className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                            <img
-                                src="/img/3p/solana.png"
-                                alt="Link Solana"
-                                className="mr-2 h-5 w-5"
-                            />
-
-                            <span className="text-sm font-semibold">
-                                Link Solana
-                            </span>
-                        </button>
                         {!tronlinkAddress ?
                             <>
                                 <button onClick={() => connectTronlink()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
@@ -529,7 +559,7 @@ function Link({ handle, show, next }: StageProps) {
                             </>
                             :
                             <>
-                                <button onClick={() => connectTronlink()} className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                     <img
                                         src="/img/3p/tron.png"
                                         alt="Link Tron"
@@ -547,7 +577,6 @@ function Link({ handle, show, next }: StageProps) {
                             </>
 
                         }
-
                         <button disabled onClick={() => handleLogin('twitter')} type="button" className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60">
                             <img
                                 src="/img/3p/unstoppabledomains.png"
@@ -767,7 +796,7 @@ export default function Onboard() {
     const [handle, setHandle] = useState("");
     const [links, setLinks] = useState({});
     const [profile, setProfile] = useState<any>({});
-    // const router = useRouter();
+    const router = useRouter();
     const [stage, setStage] = useState<Stage>("handle");
 
     const nextStage = () => {
@@ -787,7 +816,7 @@ export default function Onboard() {
         const userInfo = JSON.parse(sessionStorage.getItem("userInfo")); // sucks
         const wallets = JSON.parse(sessionStorage.getItem("wallets"));
         const socials = JSON.parse(sessionStorage.getItem("socials"));
-
+        console.log("USERINFO", socials)
         const fetchSocialDetails = async () => {
             for (let i = 0; i < socials.length; i++) {
                 if (socials[i].authType == 'github') {
@@ -809,7 +838,7 @@ export default function Onboard() {
 
         await fetchSocialDetails()
         await createUserProfile(socials, wallets, userInfo, handle, profile); // Assuming this is an async function
-        sessionStorage.clear()
+        router.push('/')
     }
 
 
