@@ -161,11 +161,8 @@ function Link({ handle, show, next }: StageProps) {
         if (sessionStorage.getItem(preferredAuthType)) {
             return 0
         }
-        console.log("SOICALS CLIENT", socials)
-        console.log("THIRD", user.thirdparty_user_info.user_info.id)
         socials.push({ authType: preferredAuthType, socialUsername: user.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
         //store the specific auth type user info in different storage items
-        console.log("SOICALS CLIENT2 ", socials)
         sessionStorage.setItem('socials', JSON.stringify(socials));
         sessionStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
     }
@@ -791,10 +788,31 @@ export default function Onboard() {
         const userInfo = JSON.parse(sessionStorage.getItem("userInfo")); // sucks
         const wallets = JSON.parse(sessionStorage.getItem("wallets"));
         const socials = JSON.parse(sessionStorage.getItem("socials"));
-        console.log("PROFILE", socials, wallets)
+
+        const fetchSocialDetails = async () => {
+            for (let i = 0; i < socials.length; i++) {
+                if (socials[i].authType == 'github') {
+                    if (socials[i].socialUsername === "" && socials[i].socialId) {
+                        let id = socials[i].socialId
+                        let res = await fetch(`https://api.github.com/user/${id}`);
+                        if (!res.ok) throw new Error('bad')
+                        res = await res.json(); //@ts-ignore
+                        console.log("RES", res)
+                        socials[i].socialUsername = res.login
+                    }
+                } else if (socials[i].authType == 'twitch') {
+                    //TODO
+                } else if (socials[i].authType == 'twitter') {
+                    //TODO
+                }
+            }
+        }
+
+        await fetchSocialDetails()
         await createUserProfile(socials, wallets, userInfo, handle, profile); // Assuming this is an async function
         sessionStorage.clear()
-    };
+    }
+
 
     return (
         <>

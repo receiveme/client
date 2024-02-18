@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma"
 export async function createUserDRaftProfile(userInfo: Object, handle: String, profile: Object) {
 
     const { theme, banner } = profile
+    console.log("PROP IN", userInfo)
     const { chain_name, public_address } = userInfo[0].info.wallets[0]
 
     try {
@@ -72,10 +73,9 @@ export async function getUserWallets(userId) {
 
 
 export async function createUserProfile(socials: any, wallets: any, userInfo: any, handle: String, profile: any) { // TODO; seperate socials & wallets
-    console.log("PROFILE", userInfo)
     const { theme, banner } = profile
-    const infoObj = userInfo[0].info.thirdparty_user_info.user_info.id
-
+    const info_id = userInfo[0].info.thirdparty_user_info.user_info.id
+    const uuid = userInfo[0].info.uuid
 
     try {
         const user = await prisma.user.create({
@@ -93,15 +93,14 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
         });
 
         for (let i = 0; i < socials.length; i++) {
-
             try {
                 await prisma.social.create({
                     data: {
                         userid: user.id,
                         platform: socials[i].authType,
                         networkid: String(socials[i].socialId),
-                        particle_token: String(infoObj.token),
-                        particle_uuid: String(infoObj.uuid),
+                        particle_token: String(info_id),
+                        particle_uuid: String(uuid),
                         name: socials[i].socialUsername ? socials[i].socialUsername : "",
                         imageurl: socials[i].socialImage ? socials[i].socialImage : ""
                     },
@@ -113,14 +112,12 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
         }
 
         for (let i = 0; i < wallets.length; i++) {
-            console.log("SOCIALS", wallets)
             try {
                 await prisma.wallet.create({
                     data: {
                         userid: user.id,
                         network: wallets[i].walletProvider,
                         address: wallets[i].walletAddress,
-
                     },
                 });
 
