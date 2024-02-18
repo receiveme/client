@@ -34,13 +34,16 @@ model Profile {
 }
 
 model Social {
-  id        String   @id @default(uuid())
-  userid    String
-  created   DateTime @default(now())
-  social    String?  // Optional field
-  platform  String?  // Optional field
-  imageUrl  String?  // Optional field for storing image URLs
-  user      User     @relation(fields: [userid], references: [id], onDelete: Cascade)
+  id                String   @id @default(uuid())
+  userid            String
+  networkid         String?
+  particleid        String?
+  particle_uuid     String?
+  created           DateTime @default(now())
+  name              String?  // Optional field
+  platform          String?  // Optional field
+  imageurl          String?  // Optional field for storing image URLs
+  user              User     @relation(fields: [userid], references: [id], onDelete: Cascade)
   
   @@map("socials")
 }
