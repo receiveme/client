@@ -111,23 +111,23 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: Ob
             } catch (error) {
                 console.error(`Error inserting social:`, error);
             }
-
-            for (let i = 0; wallets.length < i; i++) {
-                try {
-                    await prisma.wallet.create({
-                        data: {
-                            userid: user.id,
-                            address: wallets[i].walletAdress,
-                            network: wallets[i].walletProvider
-                        },
-                    });
-
-                } catch (error) {
-                    console.error("Wallet insertion err:", error);
-                }
-            }
-
         }
+
+        for (let i = 0; wallets.length < i; i++) {
+            try {
+                await prisma.wallet.create({
+                    data: {
+                        userid: user.id,
+                        address: wallets[i].walletAdress,
+                        network: wallets[i].walletProvider
+                    },
+                });
+
+            } catch (error) {
+                console.error("Wallet insertion err:", error);
+            }
+        }
+
         await prisma.$disconnect();
 
         return user;
