@@ -161,7 +161,7 @@ function Link({ handle, show, next }: StageProps) {
         if (sessionStorage.getItem(preferredAuthType)) {
             return 0
         }
-        socials.push({ authType: preferredAuthType, socialUsername: user.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
+        socials.push({ authType: preferredAuthType, socialUsername: user.thirdparty_user_info.user_info.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
         //store the specific auth type user info in different storage items
         sessionStorage.setItem('socials', JSON.stringify(socials));
         sessionStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
@@ -203,7 +203,6 @@ function Link({ handle, show, next }: StageProps) {
             } else return reject();
         })
     }
-
 
     function connectTronlink() {
         return new Promise(async (resolve, reject) => {
@@ -788,11 +787,11 @@ export default function Onboard() {
         const userInfo = JSON.parse(sessionStorage.getItem("userInfo")); // sucks
         const wallets = JSON.parse(sessionStorage.getItem("wallets"));
         const socials = JSON.parse(sessionStorage.getItem("socials"));
-        console.log("SOICL CLI", socials)
+
         const fetchSocialDetails = async () => {
             for (let i = 0; i < socials.length; i++) {
                 if (socials[i].authType == 'github') {
-                    if ((socials[i].socialUsername === "" || socials[i].socialUsername) && socials[i].socialId) {
+                    if (!socials[i] && socials[i].socialId) {
                         let id = socials[i].socialId
                         let res = await fetch(`https://api.github.com/user/${id}`);
                         if (!res.ok) throw new Error('bad')
