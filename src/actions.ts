@@ -71,10 +71,9 @@ export async function getUserWallets(userId) {
 }
 
 
-export async function createUserProfile(socials: any, wallets: any, userInfo: Array, handle: String, profile: any) { // TODO; seperate socials & wallets
+export async function createUserProfile(socials: any, wallets: any, userInfo: any, handle: String, profile: any) { // TODO; seperate socials & wallets
     console.log("PROFILE", userInfo)
     const { theme, banner } = profile
-    const { chain_name, public_address } = userInfo[0].info.wallets[0]
     const infoObj = userInfo[0].info.thirdparty_user_info.user_info.id
 
 
@@ -100,11 +99,11 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: Ar
                     data: {
                         userid: user.id,
                         platform: socials[i].authType,
-                        networkid: socials[i].socialId,
-                        particle_token: infoObj.token,
-                        particle_uuid: infoObj.uuid,
-                        name: socials[i].socialUsername,
-                        imageurl: socials[i].socialImage
+                        networkid: String(socials[i].socialId),
+                        particle_token: String(infoObj.token),
+                        particle_uuid: String(infoObj.uuid),
+                        name: socials[i].socialUsername ? socials[i].socialUsername : "",
+                        imageurl: socials[i].socialImage ? socials[i].socialImage : ""
                     },
                 });
                 console.log(`Social inserted successfully.`);
@@ -113,13 +112,15 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: Ar
             }
         }
 
-        for (let i = 0; wallets.length < i; i++) {
+        for (let i = 0; i < wallets.length; i++) {
+            console.log("SOCIALS", wallets)
             try {
                 await prisma.wallet.create({
                     data: {
                         userid: user.id,
-                        address: wallets[i].walletAdress,
-                        network: wallets[i].walletProvider
+                        network: wallets[i].walletProvider,
+                        address: wallets[i].walletAddress,
+
                     },
                 });
 

@@ -161,9 +161,11 @@ function Link({ handle, show, next }: StageProps) {
         if (sessionStorage.getItem(preferredAuthType)) {
             return 0
         }
-
-        socials.push({ authType: preferredAuthType, socialUsername: user.name, socialInfo: user, socialImg: user.avatar, socialId: user.thirdparty_user_info.user_info.id })
+        console.log("SOICALS CLIENT", socials)
+        console.log("THIRD", user.thirdparty_user_info.user_info.id)
+        socials.push({ authType: preferredAuthType, socialUsername: user.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
         //store the specific auth type user info in different storage items
+        console.log("SOICALS CLIENT2 ", socials)
         sessionStorage.setItem('socials', JSON.stringify(socials));
         sessionStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
     }
@@ -198,7 +200,7 @@ function Link({ handle, show, next }: StageProps) {
             // After connection
             if (accounts?.length && accounts[0] && chainId) {
                 setMetamaskAddress(accounts[0])
-                const wallets = Array.isArray(JSON.parse(JSON.stringify("wallets"))) ? JSON.parse(JSON.stringify("wallets")) : []
+                const wallets = Array.isArray(JSON.parse(sessionStorage.getItem("wallets"))) ? JSON.parse(sessionStorage.getItem("wallets")) : []
                 wallets.push({ walletProvider: "metamask", walletAddress: accounts[0] })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
             } else return reject();
@@ -219,7 +221,7 @@ function Link({ handle, show, next }: StageProps) {
                 let tronLink = { ... (await window["tronLink"]) };
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account)
-                const wallets = Array.isArray(JSON.parse(JSON.stringify("wallets"))) ? JSON.parse(JSON.stringify("wallets")) : []
+                const wallets = Array.isArray(JSON.parse(sessionStorage.getItem("wallets"))) ? JSON.parse(sessionStorage.getItem("wallets")) : []
                 wallets.push({ walletProvider: "tron", walletaAddress: account })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
                 if (!account) return reject();
@@ -789,7 +791,7 @@ export default function Onboard() {
         const userInfo = JSON.parse(sessionStorage.getItem("userInfo")); // sucks
         const wallets = JSON.parse(sessionStorage.getItem("wallets"));
         const socials = JSON.parse(sessionStorage.getItem("socials"));
-        console.log("PROFILE", profile)
+        console.log("PROFILE", socials, wallets)
         await createUserProfile(socials, wallets, userInfo, handle, profile); // Assuming this is an async function
         sessionStorage.clear()
     };
