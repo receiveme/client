@@ -37,7 +37,7 @@ model Social {
   id                String   @id @default(uuid())
   userid            String
   networkid         String?
-  particleid        String?
+  particle_token    String?
   particle_uuid     String?
   created           DateTime @default(now())
   name              String?  // Optional field

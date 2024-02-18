@@ -152,18 +152,19 @@ function Link({ handle, show, next }: StageProps) {
 
     const handleLogin = async (preferredAuthType: 'google' | 'twitter' | 'twitch' | 'github' | 'discord' | 'linkedin') => {
         const user = await particle.auth.login({ preferredAuthType })
+        sessionStorage.setItem("wallets", JSON.stringify([]))
+        const socials = Array.isArray(JSON.parse(sessionStorage.getItem("socials"))) ?
+            JSON.parse(sessionStorage.getItem("socials")) : []
 
         setUserInfo(user);
 
-        // const profileImg = user.thirdparty_user_info?
-        const socialInfo = sessionStorage.getItem(preferredAuthType)
-
-        if (socialInfo) {
+        if (sessionStorage.getItem(preferredAuthType)) {
             return 0
         }
-        // socialInfo.push({ socialUsername: socialUsername, provider: provider })
+
+        socials.push({ authType: preferredAuthType, socialUsername: user.name, socialInfo: user, socialImg: user.avatar, socialId: user.thirdparty_user_info.user_info.id })
         //store the specific auth type user info in different storage items
-        //sessionStorage.setItem('socialInfo', JSON.stringify(socialInfo));
+        sessionStorage.setItem('socials', JSON.stringify(socials));
         sessionStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
     }
 
@@ -199,7 +200,7 @@ function Link({ handle, show, next }: StageProps) {
                 setMetamaskAddress(accounts[0])
                 const wallets = Array.isArray(JSON.parse(JSON.stringify("wallets"))) ? JSON.parse(JSON.stringify("wallets")) : []
                 wallets.push({ walletProvider: "metamask", walletaAddress: accounts[0] })
-                sessionStorage.setItem("wallets", wallets)
+                sessionStorage.setItem("wallets", JSON.stringify(wallets))
             } else return reject();
         })
     }
@@ -216,12 +217,11 @@ function Link({ handle, show, next }: StageProps) {
                     }
                 }) //@ts-ignore
                 let tronLink = { ... (await window["tronLink"]) };
-                console.log("TRON", tronLink)
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account)
                 const wallets = Array.isArray(JSON.parse(JSON.stringify("wallets"))) ? JSON.parse(JSON.stringify("wallets")) : []
                 wallets.push({ walletProvider: "tron", walletaAddress: account })
-                sessionStorage.setItem("wallets", wallets)
+                sessionStorage.setItem("wallets", JSON.stringify(wallets))
                 if (!account) return reject();
                 return resolve({ account, chain: "tron" });
             } catch (e) {
@@ -550,7 +550,6 @@ function Link({ handle, show, next }: StageProps) {
 
                         }
 
-
                         <button disabled onClick={() => handleLogin('twitter')} type="button" className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60">
                             <img
                                 src="/img/3p/unstoppabledomains.png"
@@ -788,14 +787,11 @@ export default function Onboard() {
     const complete = async () => {
         //@ts-ignore
         const userInfo = JSON.parse(sessionStorage.getItem("userInfo")); // sucks
-        // const linkedWallets = JSON.parse(sessionStorage.getItem("wallets"));
-
-        sessionStorage.setItem("handle", handle);
-        // console.log("SOCIALS", linkedWallets)
-        await createUserProfile(userInfo, handle, profile); // Assuming this is an async function
-
-        // Correct navigation after async operation
-        // router.push(`/app/${handle}/page`);
+        const wallets = JSON.parse(sessionStorage.getItem("wallets"));
+        const socials = JSON.parse(sessionStorage.getItem("socials"));
+        console.log("PROFILE", profile)
+        await createUserProfile(wallets, socials, userInfo, handle, profile); // Assuming this is an async function
+        sessionStorage.clear()
     };
 
     return (

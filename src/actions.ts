@@ -1,7 +1,7 @@
 "use server"
 import prisma from "@/lib/prisma"
 
-export async function createUserProfile(userInfo: Object, handle: String, profile: Object) {
+export async function createUserDRaftProfile(userInfo: Object, handle: String, profile: Object) {
 
     const { theme, banner } = profile
     const { chain_name, public_address } = userInfo[0].info.wallets[0]
@@ -71,20 +71,12 @@ export async function getUserWallets(userId) {
 }
 
 
-export async function createUserProfileDraft(socials: any, wallets: any, userInfo: Object, handle: String, profile: Object) { // TODO; seperate socials & wallets
-
+export async function createUserProfile(socials: any, wallets: any, userInfo: Object, handle: String, profile: any) { // TODO; seperate socials & wallets
+    console.log("PROFILE", profile)
     const { theme, banner } = profile
     const { chain_name, public_address } = userInfo[0].info.wallets[0]
-    console.log("SOCIALS", socials)
-    const infoObj = userInfo[0].info
-    const validSocials = {}
-    //check social values
-    infoObj.googleId ? validSocials["googleId"] = infoObj.google_id : null
-    infoObj.discordId ? validSocials["discordId"] = infoObj.discord_id : null
-    infoObj.twitterId ? validSocials["twitterId"] = infoObj.twitter_id : null
-    infoObj.githubId ? validSocials["githubId"] = infoObj.github_id : null
-    infoObj.linkedId ? validSocials["linkedId"] = infoObj.linked_id : null
-    infoObj.twitchId ? validSocials["twitchId"] = infoObj.twitch_id : null
+    const infoObj = userInfo[0].info.thirdparty_user_info.user_info.id
+
 
     try {
         const user = await prisma.user.create({
@@ -101,14 +93,41 @@ export async function createUserProfileDraft(socials: any, wallets: any, userInf
             },
         });
 
-        await prisma.wallet.create({
-            data: {
-                address: public_address,
-                network: chain_name, // Optional, can be null or omitted if not provided
-                userid: user.id, // Optional, can be null. Make sure the userId exists if provided
-            },
-        });
+        for (let i = 0; i < socials.length; i++) {
 
+            try {
+                await prisma.social.create({
+                    data: {
+                        userid: user.id,
+                        platform: socials[i].authType,
+                        networkid: socials[i].socialId,
+                        particletoken: infoObj.token,
+                        particle_uuid: infoObj.uuid,
+                        name: socials[i].socialUsername,
+                        imageurl: socials[i].socialImage
+                    },
+                });
+                console.log(`Social inserted successfully.`);
+            } catch (error) {
+                console.error(`Error inserting social:`, error);
+            }
+
+            for (let i = 0; wallets.length < i; i++) {
+                try {
+                    await prisma.wallet.create({
+                        data: {
+                            userid: user.id,
+                            address: wallets[i].walletAdress,
+                            network: wallets[i].walletProvider
+                        },
+                    });
+
+                } catch (error) {
+                    console.error("Wallet insertion err:", error);
+                }
+            }
+
+        }
         await prisma.$disconnect();
 
         return user;
