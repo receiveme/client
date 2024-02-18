@@ -74,7 +74,7 @@ export async function getUserWallets(userId) {
 
 export async function createUserProfile(socials: any, wallets: any, userInfo: any, handle: String, profile: any) { // TODO; seperate socials & wallets
     const { theme, banner } = profile
-    const info_id = userInfo[0].info.thirdparty_user_info.user_info.id
+    const info_token = userInfo[0].info.token
     const uuid = userInfo[0].info.uuid
 
     try {
@@ -99,7 +99,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                         userid: user.id,
                         platform: socials[i].authType,
                         networkid: String(socials[i].socialId),
-                        particle_token: String(info_id),
+                        particle_token: String(info_token),
                         particle_uuid: String(uuid),
                         name: socials[i].socialUsername ? socials[i].socialUsername : "",
                         imageurl: socials[i].socialImage ? socials[i].socialImg : ""
