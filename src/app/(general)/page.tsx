@@ -1,29 +1,17 @@
 "use client";
 
 import { useAppState } from "@/src/hooks/useAppState";
-<<<<<<< HEAD
-=======
-import Image from "next/image";
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-<<<<<<< HEAD
-=======
-    const router = useRouter();
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
     const [appState, setAppState] = useAppState();
 
     // async function signOut() {
     //     await supabase.auth.signOut();
     //     setAppState({ user: null });
     // }
-<<<<<<< HEAD
     // console.log("DEBUG INFO", JSON.parse(sessionStorage.getItem("userData")))
-=======
-    console.log("DEBUG INFO", JSON.parse(sessionStorage.getItem("userData") || "{}"))
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
     return (
         <main>
             <Link href="/login" className="text-green-500 underline block">
@@ -52,7 +40,7 @@ export default function Home() {
             {appState!.user ? (
                 <h5
                     className="text-green-500 underline block mt-2 cursor-pointer"
-                    onClick={signOut}
+                // onClick={signOut}
                 >
                     sign out
                 </h5>
