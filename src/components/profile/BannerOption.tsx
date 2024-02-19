@@ -37,9 +37,15 @@ export function BannerOption({
 
     return (
         <img
+<<<<<<< HEAD
             className={`flex-grow-1 w-full h-auto mr-2 rounded-md transition cursor-pointer border-2 ${
                 banner === `${type}/${color}`
                     ? "border-indigo-600 shadow-md scale-[1.02]"
+=======
+            className={`flex-grow-1 w-full h-12 mr-2 rounded-md transition cursor-pointer border-2 ${
+                banner === "red-500"
+                    ? "border-indigo-600"
+>>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
                     : "border-gray-200 hover:border-indigo-600"
             } ${bg ? `bg-${color}` : ""}`}
             src={src}

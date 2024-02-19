@@ -68,7 +68,11 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
     const info_token = userInfo[0].info.token
     const uuid = userInfo[0].info.uuid
     const particleWalletAddress = userInfo[0].info.wallets[0].public_address
+<<<<<<< HEAD
 
+=======
+    console.log(wallets)
+>>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
     try {
         const user = await prisma.user.create({
             data: {
@@ -78,6 +82,12 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
             },
         });
 
+<<<<<<< HEAD
+=======
+        console.log("THEME", theme);
+        console.log("BANNER", banner);
+
+>>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
         await prisma.profile.create({
             data: {
                 userid: user.id, // Use the existing user's ID
@@ -104,6 +114,11 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                 } catch (error) {
                     console.error(`Error inserting social:`, error);
                 }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
             }
         }
 
@@ -141,6 +156,10 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
         }
 
         await prisma.$disconnect();
+<<<<<<< HEAD
+=======
+        console.log("USER RETURN", user)
+>>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
         return user.id;
     } catch (error) {
         console.error('Error creating user:', error);

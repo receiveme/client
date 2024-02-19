@@ -58,20 +58,20 @@ export function WalletConfigModal({
                                         <p className="font-medium mt-4">
                                             For EVM based-agnostic chains, what supported networks do you want to show on your profile?
                                         </p>
-                                            
-                                            <div>
-                                                <input type="checkbox" id="ETH" name="ETH" checked />
-                                                <label for="ETH">ETH</label>
-                                            </div>
 
-                                            <div>
-                                                <input type="checkbox" id="avax" name="avax" checked />
-                                                <label for="avax">AVAX</label>
-                                            </div>
-                                            <div>
-                                                <input type="checkbox" id="matic" name="matic" />
-                                                <label for="matic">MATIC</label>
-                                            </div>
+                                        <div>
+                                            <input type="checkbox" id="ETH" name="ETH" checked />
+                                            <label htmlFor="ETH">ETH</label>
+                                        </div>
+
+                                        <div>
+                                            <input type="checkbox" id="avax" name="avax" checked />
+                                            <label htmlFor="avax">AVAX</label>
+                                        </div>
+                                        <div>
+                                            <input type="checkbox" id="matic" name="matic" />
+                                            <label htmlFor="matic">MATIC</label>
+                                        </div>
                                     </div>
 
                                     <div className="mt-6">

@@ -129,7 +129,6 @@ function Link({ handle, show, next }: StageProps) {
         if (!sessionStorage.getItem("userInfo")) {
             router.push('/')
         }
-
         const user = await particle.auth.login({ preferredAuthType })
         sessionStorage.setItem("wallets", JSON.stringify([]))
         //@ts-ignore

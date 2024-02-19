@@ -24,7 +24,11 @@ model User {
 
 model profile {
   id         String   @id @default(uuid())
+<<<<<<< HEAD
   userid     String   
+=======
+  userid     String
+>>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
   created    DateTime @default(now())
   theme      String?  // Optional field
   background String?  // Optional field
@@ -53,10 +57,17 @@ model wallet {
   id                    String    @id @default(uuid())
   userid                String
   address               String    
+<<<<<<< HEAD
   network               String?   Optional field
   created               DateTime? @default(now())
   user                  User      @relation(fields: [userid], references: [id], onDelete: Cascade)
   preferrednetworks     String[]  Array of strings
+=======
+  network               String?   // Optional field
+  created               DateTime? @default(now())
+  user                  User      @relation(fields: [userid], references: [id], onDelete: Cascade)
+  preferrednetworks     String[]  // Array of strings
+>>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
 
   @@map("wallets")
 }

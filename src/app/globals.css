@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+<<<<<<< HEAD
 @media (prefers-color-scheme: dark) {}
 
 .background-animate {
@@ -70,4 +71,28 @@
 
 .network-dropdown-item:hover {
   background-color: rgb(201, 201, 201);
+=======
+@media (prefers-color-scheme: dark) {
+}
+
+.background-animate {
+
+    background-size: 400%;
+    
+    -webkit-animation: gradient-animation 3s ease infinite;
+    -moz-animation: gradient-animation 3s ease infinite;
+    animation: gradient-animation 3s ease infinite;
+}
+
+@keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+>>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
 }

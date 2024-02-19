@@ -16,6 +16,7 @@ const config: Config = {
         },
     },
     plugins: [],
+<<<<<<< HEAD
     safelist: [
         "from-yellow-300",
         "from-green-300",
@@ -23,5 +24,7 @@ const config: Config = {
         "from-red-500",
         "from-orange-600",
     ],
+=======
+>>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
 };
 export default config;
