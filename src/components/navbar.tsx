@@ -104,7 +104,7 @@ export default function Navbar() {
                 console.log("GLOBID", uuid)
                 const userData = await fetchUserData(uuid);
                 console.log("USERDATA", userData)
-                if (!userData) {
+                if (!userData || !userData.length) {
                     router.push("/onboard");
                 } else {
                     sessionStorage.setItem("userData", userData);
@@ -138,7 +138,7 @@ export default function Navbar() {
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
                     {/* {account ? */}
-                    <ConnectButton.Custom>
+                    {/* <ConnectButton.Custom>
                         {({ account, openConnectModal }) => {
                             const handleConnect = () => {
                                 openConnectModal()
@@ -151,6 +151,31 @@ export default function Navbar() {
                                     <button onClick={handleConnect} disabled={!!account}>
                                         Open Connect
                                     </button>
+                                </div>
+                            );
+                        }}
+                    </ConnectButton.Custom> */}
+                    <ConnectButton.Custom>
+                        {({ account, chain, openAccountModal, openConnectModal, openChainModal, accountLoading }) => {
+                            return (
+                                <div>
+                                    <button onClick={openConnectModal} disabled={!!account}>
+                                        Open Connect
+                                    </button>
+                                    <br />
+                                    <br />
+                                    <button onClick={openAccountModal} disabled={!account}>
+                                        Open Account
+                                    </button>
+                                    <br />
+                                    <br />
+                                    <button onClick={openChainModal} disabled={!account}>
+                                        Open Switch Network
+                                    </button>
+                                    <div>
+                                        <h3>account</h3>
+                                        <p>{account}</p>
+                                    </div>
                                 </div>
                             );
                         }}

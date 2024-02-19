@@ -67,6 +67,7 @@ export async function getUserData(userId) {
                 Wallet: true,
             },
         });
+        console.log(userData)
         await prisma.$disconnect();
 
         return userData;

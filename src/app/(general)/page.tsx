@@ -13,7 +13,7 @@ export default function Home() {
     //     await supabase.auth.signOut();
     //     setAppState({ user: null });
     // }
-    console.log("DEBUG INFO", JSON.parse(sessionStorage.getItem("userData")))
+    console.log("DEBUG INFO", JSON.parse(sessionStorage.getItem("userData") || "{}"))
     return (
         <main>
             <Link href="/login" className="text-green-500 underline block">
