@@ -134,30 +134,6 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
-<<<<<<< HEAD
-                    {
-                        JSON.parse(sessionStorage.getItem("globalId")) ?
-                            <button onClick={signOut} className={"btn-nav-auth"} type="button">
-                                LOGOUT
-                            </button>
-                            :
-                            <ConnectButton.Custom>
-                                {({ account, openConnectModal }) => {
-                                    const handleConnect = () => {
-                                        openConnectModal()
-                                        setConnected(true)
-                                    }
-                                    return (
-                                        <div>
-                                            <button onClick={handleConnect} className={"btn-nav-auth"} type="button" disabled={!!account}>
-                                                Open Connect
-                                            </button>
-                                        </div>
-                                    );
-                                }}
-                            </ConnectButton.Custom>
-                    }
-=======
                     <ConnectButton.Custom>
                         {({ account, chain, openAccountModal, openConnectModal, openChainModal, accountLoading }) => {
                             return (
@@ -193,7 +169,6 @@ export default function Navbar() {
                         
                     } */}
 
->>>>>>> ca70eeb30fbdf158e502b6cfa9121d0f73137917
                 </div>
             </nav>
             <Dialog
