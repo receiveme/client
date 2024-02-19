@@ -221,9 +221,8 @@ function Link({ handle, show, next }: StageProps) {
         });
     }
 
-    function configWalletModal() {
 
-    }
+
 
     return (
         <>
@@ -438,10 +437,20 @@ function Link({ handle, show, next }: StageProps) {
                                         alt="Link Particle"
                                         className="mr-2 h-5 w-5"
                                     />
-
-                                    <span className="text-sm font-semibold">
+                                <div>
+                                <p className="text-sm font-semibold">
                                         Particle Connect
-                                    </span>
+                                    </p>
+
+                                    <p className="ml-1.5 text-xs text-gray-600 truncate ">
+                                        Networks: ETH, AVAX... (EVM)
+                                    </p>
+                                    <p className="px-1.5 py-1.5 bg-grey-600">
+                                        <img src='/icons/settings.png' className='w-5'/>
+                                    </p>
+                                </div>
+
+
                                 </button>
                             </> :
 
