@@ -80,17 +80,17 @@ export default async function Profile({ params }: any) {
                             {data.Wallet.map((wallet: any, i) => {
                                 const preferrednetworks = wallet.preferrednetworks
                                 return (
-                                    <Wallet
-                                        network={
-                                            wallet.network == "metamask"
-                                                ? "EVM"
-                                                : wallet.network == 'particle' ?
-                                                    'EVM' : wallet.network
-                                        }
-                                        address={wallet.address}
-                                        key={i}
-                                        preferrednetworks={preferrednetworks}
-                                    />
+                                    <div className="network-map">
+                                        {wallet.preferrednetworks.map((e, i) => {
+                                            return (
+                                                <Wallet
+                                                    address={wallet.address}
+                                                    key={i}
+                                                    preferrednetwork={preferrednetworks[i]}
+                                                />
+                                            )
+                                        })}
+                                    </div>
                                 )
                             })}
                         </div>

@@ -140,7 +140,7 @@ export default function Navbar() {
                             </button>
                             :
                             <ConnectButton.Custom>
-                                {({ account, openConnectModal }) => {
+                                {({ openConnectModal }) => {
                                     const handleConnect = () => {
                                         openConnectModal()
                                         setConnected(true)

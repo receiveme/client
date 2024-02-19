@@ -24,7 +24,7 @@ model User {
 
 model profile {
   id         String   @id @default(uuid())
-  userid     String
+  userid     String   
   created    DateTime @default(now())
   theme      String?  // Optional field
   background String?  // Optional field
@@ -53,10 +53,10 @@ model wallet {
   id                    String    @id @default(uuid())
   userid                String
   address               String    
-  network               String?   // Optional field
+  network               String?   Optional field
   created               DateTime? @default(now())
   user                  User      @relation(fields: [userid], references: [id], onDelete: Cascade)
-  preferrednetworks     String[]  // Array of strings
+  preferrednetworks     String[]  Array of strings
 
   @@map("wallets")
 }

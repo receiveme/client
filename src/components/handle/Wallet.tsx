@@ -6,19 +6,18 @@ import Toast from "../toast";
 import { WalletQRCodeModal } from "./WalletQRCodeModal";
 import Algorand from "../../../public/img/3p/algorand.png"
 import Eth from "../../../public/img/3p/eth.png"
-import Polygon from "../../../public/img/3p/polygon.png"
+import Polygon from "../../../public/img/3p/polygonsvg.png"
 import Avax from "../../../public/img/3p/avaxpng.png"
 import Tron from "../../../public/img/3p/tron.png"
 // import styles from "Wallet.module.css"
 import "../../app/globals.css"
 
 type WalletProps = {
-    network: string;
     address: string;
-    preferrednetworks: any
+    preferrednetwork: any
 };
 
-export function Wallet({ network, address, preferrednetworks }: WalletProps) {
+export function Wallet({ address, preferrednetwork }: WalletProps) {
     const originalWalletAddress = address;
     const [selectedNetwork, setSelectedNetwork] = useState(0)
     const [walletAddress, setWalletAddress] = useState(address);
@@ -90,7 +89,7 @@ export function Wallet({ network, address, preferrednetworks }: WalletProps) {
             <WalletQRCodeModal
                 isOpen={isQRCodeModalOpen}
                 setIsOpen={setIsQRCodeModalOpen}
-                network={preferrednetworks[selectedNetwork]}
+                network={preferrednetwork}
                 address={originalWalletAddress}
 
             />
@@ -98,7 +97,7 @@ export function Wallet({ network, address, preferrednetworks }: WalletProps) {
             <div className="flex bg-white rounded-lg shadow-sm py-2 px-1">
                 <div className="flex items-center justify-center ml-2">
                     <div className={"preferred-networks"}>
-                        <div className={showSelectedNetworks ? "preferred-networks-dropdown" : "preferred-networks-dropdown-hide"}>
+                        {/* <div className={showSelectedNetworks ? "preferred-networks-dropdown" : "preferred-networks-dropdown-hide"}>
                             {preferrednetworks.map((network, i) => {
                                 return (
                                     <img
@@ -121,24 +120,26 @@ export function Wallet({ network, address, preferrednetworks }: WalletProps) {
                                                             ? Algorand.src
                                                             : null
                                         }
-                                        className={`network-dropdown-item`}
+                                        className={`w-[28px] h-[auto] network-dropdown-item`}
                                     />
                                 )
                             })
                             }
-                        </div>
+                        </div> */}
                         <img
                             onClick={() => setShowSelectedNetworks(true)}
                             src={
-                                preferrednetworks[selectedNetwork] === "eth"
+                                preferrednetwork === "eth"
                                     ? Eth.src
-                                    : preferrednetworks[selectedNetwork] === "tron"
+                                    : preferrednetwork === "tron"
                                         ? Tron.src
-                                        : preferrednetworks[selectedNetwork] === "avax"
+                                        : preferrednetwork === "avax"
                                             ? Avax.src
-                                            : preferrednetworks[selectedNetwork] === "algorand"
+                                            : preferrednetwork === "algorand"
                                                 ? Algorand.src
-                                                : null
+                                                : preferrednetwork === "polygon"
+                                                    ? Polygon.src
+                                                    : null
                             }
                             className={`w-[28px] h-[auto] selected-network-item`}
                         />
@@ -147,7 +148,7 @@ export function Wallet({ network, address, preferrednetworks }: WalletProps) {
                 </div>
                 <div className="ml-3 w-full flex flex-col flex-shrink-1">
                     <p className="text-sm font-bold overflow-ellipsis">
-                        {preferrednetworks[selectedNetwork].toUpperCase()}
+                        {preferrednetwork.toUpperCase()}
                     </p>
                     <span className="text-xs font-light">{walletAddress}</span>
                 </div>

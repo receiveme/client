@@ -38,12 +38,18 @@
 .selected-network-item:hover {
   cursor: pointer;
   border-radius: 4px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+
 }
 
 .preferred-networks-dropdown-hide {
   display: none;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0);
+
+}
+
+.network-map {
+  display: flex;
+  flex-direction: column;
+  row-gap: .5rem;
 }
 
 .preferred-networks-dropdown {
@@ -54,7 +60,6 @@
   row-gap: .25rem;
   top: 0;
   left: 0;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .network-dropdown-item {
