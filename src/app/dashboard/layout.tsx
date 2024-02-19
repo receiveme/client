@@ -9,26 +9,30 @@ import "./dashboard.css";
 
 const archivo = Archivo({ subsets: ["latin"] });
 
-import { Fragment, useState } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
+import { Fragment, useEffect, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 import {
     Icon12Hours,
     IconChartAreaLine,
-    IconHome,
-    IconQrcode,
+    IconPalette,
     IconSocial,
-    IconUsersGroup,
-    IconWallet,
+    IconUserBolt,
 } from "@tabler/icons-react";
 
 import "@particle-network/connect-react-ui/dist/index.css";
 import { ConnectButton } from "@particle-network/connect-react-ui";
+import { DashboardProfile } from "@/src/components/dashboard/DashboardProfile";
 
 const navigation = [
-    { name: "Appearance", href: "#", icon: IconHome, current: true },
-    { name: "Analytics", href: "#", icon: IconChartAreaLine, current: false },
-    { name: "Wallets", href: "#", icon: IconWallet, current: false },
-    { name: "Socials", href: "#", icon: IconSocial, current: false },
+    { name: "Appearance", href: "#", icon: IconPalette },
+    { name: "Wallets & Socials", href: "#", icon: IconSocial, link: true },
+    { name: "My Profile", href: "#", icon: IconUserBolt, profile: true },
+    {
+        name: "Analytics",
+        href: "#",
+        icon: IconChartAreaLine,
+        disabled: true,
+    },
 ];
 
 const userNavigation = [
@@ -46,6 +50,16 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const [current, setCurrent] = useState("Appearance");
+    const [handle, setHandle] = useState("");
+
+    useEffect(() => {
+        if (sessionStorage) {
+            const storageHandle = sessionStorage.getItem("handle") || "hello";
+            setHandle(storageHandle);
+        }
+    });
 
     return (
         <html lang="en">
@@ -167,16 +181,26 @@ export default function RootLayout({
                                                                                 href={
                                                                                     item.href
                                                                                 }
+                                                                                onClick={() =>
+                                                                                    setCurrent(
+                                                                                        item.name,
+                                                                                    )
+                                                                                }
                                                                                 className={classNames(
-                                                                                    item.current
+                                                                                    current ===
+                                                                                        item.name
                                                                                         ? "bg-gray-50 text-indigo-600"
                                                                                         : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
                                                                                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition",
+                                                                                    item.disabled
+                                                                                        ? "opacity-10 text-gray-300 hover:text-gray-600 "
+                                                                                        : "",
                                                                                 )}
                                                                             >
                                                                                 <item.icon
                                                                                     className={classNames(
-                                                                                        item.current
+                                                                                        current ===
+                                                                                            item.name
                                                                                             ? "text-indigo-600"
                                                                                             : "text-gray-400 group-hover:text-indigo-600",
                                                                                         "h-6 w-6 shrink-0 transition",
@@ -224,19 +248,39 @@ export default function RootLayout({
                                                     <li key={item.name}>
                                                         <a
                                                             href={item.href}
+                                                            onClick={() =>
+                                                                item.profile
+                                                                    ? window.open(
+                                                                          `/${handle}`,
+                                                                          "_blank",
+                                                                      )
+                                                                    : !item.disabled
+                                                                    ? setCurrent(
+                                                                          item.name,
+                                                                      )
+                                                                    : null
+                                                            }
                                                             className={classNames(
-                                                                item.current
+                                                                current ===
+                                                                    item.name
                                                                     ? "bg-gray-50 text-indigo-600"
                                                                     : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
                                                                 "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition",
+                                                                item.disabled
+                                                                    ? "!text-gray-400 !hover:text-gray-500"
+                                                                    : "",
                                                             )}
                                                         >
                                                             <item.icon
                                                                 className={classNames(
-                                                                    item.current
+                                                                    current ===
+                                                                        item.name
                                                                         ? "text-indigo-600"
                                                                         : "text-gray-400 group-hover:text-indigo-600",
                                                                     "h-6 w-6 shrink-0 transition",
+                                                                    item.disabled
+                                                                        ? "!text-gray-300 !hover:text-gray-400 !group-hover:text-gray-400"
+                                                                        : "",
                                                                 )}
                                                                 aria-hidden="true"
                                                             />
@@ -274,15 +318,28 @@ export default function RootLayout({
                                 />
 
                                 <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                                    <div className="flex items-center justify-end gap-x-4 lg:gap-x-6 w-full">
+                                    <div className="flex items-center justify-between gap-x-4 lg:gap-x-6 w-full">
+                                        <div className="flex gap-3 items-center">
+                                            <div className="h-full px-4 py-2 rounded-lg bg-gray-100">
+                                                <span className="font-bold">
+                                                    <span className="text-gray-400 font-normal">
+                                                        @
+                                                    </span>
+                                                    {handle}
+                                                </span>
+                                            </div>
+                                        </div>
+
                                         <ConnectButton />
                                     </div>
                                 </div>
                             </div>
 
-                            <main className="py-10 w-full h-full">
+                            <main className="py-6">
                                 <div className="px-4 sm:px-6 lg:px-8 h-full w-full">
-                                    {children}
+                                    {current === "Appearance" && (
+                                        <DashboardProfile handle={handle} />
+                                    )}
                                 </div>
                             </main>
                         </div>
