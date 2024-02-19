@@ -415,84 +415,7 @@ function Link({ handle, show, next }: StageProps) {
                     <h3 className="font-regular text-sm mt-1">
                         Link your wallets and start getting paid.
                     </h3>
-                    {!metamaskAddress ?
-                        <>
-                            <button onClick={() => connectMetamask()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/metamask.png"
-                                    alt="Link Metamask"
-                                    className="mr-2 h-5 w-5"
-                                />
 
-                                <span onClick={connectMetamask} className="text-sm font-semibold">
-                                    Link Metamask
-                                </span>
-                            </button>
-                        </>
-                        :
-
-                        <>
-
-                            <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/metamask.png"
-                                    alt="Link Metamask"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span onClick={connectMetamask} className="text-sm font-semibold">
-                                    Link Metamask
-                                </span>
-
-                                <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                    {metamaskAddress.substring(0, 5)}...{metamaskAddress.substring(35, 42)}
-                                </span>
-                            </button>
-                        </>
-
-
-                    }
-
-
-
-
-
-                    3:34
-                    {!tronlinkAddress ?
-                        <>
-                            <button onClick={() => connectTronlink()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/tron.png"
-                                    alt="Link Tron"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span className="text-sm font-semibold">
-                                    Link Tronlink
-                                </span>
-                            </button>
-
-                        </>
-                        :
-                        <>
-                            <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/tron.png"
-                                    alt="Link Tron"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span className="text-sm font-semibold">
-                                    Link Tronlink
-                                </span>
-
-                                <span className="ml-1.5 text-xs text-gray-600 truncate">
-                                    {tronlinkAddress.substring(0, 5)}...{tronlinkAddress.substring(35, 41)}
-                                </span>
-                            </button>
-                        </>
-
-                    }
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
                         {!metamaskAddress ?
                             <>
@@ -837,7 +760,7 @@ export default function Onboard() {
         const fetchSocialDetails = async () => {
             for (let i = 0; i < socials.length; i++) {
                 if (socials[i].authType == 'github') {
-                    if (!socials[i] && socials[i].socialId) {
+                    if (!socials[i].name && socials[i].socialId) {
                         let id = socials[i].socialId
                         let res = await fetch(`https://api.github.com/user/${id}`);
                         if (!res.ok) throw new Error('bad')

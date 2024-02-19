@@ -6,6 +6,7 @@
 }
 
 .background-animate {
+
     background-size: 400%;
     
     -webkit-animation: gradient-animation 3s ease infinite;

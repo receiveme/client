@@ -68,6 +68,10 @@ export default async function Profile() {
         // Render 404
         return <>could not find</>;
     }
+    const bg = data.profiles.theme.includes('/animate') ? `from-${data.profiles.theme.replace('/animate', '')} background-animate gradient-animation`: `from-${data.profiles.theme.replace('/none', '')} `
+    
+    let bannerSrc = data.profiles.background.includes('whale') ? `/img/profile/WhaleNew.png` : data.profiles.background.includes('waves/blue') ? `/img/profile/WavesBlue.png` : data.profiles.background.includes('waves/red') ? '/img/profile/WavesRed.png' : data.profiles.background.includes('waves/pink') ?  `/img/profile/WavesPink.png`:  data.profiles.background.includes('waves/turquoise') ? `/img/profile/WavesTurquoise.png` : data.profiles.background.includes('waves/yellow') ? `/img/profile/WavesYellow.png` : ``
+
     const socials = data.Social.map(social => 
             <div className="flex gap-2 ">
             <a
@@ -83,16 +87,16 @@ export default async function Profile() {
     )
     const wallets = data.Wallet.map(wallet =>
         <Wallet
-            network={wallet.network || 'ETH'}
+            network={wallet.network == 'metamask' ? 'EVM' : wallet.network}
             address={wallet.address}
         />
     )
 
     return (
-        <>
+        <> 
             <main className="">
                 <div
-                    className={`w-full bg-gradient-to-b from-${data.profiles.theme} to-slate-900 p-2 flex justify-center flex-wrap flex-col gap-2 items-center h-screen`}
+                    className={`w-full bg-gradient-to-b ${bg} to-slate-900 p-2 flex justify-center flex-wrap flex-col gap-2 items-center h-screen `}
                 >
                     <div className="max-w-[580px] w-full px-5 flex flex-col items-center mb-24">
                         <div
@@ -111,7 +115,7 @@ export default async function Profile() {
 
                             </div>
                             <img
-                                src="/img/profile/WhaleNew.png"
+                                src={bannerSrc}
                                 className={`rounded-xl shadow-md`}
                             />
                         </div>
