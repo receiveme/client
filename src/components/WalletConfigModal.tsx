@@ -2,15 +2,17 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 
-// type WalletQRCodeModalProps = {
-//     address: string;
-//     network: string;
-//     isOpen: boolean;
-//     setIsOpen: any;
-// };
+type WalletConfigModalProps = {
+    isOpen: boolean;
+    setIsOpen: any;
 
-export function WalletConfigModal() {
-    
+};
+
+export function WalletConfigModal({
+    isOpen,
+    setIsOpen,
+
+}: WalletConfigModalProps) {
     function closeModal() {
         setIsOpen(false);
     }
@@ -51,14 +53,25 @@ export function WalletConfigModal() {
                                     </Dialog.Title>
 
                                     <div className="mt-6 flex flex-col items-center justify-center">
-                                        <QRCodeSVG value={address} size={256} />
+                                        {/* <QRCodeSVG value={address} size={256} /> */}
 
                                         <p className="font-medium mt-4">
-                                            {network.toUpperCase()}
+                                            For EVM based-agnostic chains, what supported networks do you want to show on your profile?
                                         </p>
-                                        <p className="text-xs font-light text-gray-700">
-                                            {address}
-                                        </p>
+                                            
+                                            <div>
+                                                <input type="checkbox" id="ETH" name="ETH" checked />
+                                                <label for="ETH">ETH</label>
+                                            </div>
+
+                                            <div>
+                                                <input type="checkbox" id="avax" name="avax" checked />
+                                                <label for="avax">AVAX</label>
+                                            </div>
+                                            <div>
+                                                <input type="checkbox" id="matic" name="matic" />
+                                                <label for="matic">MATIC</label>
+                                            </div>
                                     </div>
 
                                     <div className="mt-6">

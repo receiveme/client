@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { ThemeOption } from "@/src/components/profile/ThemeOption";
 import { BannerOption } from "@/src/components/profile/BannerOption";
 import { Banner } from "@/src/components/profile/Banner";
+import { WalletConfigModal } from "@/src/components/WalletConfigModal";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 type StageProps = {
@@ -62,7 +63,7 @@ function Handle({ show, updateHandle, next }: StageProps) {
             <div className="my-6 relative">
                 <Banner
                     handle={handleInput ? `${handleInput}` : "myhandle"}
-                    banner="whale/white"
+                    banner="waves/turquoise"
                 />
             </div>
 
@@ -120,6 +121,7 @@ function Link({ handle, show, next }: StageProps) {
 
     const [metamaskAddress, setMetamaskAddress] = useState<string | null>();
     const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
+    const [isQRCodeModalOpen, setIsQRCodeModalOpen] = useState(false);
 
     if (!show) {
         return <></>;
@@ -224,12 +226,21 @@ function Link({ handle, show, next }: StageProps) {
 
 
 
-    function configWalletModal(): void {
-        throw new Error("Function not implemented.");
+
+
+
+    function showWalletConfig() {
+        setIsQRCodeModalOpen(true);
     }
+
 
     return (
         <>
+        <WalletConfigModal
+            isOpen={isQRCodeModalOpen}
+            setIsOpen={setIsQRCodeModalOpen}
+        />
+
             <div className="flex flex-col gap-4">
                 <div className="mt-6 relative">
                     <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
@@ -435,7 +446,7 @@ function Link({ handle, show, next }: StageProps) {
                     <div className="mt-4 grid grid-cols-1  gap-x-2 gap-y-2">
                         {sessionStorage.getItem('userInfo') ?
                             <>
-                                <button onClick={() => configWalletModal()} className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button onClick={() => showWalletConfig()} className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                     <img
                                         src="/img/3p/particle.png"
                                         alt="Link Particle"
@@ -479,7 +490,7 @@ function Link({ handle, show, next }: StageProps) {
 
                             <>
 
-                                <button className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button onClick={()=>showWalletConfig()} className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                     <img
                                         src="/img/3p/metamask.png"
                                         alt="Link Metamask"
