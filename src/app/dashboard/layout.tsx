@@ -25,12 +25,10 @@ import "@particle-network/connect-react-ui/dist/index.css";
 import { ConnectButton } from "@particle-network/connect-react-ui";
 
 const navigation = [
-    { name: "Home", href: "#", icon: IconHome, current: true },
+    { name: "Appearance", href: "#", icon: IconHome, current: true },
     { name: "Analytics", href: "#", icon: IconChartAreaLine, current: false },
-    { name: "Profile", href: "#", icon: IconUsersGroup, current: false },
     { name: "Wallets", href: "#", icon: IconWallet, current: false },
     { name: "Socials", href: "#", icon: IconSocial, current: false },
-    { name: "QR Code", href: "#", icon: IconQrcode, current: false },
 ];
 
 const userNavigation = [
