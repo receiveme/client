@@ -5,11 +5,24 @@ import { Banner } from "../profile/Banner";
 import { ThemeOption } from "../profile/ThemeOption";
 import { BannerOption } from "../profile/BannerOption";
 
-export function DashboardProfile({ handle }: { handle: string }) {
-    const [theme, setTheme] = useState("green-300");
-    const [banner, setBanner] = useState("whale/white");
+type DashboardProfileProps = {
+    handle: string;
+    initialTheme: string;
+    initialBackground: string;
+};
 
-    async function save() {}
+export function DashboardProfile({
+    handle,
+    initialTheme,
+    initialBackground,
+}: DashboardProfileProps) {
+    const [theme, setTheme] = useState(initialTheme);
+    const [banner, setBanner] = useState(initialBackground);
+
+    async function save() {
+        // Send API request
+        // Save to sessionStorage
+    }
 
     return (
         <div className="flex flex-col gap-4 w-full transition fade-up">

@@ -53,11 +53,33 @@ export default function RootLayout({
 
     const [current, setCurrent] = useState("Appearance");
     const [handle, setHandle] = useState("");
+    const [theme, setTheme] = useState("blue-400/none");
+    const [background, setBackground] = useState("waves/blue");
 
     useEffect(() => {
         if (sessionStorage) {
-            const storageHandle = sessionStorage.getItem("handle") || "hello";
-            setHandle(storageHandle);
+            const storage =
+                sessionStorage.getItem("userData") ||
+                '{ "handle": "", "theme": "", "background": "" }';
+            const storageParsed = JSON.parse(storage);
+
+            if (storageParsed) {
+                const storageHandle = storageParsed.handle;
+                const storageTheme = storageParsed.Profile[0].theme;
+                const storageBackground = storageParsed.Profile[0].background;
+
+                if (storageHandle) {
+                    setHandle(storageHandle);
+                }
+
+                if (storageTheme) {
+                    setTheme(storageTheme);
+                }
+
+                if (storageBackground) {
+                    setBackground(storageBackground);
+                }
+            }
         }
     });
 
@@ -338,7 +360,11 @@ export default function RootLayout({
                             <main className="py-6">
                                 <div className="px-4 sm:px-6 lg:px-8 h-full w-full">
                                     {current === "Appearance" && (
-                                        <DashboardProfile handle={handle} />
+                                        <DashboardProfile
+                                            handle={handle}
+                                            initialTheme={theme}
+                                            initialBackground={background}
+                                        />
                                     )}
                                 </div>
                             </main>
