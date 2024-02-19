@@ -88,7 +88,6 @@ export default async function Profile({ params }: any) {
                                             : wallet.network
                                     }
                                     address={wallet.address}
-                                    networks={wallet.preferrednetworks}
                                 />
                             ))}
                         </div>

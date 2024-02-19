@@ -8,10 +8,9 @@ import { WalletQRCodeModal } from "./WalletQRCodeModal";
 type WalletProps = {
     network: string;
     address: string;
-    networks: string[]
 };
 
-export function Wallet({ network, address, networks }: WalletProps) {
+export function Wallet({ network, address }: WalletProps) {
     const originalWalletAddress = address;
 
     const [walletAddress, setWalletAddress] = useState(address);
@@ -84,7 +83,7 @@ export function Wallet({ network, address, networks }: WalletProps) {
                 setIsOpen={setIsQRCodeModalOpen}
                 network={network}
                 address={originalWalletAddress}
-                networks={networks}
+
             />
 
             <div className="flex bg-white rounded-lg shadow-sm py-2 px-1">

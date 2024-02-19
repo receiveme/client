@@ -7,7 +7,7 @@ type WalletQRCodeModalProps = {
     network: string;
     isOpen: boolean;
     setIsOpen: any;
-    networks: string
+
 };
 
 export function WalletQRCodeModal({
@@ -15,7 +15,7 @@ export function WalletQRCodeModal({
     network,
     isOpen,
     setIsOpen,
-    networks,
+
 }: WalletQRCodeModalProps) {
     function closeModal() {
         setIsOpen(false);
