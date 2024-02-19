@@ -71,6 +71,7 @@ export default function Navbar() {
     const [connected, setConnected] = useState(false)
 
     async function signOut() {
+        sessionStorage.clear()
         connectKit.particle.auth.logout()
     }
 
@@ -99,18 +100,13 @@ export default function Navbar() {
 
         const fetchData = async () => {
             if (userInfo && userInfo.uuid) { // Assuming userInfo has a uuid property
-                console.log("UUID", userInfo.uuid)
                 const uuid = JSON.parse(sessionStorage.getItem("globalId")) ? JSON.parse(sessionStorage.getItem("globalId")) : "n/a"
-                console.log("GLOBID", uuid)
                 const userData = await fetchUserData(uuid);
-                console.log("USERDATA", userData)
                 if (!userData) {
                     router.push("/onboard");
                 } else {
                     sessionStorage.setItem("userData", userData);
                 }
-
-                console.log("userdata", sessionStorage.getItem("userData")); // Do something with userData, e.g., setting state
             }
         };
 
@@ -120,6 +116,7 @@ export default function Navbar() {
 
     }, [connected, userInfo])
 
+    console.log("ID CHECK", JSON.parse(sessionStorage.getItem("globalId")))
     return (
         <header className="w-full mb-4">
             <nav
@@ -137,31 +134,28 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
-                    {/* {account ? */}
-                    <ConnectButton.Custom>
-                        {({ account, openConnectModal }) => {
-                            const handleConnect = () => {
-                                openConnectModal()
-                                setConnected(true)
-                                // console.log("FETCH DDATA")
-                                // fetchData();
-                            }
-                            return (
-                                <div>
-                                    <button onClick={handleConnect} disabled={!!account}>
-                                        Open Connect
-                                    </button>
-                                </div>
-                            );
-                        }}
-                    </ConnectButton.Custom>
-                    <button onClick={signOut}>
-                        LOGOUT
-                    </button>
-                    {/* :
-                        
-                    } */}
-
+                    {
+                        JSON.parse(sessionStorage.getItem("globalId")) ?
+                            <button onClick={signOut} className={"btn-nav-auth"} type="button">
+                                LOGOUT
+                            </button>
+                            :
+                            <ConnectButton.Custom>
+                                {({ account, openConnectModal }) => {
+                                    const handleConnect = () => {
+                                        openConnectModal()
+                                        setConnected(true)
+                                    }
+                                    return (
+                                        <div>
+                                            <button onClick={handleConnect} className={"btn-nav-auth"} type="button" disabled={!!account}>
+                                                Open Connect
+                                            </button>
+                                        </div>
+                                    );
+                                }}
+                            </ConnectButton.Custom>
+                    }
                 </div>
             </nav>
             <Dialog
