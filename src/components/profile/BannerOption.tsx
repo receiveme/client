@@ -1,5 +1,5 @@
 type BannerOptionProps = {
-    type: "whale" | "waves";
+    type: "whale" | "waves" | "beach" | "gator";
     color: string;
     banner: string;
     setBanner: (banner: string) => void;
@@ -21,6 +21,12 @@ export function BannerOption({
         bg = color;
     } else if (type === "waves") {
         src = `/img/profile/Waves${
+            color[0].toUpperCase() + color.slice(1).toLowerCase()
+        }.png`;
+    } else if (type === "beach") {
+        src = "/img/profile/BeachDay.png";
+    } else if (type === "gator") {
+        src = `/img/profile/Gator${
             color[0].toUpperCase() + color.slice(1).toLowerCase()
         }.png`;
     }

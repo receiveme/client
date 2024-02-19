@@ -7,19 +7,20 @@
 
 .background-animate {
     background-size: 400%;
-
-    -webkit-animation: BgAnimation 3s ease infinite;
-    -moz-animation: BgAnimation 3s ease infinite;
-    animation: BgAnimation 3s ease infinite;
+    
+    -webkit-animation: gradient-animation 3s ease infinite;
+    -moz-animation: gradient-animation 3s ease infinite;
+    animation: gradient-animation 3s ease infinite;
 }
 
-@keyframes BgAnimation {
-    0%,
-    100% {
-        background-position: 0% 50%;
+@keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
     }
-
     50% {
-        background-position: 100% 50%;
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
     }
 }

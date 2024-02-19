@@ -17,6 +17,7 @@ import { createUserProfile } from "@/src/actions";
 import { useRouter } from "next/router";
 import { ThemeOption } from "@/src/components/profile/ThemeOption";
 import { BannerOption } from "@/src/components/profile/BannerOption";
+import { Banner } from "@/src/components/profile/Banner";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 type StageProps = {
@@ -69,27 +70,9 @@ function Handle({ show, updateHandle, next }: StageProps) {
     return (
         <>
             <div className="my-6 relative">
-                <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
-                    <span className="text-3xl text-white font-bold">
-                        <span className="text-gray-400 font-normal">@</span>
-                        {handleInput ? `${handleInput}` : "myhandle"}
-                    </span>
-
-                    {/* <div className="flex gap-2 items-center">
-                        <a
-                            href={"#"}
-                            className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
-                        >
-                            <img
-                                src="/img/3p/paypal.png"
-                                className={`h-[20px] w-[20px]`}
-                            />
-                        </a>
-                    </div> */}
-                </div>
-                <img
-                    src="/img/profile/WhaleNew.png"
-                    className="rounded-xl shadow-md"
+                <Banner
+                    handle={handleInput ? `${handleInput}` : "myhandle"}
+                    banner="whale/white"
                 />
             </div>
 
@@ -258,18 +241,7 @@ function Link({ handle, show, next }: StageProps) {
     return (
         <>
             <div className="flex flex-col gap-4">
-                <div className="mt-6 relative">
-                    <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
-                        <span className="text-3xl text-white font-bold">
-                            <span className="text-gray-400 font-normal">@</span>
-                            {handle}
-                        </span>
-                    </div>
-                    <img
-                        src="/img/profile/WhaleNew.png"
-                        className="rounded-xl shadow-md"
-                    />
-                </div>
+                <Banner handle={handle} banner="whale/white" />
                 <div className="w-full">
                     <h1 className="font-semibold text-lg">Socials</h1>
 
@@ -697,37 +669,7 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                         theme.split("/")[0]
                     } background-animate to-slate-900`}
                 >
-                    <div
-                        className={`relative rounded-xl bg-${
-                            banner.split("/")[1]
-                        }`}
-                    >
-                        <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
-                            <span className="text-3xl text-white font-bold">
-                                <span className="text-gray-400 font-normal">
-                                    @
-                                </span>
-                                {handle}
-                            </span>
-                        </div>
-                        <img
-                            src={
-                                banner.split("/")[0] === "whale"
-                                    ? "/img/profile/WhaleNew.png"
-                                    : `/img/profile/Waves${
-                                          banner
-                                              .split("/")[1][0]
-                                              .toUpperCase() +
-                                          banner
-                                              .split("/")[1]
-                                              .slice(1)
-                                              .toLowerCase()
-                                      }.png`
-                            }
-                            style={{ objectFit: "contain" }}
-                            className="rounded-xl shadow-md w-full"
-                        />
-                    </div>
+                    <Banner handle={handle} banner={banner} />
                 </div>
 
                 <div>
@@ -836,6 +778,42 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                             setBanner={setBanner}
                         />
                     </div>
+
+                    <div className="flex justify-between mt-2 w-full">
+                        <BannerOption
+                            type="beach"
+                            color="day"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+
+                        <BannerOption
+                            type="gator"
+                            color="night"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                        <BannerOption
+                            type="gator"
+                            color="evening"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+
+                        <BannerOption
+                            type="gator"
+                            color="sunrise"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+
+                        <BannerOption
+                            type="gator"
+                            color="cool"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                    </div>
                 </div>
 
                 <button
@@ -863,38 +841,13 @@ function Preview({ handle, links, profile, show, complete }: StageProps) {
                     className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${
                         theme.split("/")[0]
                     } background-animate to-slate-900`}
+                    // className={`mt-6 p-6 rounded-xl background-animate`}
+                    // style={{
+                    //     background:
+                    //         "linear-gradient(180deg, #fff 0%, #f6e05e 100%)",
+                    // }}
                 >
-                    <div
-                        className={`relative rounded-xl bg-${
-                            banner.split("/")[1]
-                        }`}
-                    >
-                        <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
-                            <span className="text-3xl text-white font-bold">
-                                <span className="text-gray-400 font-normal">
-                                    @
-                                </span>
-                                {handle}
-                            </span>
-                        </div>
-                        <img
-                            src={
-                                banner.split("/")[0] === "whale"
-                                    ? "/img/profile/WhaleNew.png"
-                                    : `/img/profile/Waves${
-                                          banner
-                                              .split("/")[1][0]
-                                              .toUpperCase() +
-                                          banner
-                                              .split("/")[1]
-                                              .slice(1)
-                                              .toLowerCase()
-                                      }.png`
-                            }
-                            style={{ objectFit: "contain" }}
-                            className="rounded-xl shadow-md w-full"
-                        />
-                    </div>
+                    <Banner handle={handle} banner={banner} />
                 </div>
 
                 <button
