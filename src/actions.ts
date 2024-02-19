@@ -103,7 +103,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
     const { theme, banner } = profile
     const info_token = userInfo[0].info.token
     const uuid = userInfo[0].info.uuid
-
+    console.log(wallets)
     try {
         const user = await prisma.user.create({
             data: {
@@ -142,6 +142,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
         }
 
         for (let i = 0; i < wallets.length; i++) {
+
             try {
                 await prisma.wallet.create({
                     data: {
@@ -150,7 +151,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                         address: wallets[i].walletAddress,
                     },
                 });
-
+                console.log('successuflly inserted wallet')
             } catch (error) {
                 console.error("Wallet insertion err:", error);
             }

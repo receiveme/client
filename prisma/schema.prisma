@@ -15,14 +15,14 @@ model User {
   created     DateTime  @default(now())
   handle      String    @unique
   authuuid    String?
-  Profile     Profile[]
-  Social      Social[]
-  Wallet      Wallet[]
+  Profile     profile[]
+  Social      social[]
+  Wallet      wallet[]
 
   @@map("users")
 }
 
-model Profile {
+model profile {
   id         String   @id @default(uuid())
   userid     String
   created    DateTime @default(now())
@@ -34,7 +34,7 @@ model Profile {
   @@map("profiles")
 }
 
-model Social {
+model social {
   id                String   @id @default(uuid())
   userid            String
   networkid         String?
@@ -49,7 +49,7 @@ model Social {
   @@map("socials")
 }
 
-model Wallet {
+model wallet {
   id       String    @id @default(uuid())
   userid   String
   address  String    

@@ -5,10 +5,13 @@ import {
     IconLoader2,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { ParticleNetwork, UserInfo } from '@particle-network/auth';
-import { Avalanche } from '@particle-network/chains';
+import { ParticleNetwork, UserInfo } from "@particle-network/auth";
+import { Avalanche } from "@particle-network/chains";
 import { createUserProfile } from "@/src/actions";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import { ThemeOption } from "@/src/components/profile/ThemeOption";
+import { BannerOption } from "@/src/components/profile/BannerOption";
+import { Banner } from "@/src/components/profile/Banner";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 type StageProps = {
@@ -23,7 +26,7 @@ const particle = new ParticleNetwork({
     chainId: Avalanche.id,
     wallet: {
         displayWalletEntry: true,
-        uiMode: "dark"
+        uiMode: "dark",
     },
 });
 
@@ -57,27 +60,9 @@ function Handle({ show, updateHandle, next }: StageProps) {
     return (
         <>
             <div className="my-6 relative">
-                <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
-                    <span className="text-3xl text-white font-bold">
-                        <span className="text-gray-400 font-normal">@</span>
-                        {handleInput ? `${handleInput}` : "myhandle"}
-                    </span>
-
-                    {/* <div className="flex gap-2 items-center">
-                        <a
-                            href={"#"}
-                            className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
-                        >
-                            <img
-                                src="/img/3p/paypal.png"
-                                className={`h-[20px] w-[20px]`}
-                            />
-                        </a>
-                    </div> */}
-                </div>
-                <img
-                    src="/img/profile/WhaleNew.png"
-                    className="rounded-xl shadow-md"
+                <Banner
+                    handle={handleInput ? `${handleInput}` : "myhandle"}
+                    banner="whale/white"
                 />
             </div>
 
@@ -129,12 +114,12 @@ function Handle({ show, updateHandle, next }: StageProps) {
 
 function Link({ handle, show, next }: StageProps) {
     const [isLoading, setLoading] = useState(false);
-    const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
     const [avaxBalance, setAvaxBalance] = useState<string | null>(null);
     const router = useRouter()
 
-    const [metamaskAddress, setMetamaskAddress] = useState<string | null>()
-    const [tronlinkAddress, setTronlinkAddress] = useState<string | null>()
+    const [metamaskAddress, setMetamaskAddress] = useState<string | null>();
+    const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
 
     if (!show) {
         return <></>;
@@ -160,7 +145,7 @@ function Link({ handle, show, next }: StageProps) {
         //store the specific auth type user info in different storage items
         sessionStorage.setItem('socials', JSON.stringify(socials));
         sessionStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
-    }
+    };
 
     // use when manually triggering logout
     // const handleLogout = () => {
@@ -182,10 +167,12 @@ function Link({ handle, show, next }: StageProps) {
 
     function connectMetamask() {
         return new Promise(async (resolve, reject) => {
-            const chainId = await window["ethereum"]?.request({ method: 'eth_chainId' });
-            const accounts = await window["ethereum"]?.
-                request({ method: 'eth_requestAccounts' }) // @ts-ignore
-                .catch(e => {
+            const chainId = await window["ethereum"]?.request({
+                method: "eth_chainId",
+            });
+            const accounts = await window["ethereum"]
+                ?.request({ method: "eth_requestAccounts" }) // @ts-ignore
+                .catch((e) => {
                     console.error("METAMASK ERR:", e);
                     return reject();
                 });
@@ -196,12 +183,13 @@ function Link({ handle, show, next }: StageProps) {
                 wallets.push({ walletProvider: "metamask", walletAddress: accounts[0] })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
             } else return reject();
-        })
+        });
     }
 
     function connectTronlink() {
         return new Promise(async (resolve, reject) => {
-            try { //@ts-ignore
+            try {
+                //@ts-ignore
                 await window["tronLink"]?.request({
                     method: "tron_requestAccounts",
                     params: {
@@ -213,15 +201,15 @@ function Link({ handle, show, next }: StageProps) {
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account)
                 const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
-                wallets.push({ walletProvider: "tron", walletaAddress: account })
+                wallets.push({ walletProvider: "tron", walletAddress: account })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
                 if (!account) return reject();
                 return resolve({ account, chain: "tron" });
             } catch (e) {
-                console.log(e)
+                console.log(e);
                 return reject();
             }
-        })
+        });
     }
 
     return (
@@ -427,84 +415,7 @@ function Link({ handle, show, next }: StageProps) {
                     <h3 className="font-regular text-sm mt-1">
                         Link your wallets and start getting paid.
                     </h3>
-                    {!metamaskAddress ?
-                        <>
-                            <button onClick={() => connectMetamask()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/metamask.png"
-                                    alt="Link Metamask"
-                                    className="mr-2 h-5 w-5"
-                                />
 
-                                <span onClick={connectMetamask} className="text-sm font-semibold">
-                                    Link Metamask
-                                </span>
-                            </button>
-                        </>
-                        :
-
-                        <>
-
-                            <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/metamask.png"
-                                    alt="Link Metamask"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span onClick={connectMetamask} className="text-sm font-semibold">
-                                    Link Metamask
-                                </span>
-
-                                <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                    {metamaskAddress.substring(0, 5)}...{metamaskAddress.substring(35, 42)}
-                                </span>
-                            </button>
-                        </>
-
-
-                    }
-
-
-
-
-
-                    3:34
-                    {!tronlinkAddress ?
-                        <>
-                            <button onClick={() => connectTronlink()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/tron.png"
-                                    alt="Link Tron"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span className="text-sm font-semibold">
-                                    Link Tronlink
-                                </span>
-                            </button>
-
-                        </>
-                        :
-                        <>
-                            <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/tron.png"
-                                    alt="Link Tron"
-                                    className="mr-2 h-5 w-5"
-                                />
-
-                                <span className="text-sm font-semibold">
-                                    Link Tronlink
-                                </span>
-
-                                <span className="ml-1.5 text-xs text-gray-600 truncate">
-                                    {tronlinkAddress.substring(0, 5)}...{tronlinkAddress.substring(35, 41)}
-                                </span>
-                            </button>
-                        </>
-
-                    }
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
                         {!metamaskAddress ?
                             <>
@@ -609,8 +520,8 @@ function Link({ handle, show, next }: StageProps) {
 }
 
 function Profile({ handle, next, setProfile, show }: StageProps) {
-    const [theme, setTheme] = useState("yellow-300");
-    const [banner, setBanner] = useState("white");
+    const [theme, setTheme] = useState("yellow-300/none");
+    const [banner, setBanner] = useState("whale/white");
 
     function nextStage() {
         setProfile({ theme, banner });
@@ -625,22 +536,10 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
         <>
             <div className="flex flex-col gap-4">
                 <div
-                    className={`mt-6 p-6 rounded-xl bg-gradient-to-b from-${theme} to-slate-900`}
+                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${theme.split("/")[0]
+                        } background-animate to-slate-900`}
                 >
-                    <div className={`relative rounded-xl bg-${banner}`}>
-                        <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
-                            <span className="text-3xl text-white font-bold">
-                                <span className="text-gray-400 font-normal">
-                                    @
-                                </span>
-                                {handle}
-                            </span>
-                        </div>
-                        <img
-                            src="/img/profile/WhaleNew.png"
-                            className="rounded-xl shadow-md"
-                        />
-                    </div>
+                    <Banner handle={handle} banner={banner} />
                 </div>
 
                 <div>
@@ -651,94 +550,138 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                     </h3>
 
                     <div className="flex gap-4 mt-2">
-                        <div
-                            onClick={() => setTheme("yellow-300")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-yellow-300 to-slate-900 transition cursor-pointer border-2 ${theme === "yellow-300"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                        ></div>
-                        <div
-                            onClick={() => setTheme("green-300")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-green-300 to-slate-900 transition cursor-pointer border-2 ${theme === "green-300"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                        ></div>
-                        <div
-                            onClick={() => setTheme("blue-400")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-blue-400 to-slate-900 transition cursor-pointer border-2 ${theme === "blue-400"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                        ></div>
-                        <div
-                            onClick={() => setTheme("red-500")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-red-500 to-slate-900 transition cursor-pointer border-2 ${theme === "red-500"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                        ></div>
-                        <div
-                            onClick={() => setTheme("orange-600")}
-                            className={`flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-orange-600 to-slate-900 transition cursor-pointer border-2 ${theme === "orange-600"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                        ></div>
+                        <ThemeOption
+                            color="yellow-300"
+                            theme={theme}
+                            setTheme={setTheme}
+                        />
+                        <ThemeOption
+                            color="green-300"
+                            theme={theme}
+                            setTheme={setTheme}
+                        />
+                        <ThemeOption
+                            color="blue-400"
+                            theme={theme}
+                            setTheme={setTheme}
+                        />
+                        <ThemeOption
+                            color="red-500"
+                            theme={theme}
+                            setTheme={setTheme}
+                        />
+                        <ThemeOption
+                            color="orange-600"
+                            theme={theme}
+                            setTheme={setTheme}
+                        />
                     </div>
 
-                    <h2 className="font-semibold text-lg mt-6">Banner</h2>
+                    <h2 className="font-semibold text-lg mt-4">Banner</h2>
 
                     <h3 className="font-regular text-sm">
                         Choose a banner for your profile.
                     </h3>
 
-                    <div className="flex gap-4 mt-2">
-                        <img
-                            className={`flex-grow-1 w-full h-12 rounded-md border-2 transition cursor-pointer ${banner === "white"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                }`}
-                            src="/img/profile/WhaleNew.png"
-                            onClick={() => setBanner("white")}
-                            alt="whale banner"
+                    <div className="flex justify-between mt-2 w-full">
+                        <BannerOption
+                            type="whale"
+                            color="white"
+                            banner={banner}
+                            setBanner={setBanner}
                         />
-                        <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "green-400"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                } bg-green-400`}
-                            src="/img/profile/WhaleNew.png"
-                            onClick={() => setBanner("green-400")}
-                            alt="whale banner green"
+                        <BannerOption
+                            type="whale"
+                            color="green-400"
+                            banner={banner}
+                            setBanner={setBanner}
                         />
-                        <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "blue-300"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                } bg-blue-300`}
-                            src="/img/profile/WhaleNew.png"
-                            onClick={() => setBanner("blue-300")}
-                            alt="whale banner blue"
+                        <BannerOption
+                            type="whale"
+                            color="blue-300"
+                            banner={banner}
+                            setBanner={setBanner}
                         />
-                        <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "red-500"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                } bg-red-500`}
-                            src="/img/profile/WhaleNew.png"
-                            onClick={() => setBanner("red-500")}
-                            alt="whale banner red"
+                        <BannerOption
+                            type="whale"
+                            color="red-500"
+                            banner={banner}
+                            setBanner={setBanner}
                         />
-                        <img
-                            className={`flex-grow-1 w-full h-12 rounded-md transition cursor-pointer border-2 ${banner === "orange-400"
-                                ? "border-indigo-600"
-                                : "border-gray-200 hover:border-indigo-600"
-                                } bg-orange-400`}
-                            src="/img/profile/WhaleNew.png"
-                            onClick={() => setBanner("orange-400")}
-                            alt="whale banner orange"
+                        <BannerOption
+                            type="whale"
+                            color="orange-400"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                    </div>
+
+                    <div className="flex justify-between mt-2 w-full">
+                        <BannerOption
+                            type="waves"
+                            color="blue"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                        <BannerOption
+                            type="waves"
+                            color="pink"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                        <BannerOption
+                            type="waves"
+                            color="red"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                        <BannerOption
+                            type="waves"
+                            color="turquoise"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                        <BannerOption
+                            type="waves"
+                            color="yellow"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                    </div>
+
+                    <div className="flex justify-between mt-2 w-full">
+                        <BannerOption
+                            type="beach"
+                            color="day"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+
+                        <BannerOption
+                            type="gator"
+                            color="night"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+                        <BannerOption
+                            type="gator"
+                            color="evening"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+
+                        <BannerOption
+                            type="gator"
+                            color="sunrise"
+                            banner={banner}
+                            setBanner={setBanner}
+                        />
+
+                        <BannerOption
+                            type="gator"
+                            color="cool"
+                            banner={banner}
+                            setBanner={setBanner}
                         />
                     </div>
                 </div>
@@ -759,26 +702,21 @@ function Preview({ handle, links, profile, show, complete }: StageProps) {
         return <></>;
     }
 
+    const { theme, banner } = profile;
+
     return (
         <>
             <div className="flex flex-col gap-4">
                 <div
-                    className={`mt-6 p-6 rounded-xl bg-gradient-to-b from-${profile.theme} to-slate-900`}
+                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${theme.split("/")[0]
+                        } background-animate to-slate-900`}
+                // className={`mt-6 p-6 rounded-xl background-animate`}
+                // style={{
+                //     background:
+                //         "linear-gradient(180deg, #fff 0%, #f6e05e 100%)",
+                // }}
                 >
-                    <div className={`relative rounded-xl bg-${profile.banner}`}>
-                        <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
-                            <span className="text-3xl text-white font-bold">
-                                <span className="text-gray-400 font-normal">
-                                    @
-                                </span>
-                                {handle}
-                            </span>
-                        </div>
-                        <img
-                            src="/img/profile/WhaleNew.png"
-                            className="rounded-xl shadow-md"
-                        />
-                    </div>
+                    <Banner handle={handle} banner={banner} />
                 </div>
 
                 <button
@@ -820,7 +758,7 @@ export default function Onboard() {
         const fetchSocialDetails = async () => {
             for (let i = 0; i < socials.length; i++) {
                 if (socials[i].authType == 'github') {
-                    if (!socials[i] && socials[i].socialId) {
+                    if (!socials[i].name && socials[i].socialId) {
                         let id = socials[i].socialId
                         let res = await fetch(`https://api.github.com/user/${id}`);
                         if (!res.ok) throw new Error('bad')
