@@ -81,7 +81,7 @@ export default async function Profile({ params }: any) {
                             socials={data.Social}
                             className="my-6"
                         />
-                        <div className="w-full flex flex-col gap-4 max-w-[650px]">
+                        <div className="w-full flex flex-col gap-1 max-w-[650px]">
                             {data.Wallet.map((wallet: any, i) => {
                                 const preferrednetworks = wallet.preferrednetworks
                                 return (
