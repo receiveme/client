@@ -66,30 +66,39 @@ export default async function Profile() {
         // Render 404
         return <>could not find</>;
     }
+    //@ts-ignore    
     const bg = data.profiles.theme.includes('/animate') ? `from-${data.profiles.theme.replace('/animate', '')} background-animate gradient-animation`: `from-${data.profiles.theme.replace('/none', '')} `
     
+    //@ts-ignore
     let bannerSrc = data.profiles.background.includes('whale') ? `/img/profile/WhaleNew.png` : data.profiles.background.includes('waves/blue') ? `/img/profile/WavesBlue.png` : data.profiles.background.includes('waves/red') ? '/img/profile/WavesRed.png' : data.profiles.background.includes('waves/pink') ?  `/img/profile/WavesPink.png`:  data.profiles.background.includes('waves/turquoise') ? `/img/profile/WavesTurquoise.png` : data.profiles.background.includes('waves/yellow') ? `/img/profile/WavesYellow.png` : data.profiles.background.includes('gator/evening') ? `/img/profile/GatorEvening.png` : data.profiles.background.includes(`gator/cool`) ? `/img/profile/GatorCool.png` : data.profiles.background.includes(`gator/night`) ? `/img/profile/GatorNight.png` : data.profiles.background.includes(`gator/sunrise`) ? `/img/profile/GatorSunrise.png` : data.profiles.background.includes(`beach/day`) ? `/img/profile/BeachDay.png` : ``  
     //@ts-ignore
-    const socials = data.Social.map(social => 
-            <div className="flex gap-2 ">
-            <a
-                href={social.platform == 'github' ? `https://github.com/${social.name}/` : social.platform == 'twitter' ? `https:/twitter.com/${social.name}` : social.platform == 'twitch'  ? `https://twitch.com/${social.name}/` : ''}
-                className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
-            >
-                <img
-                    src={social.platform == 'github' ? '/img/3p/github.png' : social.platform == 'twitter' ? '/img/3p/twitter.png' : social.platform == 'twitch' ? '/img/3p/twitch.png' : '/img/3p/discord.png'}
-                    className={`h-[20px] w-[20px]`}
-                />
-            </a>
-        </div>
+    const socials = data.Social.map((social, i) =>  {
+        return (
+            <div className="flex gap-2 " key={i}>
+                <a
+                    href={social.platform == 'github' ? `https://github.com/${social.name}/` : social.platform == 'twitter' ? `https:/twitter.com/${social.name}` : social.platform == 'twitch'  ? `https://twitch.com/${social.name}/` : ''}
+                    className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
+                >
+                    <img
+                        src={social.platform == 'github' ? '/img/3p/github.png' : social.platform == 'twitter' ? '/img/3p/twitter.png' : social.platform == 'twitch' ? '/img/3p/twitch.png' : '/img/3p/discord.png'}
+                        className={`h-[20px] w-[20px]`}
+                    />
+                </a>
+            </div>
+        )
+    }
+
     )
     //@ts-ignore
-    const wallets = data.Wallet.map(wallet =>
-        <Wallet
-            network={wallet.network == 'metamask' ? 'EVM' : wallet.network}
-            address={wallet.address}
-        />
-    )
+    const wallets = data.Wallet.map((wallet, i) => {
+        return (
+            <Wallet
+                network={String(wallet.network) == 'metamask' ? 'EVM' : String(wallet.network)}
+                address={String(wallet.network)}
+                key={i}
+            />
+        )
+    })      
 
     return (
         <> 
@@ -99,7 +108,7 @@ export default async function Profile() {
                 >
                     <div className="max-w-[580px] w-full px-5 flex flex-col items-center mb-24">
                         <div
-                            className={`my-6 relative bg-${data.profiles.banner} rounded-xl`}
+                            className={`my-6 relative  rounded-xl`}
                         >
                             <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
                                 <span className="text-3xl text-white font-bold">

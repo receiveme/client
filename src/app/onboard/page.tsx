@@ -166,7 +166,7 @@ function Link({ handle, show, next }: StageProps) {
     //         }
     //     });
     // }
-
+    
     function connectMetamask() {
         return new Promise(async (resolve, reject) => {
             const chainId = await window["ethereum"]?.request({
@@ -182,7 +182,9 @@ function Link({ handle, show, next }: StageProps) {
             if (accounts?.length && accounts[0] && chainId) {
                 setMetamaskAddress(accounts[0])
                 const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
-                wallets.push({ walletProvider: "metamask", walletAddress: accounts[0] })
+                wallets.push({ walletProvider: "metamask", walletAddress: accounts[0], preferred_networks: ['eth', 'avax'] })
+                // addPreferredNetwork(accounts[0], 'avax')
+
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
             } else return reject();
         });
@@ -203,7 +205,7 @@ function Link({ handle, show, next }: StageProps) {
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account)
                 const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
-                wallets.push({ walletProvider: "tron", walletAddress: account })
+                wallets.push({ walletProvider: "tron", walletAddress: account, preferred_networks: ['tron'] })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
                 if (!account) return reject();
                 return resolve({ account, chain: "tron" });
@@ -213,11 +215,28 @@ function Link({ handle, show, next }: StageProps) {
             }
         });
     }
+    function addPreferredNetwork(address:string, network:string) {
+        const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
+        console.log(wallets)
+        if (!wallets.length) return Error('no wallets')
+        if (wallets.length) {
+            wallets.map(wallet => {
 
+                if (!wallet.preferred_networks.includes(network) && wallet.walletAddress == address) {
+                    wallet.preferred_networks.push(network)
+                    sessionStorage.setItem("wallets", JSON.stringify(wallets))
+                }
+            })
+
+            console.log(wallets)
+            return true
+        }
+    }
     function configWalletModal() {
         
     }
-
+    
+    
     return (
         <>
             <div className="flex flex-col gap-4">

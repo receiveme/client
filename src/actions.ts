@@ -37,7 +37,7 @@ import prisma from "@/lib/prisma"
 //     }
 // }
 
-export async function getUserSocials(userId) {
+export async function getUserSocials(userId:string) {
     try {
         const userSocials = await prisma.user.findUnique({
             where: {
@@ -49,6 +49,7 @@ export async function getUserSocials(userId) {
         });
 
         await prisma.$disconnect();
+        //@ts-ignore
         return userSocials.Social; // Return only the Social array
     } catch (error) {
         console.error("Error retrieving user socials:", error);
@@ -57,7 +58,7 @@ export async function getUserSocials(userId) {
     }
 }
 
-export async function getUserData(userId) {
+export async function getUserData(userId:string) {
     console.log("get suer", userId)
     try {
         const userData = await prisma.user.findUnique({
@@ -80,7 +81,7 @@ export async function getUserData(userId) {
     }
 }
 
-export async function getUserWallets(userId) {
+export async function getUserWallets(userId:string) {
     try {
         const userWallets = await prisma.user.findUnique({
             where: {
@@ -91,6 +92,7 @@ export async function getUserWallets(userId) {
             },
         });
         await prisma.$disconnect();
+        //@ts-ignore
         return userWallets.Wallet; // Return only the Wallet array
     } catch (error) {
         console.error("Error retrieving user wallets:", error);
@@ -107,7 +109,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
     try {
         const user = await prisma.user.create({
             data: {
-                handle: handle,
+                handle: String(handle),
                 authuuid: socials[0].socialUuid
             },
         });
