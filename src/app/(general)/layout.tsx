@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 
 import Head from "next/head";
@@ -6,7 +7,6 @@ import Providers from "../providers";
 
 import "../globals.css";
 import Navbar from "@/src/components/navbar";
-import Toast from "@/src/components/toast";
 
 const archivo = Archivo({ subsets: ["latin"] });
 
