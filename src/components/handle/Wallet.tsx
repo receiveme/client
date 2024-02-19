@@ -11,7 +11,10 @@ type WalletProps = {
 };
 
 export function Wallet({ network, address }: WalletProps) {
+    
+
     const originalWalletAddress = address;
+    
     const [walletAddress, setWalletAddress] = useState(address);
 
     if (walletAddress.length > 50) {
@@ -87,12 +90,12 @@ export function Wallet({ network, address }: WalletProps) {
             <div className="flex bg-white rounded-lg shadow-sm py-2 px-1">
                 <div className="flex items-center justify-center ml-2">
                     <img
-                        src="/img/3p/eth.png"
+                        src={network == 'ETH' ? "/img/3p/eth.png" : network == 'tron' ? '/img/3p/tron.png': '/img/3p/eth.png'}
                         className={`w-[28px] h-[auto]`}
                     />
                 </div>
                 <div className="ml-3 w-full flex flex-col flex-shrink-1">
-                    <p className="text-sm font-bold overflow-ellipsis">ETH</p>
+                    <p className="text-sm font-bold overflow-ellipsis">{network.toUpperCase()}</p>
                     <span className="text-xs font-light">{walletAddress}</span>
                 </div>
                 <div className="ml-auto mr-1 flex gap-1.5">

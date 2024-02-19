@@ -32,12 +32,24 @@ async function getUserByHandle(handle: string) {
                         theme: true,
                         background: true,
 
+                    },
+
+                },Social: {
+                    select: {
+                        platform: true,
+                        name: true,
+                        networkid: true,
+                    }
+                },Wallet: {
+                    select: {
+                        address: true,
+                        network: true
                     }
                 }
             }
         });
 
-
+        //@ts-ignore    
         user.profiles = user.Profile[0]
         console.log(user);
         return user;
@@ -56,6 +68,25 @@ export default async function Profile() {
         // Render 404
         return <>could not find</>;
     }
+    const socials = data.Social.map(social => 
+            <div className="flex gap-2 ">
+            <a
+                href={social.platform == 'github' ? `https://github.com/${social.name}/` : social.platform == 'twitter' ? `https:/twitter.com/${social.name}` : social.platform == 'twitch'  ? `https://twitch.com/${social.name}/` : ''}
+                className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
+            >
+                <img
+                    src={social.platform == 'github' ? '/img/3p/github.png' : social.platform == 'twitter' ? '/img/3p/twitter.png' : social.platform == 'twitch' ? '/img/3p/twitch.png' : '/img/3p/discord.png'}
+                    className={`h-[20px] w-[20px]`}
+                />
+            </a>
+        </div>
+    )
+    const wallets = data.Wallet.map(wallet =>
+        <Wallet
+            network={wallet.network || 'ETH'}
+            address={wallet.address}
+        />
+    )
 
     return (
         <>
@@ -74,18 +105,10 @@ export default async function Profile() {
                                     </span>
                                     {data.handle}
                                 </span>
-
-                                <div className="flex gap-2 items-center">
-                                    <a
-                                        href={"https://paypal.me/nickmura/"}
-                                        className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
-                                    >
-                                        <img
-                                            src="/img/3p/paypal.png"
-                                            className={`h-[20px] w-[20px]`}
-                                        />
-                                    </a>
+                                <div className='flex gap-2 items-end'>
+                                    {socials}
                                 </div>
+
                             </div>
                             <img
                                 src="/img/profile/WhaleNew.png"
@@ -94,10 +117,7 @@ export default async function Profile() {
                         </div>
 
                         <div className="w-full flex flex-col gap-4 max-w-[650px]">
-                            <Wallet
-                                network="eth"
-                                address="0xc49C0eEd65b1d4C757Bd064dC83e10f88DF16BB1"
-                            />
+                            {wallets}
                         </div>
 
                         <div className="mt-4">

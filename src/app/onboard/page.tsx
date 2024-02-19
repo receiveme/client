@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { ParticleNetwork, UserInfo } from '@particle-network/auth';
 import { Avalanche } from '@particle-network/chains';
 import { createUserProfile } from "@/src/actions";
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 type StageProps = {
@@ -213,7 +213,7 @@ function Link({ handle, show, next }: StageProps) {
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account)
                 const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
-                wallets.push({ walletProvider: "tron", walletaAddress: account })
+                wallets.push({ walletProvider: "tron", walletAddress: account })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
                 if (!account) return reject();
                 return resolve({ account, chain: "tron" });
