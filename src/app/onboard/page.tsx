@@ -129,7 +129,7 @@ function Link({ handle, show, next }: StageProps) {
         if (!sessionStorage.getItem("userInfo")) {
             router.push('/')
         }
-        console.log("ORIN HERE")
+
         const user = await particle.auth.login({ preferredAuthType })
         sessionStorage.setItem("wallets", JSON.stringify([]))
         //@ts-ignore
@@ -143,13 +143,11 @@ function Link({ handle, show, next }: StageProps) {
         //     return 0
         // }
 
-        console.log("SOC HERE")
-                //@ts-ignore
+        //@ts-ignore
         let socialIndex = socials.findIndex(social => social.authType == preferredAuthType);
         console.log(socialIndex)
         if (socialIndex < 0) socials.push({ authType: preferredAuthType, socialUuid: user.uuid, socialUsername: user.thirdparty_user_info.user_info.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
         //store the specific auth type user info in different storage items
-        console.log("FIRST SOC", socials)
         sessionStorage.setItem('socials', JSON.stringify(socials));
         sessionStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
     };
@@ -442,7 +440,7 @@ function Link({ handle, show, next }: StageProps) {
                                         className="mr-2 h-5 w-5"
                                     />
 
-                                <span className="text-sm font-semibold">
+                                    <span className="text-sm font-semibold">
                                         Particle Connect
                                     </span>
 
@@ -450,7 +448,7 @@ function Link({ handle, show, next }: StageProps) {
                                         Networks: ETH, AVAX... (EVM)
                                     </span>
                                     <div className=" flex-end px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
-                                        <img src='/icons/settings.png' className='w-5'/>
+                                        <img src='/icons/settings.png' className='w-5' />
                                     </div>
 
 
@@ -498,7 +496,7 @@ function Link({ handle, show, next }: StageProps) {
                                         Networks: ETH, AVAX... (EVM)
                                     </span>
                                     <div className="px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
-                                        <img src='/icons/settings.png' className='w-5'/>
+                                        <img src='/icons/settings.png' className='w-5' />
                                     </div>
                                 </button>
                             </>}

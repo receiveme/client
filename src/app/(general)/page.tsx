@@ -1,19 +1,17 @@
 "use client";
 
 import { useAppState } from "@/src/hooks/useAppState";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-    const router = useRouter();
     const [appState, setAppState] = useAppState();
 
     // async function signOut() {
     //     await supabase.auth.signOut();
     //     setAppState({ user: null });
     // }
-    console.log("DEBUG INFO", JSON.parse(sessionStorage.getItem("userData") || "{}"))
+    // console.log("DEBUG INFO", JSON.parse(sessionStorage.getItem("userData")))
     return (
         <main>
             <Link href="/login" className="text-green-500 underline block">

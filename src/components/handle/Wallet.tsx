@@ -4,16 +4,25 @@ import { IconCopy, IconQrcode } from "@tabler/icons-react";
 import { useState } from "react";
 import Toast from "../toast";
 import { WalletQRCodeModal } from "./WalletQRCodeModal";
+import Algorand from "../../../public/img/3p/algorand.png"
+import Eth from "../../../public/img/3p/eth.png"
+import Polygon from "../../../public/img/3p/polygon.png"
+import Avax from "../../../public/img/3p/avaxpng.png"
+import Tron from "../../../public/img/3p/tron.png"
+// import styles from "Wallet.module.css"
+import "../../app/globals.css"
 
 type WalletProps = {
     network: string;
     address: string;
+    preferrednetworks: any
 };
 
-export function Wallet({ network, address }: WalletProps) {
+export function Wallet({ network, address, preferrednetworks }: WalletProps) {
     const originalWalletAddress = address;
-
+    const [selectedNetwork, setSelectedNetwork] = useState(0)
     const [walletAddress, setWalletAddress] = useState(address);
+    const [showSelectedNetworks, setShowSelectedNetworks] = useState(false);
 
     if (walletAddress.length > 50) {
         setWalletAddress(
@@ -81,36 +90,72 @@ export function Wallet({ network, address }: WalletProps) {
             <WalletQRCodeModal
                 isOpen={isQRCodeModalOpen}
                 setIsOpen={setIsQRCodeModalOpen}
-                network={network}
+                network={preferrednetworks[selectedNetwork]}
                 address={originalWalletAddress}
 
             />
 
             <div className="flex bg-white rounded-lg shadow-sm py-2 px-1">
                 <div className="flex items-center justify-center ml-2">
-                    <img
-                        src={
-                            network == "ETH"
-                                ? "/img/3p/eth.png"
-                                : network == "tron"
-                                ? "/img/3p/tron.png"
-                                : "/img/3p/eth.png"
-                        }
-                        className={`w-[28px] h-[auto]`}
-                    />
+                    <div className={"preferred-networks"}>
+                        <div className={showSelectedNetworks ? "preferred-networks-dropdown" : "preferred-networks-dropdown-hide"}>
+                            {preferrednetworks.map((network, i) => {
+                                return (
+                                    <img
+                                        key={i}
+                                        onClick={() => {
+                                            const index = preferrednetworks.findIndex((e, i) => {
+                                                return e === network
+                                            })
+                                            setSelectedNetwork(index)
+                                            setShowSelectedNetworks(false)
+                                        }}
+                                        src={
+                                            preferrednetworks[i] === "eth"
+                                                ? Eth.src
+                                                : preferrednetworks[i] === "tron"
+                                                    ? Tron.src
+                                                    : preferrednetworks[i] === "avax"
+                                                        ? Avax.src
+                                                        : preferrednetworks[i] === "algorand"
+                                                            ? Algorand.src
+                                                            : null
+                                        }
+                                        className={`network-dropdown-item`}
+                                    />
+                                )
+                            })
+                            }
+                        </div>
+                        <img
+                            onClick={() => setShowSelectedNetworks(true)}
+                            src={
+                                preferrednetworks[selectedNetwork] === "eth"
+                                    ? Eth.src
+                                    : preferrednetworks[selectedNetwork] === "tron"
+                                        ? Tron.src
+                                        : preferrednetworks[selectedNetwork] === "avax"
+                                            ? Avax.src
+                                            : preferrednetworks[selectedNetwork] === "algorand"
+                                                ? Algorand.src
+                                                : null
+                            }
+                            className={`w-[28px] h-[auto] selected-network-item`}
+                        />
+                    </div>
+
                 </div>
                 <div className="ml-3 w-full flex flex-col flex-shrink-1">
                     <p className="text-sm font-bold overflow-ellipsis">
-                        {network.toUpperCase()}
+                        {preferrednetworks[selectedNetwork].toUpperCase()}
                     </p>
                     <span className="text-xs font-light">{walletAddress}</span>
                 </div>
                 <div className="ml-auto mr-1 flex gap-1.5">
                     <button
                         onClick={copyAddress}
-                        className={`bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full ${
-                            copied ? "bg-green-400 text-white" : ""
-                        }`}
+                        className={`bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full ${copied ? "bg-green-400 text-white" : ""
+                            }`}
                     >
                         <IconCopy className="w-4 h-4" />
                     </button>
@@ -122,7 +167,7 @@ export function Wallet({ network, address }: WalletProps) {
                         <IconQrcode className="h-4 w-4" />
                     </button>
                 </div>
-            </div>
+            </div >
         </>
     );
 }

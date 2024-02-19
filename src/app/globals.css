@@ -2,26 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-@media (prefers-color-scheme: dark) {
-}
+@media (prefers-color-scheme: dark) {}
 
 .background-animate {
 
-    background-size: 400%;
-    
-    -webkit-animation: gradient-animation 3s ease infinite;
-    -moz-animation: gradient-animation 3s ease infinite;
-    animation: gradient-animation 3s ease infinite;
+  background-size: 400%;
+
+  -webkit-animation: gradient-animation 3s ease infinite;
+  -moz-animation: gradient-animation 3s ease infinite;
+  animation: gradient-animation 3s ease infinite;
 }
 
 @keyframes gradient-animation {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.preferred-networks {
+  position: relative;
+}
+
+.selected-network-item {
+  cursor: pointer;
+}
+
+.selected-network-item:hover {
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.preferred-networks-dropdown-hide {
+  display: none;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0);
+}
+
+.preferred-networks-dropdown {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  border-radius: 4px;
+  row-gap: .25rem;
+  top: 0;
+  left: 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.network-dropdown-item {
+  cursor: pointer;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.network-dropdown-item:hover {
+  background-color: rgb(201, 201, 201);
 }

@@ -1,6 +1,5 @@
 import { Wallet } from "@/src/components/handle/Wallet";
 import prisma from "@/lib/prisma";
-
 import "../globals.css";
 import { Banner } from "@/src/components/profile/Banner";
 
@@ -42,7 +41,6 @@ async function getUserByHandle(handle: string) {
 
         //@ts-ignore
         user.profiles = user.Profile[0];
-        console.log(user);
         return user;
     } catch (error) {
         console.error("Failed to fetch user:", error);
@@ -60,9 +58,9 @@ export default async function Profile({ params }: any) {
 
     const bg = data.profiles.theme.includes("/animate")
         ? `from-${data.profiles.theme.replace(
-              "/animate",
-              "",
-          )} background-animate gradient-animation`
+            "/animate",
+            "",
+        )} background-animate gradient-animation`
         : `from-${data.profiles.theme.replace("/none", "")} `;
 
     return (
@@ -78,22 +76,23 @@ export default async function Profile({ params }: any) {
                             socials={data.Social}
                             className="my-6"
                         />
-
                         <div className="w-full flex flex-col gap-4 max-w-[650px]">
-                            {data.Wallet.map((wallet: any, i) => (
-
-
+                            {data.Wallet.map((wallet: any, i) => {
+                                const preferrednetworks = wallet.preferrednetworks
+                                return (
                                     <Wallet
                                         network={
                                             wallet.network == "metamask"
                                                 ? "EVM"
                                                 : wallet.network == 'particle' ?
-                                                'EVM' : wallet.network
+                                                    'EVM' : wallet.network
                                         }
                                         address={wallet.address}
+                                        key={i}
+                                        preferrednetworks={preferrednetworks}
                                     />
-
-                            ))}
+                                )
+                            })}
                         </div>
 
                         <div className="mt-4 flex w-full justify-center items-center">

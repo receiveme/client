@@ -22,7 +22,6 @@ export async function getUserSocials(userId) {
 }
 
 export async function getUserData(userId) {
-    console.log("get suer", userId)
     try {
         const userData = await prisma.user.findUnique({
             where: {
@@ -69,7 +68,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
     const info_token = userInfo[0].info.token
     const uuid = userInfo[0].info.uuid
     const particleWalletAddress = userInfo[0].info.wallets[0].public_address
-    console.log(wallets)
+
     try {
         const user = await prisma.user.create({
             data: {
@@ -78,9 +77,6 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                 authuuid: uuid
             },
         });
-
-        console.log("THEME", theme);
-        console.log("BANNER", banner);
 
         await prisma.profile.create({
             data: {
@@ -108,8 +104,6 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                 } catch (error) {
                     console.error(`Error inserting social:`, error);
                 }
-
-
             }
         }
 
@@ -147,7 +141,6 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
         }
 
         await prisma.$disconnect();
-        console.log("USER RETURN", user)
         return user.id;
     } catch (error) {
         console.error('Error creating user:', error);

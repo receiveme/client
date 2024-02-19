@@ -50,7 +50,7 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                     },
                     securityAccount: { //optional: particle security account config
                         //prompt set payment password. 0: None, 1: Once(default), 2: Always
-                        promptSettingWhenSign: 1,
+                        promptSettingWhenSign: 0,
                         //prompt set master password. 0: None(default), 1: Once, 2: Always
                         promptMasterPasswordSettingWhenLogin: 0
                     },
@@ -68,7 +68,6 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                     'apple',
                     'github',
                     'discord',
-
                 ]}>
 
                 <AppContext.Provider value={{ appState, setAppState }}>

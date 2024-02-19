@@ -102,6 +102,7 @@ export default function Navbar() {
             if (userInfo && userInfo.uuid) { // Assuming userInfo has a uuid property
                 const uuid = JSON.parse(sessionStorage.getItem("globalId")) ? JSON.parse(sessionStorage.getItem("globalId")) : "n/a"
                 const userData = await fetchUserData(uuid);
+
                 if (!userData) {
                     router.push("/onboard");
                 } else {
@@ -110,15 +111,13 @@ export default function Navbar() {
             }
         };
 
-        if ((connected && userInfo) || (userInfo && !sessionStorage.getItem("userData"))) {
+        if ((connected && userInfo) || (userInfo && !JSON.parse(sessionStorage.getItem("userData")))) {
             fetchData()
         }
-
     }, [connected, userInfo])
 
-    console.log("ID CHECK", JSON.parse(sessionStorage.getItem("globalId")))
     return (
-        <header className="w-full mb-4">
+        <div className="w-full mb-4">
             <nav
                 className="bg-gradient-to-r from-indigo-500 to-indigo-600 w-full rounded-2xl shadow-md flex items-center justify-between p-4 lg:px-6"
                 aria-label="Global"
@@ -134,11 +133,10 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
-<<<<<<< HEAD
                     {
                         JSON.parse(sessionStorage.getItem("globalId")) ?
                             <button onClick={signOut} className={"btn-nav-auth"} type="button">
-                                LOGOUT
+                                Sign Out
                             </button>
                             :
                             <ConnectButton.Custom>
@@ -149,7 +147,7 @@ export default function Navbar() {
                                     }
                                     return (
                                         <div>
-                                            <button onClick={handleConnect} className={"btn-nav-auth"} type="button" disabled={!!account}>
+                                            <button onClick={handleConnect} className={"btn-nav-auth"} type="button">
                                                 Open Connect
                                             </button>
                                         </div>
@@ -157,43 +155,6 @@ export default function Navbar() {
                                 }}
                             </ConnectButton.Custom>
                     }
-=======
-                    <ConnectButton.Custom>
-                        {({ account, chain, openAccountModal, openConnectModal, openChainModal, accountLoading }) => {
-                            return (
-                                <div>
-                                    <button className='px-2 py-2 rounded-lg bg-white font-bold' onClick={openConnectModal} disabled={!!account}>
-                                        Login
-                                    </button>
-                                    <br />
-                                    <br />
-                                    <button className='px-2 py-2 rounded-lg bg-white font-bold' onClick={openAccountModal} disabled={!account}>
-                                        Open Account
-                                    </button>
-                                    <br />
-                                    <br />
-                                    <button className='px-2 py-2 rounded-lg bg-white font-bold' onClick={openChainModal} disabled={!account}>
-                                        Open Switch Network
-                                    </button>
-                                    {sessionStorage.getItem('userData') ? <>
-                                    </> : <>
-                                    </>}
-                                    <div>
-                                        <h3>account</h3>
-                                        <p>{account}</p>
-                                    </div>
-                                </div>
-                            );
-                        }}
-                    </ConnectButton.Custom>
-                    <button onClick={signOut}>
-                        LOGOUT
-                    </button>
-                    {/* :
-                        
-                    } */}
-
->>>>>>> ca70eeb30fbdf158e502b6cfa9121d0f73137917
                 </div>
             </nav>
             <Dialog
@@ -286,6 +247,6 @@ export default function Navbar() {
                     </div>
                 </Dialog.Panel>
             </Dialog>
-        </header>
+        </div>
     );
 }
