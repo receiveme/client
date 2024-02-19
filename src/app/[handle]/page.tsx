@@ -19,8 +19,6 @@ import "../globals.css";
 
 
 async function getUserByHandle(handle: string) {
-    
-
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -70,8 +68,8 @@ export default async function Profile() {
     }
     const bg = data.profiles.theme.includes('/animate') ? `from-${data.profiles.theme.replace('/animate', '')} background-animate gradient-animation`: `from-${data.profiles.theme.replace('/none', '')} `
     
-    let bannerSrc = data.profiles.background.includes('whale') ? `/img/profile/WhaleNew.png` : data.profiles.background.includes('waves/blue') ? `/img/profile/WavesBlue.png` : data.profiles.background.includes('waves/red') ? '/img/profile/WavesRed.png' : data.profiles.background.includes('waves/pink') ?  `/img/profile/WavesPink.png`:  data.profiles.background.includes('waves/turquoise') ? `/img/profile/WavesTurquoise.png` : data.profiles.background.includes('waves/yellow') ? `/img/profile/WavesYellow.png` : ``
-
+    let bannerSrc = data.profiles.background.includes('whale') ? `/img/profile/WhaleNew.png` : data.profiles.background.includes('waves/blue') ? `/img/profile/WavesBlue.png` : data.profiles.background.includes('waves/red') ? '/img/profile/WavesRed.png' : data.profiles.background.includes('waves/pink') ?  `/img/profile/WavesPink.png`:  data.profiles.background.includes('waves/turquoise') ? `/img/profile/WavesTurquoise.png` : data.profiles.background.includes('waves/yellow') ? `/img/profile/WavesYellow.png` : data.profiles.background.includes('gator/evening') ? `/img/profile/GatorEvening.png` : data.profiles.background.includes(`gator/cool`) ? `/img/profile/GatorCool.png` : data.profiles.background.includes(`gator/night`) ? `/img/profile/GatorNight.png` : data.profiles.background.includes(`gator/sunrise`) ? `/img/profile/GatorSunrise.png` : data.profiles.background.includes(`beach/day`) ? `/img/profile/BeachDay.png` : ``  
+    //@ts-ignore
     const socials = data.Social.map(social => 
             <div className="flex gap-2 ">
             <a
@@ -85,6 +83,7 @@ export default async function Profile() {
             </a>
         </div>
     )
+    //@ts-ignore
     const wallets = data.Wallet.map(wallet =>
         <Wallet
             network={wallet.network == 'metamask' ? 'EVM' : wallet.network}

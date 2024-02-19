@@ -2,24 +2,19 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 
-type WalletQRCodeModalProps = {
-    address: string;
-    network: string;
-    isOpen: boolean;
-    setIsOpen: any;
-};
+// type WalletQRCodeModalProps = {
+//     address: string;
+//     network: string;
+//     isOpen: boolean;
+//     setIsOpen: any;
+// };
 
-export function WalletQRCodeModal({
-    address,
-    network,
-    isOpen,
-    setIsOpen,
-}: WalletQRCodeModalProps) {
-    console.log(isOpen)
+export function WalletConfigModal() {
+    
     function closeModal() {
         setIsOpen(false);
     }
-    
+
     return (
         <>
             <Transition appear show={isOpen} as={Fragment}>

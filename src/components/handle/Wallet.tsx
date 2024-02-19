@@ -109,7 +109,7 @@ export function Wallet({ network, address }: WalletProps) {
                     </button>
 
                     <button
-                        onClick={showQRCode}
+                        onClick={show}
                         className="bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full"
                     >
                         <IconQrcode className="h-4 w-4" />
