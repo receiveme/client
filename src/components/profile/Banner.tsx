@@ -42,38 +42,40 @@ export function Banner({
                     {handle}
                 </span>
 
-                {socials &&
-                    socials.length &&
-                    socials.map((social) => (
-                        <div className="flex gap-2 ">
-                            <a
-                                href={
-                                    social.platform == "github"
-                                        ? `https://github.com/${social.name}/`
-                                        : social.platform == "twitter"
-                                        ? `https:/twitter.com/${social.name}`
-                                        : social.platform == "twitch"
-                                        ? `https://twitch.com/${social.name}/`
-                                        : ""
-                                }
-                                target="_blank"
-                                className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
-                            >
-                                <img
-                                    src={
+                <div className="flex gap-3">
+                    {socials &&
+                        socials.length &&
+                        socials.map((social) => (
+                            <div className="flex gap-2">
+                                <a
+                                    href={
                                         social.platform == "github"
-                                            ? "/img/3p/github.png"
+                                            ? `https://github.com/${social.name}/`
                                             : social.platform == "twitter"
-                                            ? "/img/3p/twitter.png"
+                                            ? `https:/twitter.com/${social.name}`
                                             : social.platform == "twitch"
-                                            ? "/img/3p/twitch.png"
-                                            : "/img/3p/discord.png"
+                                            ? `https://twitch.com/${social.name}/`
+                                            : ""
                                     }
-                                    className={`h-[20px] w-[20px]`}
-                                />
-                            </a>
-                        </div>
-                    ))}
+                                    target="_blank"
+                                    className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
+                                >
+                                    <img
+                                        src={
+                                            social.platform == "github"
+                                                ? "/img/3p/github.png"
+                                                : social.platform == "twitter"
+                                                ? "/img/3p/twitter.png"
+                                                : social.platform == "twitch"
+                                                ? "/img/3p/twitch.png"
+                                                : "/img/3p/discord.png"
+                                        }
+                                        className={`w-[20px] h-auto`}
+                                    />
+                                </a>
+                            </div>
+                        ))}
+                </div>
             </div>
             <img
                 src={src}

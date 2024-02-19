@@ -84,14 +84,16 @@ export default async function Profile({ params }: any) {
                                 <Wallet
                                     network={
                                         wallet.network == "metamask"
-                                            ? "EVM" : wallet.network}
+                                            ? "EVM"
+                                            : wallet.network
+                                    }
                                     address={wallet.address}
                                     networks={wallet.preferrednetworks}
                                 />
                             ))}
                         </div>
 
-                        <div className="mt-4">
+                        <div className="mt-4 flex w-full justify-center items-center">
                             <span className="text-sm text-gray-400 font-bold">
                                 @receive.me
                             </span>
