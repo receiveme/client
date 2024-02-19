@@ -34,6 +34,7 @@ export async function getUserData(userId) {
                 Wallet: true,
             },
         });
+        console.log(userData)
         await prisma.$disconnect();
 
         return userData;
@@ -67,10 +68,12 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
     const { theme, banner } = profile
     const info_token = userInfo[0].info.token
     const uuid = userInfo[0].info.uuid
+    const particleWalletAddress = userInfo[0].info.wallets[0].public_address
     console.log(wallets)
     try {
         const user = await prisma.user.create({
             data: {
+                //@ts-ignore
                 handle: handle,
                 authuuid: uuid
             },
@@ -105,6 +108,8 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                 } catch (error) {
                     console.error(`Error inserting social:`, error);
                 }
+
+
             }
         }
 
@@ -116,12 +121,28 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                             userid: user.id,
                             network: wallets[i].walletProvider,
                             address: wallets[i].walletAddress,
+                            preferrednetworks: wallets[i].walletProvider == 'metamask' ? ['eth', 'avax'] : wallets[i].walletProvider == 'particle' ? ['eth', 'avax'] : wallets[i].walletProvider == 'tron' ? ['tron'] : ['algo']
                         },
                     });
                     console.log('successuflly inserted wallet')
                 } catch (error) {
                     console.error("Wallet insertion err:", error);
                 }
+            }
+        }
+        if (particleWalletAddress) {
+            try {
+                await prisma.wallet.create({
+                    data: {
+                        userid: user.id,
+                        network: 'particle',
+                        address: String(particleWalletAddress),
+                        preferrednetworks: ['eth', 'avax',]
+                    },
+                });
+                console.log('successuflly inserted particle wallet')
+            } catch (error) {
+                console.error("Wallet insertion err:", error);
             }
         }
 

@@ -3,35 +3,36 @@ import { Fragment, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 
 type WalletQRCodeModalProps = {
-    // address: string;
-    // network: string;
-    // isOpen: boolean;
-    // setIsOpen: any;
-    modalProps: any
+    address: string;
+    network: string;
+    isOpen: boolean;
+    setIsOpen: any;
+
 };
 
 export function WalletQRCodeModal({
-    modalProps
-}: WalletQRCodeModalProps) {
-    console.log("PROPS", modalProps)
-    const { setIsOpen, isOpen, network, address } = modalProps
+    address,
+    network,
+    isOpen,
+    setIsOpen,
 
+}: WalletQRCodeModalProps) {
     function closeModal() {
         setIsOpen(false);
     }
 
     return (
         <>
-            <Transition appear show={true} as={Fragment}>
+            <Transition appear show={isOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-10" onClose={closeModal}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
                         enterFrom="opacity-0"
                         enterTo="opacity-100"
-                    // leave="ease-in duration-200"
-                    // leaveFrom="opacity-100"
-                    // leaveTo="opacity-0"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
                     >
                         <div className="fixed inset-0 bg-black/25" />
                     </Transition.Child>
@@ -59,7 +60,7 @@ export function WalletQRCodeModal({
                                         <QRCodeSVG value={address} size={256} />
 
                                         <p className="font-medium mt-4">
-                                            {network.toUpperCase()}
+                                            {network.toUpperCase() == '(ETH) EVM' ? 'EVM (ETH, AVAX...)' : network.toUpperCase()}
                                         </p>
                                         <p className="text-xs font-light text-gray-700">
                                             {address}

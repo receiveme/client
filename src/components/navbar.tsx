@@ -105,7 +105,7 @@ export default function Navbar() {
                 if (!userData) {
                     router.push("/onboard");
                 } else {
-                    sessionStorage.setItem("userData", userData);
+                    sessionStorage.setItem("userData", JSON.stringify(userData));
                 }
             }
         };
@@ -134,6 +134,7 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
+<<<<<<< HEAD
                     {
                         JSON.parse(sessionStorage.getItem("globalId")) ?
                             <button onClick={signOut} className={"btn-nav-auth"} type="button">
@@ -156,6 +157,43 @@ export default function Navbar() {
                                 }}
                             </ConnectButton.Custom>
                     }
+=======
+                    <ConnectButton.Custom>
+                        {({ account, chain, openAccountModal, openConnectModal, openChainModal, accountLoading }) => {
+                            return (
+                                <div>
+                                    <button className='px-2 py-2 rounded-lg bg-white font-bold' onClick={openConnectModal} disabled={!!account}>
+                                        Login
+                                    </button>
+                                    <br />
+                                    <br />
+                                    <button className='px-2 py-2 rounded-lg bg-white font-bold' onClick={openAccountModal} disabled={!account}>
+                                        Open Account
+                                    </button>
+                                    <br />
+                                    <br />
+                                    <button className='px-2 py-2 rounded-lg bg-white font-bold' onClick={openChainModal} disabled={!account}>
+                                        Open Switch Network
+                                    </button>
+                                    {sessionStorage.getItem('userData') ? <>
+                                    </> : <>
+                                    </>}
+                                    <div>
+                                        <h3>account</h3>
+                                        <p>{account}</p>
+                                    </div>
+                                </div>
+                            );
+                        }}
+                    </ConnectButton.Custom>
+                    <button onClick={signOut}>
+                        LOGOUT
+                    </button>
+                    {/* :
+                        
+                    } */}
+
+>>>>>>> ca70eeb30fbdf158e502b6cfa9121d0f73137917
                 </div>
             </nav>
             <Dialog

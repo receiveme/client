@@ -133,7 +133,7 @@ function Link({ handle, show, next }: StageProps) {
         const user = await particle.auth.login({ preferredAuthType })
         sessionStorage.setItem("wallets", JSON.stringify([]))
         //@ts-ignore
-        const socials = Array.isArray(JSON.parse(sessionStorage.getItem("socials"))) ?
+        const socials = JSON.parse(sessionStorage.getItem("socials")) ?
             //@ts-ignore
             JSON.parse(sessionStorage.getItem("socials")) : []
 
@@ -142,9 +142,12 @@ function Link({ handle, show, next }: StageProps) {
         // if (sessionStorage.getItem(preferredAuthType)) {
         //     return 0
         // }
-        //@ts-ignore
+
         console.log("SOC HERE")
-        socials.push({ authType: preferredAuthType, socialUuid: user.uuid, socialUsername: user.thirdparty_user_info.user_info.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
+                //@ts-ignore
+        let socialIndex = socials.findIndex(social => social.authType == preferredAuthType);
+        console.log(socialIndex)
+        if (socialIndex < 0) socials.push({ authType: preferredAuthType, socialUuid: user.uuid, socialUsername: user.thirdparty_user_info.user_info.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
         //store the specific auth type user info in different storage items
         console.log("FIRST SOC", socials)
         sessionStorage.setItem('socials', JSON.stringify(socials));
@@ -184,7 +187,8 @@ function Link({ handle, show, next }: StageProps) {
             if (accounts?.length && accounts[0] && chainId) {
                 setMetamaskAddress(accounts[0])
                 const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
-                wallets.push({ walletProvider: "metamask", walletAddress: accounts[0] })
+                let walletIndex = wallets.findIndex(wallet => wallet.walletProvider == 'metamask');
+                if (walletIndex < 0) wallets.push({ walletProvider: "metamask", walletAddress: accounts[0] })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
             } else return reject();
         });
@@ -205,7 +209,8 @@ function Link({ handle, show, next }: StageProps) {
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account)
                 const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
-                wallets.push({ walletProvider: "tron", walletAddress: account })
+                let walletIndex = wallets.findIndex(wallet => wallet.walletProvider == 'tron');
+                if (walletIndex < 0) wallets.push({ walletProvider: "tron", walletAddress: account })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
                 if (!account) return reject();
                 return resolve({ account, chain: "tron" });
@@ -216,8 +221,11 @@ function Link({ handle, show, next }: StageProps) {
         });
     }
 
-    function configWalletModal() {
 
+
+
+    function configWalletModal(): void {
+        throw new Error("Function not implemented.");
     }
 
     return (
@@ -243,7 +251,7 @@ function Link({ handle, show, next }: StageProps) {
                     </h3>
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
                         {sessionStorage.getItem('discord') ? <>
-                            <button onClick={() => handleLogin('discord')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                            <button onClick={() => handleLogin('discord')} type="button" className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                 <img
                                     src="/img/3p/discord.png"
                                     alt="Link Discord"
@@ -277,7 +285,7 @@ function Link({ handle, show, next }: StageProps) {
 
 
                         {sessionStorage.getItem('github') ? <>
-                            <button onClick={() => handleLogin('github')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                            <button onClick={() => handleLogin('github')} type="button" className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                 <img
                                     src="/img/3p/github.png"
                                     alt="Link Github"
@@ -305,7 +313,7 @@ function Link({ handle, show, next }: StageProps) {
                         </>}
 
                         {sessionStorage.getItem('twitch') ? <>
-                            <button onClick={() => handleLogin('twitch')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3v">
+                            <button onClick={() => handleLogin('twitch')} type="button" className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3v">
                                 <img
                                     src="/img/3p/twitch.png"
                                     alt="Twitch"
@@ -334,7 +342,7 @@ function Link({ handle, show, next }: StageProps) {
 
 
                         {sessionStorage.getItem('twitter') ? <>
-                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 
+                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all border border-green-500/50 hover:bg-gray-200 
                                 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                 <img
                                     src="/img/3p/twitter.png"
@@ -361,7 +369,7 @@ function Link({ handle, show, next }: StageProps) {
                         </>}
 
                         {sessionStorage.getItem('linkedin') ? <>
-                            <button onClick={() => handleLogin('linkedin')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 
+                            <button onClick={() => handleLogin('linkedin')} type="button" className="transition-all border border-green-500/50 hover:bg-gray-200 
                                 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                 <img
                                     src="/img/3p/linkedin.png"
@@ -424,19 +432,29 @@ function Link({ handle, show, next }: StageProps) {
                         Link your wallets and start getting paid.
                     </h3>
 
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
+                    <div className="mt-4 grid grid-cols-1  gap-x-2 gap-y-2">
                         {sessionStorage.getItem('userInfo') ?
                             <>
-                                <button onClick={() => configWalletModal()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button onClick={() => configWalletModal()} className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                     <img
                                         src="/img/3p/particle.png"
                                         alt="Link Particle"
                                         className="mr-2 h-5 w-5"
                                     />
 
-                                    <span className="text-sm font-semibold">
+                                <span className="text-sm font-semibold">
                                         Particle Connect
                                     </span>
+
+                                    <span className="ml-1.5 text-xs text-gray-600 truncate ">
+                                        Networks: ETH, AVAX... (EVM)
+                                    </span>
+                                    <div className=" flex-end px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
+                                        <img src='/icons/settings.png' className='w-5'/>
+                                    </div>
+
+
+
                                 </button>
                             </> :
 
@@ -461,7 +479,7 @@ function Link({ handle, show, next }: StageProps) {
 
                             <>
 
-                                <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                     <img
                                         src="/img/3p/metamask.png"
                                         alt="Link Metamask"
@@ -475,6 +493,13 @@ function Link({ handle, show, next }: StageProps) {
                                     <span className="ml-1.5 text-xs text-gray-600 truncate ">
                                         {metamaskAddress.substring(0, 5)}...{metamaskAddress.substring(35, 42)}
                                     </span>
+
+                                    <span className="ml-1.5 text-xs text-gray-600 truncate ">
+                                        Networks: ETH, AVAX... (EVM)
+                                    </span>
+                                    <div className="px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
+                                        <img src='/icons/settings.png' className='w-5'/>
+                                    </div>
                                 </button>
                             </>}
 
@@ -496,7 +521,7 @@ function Link({ handle, show, next }: StageProps) {
                             </>
                             :
                             <>
-                                <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                     <img
                                         src="/img/3p/tron.png"
                                         alt="Link Tron"
