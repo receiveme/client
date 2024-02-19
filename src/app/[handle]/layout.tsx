@@ -1,9 +1,3 @@
-
-
-
-
-
-
 export const metadata = {
   title: `receive.me`,
   description: 'receive.me profile',

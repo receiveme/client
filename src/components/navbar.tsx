@@ -93,27 +93,31 @@ export default function Navbar() {
     }, [account, userInfo]);
 
     useEffect(() => {
-
         const fetchUserData = async (uuid) => {
             return await getUserData(uuid); // Assuming getUserData is defined elsewhere
         };
 
         const fetchData = async () => {
             if (userInfo && userInfo.uuid) { // Assuming userInfo has a uuid property
-                const userData = await fetchUserData(userInfo.uuid);
+                console.log("UUID", userInfo.uuid)
+                const uuid = JSON.parse(sessionStorage.getItem("globalId")) ? JSON.parse(sessionStorage.getItem("globalId")) : "n/a"
+                console.log("GLOBID", uuid)
+                const userData = await fetchUserData(uuid);
+                console.log("USERDATA", userData)
                 if (!userData) {
                     router.push("/onboard");
                 } else {
                     sessionStorage.setItem("userData", userData);
                 }
 
-                console.log("userdata", sessionStorage.getItem("userData", userData)); // Do something with userData, e.g., setting state
+                console.log("userdata", sessionStorage.getItem("userData")); // Do something with userData, e.g., setting state
             }
         };
 
-        if (connected && userInfo) {
+        if ((connected && userInfo) || (userInfo && !sessionStorage.getItem("userData"))) {
             fetchData()
         }
+
     }, [connected, userInfo])
 
     return (

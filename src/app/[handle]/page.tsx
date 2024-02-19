@@ -17,7 +17,6 @@ import "../globals.css";
 // }
 
 
-
 async function getUserByHandle(handle: string) {
     try {
         const user = await prisma.user.findUnique({
@@ -32,13 +31,13 @@ async function getUserByHandle(handle: string) {
 
                     },
 
-                },Social: {
+                }, Social: {
                     select: {
                         platform: true,
                         name: true,
                         networkid: true,
                     }
-                },Wallet: {
+                }, Wallet: {
                     select: {
                         address: true,
                         network: true
@@ -58,22 +57,21 @@ async function getUserByHandle(handle: string) {
 
 export default async function Profile() {
     const pathName = usePathname().replace('/', '')
-
-    console.log("GETUSER", pathName)
     const data = await getUserByHandle(pathName);
 
     if (!data) {
         // Render 404
         return <>could not find</>;
     }
-    const bg = data.profiles.theme.includes('/animate') ? `from-${data.profiles.theme.replace('/animate', '')} background-animate gradient-animation`: `from-${data.profiles.theme.replace('/none', '')} `
-    
-    let bannerSrc = data.profiles.background.includes('whale') ? `/img/profile/WhaleNew.png` : data.profiles.background.includes('waves/blue') ? `/img/profile/WavesBlue.png` : data.profiles.background.includes('waves/red') ? '/img/profile/WavesRed.png' : data.profiles.background.includes('waves/pink') ?  `/img/profile/WavesPink.png`:  data.profiles.background.includes('waves/turquoise') ? `/img/profile/WavesTurquoise.png` : data.profiles.background.includes('waves/yellow') ? `/img/profile/WavesYellow.png` : data.profiles.background.includes('gator/evening') ? `/img/profile/GatorEvening.png` : data.profiles.background.includes(`gator/cool`) ? `/img/profile/GatorCool.png` : data.profiles.background.includes(`gator/night`) ? `/img/profile/GatorNight.png` : data.profiles.background.includes(`gator/sunrise`) ? `/img/profile/GatorSunrise.png` : data.profiles.background.includes(`beach/day`) ? `/img/profile/BeachDay.png` : ``  
+
+    const bg = data.profiles.theme.includes('/animate') ? `from-${data.profiles.theme.replace('/animate', '')} background-animate gradient-animation` : `from-${data.profiles.theme.replace('/none', '')} `
+
+    let bannerSrc = data.profiles.background.includes('whale') ? `/img/profile/WhaleNew.png` : data.profiles.background.includes('waves/blue') ? `/img/profile/WavesBlue.png` : data.profiles.background.includes('waves/red') ? '/img/profile/WavesRed.png' : data.profiles.background.includes('waves/pink') ? `/img/profile/WavesPink.png` : data.profiles.background.includes('waves/turquoise') ? `/img/profile/WavesTurquoise.png` : data.profiles.background.includes('waves/yellow') ? `/img/profile/WavesYellow.png` : data.profiles.background.includes('gator/evening') ? `/img/profile/GatorEvening.png` : data.profiles.background.includes(`gator/cool`) ? `/img/profile/GatorCool.png` : data.profiles.background.includes(`gator/night`) ? `/img/profile/GatorNight.png` : data.profiles.background.includes(`gator/sunrise`) ? `/img/profile/GatorSunrise.png` : data.profiles.background.includes(`beach/day`) ? `/img/profile/BeachDay.png` : ``
     //@ts-ignore
-    const socials = data.Social.map(social => 
-            <div className="flex gap-2 ">
+    const socials = data.Social.map(social =>
+        <div className="flex gap-2 ">
             <a
-                href={social.platform == 'github' ? `https://github.com/${social.name}/` : social.platform == 'twitter' ? `https:/twitter.com/${social.name}` : social.platform == 'twitch'  ? `https://twitch.com/${social.name}/` : ''}
+                href={social.platform == 'github' ? `https://github.com/${social.name}/` : social.platform == 'twitter' ? `https:/twitter.com/${social.name}` : social.platform == 'twitch' ? `https://twitch.com/${social.name}/` : ''}
                 className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
             >
                 <img
@@ -84,15 +82,17 @@ export default async function Profile() {
         </div>
     )
     //@ts-ignore
-    const wallets = data.Wallet.map(wallet =>
-        <Wallet
-            network={wallet.network == 'metamask' ? 'EVM' : wallet.network}
-            address={wallet.address}
-        />
-    )
+    const wallets = data.Wallet.map(wallet => {
+        return (
+            <Wallet
+                network={wallet.network == 'metamask' ? 'EVM' : wallet.network}
+                address={wallet.address}
+            />
+        )
+    })
 
     return (
-        <> 
+        <>
             <main className="">
                 <div
                     className={`w-full bg-gradient-to-b ${bg} to-slate-900 p-2 flex justify-center flex-wrap flex-col gap-2 items-center h-screen `}

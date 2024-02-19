@@ -2,11 +2,8 @@
 import prisma from "@/lib/prisma"
 
 // export async function createUserDRaftProfile(userInfo: Object, handle: String, profile: Object) {
-
 //     const { theme, banner } = profile
-//     console.log("PROP IN", userInfo)
 //     const { chain_name, public_address } = userInfo[0].info.wallets[0]
-
 //     try {
 //         const user = await prisma.user.create({
 //             data: {
@@ -70,8 +67,8 @@ export async function getUserData(userId) {
                 Wallet: true,
             },
         });
-        console.log("SUCCESS", userData)
         await prisma.$disconnect();
+
         return userData;
     } catch (error) {
         console.error("Error fetching user data:", error);
@@ -108,7 +105,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
         const user = await prisma.user.create({
             data: {
                 handle: handle,
-                authuuid: socials[0].socialUuid
+                authuuid: uuid
             },
         });
 
@@ -122,47 +119,89 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                 background: banner, // Optional, specify the background if provided
             },
         });
-        for (let i = 0; i < socials.length; i++) {
-            try {
-                await prisma.social.create({
-                    data: {
-                        userid: user.id,
-                        platform: socials[i].authType,
-                        networkid: String(socials[i].socialId),
-                        particle_token: String(info_token),
-                        particle_uuid: String(uuid),
-                        name: socials[i].socialUsername ? socials[i].socialUsername : "",
-                        imageurl: socials[i].socialImage ? socials[i].socialImg : ""
-                    },
-                });
-                console.log(`Social inserted successfully.`);
-            } catch (error) {
-                console.error(`Error inserting social:`, error);
+
+        if (socials.length > 0) {
+            for (let i = 0; i < socials.length; i++) {
+                try {
+                    await prisma.social.create({
+                        data: {
+                            userid: user.id,
+                            platform: socials[i].authType,
+                            networkid: String(socials[i].socialId),
+                            particle_token: String(info_token),
+                            particle_uuid: String(uuid),
+                            name: socials[i].socialUsername ? socials[i].socialUsername : "",
+                            imageurl: socials[i].socialImage ? socials[i].socialImg : ""
+                        },
+                    });
+                    console.log(`Social inserted successfully.`);
+                } catch (error) {
+                    console.error(`Error inserting social:`, error);
+                }
             }
         }
 
-        for (let i = 0; i < wallets.length; i++) {
-
-            try {
-                await prisma.wallet.create({
-                    data: {
-                        userid: user.id,
-                        network: wallets[i].walletProvider,
-                        address: wallets[i].walletAddress,
-                    },
-                });
-                console.log('successuflly inserted wallet')
-            } catch (error) {
-                console.error("Wallet insertion err:", error);
+        if (wallets.length > 0) {
+            for (let i = 0; i < wallets.length; i++) {
+                try {
+                    await prisma.wallet.create({
+                        data: {
+                            userid: user.id,
+                            network: wallets[i].walletProvider,
+                            address: wallets[i].walletAddress,
+                        },
+                    });
+                    console.log('successuflly inserted wallet')
+                } catch (error) {
+                    console.error("Wallet insertion err:", error);
+                }
             }
         }
 
         await prisma.$disconnect();
-
-        return user;
+        console.log("USER RETURN", user)
+        return user.id;
     } catch (error) {
         console.error('Error creating user:', error);
         await prisma.$disconnect();
         throw error;
+    }
+}
+
+export async function getUserByHandle(handle: string) {
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                handle: handle
+            },
+            include: {
+                Profile: {
+                    select: {
+                        theme: true,
+                        background: true,
+
+                    },
+
+                }, Social: {
+                    select: {
+                        platform: true,
+                        name: true,
+                        networkid: true,
+                    }
+                }, Wallet: {
+                    select: {
+                        address: true,
+                        network: true
+                    }
+                }
+            }
+        });
+
+        //@ts-ignore    
+        user.profiles = user.Profile[0]
+        console.log(user);
+        return user.id;
+    } catch (error) {
+        console.error("Failed to fetch user:", error);
     }
 }

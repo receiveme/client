@@ -129,22 +129,24 @@ function Link({ handle, show, next }: StageProps) {
         if (!sessionStorage.getItem("userInfo")) {
             router.push('/')
         }
-
+        console.log("ORIN HERE")
         const user = await particle.auth.login({ preferredAuthType })
         sessionStorage.setItem("wallets", JSON.stringify([]))
         //@ts-ignore
         const socials = Array.isArray(JSON.parse(sessionStorage.getItem("socials"))) ?
-        //@ts-ignore
+            //@ts-ignore
             JSON.parse(sessionStorage.getItem("socials")) : []
 
         setUserInfo(user);
 
-        if (sessionStorage.getItem(preferredAuthType)) {
-            return 0
-        }
+        // if (sessionStorage.getItem(preferredAuthType)) {
+        //     return 0
+        // }
         //@ts-ignore
+        console.log("SOC HERE")
         socials.push({ authType: preferredAuthType, socialUuid: user.uuid, socialUsername: user.thirdparty_user_info.user_info.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
         //store the specific auth type user info in different storage items
+        console.log("FIRST SOC", socials)
         sessionStorage.setItem('socials', JSON.stringify(socials));
         sessionStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
     };
@@ -215,7 +217,7 @@ function Link({ handle, show, next }: StageProps) {
     }
 
     function configWalletModal() {
-        
+
     }
 
     return (
@@ -423,24 +425,24 @@ function Link({ handle, show, next }: StageProps) {
                     </h3>
 
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
-                        {sessionStorage.getItem('userInfo') ? 
-                        <>
-                            <button onClick={() => configWalletModal()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                <img
-                                    src="/img/3p/particle.png"
-                                    alt="Link Particle"
-                                    className="mr-2 h-5 w-5"
-                                />
+                        {sessionStorage.getItem('userInfo') ?
+                            <>
+                                <button onClick={() => configWalletModal()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                    <img
+                                        src="/img/3p/particle.png"
+                                        alt="Link Particle"
+                                        className="mr-2 h-5 w-5"
+                                    />
 
-                                <span className="text-sm font-semibold">
+                                    <span className="text-sm font-semibold">
                                         Particle Connect
-                                </span>
-                            </button>
-                        </> :
+                                    </span>
+                                </button>
+                            </> :
 
-                        <>
+                            <>
 
-                        </>}
+                            </>}
                         {!metamaskAddress ?
                             <>
                                 <button onClick={() => connectMetamask()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
@@ -776,9 +778,9 @@ export default function Onboard() {
     const complete = async () => {
         //@ts-ignore
         const userInfo = JSON.parse(sessionStorage.getItem("userInfo")); // sucks
-        const wallets = JSON.parse(sessionStorage.getItem("wallets"));
-        const socials = JSON.parse(sessionStorage.getItem("socials"));
-        console.log("USERINFO", socials)
+        const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
+        const socials = JSON.parse(sessionStorage.getItem("socials")) ? JSON.parse(sessionStorage.getItem("socials")) : [];
+
         const fetchSocialDetails = async () => {
             for (let i = 0; i < socials.length; i++) {
                 if (socials[i].authType == 'github') {
@@ -799,10 +801,11 @@ export default function Onboard() {
         }
 
         await fetchSocialDetails()
-        await createUserProfile(socials, wallets, userInfo, handle, profile); // Assuming this is an async function
+        console.log("CHECK DETAILS", profile, userInfo)
+        const globalId = await createUserProfile(socials, wallets, userInfo, handle, profile); // Assuming this is an async function
+        sessionStorage.setItem("globalId", JSON.stringify(globalId))
         router.push('/')
     }
-
 
     return (
         <>

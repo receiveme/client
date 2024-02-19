@@ -48,7 +48,7 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                 },
                 connectors: evmWallets({
                     projectId: '08e47732f28f0dcaf3411492b7c269ab', //replace with walletconnect projectId
-                    showQrModal: false
+                    showQrModal: true
                 }),
             }}
             theme={'light'}
@@ -61,10 +61,5 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
             </AppContext.Provider>
 
         </ModalProvider>
-
-
-        // </AuthCoreContextProvider>
-
-
     );
 };
