@@ -30,8 +30,7 @@ export default function Home() {
             </Link>
             <Link
                 href="/onboard"
-                className="text-green-500 underline block mt-2"
-            >
+                className="text-green-500 underline block mt-2">
                 /onboard
             </Link>
 

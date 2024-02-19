@@ -150,6 +150,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                             userid: user.id,
                             network: wallets[i].walletProvider,
                             address: wallets[i].walletAddress,
+                            preferrednetworks: wallets[i].walletProvider == 'metamask' ? ['eth', 'avax'] : wallets[i].walletProvider == 'particle' ? ['eth', 'avax'] : ''
                         },
                     });
                     console.log('successuflly inserted wallet')
