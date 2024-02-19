@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { IconCopy, IconQrcode } from "@tabler/icons-react";
 import { useState } from "react";
@@ -65,11 +65,10 @@ export function Wallet({ network, address }: WalletProps) {
 
     const [isQRCodeModalOpen, setIsQRCodeModalOpen] = useState(false);
 
-    const showQRCode = () => {
-        console.log("HERE")
+    function showQRCode() {
         setIsQRCodeModalOpen(true);
     }
-    console.log("QR", isQRCodeModalOpen)
+
     return (
         <>
             <Toast
@@ -80,36 +79,44 @@ export function Wallet({ network, address }: WalletProps) {
             />
 
             <WalletQRCodeModal
-                // isOpen={isQRCodeModalOpen}
-                // setIsOpen={setIsQRCodeModalOpen}
-                // network={network}
-                // address={originalWalletAddress}
-                modalProps={{ network, setIsOpen: setIsQRCodeModalOpen, isOpen: true, address: originalWalletAddress }}
+                isOpen={isQRCodeModalOpen}
+                setIsOpen={setIsQRCodeModalOpen}
+                network={network}
+                address={originalWalletAddress}
             />
 
             <div className="flex bg-white rounded-lg shadow-sm py-2 px-1">
                 <div className="flex items-center justify-center ml-2">
                     <img
-                        src={network == 'ETH' ? "/img/3p/eth.png" : network == 'tron' ? '/img/3p/tron.png' : '/img/3p/eth.png'}
+                        src={
+                            network == "ETH"
+                                ? "/img/3p/eth.png"
+                                : network == "tron"
+                                ? "/img/3p/tron.png"
+                                : "/img/3p/eth.png"
+                        }
                         className={`w-[28px] h-[auto]`}
                     />
                 </div>
                 <div className="ml-3 w-full flex flex-col flex-shrink-1">
-                    <p className="text-sm font-bold overflow-ellipsis">{network.toUpperCase()}</p>
+                    <p className="text-sm font-bold overflow-ellipsis">
+                        {network.toUpperCase()}
+                    </p>
                     <span className="text-xs font-light">{walletAddress}</span>
                 </div>
                 <div className="ml-auto mr-1 flex gap-1.5">
                     <button
                         onClick={copyAddress}
-                        className={`bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full ${copied ? "bg-green-400 text-white" : ""
-                            }`}
+                        className={`bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full ${
+                            copied ? "bg-green-400 text-white" : ""
+                        }`}
                     >
                         <IconCopy className="w-4 h-4" />
                     </button>
 
                     <button
-                        onClick={() => setIsQRCodeModalOpen(true)}
-                        className=""
+                        onClick={showQRCode}
+                        className={`bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full`}
                     >
                         <IconQrcode className="h-4 w-4" />
                     </button>

@@ -35,27 +35,45 @@ export function Banner({
     }
 
     return (
-        <div className={`relative rounded-xl bg-${bg ?? ""}` + className}>
+        <div className={`relative rounded-xl bg-${bg ?? ""} ` + className}>
             <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t bg-opacity-20 from-black/[.54] to-transparent">
                 <span className="text-3xl text-white font-bold">
                     <span className="text-gray-400 font-normal">@</span>
                     {handle}
                 </span>
 
-                {socials && (
-                    <div className="flex gap-2 items-center">
-                        <a
-                            href={"https://paypal.me/nickmura/"}
-                            target="_blank"
-                            className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
-                        >
-                            <img
-                                src="/img/3p/paypal.png"
-                                className={`h-[20px] w-[20px]`}
-                            />
-                        </a>
-                    </div>
-                )}
+                {socials &&
+                    socials.length &&
+                    socials.map((social) => (
+                        <div className="flex gap-2 ">
+                            <a
+                                href={
+                                    social.platform == "github"
+                                        ? `https://github.com/${social.name}/`
+                                        : social.platform == "twitter"
+                                        ? `https:/twitter.com/${social.name}`
+                                        : social.platform == "twitch"
+                                        ? `https://twitch.com/${social.name}/`
+                                        : ""
+                                }
+                                target="_blank"
+                                className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
+                            >
+                                <img
+                                    src={
+                                        social.platform == "github"
+                                            ? "/img/3p/github.png"
+                                            : social.platform == "twitter"
+                                            ? "/img/3p/twitter.png"
+                                            : social.platform == "twitch"
+                                            ? "/img/3p/twitch.png"
+                                            : "/img/3p/discord.png"
+                                    }
+                                    className={`h-[20px] w-[20px]`}
+                                />
+                            </a>
+                        </div>
+                    ))}
             </div>
             <img
                 src={src}
