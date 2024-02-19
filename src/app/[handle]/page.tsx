@@ -80,15 +80,19 @@ export default async function Profile({ params }: any) {
                         />
 
                         <div className="w-full flex flex-col gap-4 max-w-[650px]">
-                            {data.Wallet.map((wallet: any) => (
-                                <Wallet
-                                    network={
-                                        wallet.network == "metamask"
-                                            ? "EVM"
-                                            : wallet.network
-                                    }
-                                    address={wallet.address}
-                                />
+                            {data.Wallet.map((wallet: any, i) => (
+
+
+                                    <Wallet
+                                        network={
+                                            wallet.network == "metamask"
+                                                ? "EVM"
+                                                : wallet.network == 'particle' ?
+                                                'EVM' : wallet.network
+                                        }
+                                        address={wallet.address}
+                                    />
+
                             ))}
                         </div>
 

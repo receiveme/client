@@ -60,7 +60,7 @@ export function WalletQRCodeModal({
                                         <QRCodeSVG value={address} size={256} />
 
                                         <p className="font-medium mt-4">
-                                            {network.toUpperCase()}
+                                            {network.toUpperCase() == '(ETH) EVM' ? 'EVM (ETH, AVAX...)' : network.toUpperCase()}
                                         </p>
                                         <p className="text-xs font-light text-gray-700">
                                             {address}

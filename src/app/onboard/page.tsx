@@ -224,6 +224,10 @@ function Link({ handle, show, next }: StageProps) {
 
 
 
+    function configWalletModal(): void {
+        throw new Error("Function not implemented.");
+    }
+
     return (
         <>
             <div className="flex flex-col gap-4">
@@ -247,7 +251,7 @@ function Link({ handle, show, next }: StageProps) {
                     </h3>
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
                         {sessionStorage.getItem('discord') ? <>
-                            <button onClick={() => handleLogin('discord')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                            <button onClick={() => handleLogin('discord')} type="button" className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                 <img
                                     src="/img/3p/discord.png"
                                     alt="Link Discord"
@@ -281,7 +285,7 @@ function Link({ handle, show, next }: StageProps) {
 
 
                         {sessionStorage.getItem('github') ? <>
-                            <button onClick={() => handleLogin('github')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                            <button onClick={() => handleLogin('github')} type="button" className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                 <img
                                     src="/img/3p/github.png"
                                     alt="Link Github"
@@ -309,7 +313,7 @@ function Link({ handle, show, next }: StageProps) {
                         </>}
 
                         {sessionStorage.getItem('twitch') ? <>
-                            <button onClick={() => handleLogin('twitch')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3v">
+                            <button onClick={() => handleLogin('twitch')} type="button" className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3v">
                                 <img
                                     src="/img/3p/twitch.png"
                                     alt="Twitch"
@@ -338,7 +342,7 @@ function Link({ handle, show, next }: StageProps) {
 
 
                         {sessionStorage.getItem('twitter') ? <>
-                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 
+                            <button onClick={() => handleLogin('twitter')} type="button" className="transition-all border border-green-500/50 hover:bg-gray-200 
                                 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                 <img
                                     src="/img/3p/twitter.png"
@@ -365,7 +369,7 @@ function Link({ handle, show, next }: StageProps) {
                         </>}
 
                         {sessionStorage.getItem('linkedin') ? <>
-                            <button onClick={() => handleLogin('linkedin')} type="button" className="transition-all border-2 border-green-500 hover:bg-gray-200 
+                            <button onClick={() => handleLogin('linkedin')} type="button" className="transition-all border border-green-500/50 hover:bg-gray-200 
                                 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                 <img
                                     src="/img/3p/linkedin.png"
@@ -428,27 +432,27 @@ function Link({ handle, show, next }: StageProps) {
                         Link your wallets and start getting paid.
                     </h3>
 
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
+                    <div className="mt-4 grid grid-cols-1  gap-x-2 gap-y-2">
                         {sessionStorage.getItem('userInfo') ?
                             <>
-                                <button onClick={() => configWalletModal()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button onClick={() => configWalletModal()} className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                     <img
                                         src="/img/3p/particle.png"
                                         alt="Link Particle"
                                         className="mr-2 h-5 w-5"
                                     />
-                                <div>
-                                <p className="text-sm font-semibold">
-                                        Particle Connect
-                                    </p>
 
-                                    <p className="ml-1.5 text-xs text-gray-600 truncate ">
+                                <span className="text-sm font-semibold">
+                                        Particle Connect
+                                    </span>
+
+                                    <span className="ml-1.5 text-xs text-gray-600 truncate ">
                                         Networks: ETH, AVAX... (EVM)
-                                    </p>
-                                    <p className="px-1.5 py-1.5 bg-grey-600">
+                                    </span>
+                                    <div className=" flex-end px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
                                         <img src='/icons/settings.png' className='w-5'/>
-                                    </p>
-                                </div>
+                                    </div>
+
 
 
                                 </button>
@@ -475,7 +479,7 @@ function Link({ handle, show, next }: StageProps) {
 
                             <>
 
-                                <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                     <img
                                         src="/img/3p/metamask.png"
                                         alt="Link Metamask"
@@ -489,6 +493,13 @@ function Link({ handle, show, next }: StageProps) {
                                     <span className="ml-1.5 text-xs text-gray-600 truncate ">
                                         {metamaskAddress.substring(0, 5)}...{metamaskAddress.substring(35, 42)}
                                     </span>
+
+                                    <span className="ml-1.5 text-xs text-gray-600 truncate ">
+                                        Networks: ETH, AVAX... (EVM)
+                                    </span>
+                                    <div className="px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
+                                        <img src='/icons/settings.png' className='w-5'/>
+                                    </div>
                                 </button>
                             </>}
 
@@ -510,7 +521,7 @@ function Link({ handle, show, next }: StageProps) {
                             </>
                             :
                             <>
-                                <button className="transition-all border-2 border-green-500 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <button className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
                                     <img
                                         src="/img/3p/tron.png"
                                         alt="Link Tron"
