@@ -21,6 +21,7 @@ import {
     useAccount,
     useConnectKit,
 } from "@particle-network/connect-react-ui";
+import { getUserData } from "../actions";
 import { useRouter } from "next/navigation";
 
 const features = [
@@ -62,11 +63,16 @@ function classNames(...classes: any) {
 export default function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [tronlinkAddress, setTronlinkAddress] = useState(false);
-
     const account = useAccount() || null;
     const connectKit = useConnectKit();
+    const connectAccount = useAccount();
     const userInfo = connectKit.particle.auth.getUserInfo();
     const router = useRouter();
+    const [connected, setConnected] = useState(false)
+
+    async function signOut() {
+        connectKit.particle.auth.logout()
+    }
 
     useEffect(() => { // Seems non-functional, eventually will be replaced by endpoint
         if (!account && !userInfo) {
@@ -82,10 +88,33 @@ export default function Navbar() {
                 "userInfo",
                 JSON.stringify([{ accountInfo: account, info: userInfo }]),
             );
-
-            router.push("/onboard");
         }
+
     }, [account, userInfo]);
+
+    useEffect(() => {
+
+        const fetchUserData = async (uuid) => {
+            return await getUserData(uuid); // Assuming getUserData is defined elsewhere
+        };
+
+        const fetchData = async () => {
+            if (userInfo && userInfo.uuid) { // Assuming userInfo has a uuid property
+                const userData = await fetchUserData(userInfo.uuid);
+                if (!userData) {
+                    router.push("/onboard");
+                } else {
+                    sessionStorage.setItem("userData", userData);
+                }
+
+                console.log("userdata", sessionStorage.getItem("userData", userData)); // Do something with userData, e.g., setting state
+            }
+        };
+
+        if (connected && userInfo) {
+            fetchData()
+        }
+    }, [connected, userInfo])
 
     return (
         <header className="w-full mb-4">
@@ -104,32 +133,31 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
-                    {/* <ConnectButton /> */}
+                    {/* {account ? */}
                     <ConnectButton.Custom>
-                        {({ account, chain, openAccountModal, openConnectModal, openChainModal, accountLoading }) => {
+                        {({ account, openConnectModal }) => {
+                            const handleConnect = () => {
+                                openConnectModal()
+                                setConnected(true)
+                                // console.log("FETCH DDATA")
+                                // fetchData();
+                            }
                             return (
                                 <div>
-                                    <button onClick={openConnectModal} disabled={!!account}>
+                                    <button onClick={handleConnect} disabled={!!account}>
                                         Open Connect
                                     </button>
-                                    <br />
-                                    <br />
-                                    <button onClick={openAccountModal} disabled={!account}>
-                                        Open Account
-                                    </button>
-                                    <br />
-                                    <br />
-                                    <button onClick={openChainModal} disabled={!account}>
-                                        Open Switch Network
-                                    </button>
-                                    <div>
-                                        <h3>account</h3>
-                                        <p>{account}</p>
-                                    </div>
                                 </div>
                             );
                         }}
                     </ConnectButton.Custom>
+                    <button onClick={signOut}>
+                        LOGOUT
+                    </button>
+                    {/* :
+                        
+                    } */}
+
                 </div>
             </nav>
             <Dialog

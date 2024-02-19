@@ -47,9 +47,35 @@ export async function getUserSocials(userId) {
                 Social: true, // Selects all fields from Social
             },
         });
+
+        await prisma.$disconnect();
         return userSocials.Social; // Return only the Social array
     } catch (error) {
         console.error("Error retrieving user socials:", error);
+        await prisma.$disconnect();
+        throw error;
+    }
+}
+
+export async function getUserData(userId) {
+    console.log("get suer", userId)
+    try {
+        const userData = await prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                Profile: true,
+                Social: true,
+                Wallet: true,
+            },
+        });
+        console.log("SUCCESS", userData)
+        await prisma.$disconnect();
+        return userData;
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        await prisma.$disconnect();
         throw error;
     }
 }
@@ -64,13 +90,14 @@ export async function getUserWallets(userId) {
                 Wallet: true, // Selects all fields from Wallet
             },
         });
+        await prisma.$disconnect();
         return userWallets.Wallet; // Return only the Wallet array
     } catch (error) {
         console.error("Error retrieving user wallets:", error);
+        await prisma.$disconnect();
         throw error;
     }
 }
-
 
 export async function createUserProfile(socials: any, wallets: any, userInfo: any, handle: String, profile: any) { // TODO; seperate socials & wallets
     const { theme, banner } = profile
@@ -81,9 +108,12 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
         const user = await prisma.user.create({
             data: {
                 handle: handle,
-                uuid: socials[0].socialUuid
+                authuuid: socials[0].socialUuid
             },
         });
+
+        console.log("THEME", theme);
+        console.log("BANNER", banner);
 
         await prisma.profile.create({
             data: {
@@ -92,7 +122,6 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                 background: banner, // Optional, specify the background if provided
             },
         });
-        console.log("SOCIALS", socials)
         for (let i = 0; i < socials.length; i++) {
             try {
                 await prisma.social.create({
@@ -132,6 +161,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
         return user;
     } catch (error) {
         console.error('Error creating user:', error);
+        await prisma.$disconnect();
         throw error;
     }
 }

@@ -4,7 +4,6 @@ import { AppState } from "../types/state/app-state.type";
 import { supabase } from "./supabase";
 import { AuthCoreContextProvider } from '@particle-network/auth-core-modal';
 import { ModalProvider } from "@particle-network/connectkit";
-import { WalletEntryPosition } from '@particle-network/auth';
 import { Ethereum, EthereumGoerli, Avalanche, AvalancheTestnet, ArbitrumGoerli, ArbitrumNova } from '@particle-network/chains';
 import { evmWallets } from '@particle-network/connect';
 
@@ -55,7 +54,7 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
             theme={'light'}
             language={'en'}   //optional：localize, default en
             walletSort={['Particle Auth', 'Wallet']} //optional：walelt orde
-            >
+        >
 
             <AppContext.Provider value={{ appState, setAppState }}>
                 {children}

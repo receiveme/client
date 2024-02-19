@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { ParticleNetwork, UserInfo } from '@particle-network/auth';
 import { Avalanche } from '@particle-network/chains';
 import { createUserProfile } from "@/src/actions";
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 type StageProps = {
