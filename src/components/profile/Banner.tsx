@@ -59,9 +59,11 @@ export function Banner({
                                             social.platform == "github"
                                                 ? `https://github.com/${social.name}/`
                                                 : social.platform == "twitter"
-                                                ? `https:/twitter.com/${social.name}`
+                                                ? `https://twitter.com/${social.name}`
                                                 : social.platform == "twitch"
                                                 ? `https://twitch.com/${social.name}/`
+                                                : social.platform == "discord"
+                                                ? `discord://-/users/${social.networkid}`
                                                 : ""
                                         }
                                         target="_blank"
