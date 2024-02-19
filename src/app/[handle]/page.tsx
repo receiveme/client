@@ -1,6 +1,5 @@
 import { Wallet } from "@/src/components/handle/Wallet";
 import prisma from "@/lib/prisma";
-
 import "../globals.css";
 import { Banner } from "@/src/components/profile/Banner";
 import { getUser } from "@/src/actions/getUser";
@@ -50,11 +49,12 @@ export default async function Profile({ params }: any) {
     let data_each_wallet: any = {};
     let total_balance: number = 0;
 
-    for (let wallet of (data?.["Wallet"] || [])) {
-        const covalent: any = await getUser({ address: wallet?.["address"] });
-        data_each_wallet[wallet.network] = covalent;
-        total_balance += covalent["usd_balance"];
-    }
+    // for (let wallet of (data?.["Wallet"] || [])) {
+    //     // const covalent: any = await getUser({ address: wallet?.["address"] });
+    //     // console.log("COVALENT", covalent)
+    //     // data_each_wallet[wallet.network] = covalent;
+    //     // total_balance += covalent["usd_balance"];
+    // }
 
     if (!data) {
         // Render 404
