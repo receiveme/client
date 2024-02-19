@@ -597,7 +597,7 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                         Choose a theme for your profile.
                     </h3>
 
-                    <div className="flex gap-4 mt-2">
+                    <div className="grid grid-cols-5 gap-3 mt-2 w-full">
                         <ThemeOption
                             color="yellow-300"
                             theme={theme}
@@ -631,7 +631,7 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                         Choose a banner for your profile.
                     </h3>
 
-                    <div className="flex justify-between mt-2 w-full">
+                    <div className="grid grid-cols-5 gap-3 mt-2 w-full">
                         <BannerOption
                             type="whale"
                             color="white"
@@ -662,9 +662,6 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                             banner={banner}
                             setBanner={setBanner}
                         />
-                    </div>
-
-                    <div className="flex justify-between mt-2 w-full">
                         <BannerOption
                             type="waves"
                             color="blue"
@@ -695,9 +692,6 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
                             banner={banner}
                             setBanner={setBanner}
                         />
-                    </div>
-
-                    <div className="flex justify-between mt-2 w-full">
                         <BannerOption
                             type="beach"
                             color="day"

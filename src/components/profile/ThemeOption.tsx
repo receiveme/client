@@ -38,15 +38,10 @@ export function ThemeOption({
             <div className="flex-grow-1 w-full">
                 <div
                     onClick={onClick}
-                    className={`relative flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-${color} to-slate-900 transition cursor-pointer border-2 ${
-                        theme.includes(color)
-<<<<<<< HEAD
-                            ? "border-indigo-600 shadow-md scale-[1.02]"
-=======
-                            ? "border-indigo-600"
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
-                            : "border-gray-200 hover:border-indigo-600"
-                    } ${className ?? ""}`}
+                    className={`relative flex-grow-1 w-full h-12 rounded-md bg-gradient-to-b from-${color} to-slate-900 transition cursor-pointer border-2 ${theme.includes(color)
+                        ? "border-indigo-600 shadow-md scale-[1.02]"
+                        : "border-gray-200 hover:border-indigo-600"
+                        } ${className ?? ""}`}
                 ></div>
 
                 {theme.includes(color) && (

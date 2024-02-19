@@ -1,20 +1,9 @@
 import { Wallet } from "@/src/components/handle/Wallet";
 import prisma from "@/lib/prisma";
-<<<<<<< HEAD
-import "../globals.css";
-import { Banner } from "@/src/components/profile/Banner";
-
-// export async function generateMetadata({ params }: { params: any }) {
-//     return {
-//         title: params,
-//     };
-// }
-=======
 
 import "../globals.css";
 import { Banner } from "@/src/components/profile/Banner";
 import { getUser } from "@/src/actions/getUser";
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
 
 async function getUserByHandle(handle: string) {
     try {
@@ -48,10 +37,6 @@ async function getUserByHandle(handle: string) {
 
         //@ts-ignore
         user.profiles = user.Profile[0];
-<<<<<<< HEAD
-=======
-        console.log(user);
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
         return user;
     } catch (error) {
         console.error("Failed to fetch user:", error);
@@ -59,10 +44,6 @@ async function getUserByHandle(handle: string) {
 }
 
 export default async function Profile({ params }: any) {
-<<<<<<< HEAD
-    const handle = params.handle;
-    const data = await getUserByHandle(handle);
-=======
     const handle: any = params.handle;
     const data: any = await getUserByHandle(handle);
 
@@ -74,7 +55,6 @@ export default async function Profile({ params }: any) {
         data_each_wallet[wallet.network] = covalent;
         total_balance += covalent["usd_balance"];
     }
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
 
     if (!data) {
         // Render 404
@@ -99,7 +79,6 @@ export default async function Profile({ params }: any) {
                             handle={data.handle}
                             banner={data.profiles.background}
                             socials={data.Social}
-<<<<<<< HEAD
                             className="my-6"
                         />
                         <div className="w-full flex flex-col gap-4 max-w-[650px]">
@@ -119,26 +98,6 @@ export default async function Profile({ params }: any) {
                                     </div>
                                 )
                             })}
-=======
-                            balance={total_balance}
-                            className="my-6"
-                        />
-
-                        <div className="w-full flex flex-col gap-4 max-w-[650px]">
-                            {data.Wallet.map((wallet: any, i: any) => (
-                                <Wallet
-                                    network={
-                                        wallet.network == "metamask"
-                                            ? "EVM"
-                                            : wallet.network == 'particle' ?
-                                                'EVM' : wallet.network
-                                    }
-                                    address={wallet.address}
-                                    balance={data_each_wallet[wallet.network]}
-                                />
-
-                            ))}
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
                         </div>
 
                         <div className="mt-4 flex w-full justify-center items-center">

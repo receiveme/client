@@ -9,7 +9,6 @@ import "./dashboard.css";
 
 const archivo = Archivo({ subsets: ["latin"] });
 
-<<<<<<< HEAD
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -18,23 +17,10 @@ import {
     IconPalette,
     IconSocial,
     IconUserBolt,
-=======
-import { Fragment, useState } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
-import {
-    Icon12Hours,
-    IconChartAreaLine,
-    IconHome,
-    IconQrcode,
-    IconSocial,
-    IconUsersGroup,
-    IconWallet,
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
 } from "@tabler/icons-react";
 
 import "@particle-network/connect-react-ui/dist/index.css";
 import { ConnectButton } from "@particle-network/connect-react-ui";
-<<<<<<< HEAD
 import { DashboardProfile } from "@/src/components/dashboard/DashboardProfile";
 
 const navigation = [
@@ -47,14 +33,6 @@ const navigation = [
         icon: IconChartAreaLine,
         disabled: true,
     },
-=======
-
-const navigation = [
-    { name: "Appearance", href: "#", icon: IconHome, current: true },
-    { name: "Analytics", href: "#", icon: IconChartAreaLine, current: false },
-    { name: "Wallets", href: "#", icon: IconWallet, current: false },
-    { name: "Socials", href: "#", icon: IconSocial, current: false },
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
 ];
 
 const userNavigation = [
@@ -73,7 +51,6 @@ export default function RootLayout({
 }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-<<<<<<< HEAD
     const [current, setCurrent] = useState("Appearance");
     const [handle, setHandle] = useState("");
 
@@ -84,8 +61,6 @@ export default function RootLayout({
         }
     });
 
-=======
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
     return (
         <html lang="en">
             <Head>
@@ -206,7 +181,6 @@ export default function RootLayout({
                                                                                 href={
                                                                                     item.href
                                                                                 }
-<<<<<<< HEAD
                                                                                 onClick={() =>
                                                                                     setCurrent(
                                                                                         item.name,
@@ -221,23 +195,12 @@ export default function RootLayout({
                                                                                     item.disabled
                                                                                         ? "opacity-10 text-gray-300 hover:text-gray-600 "
                                                                                         : "",
-=======
-                                                                                className={classNames(
-                                                                                    item.current
-                                                                                        ? "bg-gray-50 text-indigo-600"
-                                                                                        : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
-                                                                                    "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition",
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
                                                                                 )}
                                                                             >
                                                                                 <item.icon
                                                                                     className={classNames(
-<<<<<<< HEAD
                                                                                         current ===
                                                                                             item.name
-=======
-                                                                                        item.current
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
                                                                                             ? "text-indigo-600"
                                                                                             : "text-gray-400 group-hover:text-indigo-600",
                                                                                         "h-6 w-6 shrink-0 transition",
@@ -285,18 +248,17 @@ export default function RootLayout({
                                                     <li key={item.name}>
                                                         <a
                                                             href={item.href}
-<<<<<<< HEAD
                                                             onClick={() =>
                                                                 item.profile
                                                                     ? window.open(
-                                                                          `/${handle}`,
-                                                                          "_blank",
-                                                                      )
+                                                                        `/${handle}`,
+                                                                        "_blank",
+                                                                    )
                                                                     : !item.disabled
-                                                                    ? setCurrent(
-                                                                          item.name,
-                                                                      )
-                                                                    : null
+                                                                        ? setCurrent(
+                                                                            item.name,
+                                                                        )
+                                                                        : null
                                                             }
                                                             className={classNames(
                                                                 current ===
@@ -307,18 +269,10 @@ export default function RootLayout({
                                                                 item.disabled
                                                                     ? "!text-gray-400 !hover:text-gray-500"
                                                                     : "",
-=======
-                                                            className={classNames(
-                                                                item.current
-                                                                    ? "bg-gray-50 text-indigo-600"
-                                                                    : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
-                                                                "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition",
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
                                                             )}
                                                         >
                                                             <item.icon
                                                                 className={classNames(
-<<<<<<< HEAD
                                                                     current ===
                                                                         item.name
                                                                         ? "text-indigo-600"
@@ -327,12 +281,6 @@ export default function RootLayout({
                                                                     item.disabled
                                                                         ? "!text-gray-300 !hover:text-gray-400 !group-hover:text-gray-400"
                                                                         : "",
-=======
-                                                                    item.current
-                                                                        ? "text-indigo-600"
-                                                                        : "text-gray-400 group-hover:text-indigo-600",
-                                                                    "h-6 w-6 shrink-0 transition",
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
                                                                 )}
                                                                 aria-hidden="true"
                                                             />
@@ -370,7 +318,6 @@ export default function RootLayout({
                                 />
 
                                 <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-<<<<<<< HEAD
                                     <div className="flex items-center justify-between gap-x-4 lg:gap-x-6 w-full">
                                         <div className="flex gap-3 items-center">
                                             <div className="h-full px-4 py-2 rounded-lg bg-gray-100">
@@ -383,25 +330,16 @@ export default function RootLayout({
                                             </div>
                                         </div>
 
-=======
-                                    <div className="flex items-center justify-end gap-x-4 lg:gap-x-6 w-full">
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
                                         <ConnectButton />
                                     </div>
                                 </div>
                             </div>
 
-<<<<<<< HEAD
                             <main className="py-6">
                                 <div className="px-4 sm:px-6 lg:px-8 h-full w-full">
                                     {current === "Appearance" && (
                                         <DashboardProfile handle={handle} />
                                     )}
-=======
-                            <main className="py-10 w-full h-full">
-                                <div className="px-4 sm:px-6 lg:px-8 h-full w-full">
-                                    {children}
->>>>>>> 952d83df628f624b9a565a41c86ac815ca82824f
                                 </div>
                             </main>
                         </div>
