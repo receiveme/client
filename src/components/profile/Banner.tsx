@@ -38,7 +38,7 @@ export function Banner({
 
     return (
         <div className={`relative rounded-xl bg-${bg ?? ""} ` + className}>
-            <div className="rounded-xl absolute w-full h-full p-4 flex flex-col justify-between items-end bg-gradient-to-t bg-opacity-20 from-black/[.54] to-transparent">
+            <div className="rounded-xl absolute w-full h-full p-4 flex flex-col justify-end items-end bg-gradient-to-t bg-opacity-20 from-black/[.54] to-transparent">
                 {/* <span className="text-white px-3 py-1 rounded-md bg-[#1c1c1c43] w-fit uppercase text-xs">
                     BALANCE <b>${(balance || 0)?.toFixed(2)}</b>
                 </span> */}
