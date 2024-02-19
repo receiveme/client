@@ -132,7 +132,9 @@ function Link({ handle, show, next }: StageProps) {
 
         const user = await particle.auth.login({ preferredAuthType })
         sessionStorage.setItem("wallets", JSON.stringify([]))
+        //@ts-ignore
         const socials = Array.isArray(JSON.parse(sessionStorage.getItem("socials"))) ?
+        //@ts-ignore
             JSON.parse(sessionStorage.getItem("socials")) : []
 
         setUserInfo(user);
@@ -140,7 +142,7 @@ function Link({ handle, show, next }: StageProps) {
         if (sessionStorage.getItem(preferredAuthType)) {
             return 0
         }
-
+        //@ts-ignore
         socials.push({ authType: preferredAuthType, socialUuid: user.uuid, socialUsername: user.thirdparty_user_info.user_info.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
         //store the specific auth type user info in different storage items
         sessionStorage.setItem('socials', JSON.stringify(socials));
@@ -210,6 +212,10 @@ function Link({ handle, show, next }: StageProps) {
                 return reject();
             }
         });
+    }
+
+    function configWalletModal() {
+        
     }
 
     return (
@@ -417,6 +423,24 @@ function Link({ handle, show, next }: StageProps) {
                     </h3>
 
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
+                        {sessionStorage.getItem('userInfo') ? 
+                        <>
+                            <button onClick={() => configWalletModal()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                <img
+                                    src="/img/3p/particle.png"
+                                    alt="Link Particle"
+                                    className="mr-2 h-5 w-5"
+                                />
+
+                                <span className="text-sm font-semibold">
+                                        Particle Connect
+                                </span>
+                            </button>
+                        </> :
+
+                        <>
+
+                        </>}
                         {!metamaskAddress ?
                             <>
                                 <button onClick={() => connectMetamask()} className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
