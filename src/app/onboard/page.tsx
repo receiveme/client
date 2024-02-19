@@ -133,7 +133,7 @@ function Link({ handle, show, next }: StageProps) {
         const user = await particle.auth.login({ preferredAuthType })
         sessionStorage.setItem("wallets", JSON.stringify([]))
         //@ts-ignore
-        const socials = Array.isArray(JSON.parse(sessionStorage.getItem("socials"))) ?
+        const socials = JSON.parse(sessionStorage.getItem("socials")) ?
             //@ts-ignore
             JSON.parse(sessionStorage.getItem("socials")) : []
 
@@ -142,9 +142,12 @@ function Link({ handle, show, next }: StageProps) {
         // if (sessionStorage.getItem(preferredAuthType)) {
         //     return 0
         // }
-        //@ts-ignore
+
         console.log("SOC HERE")
-        socials.push({ authType: preferredAuthType, socialUuid: user.uuid, socialUsername: user.thirdparty_user_info.user_info.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
+                //@ts-ignore
+        let socialIndex = socials.findIndex(social => social.authType == preferredAuthType);
+        console.log(socialIndex)
+        if (socialIndex < 0) socials.push({ authType: preferredAuthType, socialUuid: user.uuid, socialUsername: user.thirdparty_user_info.user_info.name, socialInfo: user, socialImg: user.avatar, socialId: String(user.thirdparty_user_info.user_info.id) })
         //store the specific auth type user info in different storage items
         console.log("FIRST SOC", socials)
         sessionStorage.setItem('socials', JSON.stringify(socials));
@@ -184,7 +187,8 @@ function Link({ handle, show, next }: StageProps) {
             if (accounts?.length && accounts[0] && chainId) {
                 setMetamaskAddress(accounts[0])
                 const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
-                wallets.push({ walletProvider: "metamask", walletAddress: accounts[0] })
+                let walletIndex = wallets.findIndex(wallet => wallet.walletProvider == 'metamask');
+                if (walletIndex < 0) wallets.push({ walletProvider: "metamask", walletAddress: accounts[0] })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
             } else return reject();
         });
@@ -205,7 +209,8 @@ function Link({ handle, show, next }: StageProps) {
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account)
                 const wallets = JSON.parse(sessionStorage.getItem("wallets")) ? JSON.parse(sessionStorage.getItem("wallets")) : []
-                wallets.push({ walletProvider: "tron", walletAddress: account })
+                let walletIndex = wallets.findIndex(wallet => wallet.walletProvider == 'tron');
+                if (walletIndex < 0) wallets.push({ walletProvider: "tron", walletAddress: account })
                 sessionStorage.setItem("wallets", JSON.stringify(wallets))
                 if (!account) return reject();
                 return resolve({ account, chain: "tron" });

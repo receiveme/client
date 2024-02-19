@@ -104,7 +104,7 @@ export default function Navbar() {
                 console.log("GLOBID", uuid)
                 const userData = await fetchUserData(uuid);
                 console.log("USERDATA", userData)
-                if (!userData || !userData.length) {
+                if (!userData || !userData) {
                     router.push("/onboard");
                 } else {
                     sessionStorage.setItem("userData", userData);

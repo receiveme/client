@@ -34,6 +34,7 @@ async function getUserByHandle(handle: string) {
                     select: {
                         address: true,
                         network: true,
+                        preferrednetworks: true,
                     },
                 },
             },
@@ -70,7 +71,7 @@ export default async function Profile({ params }: any) {
                 <div
                     className={`w-full bg-gradient-to-b ${bg} to-slate-900 p-2 flex justify-center flex-wrap flex-col gap-2 items-center h-screen `}
                 >
-                    <div className="max-w-[580px] w-full px-5 flex flex-col items-center mb-24">
+                    <div className="max-w-[580px] w-full px-5 flex flex-col items-end mb-24">
                         <Banner
                             handle={data.handle}
                             banner={data.profiles.background}
@@ -83,9 +84,7 @@ export default async function Profile({ params }: any) {
                                 <Wallet
                                     network={
                                         wallet.network == "metamask"
-                                            ? "EVM"
-                                            : wallet.network
-                                    }
+                                            ? "EVM" : wallet.network}
                                     address={wallet.address}
                                 />
                             ))}
