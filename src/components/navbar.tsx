@@ -141,8 +141,8 @@ export default function Navbar() {
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
                     {JSON.parse(
                         typeof window !== "undefined"
-                            ? localStorage.getItem("globalId") ?? "{}"
-                            : "{}",
+                            ? localStorage.getItem("globalId") ?? "null"
+                            : "null",
                     ) ? (
                         <>
                             <button
