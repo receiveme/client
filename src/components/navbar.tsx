@@ -161,12 +161,7 @@ export default function Navbar() {
                                     @
                                 </span>
                                 <span>
-                                    {
-                                        JSON.parse(
-                                            localStorage.getItem("userData") ??
-                                                '{"handle": "hello"}',
-                                        ).handle
-                                    }
+        
                                 </span>
                             </button>
 

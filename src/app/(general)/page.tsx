@@ -21,7 +21,7 @@ export default function Home() {
                                         className="inline-flex space-x-6"
                                     >
                                         <span className="rounded-full bg-indigo-600/10 px-3 py-1 text-sm font-semibold leading-6 text-indigo-600 ring-1 ring-inset ring-indigo-600/10">
-                                            What's new
+                                            What&apos;s new
                                         </span>
                                         <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-gray-600">
                                             <IconSparkles
@@ -35,13 +35,10 @@ export default function Home() {
                                     </a>
                                 </div>
                                 <h1 className="mt-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl !leading-[75px]">
-                                    Supercharge your web applications
+                                    Supercharge your wallets
                                 </h1>
                                 <p className="mt-6 text-lg leading-8 text-gray-600">
-                                    Anim aute id magna aliqua ad ad non deserunt
-                                    sunt. Qui irure qui lorem cupidatat commodo.
-                                    Elit sunt amet fugiat veniam occaecat fugiat
-                                    aliqua.
+                                    Create & customize an account with one click. Link any wallet or social with your account.
                                 </p>
                                 <div className="mt-10 flex items-center gap-x-8">
                                     <a

@@ -31,8 +31,7 @@ export const AppStateProvider = ({ // TODO MAKE THIS WORK
                         Ethereum,
                         EthereumGoerli,
                         Avalanche,
-                        AvalancheTestnet,
-                        ArbitrumNova
+                        AvalancheTestnet
                     ],
                     particleWalletEntry: {    //optional: particle wallet config
                         displayWalletEntry: true, //display wallet button when connect particle success.
