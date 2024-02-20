@@ -21,7 +21,7 @@ export function DashboardProfile({
 
     async function save() {
         // Send API request
-        // Save to sessionStorage
+        // Save to localStorage
     }
 
     return (

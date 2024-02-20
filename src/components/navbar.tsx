@@ -68,29 +68,29 @@ export default function Navbar() {
     const connectAccount = useAccount();
     const userInfo = connectKit.particle.auth.getUserInfo();
     const router = useRouter();
-    const [connected, setConnected] = useState(false)
+    const [connected, setConnected] = useState(false);
 
     async function signOut() {
-        sessionStorage.clear()
-        connectKit.particle.auth.logout()
+        localStorage.clear();
+        connectKit.particle.auth.logout();
     }
 
-    useEffect(() => { // Seems non-functional, eventually will be replaced by endpoint
+    useEffect(() => {
+        // Seems non-functional, eventually will be replaced by endpoint
         if (!account && !userInfo) {
-            sessionStorage.removeItem("userInfo");
+            localStorage.removeItem("userInfo");
         }
         if (
             //@ts-ignore
-            !JSON.parse(sessionStorage.getItem("userInfo")) &&
+            !JSON.parse(localStorage.getItem("userInfo")) &&
             account &&
             userInfo
         ) {
-            sessionStorage.setItem(
+            localStorage.setItem(
                 "userInfo",
                 JSON.stringify([{ accountInfo: account, info: userInfo }]),
             );
         }
-
     }, [account, userInfo]);
 
     useEffect(() => {
@@ -99,21 +99,27 @@ export default function Navbar() {
         };
 
         const fetchData = async () => {
-            if (userInfo && userInfo.uuid) { // Assuming userInfo has a uuid property
-                const uuid = JSON.parse(sessionStorage.getItem("globalId")) ? JSON.parse(sessionStorage.getItem("globalId")) : "n/a"
+            if (userInfo && userInfo.uuid) {
+                // Assuming userInfo has a uuid property
+                const uuid = JSON.parse(localStorage.getItem("globalId"))
+                    ? JSON.parse(localStorage.getItem("globalId"))
+                    : "n/a";
                 const userData = await fetchUserData(uuid);
                 if (!userData) {
                     router.push("/onboard");
                 } else {
-                    sessionStorage.setItem("userData", JSON.stringify(userData));
+                    localStorage.setItem("userData", JSON.stringify(userData));
                 }
             }
         };
 
-        if ((connected && userInfo) || (userInfo && !JSON.parse(sessionStorage.getItem("userData")))) {
-            fetchData()
+        if (
+            (connected && userInfo) ||
+            (userInfo && !JSON.parse(localStorage.getItem("userData")))
+        ) {
+            fetchData();
         }
-    }, [connected, userInfo])
+    }, [connected, userInfo]);
 
     return (
         <div className="w-full mb-4">
@@ -132,28 +138,35 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
-                    {
-                        JSON.parse(sessionStorage.getItem("globalId")) ?
-                            <button onClick={signOut} className={"btn-nav-auth"} type="button">
-                                Sign Out
-                            </button>
-                            :
-                            <ConnectButton.Custom>
-                                {({ openConnectModal }) => {
-                                    const handleConnect = () => {
-                                        openConnectModal()
-                                        setConnected(true)
-                                    }
-                                    return (
-                                        <div>
-                                            <button onClick={handleConnect} className={"btn-nav-auth"} type="button">
-                                                Open Connect
-                                            </button>
-                                        </div>
-                                    );
-                                }}
-                            </ConnectButton.Custom>
-                    }
+                    {JSON.parse(localStorage.getItem("globalId")) ? (
+                        <button
+                            onClick={signOut}
+                            className={"btn-nav-auth"}
+                            type="button"
+                        >
+                            Sign Out
+                        </button>
+                    ) : (
+                        <ConnectButton.Custom>
+                            {({ openConnectModal }) => {
+                                const handleConnect = () => {
+                                    openConnectModal();
+                                    setConnected(true);
+                                };
+                                return (
+                                    <div>
+                                        <button
+                                            onClick={handleConnect}
+                                            className={"btn-nav-auth"}
+                                            type="button"
+                                        >
+                                            Open Connect
+                                        </button>
+                                    </div>
+                                );
+                            }}
+                        </ConnectButton.Custom>
+                    )}
                 </div>
             </nav>
             <Dialog

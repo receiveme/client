@@ -4,7 +4,6 @@ import { getUser } from "@/src/actions/getUser";
 import { useState, useEffect } from "react";
 
 export function DashboardProfile() {
-
     const [theme, setTheme] = useState("yellow-300");
     const [banner, setBanner] = useState("white");
     const [saveStatus, setSaveStatus] = useState<boolean>(false);
@@ -12,23 +11,23 @@ export function DashboardProfile() {
     const handle = "hello";
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
             setTheme(localStorage?.getItem("theme") || "yellow-300");
             setBanner(localStorage?.getItem("banner") || "white");
         }
-    }, [typeof window !== 'undefined'])
+    }, [typeof window !== "undefined"]);
 
     useEffect(() => {
-        let raw: any = sessionStorage.getItem("userInfo");
+        let raw: any = localStorage.getItem("userInfo");
         if (raw) {
             (async () => {
                 let obj: any = JSON.parse(raw)?.[0];
-                let covalent_resp = await getUserData(obj?.["accountInfo"])
+                let covalent_resp = await getUserData(obj?.["accountInfo"]);
                 console.log(covalent_resp);
                 setUser({ ...obj, ...covalent_resp } || undefined);
-            })()
+            })();
         }
-    }, [sessionStorage.getItem("userInfo")]);
+    }, [localStorage.getItem("userInfo")]);
 
     function save() {
         localStorage.setItem("banner", banner);
@@ -45,8 +44,12 @@ export function DashboardProfile() {
         <div className="flex flex-col gap-4 w-full">
             {user && (
                 <div>
-                    <p>Address: <b>{user?.["accountInfo"]}</b></p>
-                    <p>Balance: <b>${user?.usd_balance}</b></p>
+                    <p>
+                        Address: <b>{user?.["accountInfo"]}</b>
+                    </p>
+                    <p>
+                        Balance: <b>${user?.usd_balance}</b>
+                    </p>
                 </div>
             )}
             <div
@@ -78,38 +81,43 @@ export function DashboardProfile() {
                 <div className="grid grid-cols-5 gap-4 mt-2">
                     <div
                         onClick={() => setTheme("yellow-300")}
-                        className={`w-full h-auto rounded-md bg-gradient-to-b from-yellow-300 to-slate-900 transition cursor-pointer border-2 ${theme === "yellow-300"
-                            ? "border-indigo-600"
-                            : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                        className={`w-full h-auto rounded-md bg-gradient-to-b from-yellow-300 to-slate-900 transition cursor-pointer border-2 ${
+                            theme === "yellow-300"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                        }`}
                     ></div>
                     <div
                         onClick={() => setTheme("green-300")}
-                        className={`w-full h-auto rounded-md bg-gradient-to-b from-green-300 to-slate-900 transition cursor-pointer border-2 ${theme === "green-300"
-                            ? "border-indigo-600"
-                            : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                        className={`w-full h-auto rounded-md bg-gradient-to-b from-green-300 to-slate-900 transition cursor-pointer border-2 ${
+                            theme === "green-300"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                        }`}
                     ></div>
                     <div
                         onClick={() => setTheme("blue-400")}
-                        className={`w-full h-auto rounded-md bg-gradient-to-b from-blue-400 to-slate-900 transition cursor-pointer border-2 ${theme === "blue-400"
-                            ? "border-indigo-600"
-                            : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                        className={`w-full h-auto rounded-md bg-gradient-to-b from-blue-400 to-slate-900 transition cursor-pointer border-2 ${
+                            theme === "blue-400"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                        }`}
                     ></div>
                     <div
                         onClick={() => setTheme("red-500")}
-                        className={`w-full h-auto rounded-md bg-gradient-to-b from-red-500 to-slate-900 transition cursor-pointer border-2 ${theme === "red-500"
-                            ? "border-indigo-600"
-                            : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                        className={`w-full h-auto rounded-md bg-gradient-to-b from-red-500 to-slate-900 transition cursor-pointer border-2 ${
+                            theme === "red-500"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                        }`}
                     ></div>
                     <div
                         onClick={() => setTheme("orange-600")}
-                        className={`w-full h-10 lg:h-20 rounded-md bg-gradient-to-b from-orange-600 to-slate-900 transition cursor-pointer border-2 ${theme === "orange-600"
-                            ? "border-indigo-600"
-                            : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                        className={`w-full h-10 lg:h-20 rounded-md bg-gradient-to-b from-orange-600 to-slate-900 transition cursor-pointer border-2 ${
+                            theme === "orange-600"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                        }`}
                     ></div>
                 </div>
 
@@ -121,46 +129,51 @@ export function DashboardProfile() {
 
                 <div className="grid grid-cols-5 gap-4 mt-2">
                     <img
-                        className={`w-full h-auto rounded-md border-2 transition cursor-pointer ${banner === "white"
-                            ? "border-indigo-600"
-                            : "border-gray-200 hover:border-indigo-600"
-                            }`}
+                        className={`w-full h-auto rounded-md border-2 transition cursor-pointer ${
+                            banner === "white"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                        }`}
                         src="/img/profile/WhaleNew.png"
                         onClick={() => setBanner("white")}
                         alt="whale banner"
                     />
                     <img
-                        className={`w-full h-auto rounded-md transition cursor-pointer border-2 ${banner === "green-400"
-                            ? "border-indigo-600"
-                            : "border-gray-200 hover:border-indigo-600"
-                            } bg-green-400`}
+                        className={`w-full h-auto rounded-md transition cursor-pointer border-2 ${
+                            banner === "green-400"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                        } bg-green-400`}
                         src="/img/profile/WhaleNew.png"
                         onClick={() => setBanner("green-400")}
                         alt="whale banner green"
                     />
                     <img
-                        className={`w-full h-auto rounded-md transition cursor-pointer border-2 ${banner === "blue-300"
-                            ? "border-indigo-600"
-                            : "border-gray-200 hover:border-indigo-600"
-                            } bg-blue-300`}
+                        className={`w-full h-auto rounded-md transition cursor-pointer border-2 ${
+                            banner === "blue-300"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                        } bg-blue-300`}
                         src="/img/profile/WhaleNew.png"
                         onClick={() => setBanner("blue-300")}
                         alt="whale banner blue"
                     />
                     <img
-                        className={`w-full h-auto rounded-md transition cursor-pointer border-2 ${banner === "red-500"
-                            ? "border-indigo-600"
-                            : "border-gray-200 hover:border-indigo-600"
-                            } bg-red-500`}
+                        className={`w-full h-auto rounded-md transition cursor-pointer border-2 ${
+                            banner === "red-500"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                        } bg-red-500`}
                         src="/img/profile/WhaleNew.png"
                         onClick={() => setBanner("red-500")}
                         alt="whale banner red"
                     />
                     <img
-                        className={`w-full h-auto rounded-md transition cursor-pointer border-2 ${banner === "orange-400"
-                            ? "border-indigo-600"
-                            : "border-gray-200 hover:border-indigo-600"
-                            } bg-orange-400`}
+                        className={`w-full h-auto rounded-md transition cursor-pointer border-2 ${
+                            banner === "orange-400"
+                                ? "border-indigo-600"
+                                : "border-gray-200 hover:border-indigo-600"
+                        } bg-orange-400`}
                         src="/img/profile/WhaleNew.png"
                         onClick={() => setBanner("orange-400")}
                         alt="whale banner orange"

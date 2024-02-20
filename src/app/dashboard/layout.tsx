@@ -57,9 +57,9 @@ export default function RootLayout({
     const [background, setBackground] = useState("waves/blue");
 
     useEffect(() => {
-        if (sessionStorage) {
+        if (localStorage) {
             const storage =
-                sessionStorage.getItem("userData") ||
+                localStorage.getItem("userData") ||
                 '{ "handle": "", "theme": "", "background": "" }';
             const storageParsed = JSON.parse(storage);
 
@@ -273,14 +273,14 @@ export default function RootLayout({
                                                             onClick={() =>
                                                                 item.profile
                                                                     ? window.open(
-                                                                        `/${handle}`,
-                                                                        "_blank",
-                                                                    )
+                                                                          `/${handle}`,
+                                                                          "_blank",
+                                                                      )
                                                                     : !item.disabled
-                                                                        ? setCurrent(
-                                                                            item.name,
-                                                                        )
-                                                                        : null
+                                                                    ? setCurrent(
+                                                                          item.name,
+                                                                      )
+                                                                    : null
                                                             }
                                                             className={classNames(
                                                                 current ===
