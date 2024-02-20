@@ -67,7 +67,7 @@ export default function Navbar() {
     const account = useAccount() || null;
     const connectKit = useConnectKit();
     const connectAccount = useAccount();
-    const userInfo = connectKit.particle.auth.getUserInfo();
+    const userInfo = connectKit?.particle?.auth.getUserInfo();
     const router = useRouter();
     const [connected, setConnected] = useState(false);
 
@@ -139,7 +139,11 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
-                    {JSON.parse(localStorage.getItem("globalId")) ? (
+                    {JSON.parse(
+                        typeof window !== "undefined"
+                            ? localStorage.getItem("globalId") ?? "{}"
+                            : "{}",
+                    ) ? (
                         <>
                             <button
                                 onClick={() =>
@@ -160,9 +164,7 @@ export default function Navbar() {
                                 <span className="text-gray-400 font-normal">
                                     @
                                 </span>
-                                <span>
-        
-                                </span>
+                                <span></span>
                             </button>
 
                             <button
