@@ -28,7 +28,7 @@ async function getUserByHandle(handle: string) {
                     select: {
                         address: true,
                         network: true,
-                        preferrednetworks: true
+                        preferrednetworks: true,
                     },
                 },
             },
@@ -63,9 +63,9 @@ export default async function Profile({ params }: any) {
 
     const bg = data.profiles.theme.includes("/animate")
         ? `from-${data.profiles.theme.replace(
-            "/animate",
-            "",
-        )} background-animate gradient-animation`
+              "/animate",
+              "",
+          )} background-animate gradient-animation`
         : `from-${data.profiles.theme.replace("/none", "")} `;
 
     return (
@@ -81,22 +81,27 @@ export default async function Profile({ params }: any) {
                             socials={data.Social}
                             className="my-6"
                         />
-                        <div className="w-full flex flex-col gap-1 max-w-[650px]">
+                        <div className="w-full flex flex-col gap-3 max-w-[650px]">
                             {data.Wallet.map((wallet: any, i) => {
-                                const preferrednetworks = wallet.preferrednetworks
+                                const preferrednetworks =
+                                    wallet.preferrednetworks;
                                 return (
-                                    <div className="network-map">
-                                        {wallet.preferrednetworks.map((e, i) => {
-                                            return (
-                                                <Wallet
-                                                    address={wallet.address}
-                                                    key={i}
-                                                    preferrednetwork={preferrednetworks[i]}
-                                                />
-                                            )
-                                        })}
+                                    <div className="flex flex-col gap-3">
+                                        {wallet.preferrednetworks.map(
+                                            (e, i) => {
+                                                return (
+                                                    <Wallet
+                                                        address={wallet.address}
+                                                        key={i}
+                                                        preferrednetwork={
+                                                            preferrednetworks[i]
+                                                        }
+                                                    />
+                                                );
+                                            },
+                                        )}
                                     </div>
-                                )
+                                );
                             })}
                         </div>
 
