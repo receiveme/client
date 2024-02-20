@@ -1,53 +1,86 @@
 "use client";
 
-import { useAppState } from "@/src/hooks/useAppState";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {
+    IconChevronRight as ChevronRightIcon,
+    IconAlignRight,
+    IconArrowRight,
+    IconSparkles,
+} from "@tabler/icons-react";
 
 export default function Home() {
-    const [appState, setAppState] = useAppState();
-
-    // async function signOut() {
-    //     await supabase.auth.signOut();
-    //     setAppState({ user: null });
-    // }
-    // console.log("DEBUG INFO", JSON.parse(localStorage.getItem("userData")))
     return (
-        <main>
-            <Link href="/login" className="text-green-500 underline block">
-                /login
-            </Link>
-            <Link href="/draft-auth" className="text-green-500 underline block">
-                /draft-auth
-            </Link>
-            <Link
-                href="/register"
-                className="text-green-500 underline block mt-2"
-            >
-                /register
-            </Link>
-            <Link
-                href="/onboard"
-                className="text-green-500 underline block mt-2"
-            >
-                /onboard
-            </Link>
-
-            <h3 className="mt-3 font-bold text-xl">Debug Info</h3>
-
-            <h4>status: {appState!.user ? "logged in" : "not logged in"}</h4>
-            <h4>userid: {appState?.user?.id}</h4>
-            <h4>user email: {appState?.user?.email}</h4>
-            {appState!.user ? (
-                <h5
-                    className="text-green-500 underline block mt-2 cursor-pointer"
-                    // onClick={signOut}
-                >
-                    sign out
-                </h5>
-            ) : (
-                <></>
-            )}
-        </main>
+        <div className="bg-white">
+            <div className="relative isolate">
+                <div className="mx-auto max-w-7xl pb-24 pt-10 sm:pb-32 flex justify-center items-center min-h-[85vh] lg:gap-x-8">
+                    <div className="px-6 lg:px-0 lg:pt-4">
+                        <div className="mx-auto max-w-2xl">
+                            <div className="max-w-lg">
+                                <div className="-mt-6">
+                                    <a
+                                        href="#"
+                                        className="inline-flex space-x-6"
+                                    >
+                                        <span className="rounded-full bg-indigo-600/10 px-3 py-1 text-sm font-semibold leading-6 text-indigo-600 ring-1 ring-inset ring-indigo-600/10">
+                                            What's new
+                                        </span>
+                                        <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-gray-600">
+                                            <IconSparkles
+                                                className="h-5 w-5 text-gray-400"
+                                                aria-hidden="true"
+                                            />
+                                            <span>
+                                                Integrated Particle Network
+                                            </span>
+                                        </span>
+                                    </a>
+                                </div>
+                                <h1 className="mt-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl !leading-[75px]">
+                                    Supercharge your web applications
+                                </h1>
+                                <p className="mt-6 text-lg leading-8 text-gray-600">
+                                    Anim aute id magna aliqua ad ad non deserunt
+                                    sunt. Qui irure qui lorem cupidatat commodo.
+                                    Elit sunt amet fugiat veniam occaecat fugiat
+                                    aliqua.
+                                </p>
+                                <div className="mt-10 flex items-center gap-x-8">
+                                    <a
+                                        href="#"
+                                        onClick={() => {
+                                            document
+                                                .getElementById(
+                                                    "connect-wallet",
+                                                )
+                                                ?.click();
+                                        }}
+                                        className="rounded-md bg-indigo-600 px-6 py-3 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition hover:scale-105 hover:shadow-sm"
+                                    >
+                                        Connect Wallet
+                                    </a>
+                                    <a
+                                        href="#"
+                                        className="text-md font-semibold leading-6 text-gray-900 flex justify-center items-center gap-2 transition hover:scale-105"
+                                    >
+                                        View Profile{" "}
+                                        <span aria-hidden="true">
+                                            <IconArrowRight size="18" />
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mt-20 sm:mt-24 md:mx-auto md:max-w-2xl lg:mx-0 lg:mt-0 lg:w-screen">
+                        <div className="">
+                            <img
+                                src="https://i.imgur.com/eZL8a6p.png"
+                                alt="rme image"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-white sm:h-32" />
+            </div>
+        </div>
     );
 }

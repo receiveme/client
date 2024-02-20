@@ -13,6 +13,7 @@ import {
     IconUsers,
     IconWallet,
     IconQrcode,
+    IconLogout,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import "@particle-network/connect-react-ui/dist/index.css";
@@ -139,13 +140,44 @@ export default function Navbar() {
                 </div>
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
                     {JSON.parse(localStorage.getItem("globalId")) ? (
-                        <button
-                            onClick={signOut}
-                            className={"btn-nav-auth"}
-                            type="button"
-                        >
-                            Sign Out
-                        </button>
+                        <>
+                            <button
+                                onClick={() =>
+                                    window.open(
+                                        `/${
+                                            JSON.parse(
+                                                localStorage.getItem(
+                                                    "userData",
+                                                ) ?? '{"handle": "hello"}',
+                                            ).handle
+                                        }`,
+                                        "_blank",
+                                    )
+                                }
+                                className="bg-white rounded-md h-full py-3 px-4 text-black font-bold text-sm transition hover:scale-105"
+                                type="button"
+                            >
+                                <span className="text-gray-400 font-normal">
+                                    @
+                                </span>
+                                <span>
+                                    {
+                                        JSON.parse(
+                                            localStorage.getItem("userData") ??
+                                                '{"handle": "hello"}',
+                                        ).handle
+                                    }
+                                </span>
+                            </button>
+
+                            <button
+                                onClick={signOut}
+                                className="bg-white rounded-md h-full px-6 py-3 flex justify-center items-center text-black font-bold text-sm transition hover:scale-105"
+                                type="button"
+                            >
+                                Sign Out
+                            </button>
+                        </>
                     ) : (
                         <ConnectButton.Custom>
                             {({ openConnectModal }) => {
@@ -157,10 +189,11 @@ export default function Navbar() {
                                     <div>
                                         <button
                                             onClick={handleConnect}
-                                            className={"btn-nav-auth"}
+                                            className="bg-white rounded-md h-full px-6 py-3 flex justify-center items-center text-black font-bold text-sm transition hover:scale-105"
                                             type="button"
+                                            id="connect-wallet"
                                         >
-                                            Open Connect
+                                            Connect Wallet
                                         </button>
                                     </div>
                                 );
