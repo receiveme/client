@@ -22,6 +22,7 @@
     "@walletconnect/ethereum-provider": "^2.11.1",
     "@walletconnect/logger": "^2.0.1",
     "@walletconnect/universal-provider": "^2.11.1",
+    "axios": "^1.6.7",
     "next": "14.0.4",
     "next-nprogress-bar": "^2.1.2",
     "pino": "^8.18.0",

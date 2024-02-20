@@ -50,10 +50,12 @@ export function Banner({
                     </span>
 
                     <div className="flex gap-3">
-                        {socials &&
-                            socials.length &&
+                        {socials && socials.length ? (
                             socials.map((social) => (
-                                <div className="flex gap-2">
+                                <div
+                                    className="flex gap-2"
+                                    key={social.platform}
+                                >
                                     <a
                                         href={
                                             social.platform == "github"
@@ -85,7 +87,10 @@ export function Banner({
                                         />
                                     </a>
                                 </div>
-                            ))}
+                            ))
+                        ) : (
+                            <></>
+                        )}
                     </div>
                 </div>
             </div>

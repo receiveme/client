@@ -81,7 +81,7 @@ export default function RootLayout({
                 }
             }
         }
-    });
+    }, []);
 
     return (
         <html lang="en">
@@ -359,13 +359,11 @@ export default function RootLayout({
 
                             <main className="py-6">
                                 <div className="px-4 sm:px-6 lg:px-8 h-full w-full">
-                                    {current === "Appearance" && (
-                                        <DashboardProfile
-                                            handle={handle}
-                                            initialTheme={theme}
-                                            initialBackground={background}
-                                        />
-                                    )}
+                                    <DashboardProfile
+                                        handle={handle}
+                                        initialTheme={theme}
+                                        initialBackground={background}
+                                    />
                                 </div>
                             </main>
                         </div>
