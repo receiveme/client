@@ -1,0 +1,10 @@
+html {
+    height: 100%;
+    background-color: white;
+}
+
+body,
+.particle-connect-ui,
+.particle-connect-ui > div {
+    height: 100%;
+}
