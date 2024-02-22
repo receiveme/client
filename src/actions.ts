@@ -72,7 +72,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
         const user = await prisma.user.create({
             data: {
                 //@ts-ignore
-                handle: handle,
+                handle: handle.toLowerCase(),
                 authuuid: uuid
             },
         });

@@ -54,8 +54,14 @@ export default function Home() {
                                     >
                                         Connect Wallet
                                     </a>
+                                    {JSON.parse(
+                                        typeof window !== "undefined"
+                                ? localStorage.getItem("globalId") ?? "null"
+                                : "null",
+                                ) ? (
+                                    <>
                                     <a
-                                        href="#"
+                                        href="/dashboard"
                                         className="text-md font-semibold leading-6 text-gray-900 flex justify-center items-center gap-2 transition hover:scale-105"
                                     >
                                         View Profile{" "}
@@ -63,6 +69,14 @@ export default function Home() {
                                             <IconArrowRight size="18" />
                                         </span>
                                     </a>
+                                    </>
+                                        ) : ( <>
+                                        
+                                        </>
+
+                                        ) 
+                                        
+                                        }
                                 </div>
                             </div>
                         </div>
