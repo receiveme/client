@@ -57,6 +57,10 @@ export default function RootLayout({
                     <div className="py-4 px-4 lg:px-0 lg:max-w-[85%] w-full">
                         <Providers>
                             <Navbar />
+                            <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 absolute" role="alert">
+                                <p className="font-bold">Warning</p>
+                                <p>This is an experimental build, Features may be unresponsive. If issues persist, clear your local storage or try again later.</p>
+                            </div>
                             {children}
                         </Providers>
                         {/* <Toast show /> */}

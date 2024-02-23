@@ -10,12 +10,15 @@ import {
 export default function Home() {
     return (
         <div className="bg-white">
+
             <div className="relative isolate">
                 <div className="mx-auto max-w-7xl pb-24 pt-10 sm:pb-32 flex justify-center items-center min-h-[85vh] lg:gap-x-8">
                     <div className="px-6 lg:px-0 lg:pt-4">
                         <div className="mx-auto max-w-2xl">
                             <div className="max-w-lg">
                                 <div className="-mt-6">
+
+
                                     <a
                                         href="#"
                                         className="inline-flex space-x-6"
@@ -70,7 +73,7 @@ export default function Home() {
                                         </span>
                                     </a>
                                     </>
-                                        ) : ( <>
+                                    ) : ( <>
                                         
                                         </>
 
