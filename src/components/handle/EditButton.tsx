@@ -7,7 +7,7 @@ type HandleEditButtonProps = {
     onEdit: (id: string) => void;
 };
 
-export default function EditHandleButton(handle: any) {
+export default function EditHandleButton(handle: any) { {/* app-state-marker */}
     return (
         <>
             {handle ==

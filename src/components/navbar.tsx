@@ -66,12 +66,12 @@ export default function Navbar() {
     const router = useRouter();
     const [connected, setConnected] = useState(false);
 
-    async function signOut() {
+    async function signOut() { {/* app-state-marker */}
         localStorage.clear();
         connectKit.particle.auth.logout();
     }
 
-    // useEffect(() => {
+    // useEffect(() => {  {/* app-state-marker */}
     //     // Seems non-functional, eventually will be replaced by endpoint
     //     if (!account && !userInfo) {
     //         localStorage.removeItem("userInfo");
@@ -99,8 +99,8 @@ export default function Navbar() {
         // };
 
 
-
-        const fetchData = async () => {
+ 
+        const fetchData = async () => { {/* app-state-marker */} {/* app-state-marker */}
             if (!JSON.parse(localStorage.getItem("userData"))) {
                 // Assuming userInfo has a uuid property
                 // const uuid = JSON.parse(localStorage.getItem("globalId"))
@@ -145,7 +145,7 @@ export default function Navbar() {
                     </Link>
                 </div>
 
-                <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
+                <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4"> {/* app-state-marker */} {/* app-state-marker */}
                     {JSON.parse(
                         typeof window !== "undefined"
                             ? localStorage.getItem("userData") ?? "null"
@@ -170,7 +170,7 @@ export default function Navbar() {
                                 <span className="font-normal text-gray-400">
                                     @
                                 </span>
-                                <span>
+                                <span> {/* app-state-marker */}
                                     {
                                         JSON.parse(
                                             localStorage.getItem("userData") ??
@@ -222,7 +222,7 @@ export default function Navbar() {
                 <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-200/10">
                     <div className="flex items-center justify-between">
                         <a href="#" className="-m-1.5 p-1.5">
-                            <span className="sr-only">Your Company</span>
+                            <span className="sr-only">receive.me</span>
                             <img
                                 className="h-8 w-auto"
                                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"

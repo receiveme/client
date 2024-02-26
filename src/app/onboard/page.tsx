@@ -122,7 +122,7 @@ function Link({ handle, show, next }: StageProps) {
         return <></>;
     }
 
-    const handleLogin = async (
+    const handleLogin = async ( 
         preferredAuthType:
             | "google"
             | "twitter"
@@ -130,12 +130,11 @@ function Link({ handle, show, next }: StageProps) {
             | "github"
             | "discord"
             | "linkedin",
-    ) => {
-        // if (!localStorage.getItem("userInfo")) {
-        //     router.push("/");
-        // }
+    ) => {  {/* app-state-marker */} {/* app-state-marker */} {/* app-state-marker */}
+
+    
         const user = await particle.auth.login({ preferredAuthType });
-        localStorage.setItem("wallets", JSON.stringify([]));
+        localStorage.setItem("wallets", JSON.stringify([])); 
         //@ts-ignore
         const socials = JSON.parse(localStorage.getItem("socials"))
             ? //@ts-ignore
@@ -144,9 +143,7 @@ function Link({ handle, show, next }: StageProps) {
 
         setUserInfo(user);
 
-        // if (localStorage.getItem(preferredAuthType)) {
-        //     return 0
-        // }
+
 
         //@ts-ignore
         let socialIndex = socials.findIndex(
@@ -163,29 +160,12 @@ function Link({ handle, show, next }: StageProps) {
                 socialId: String(user.thirdparty_user_info.user_info.id),
             });
         //store the specific auth type user info in different storage items
-        localStorage.setItem("socials", JSON.stringify(socials));
-        localStorage.setItem(`${preferredAuthType}`, JSON.stringify(user));
+        localStorage.setItem("socials", JSON.stringify(socials)); {/* app-state-marker */}
+        localStorage.setItem(`${preferredAuthType}`, JSON.stringify(user)); {/* app-state-marker */}
     };
 
-    // use when manually triggering logout
-    // const handleLogout = () => {
-    //     return particle.auth.logout()
-    // }
 
-    // opens the security dashboard on particle
-    // const openSecurity = () => {
-    //     particle.auth.openAccountAndSecurity().catch((error) => {
-    //         if (error.code === 4011) {
-    //             //ignore window close
-    //         } else if (error.code === 10005) {
-    //             //invalid token
-    //         } else if (error.code === 8005) {
-    //             //user not login
-    //         }
-    //     });
-    // }
-
-    function connectMetamask() {
+    function connectMetamask() { {/* app-state-marker */} {/* app-state-marker */}
         return new Promise(async (resolve, reject) => {
             const chainId = await window["ethereum"]?.request({
                 method: "eth_chainId",
@@ -196,8 +176,10 @@ function Link({ handle, show, next }: StageProps) {
                     console.error("METAMASK ERR:", e);
                     return reject();
                 });
-            // After connection
-            if (accounts?.length && accounts[0] && chainId) {
+            // After connection 
+
+
+            if (accounts?.length && accounts[0] && chainId) { 
                 setMetamaskAddress(accounts[0]);
                 const wallets = JSON.parse(localStorage.getItem("wallets"))
                     ? JSON.parse(localStorage.getItem("wallets"))
@@ -210,12 +192,12 @@ function Link({ handle, show, next }: StageProps) {
                         walletProvider: "metamask",
                         walletAddress: accounts[0],
                     });
-                localStorage.setItem("wallets", JSON.stringify(wallets));
+                localStorage.setItem("wallets", JSON.stringify(wallets)); 
             } else return reject();
         });
     }
 
-    function connectTronlink() {
+    function connectTronlink() { {/* app-state-marker */} {/* app-state-marker */} 
         return new Promise(async (resolve, reject) => {
             try {
                 //@ts-ignore
@@ -226,8 +208,12 @@ function Link({ handle, show, next }: StageProps) {
                     },
                 }); //@ts-ignore
                 let tronLink = { ...(await window["tronLink"]) };
+
+                // After connection 
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account);
+
+
                 const wallets = JSON.parse(localStorage.getItem("wallets"))
                     ? JSON.parse(localStorage.getItem("wallets"))
                     : [];
@@ -249,12 +235,15 @@ function Link({ handle, show, next }: StageProps) {
         });
     }
 
+    
+
     function configWalletModal(): void {
         throw new Error("Function not implemented.");
     }
 
-    return (
+    return ( 
         <>
+        
             <div className="flex flex-col gap-4">
                 <div className="mt-6 relative">
                     <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
@@ -274,8 +263,9 @@ function Link({ handle, show, next }: StageProps) {
                     <h3 className="font-regular text-sm mt-1">
                         Link your socials to display them on your profile.
                     </h3>
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
-                        {localStorage.getItem("discord") ? (
+                    {/* app-state-marker */}
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">    {/* app-state-marker */}
+                        {localStorage.getItem("discord") ? ( 
                             <>
                                 <button
                                     onClick={() => handleLogin("discord")}
@@ -314,7 +304,8 @@ function Link({ handle, show, next }: StageProps) {
                                     </span>
                                 </button>
                             </>
-                        )}
+                        )}    
+
 
                         {localStorage.getItem("github") ? (
                             <>
@@ -511,7 +502,7 @@ function Link({ handle, show, next }: StageProps) {
                         Link your wallets and start getting paid.
                     </h3>
 
-                    <div className="mt-4 grid grid-cols-1  gap-x-2 gap-y-2">
+                    <div className="mt-4 grid grid-cols-1  gap-x-2 gap-y-2"> {/* app-state-marker */}  {/* app-state-marker */} 
                         {localStorage.getItem("userInfo") ? (
                             <>
                                 <button
@@ -893,7 +884,7 @@ export default function Onboard() {
         else if (stage === "link") setStage("handle");
     };
 
-    const complete = async () => {
+    const complete = async () => {     {/* HUGE app-state-marker */}    {/* app-state-marker */}    {/* app-state-marker */}
         //@ts-ignore
         const userInfo = JSON.parse(localStorage.getItem("userInfo")); // sucks
         const wallets = JSON.parse(localStorage.getItem("wallets"))
@@ -932,7 +923,7 @@ export default function Onboard() {
             handle,
             profile,
         ); // Assuming this is an async functions
-        localStorage.setItem("globalId", JSON.stringify(globalId));
+        localStorage.setItem("globalId", JSON.stringify(globalId));     {/* app-state-marker */}    {/* app-state-marker */}
         router.push("/");
     };
 

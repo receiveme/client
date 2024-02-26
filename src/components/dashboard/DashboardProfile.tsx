@@ -31,7 +31,7 @@ export function DashboardProfile({
         setBanner(initialBackground);
     }, [initialTheme, initialBackground]);
 
-    async function save() {
+    async function save() { {/* app-state-marker */}
         setIsLoading(true);
 
         const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
@@ -50,7 +50,7 @@ export function DashboardProfile({
             { uuid, token, theme, background: banner },
         );
 
-        // Save to localStorage
+        // Save to localStorage     {/* app-state-marker */}
         localStorage.setItem("userData", JSON.stringify(response.data.data));
 
         setIsLoading(false);

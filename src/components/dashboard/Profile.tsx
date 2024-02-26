@@ -10,14 +10,14 @@ export function DashboardProfile() {
     const [user, setUser] = useState<any>(undefined);
     const handle = "hello";
 
-    useEffect(() => {
+    useEffect(() => {     {/* app-state-marker */}
         if (typeof window !== "undefined") {
             setTheme(localStorage?.getItem("theme") || "yellow-300");
             setBanner(localStorage?.getItem("banner") || "white");
         }
     }, [typeof window !== "undefined"]);
 
-    useEffect(() => {
+    useEffect(() => {     {/* app-state-marker */}
         let raw: any = localStorage.getItem("userInfo");
         if (raw) {
             (async () => {
@@ -29,7 +29,7 @@ export function DashboardProfile() {
         }
     }, [localStorage.getItem("userInfo")]);
 
-    function save() {
+    function save() {     {/* app-state-marker */}     {/* app-state-marker */}
         localStorage.setItem("banner", banner);
         localStorage.setItem("theme", theme);
         setSaveStatus(true);
