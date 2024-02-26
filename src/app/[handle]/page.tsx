@@ -85,7 +85,7 @@ export default async function Profile({ params }: any) {
                         />
 
                         {/* Edit button if handle is same as in localstorage userData */}
-                        <EditHandleButton handle={handle} />
+                        <EditHandleButton handle={data.handle} />
 
                         <div className="flex w-full max-w-[650px] flex-col gap-3">
                             {data.Wallet.map((wallet: any, i: number) => {
