@@ -45,18 +45,19 @@ model social {
   platform          String?  // Optional field
   imageurl          String?  // Optional field for storing image URLs
   user              User     @relation(fields: [userid], references: [id], onDelete: Cascade)
-  
+
   @@map("socials")
 }
 
 model wallet {
-  id                    String    @id @default(uuid())
-  userid                String
-  address               String    
-  network               String?   
-  created               DateTime? @default(now())
-  user                  User      @relation(fields: [userid], references: [id], onDelete: Cascade)
-  preferrednetworks     String[] 
-
+  id                String    @id @default(uuid())
+  userid            String
+  address           String           
+  network           String?   
+  created           DateTime? @default(now())
+  user              User      @relation(fields: [userid], references: [id], onDelete: Cascade)
+  preferrednetworks String[] 
+  visible           Boolean   @default(true) 
+  
   @@map("wallets")
 }

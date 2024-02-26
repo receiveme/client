@@ -3,17 +3,13 @@
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
 import {
-    IconArrowRight,
     IconBolt,
     IconChevronDown,
     IconGraph,
-    IconShieldBolt,
     IconStack,
     IconUserBolt,
-    IconUsers,
     IconWallet,
     IconQrcode,
-    IconLogout,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import "@particle-network/connect-react-ui/dist/index.css";
@@ -22,7 +18,7 @@ import {
     useAccount,
     useConnectKit,
 } from "@particle-network/connect-react-ui";
-import { getUserData } from "../actions";
+import { getUserData, getUserDataByUuid } from "../actions";
 import { useRouter } from "next/navigation";
 
 const features = [
@@ -66,7 +62,6 @@ export default function Navbar() {
     const [tronlinkAddress, setTronlinkAddress] = useState(false);
     const account = useAccount() || null;
     const connectKit = useConnectKit();
-    const connectAccount = useAccount();
     const userInfo = connectKit?.particle?.auth.getUserInfo();
     const router = useRouter();
     const [connected, setConnected] = useState(false);
@@ -76,37 +71,51 @@ export default function Navbar() {
         connectKit.particle.auth.logout();
     }
 
-    useEffect(() => {
-        // Seems non-functional, eventually will be replaced by endpoint
-        if (!account && !userInfo) {
-            localStorage.removeItem("userInfo");
-        }
-        if (
-            //@ts-ignore
-            !JSON.parse(localStorage.getItem("userInfo")) &&
-            account &&
-            userInfo
-        ) {
-            localStorage.setItem(
-                "userInfo",
-                JSON.stringify([{ accountInfo: account, info: userInfo }]),
-            );
-        }
-    }, [account, userInfo]);
+    // useEffect(() => {
+    //     // Seems non-functional, eventually will be replaced by endpoint
+    //     if (!account && !userInfo) {
+    //         localStorage.removeItem("userInfo");
+    //     }
+    //     if (
+    //         //@ts-ignore
+    //         !JSON.parse(localStorage.getItem("userInfo")) &&
+    //         account &&
+    //         userInfo
+    //     ) {
+    //         localStorage.setItem(
+    //             "userInfo",
+    //             JSON.stringify([{ accountInfo: account, info: userInfo }]),
+    //         );
+    //     }
+    // }, [account, userInfo]);
+
+    const fetchUserDataByUuid = async (uuid) => {
+        return await getUserDataByUuid(uuid)
+    }
 
     useEffect(() => {
-        const fetchUserData = async (uuid) => {
-            return await getUserData(uuid); // Assuming getUserData is defined elsewhere
-        };
+        // const fetchUserData = async (uuid) => {
+        //     return await getUserData(uuid); // Assuming getUserData is defined elsewhere
+        // };
+
+
 
         const fetchData = async () => {
-            if (userInfo && userInfo.uuid) {
+            if (!JSON.parse(localStorage.getItem("userData"))) {
                 // Assuming userInfo has a uuid property
-                const uuid = JSON.parse(localStorage.getItem("globalId"))
-                    ? JSON.parse(localStorage.getItem("globalId"))
-                    : "n/a";
-                const userData = await fetchUserData(uuid);
-                if (!userData) {
+                // const uuid = JSON.parse(localStorage.getItem("globalId"))
+                //     ? JSON.parse(localStorage.getItem("globalId"))
+                //     : "n/a";
+                let userData = null
+                if (userInfo) {
+                    userData = await fetchUserDataByUuid(userInfo.uuid);
+                }
+
+                if (!userData && userInfo && account) {
+                    localStorage.setItem(
+                        "userInfo",
+                        JSON.stringify([{ accountInfo: account, info: userInfo }]),
+                    );
                     router.push("/onboard");
                 } else {
                     localStorage.setItem("userData", JSON.stringify(userData));
@@ -114,14 +123,35 @@ export default function Navbar() {
             }
         };
 
-        if (
-            (connected && userInfo) ||
-            (userInfo && !JSON.parse(localStorage.getItem("userData")))
-        ) {
-            fetchData();
-        }
+        fetchData();
+
     }, [connected, userInfo]);
 
+    const fetchLoginData = async () => {
+        if (!JSON.parse(localStorage.getItem("userData"))) {
+            // Assuming userInfo has a uuid property
+            // const uuid = JSON.parse(localStorage.getItem("globalId"))
+            //     ? JSON.parse(localStorage.getItem("globalId"))
+            //     : "n/a";
+            let userData = null
+            if (userInfo) {
+                userData = await fetchUserDataByUuid(userInfo.uuid);
+            }
+            console.log("RUN HERE", userData)
+            if (!userData && userInfo && account) {
+                localStorage.setItem(
+                    "userInfo",
+                    JSON.stringify([{ accountInfo: account, info: userInfo }]),
+                );
+                router.push("/onboard");
+            } else {
+                localStorage.setItem("userData", JSON.stringify(userData));
+                return true
+            }
+        }
+    };
+
+    console.log("USER DATA CHECK", JSON.parse(localStorage.getItem("userData")))
     return (
         <div className="w-full mb-4">
             <nav
@@ -138,26 +168,22 @@ export default function Navbar() {
                         />
                     </Link>
                 </div>
-                
-
-
 
                 <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
                     {JSON.parse(
                         typeof window !== "undefined"
-                            ? localStorage.getItem("globalId") ?? "null"
+                            ? localStorage.getItem("userData") ?? "null"
                             : "null",
                     ) ? (
                         <>
                             <button
                                 onClick={() =>
                                     window.open(
-                                        `/${
-                                            JSON.parse(
-                                                localStorage.getItem(
-                                                    "userData",
-                                                ) ?? '{"handle": "hello"}',
-                                            ).handle
+                                        `/${JSON.parse(
+                                            localStorage.getItem(
+                                                "userData",
+                                            ) ?? '{"handle": "hello"}',
+                                        ).handle
                                         }`,
                                         "_blank",
                                     )
@@ -182,8 +208,14 @@ export default function Navbar() {
                     ) : (
                         <ConnectButton.Custom>
                             {({ openConnectModal }) => {
-                                const handleConnect = () => {
+                                const handleConnect = async () => {
                                     openConnectModal();
+                                    const response = await fetchLoginData();
+                                    console.log("RESPONSE", response)
+                                    if (response) {
+                                        console.log("INSIDE", JSON.parse(localStorage.getItem("userData")))
+                                        // router.push("/dashboard")
+                                    }
                                     setConnected(true);
                                 };
                                 return (

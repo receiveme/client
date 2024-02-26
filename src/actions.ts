@@ -44,6 +44,30 @@ export async function getUserData(userId) {
     }
 }
 
+export async function getUserDataByUuid(userId) {
+    console.log("UUID CHECK", userId)
+    try {
+        const userData = await prisma.user.findFirst({
+            where: {
+                authuuid: userId,
+            },
+            include: {
+                Profile: true,
+                Social: true,
+                Wallet: true,
+            },
+        });
+        console.log(userData)
+        await prisma.$disconnect();
+
+        return userData;
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        await prisma.$disconnect();
+        throw error;
+    }
+}
+
 export async function getUserWallets(userId) {
     try {
         const userWallets = await prisma.user.findUnique({

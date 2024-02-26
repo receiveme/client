@@ -59,27 +59,27 @@ export default function Home() {
                                     </a>
                                     {JSON.parse(
                                         typeof window !== "undefined"
-                                ? localStorage.getItem("globalId") ?? "null"
-                                : "null",
-                                ) ? (
-                                    <>
-                                    <a
-                                        href="/dashboard"
-                                        className="text-md font-semibold leading-6 text-gray-900 flex justify-center items-center gap-2 transition hover:scale-105"
-                                    >
-                                        View Profile{" "}
-                                        <span aria-hidden="true">
-                                            <IconArrowRight size="18" />
-                                        </span>
-                                    </a>
-                                    </>
-                                    ) : ( <>
-                                        
+                                            ? localStorage.getItem("userData") ?? "null"
+                                            : "null",
+                                    ) ? (
+                                        <>
+                                            <a
+                                                href="/dashboard"
+                                                className="text-md font-semibold leading-6 text-gray-900 flex justify-center items-center gap-2 transition hover:scale-105"
+                                            >
+                                                View Profile{" "}
+                                                <span aria-hidden="true">
+                                                    <IconArrowRight size="18" />
+                                                </span>
+                                            </a>
                                         </>
+                                    ) : (<>
 
-                                        ) 
-                                        
-                                        }
+                                    </>
+
+                                    )
+
+                                    }
                                 </div>
                             </div>
                         </div>
