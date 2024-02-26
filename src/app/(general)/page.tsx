@@ -42,10 +42,10 @@ export default function Home() {
                                     click. Link any wallet or social with your
                                     account.
                                 </p>
-                                <div className="mt-6 flex items-center gap-x-8 md:mt-10">
+                                <div className="mt-6 flex items-center gap-x-8 md:mt-10">     {/* app-state-marker */}
                                     {JSON.parse(
                                         typeof window !== "undefined"
-                                            ? localStorage.getItem("userData") ?? "null"
+                                            ? localStorage.getItem("userData") ?? "null" 
                                             : "null",
                                     ) ? (
                                         <>

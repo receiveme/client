@@ -57,7 +57,7 @@ export default function RootLayout({
     const [background, setBackground] = useState("waves/blue");
 
     useEffect(() => {
-        if (localStorage) {
+        if (localStorage) {     {/* app-state-marker */}
             const storage =
                 localStorage.getItem("userData") ||
                 '{ "handle": "", "theme": "", "background": "" }';

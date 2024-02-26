@@ -2,7 +2,12 @@
 
 import { IconEdit } from "@tabler/icons-react";
 
-export default function EditHandleButton({ handle }: any) {
+type HandleEditButtonProps = {
+    id: string;
+    onEdit: (id: string) => void;
+};
+
+export default function EditHandleButton(handle: any) { {/* app-state-marker */}
     return (
         <>
             {handle ==
