@@ -82,13 +82,16 @@ export default async function Profile({ params }: any) {
                             className="my-6"
                         />
                         <div className="w-full flex flex-col gap-3 max-w-[650px]">
-                            {data.Wallet.map((wallet: any, i) => {
+                            {data.Wallet.map((wallet: any, i: number) => {
                                 const preferrednetworks =
                                     wallet.preferrednetworks;
                                 return (
-                                    <div className="flex flex-col gap-3">
+                                    <div
+                                        className="flex flex-col gap-3"
+                                        key={i}
+                                    >
                                         {wallet.preferrednetworks.map(
-                                            (e, i) => {
+                                            (__n: any, i: number) => {
                                                 return (
                                                     <Wallet
                                                         address={wallet.address}

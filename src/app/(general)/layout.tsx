@@ -53,14 +53,22 @@ export default function RootLayout({
             </Head>
 
             <body className={archivo.className}>
-                <main className="min-h-screen flex justify-center">
-                    <div className="py-4 px-4 lg:px-0 lg:max-w-[85%] w-full">
+                <main className="flex min-h-screen flex-col items-center justify-center">
+                    <div
+                        className="flex w-full flex-col gap-2 bg-orange-100 p-3 text-sm text-orange-700 md:flex-row md:justify-center"
+                        role="alert"
+                    >
+                        <p className="font-bold">Warning</p>
+                        <p>
+                            This is an experimental build, Features may be
+                            unresponsive. If issues persist, clear your local
+                            storage or try again later.
+                        </p>
+                    </div>
+
+                    <div className="w-full px-4 py-4 lg:max-w-[85%] lg:px-0">
                         <Providers>
                             <Navbar />
-                            <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 absolute" role="alert">
-                                <p className="font-bold">Warning</p>
-                                <p>This is an experimental build, Features may be unresponsive. If issues persist, clear your local storage or try again later.</p>
-                            </div>
                             {children}
                         </Providers>
                         {/* <Toast show /> */}

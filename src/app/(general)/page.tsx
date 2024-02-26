@@ -10,15 +10,12 @@ import {
 export default function Home() {
     return (
         <div className="bg-white">
-
             <div className="relative isolate">
-                <div className="mx-auto max-w-7xl pb-24 pt-10 sm:pb-32 flex justify-center items-center min-h-[85vh] lg:gap-x-8">
+                <div className="mx-auto flex min-h-[85vh] max-w-7xl flex-col items-center justify-center pb-24 pt-10 sm:pb-32 lg:flex-row lg:gap-x-8 ">
                     <div className="px-6 lg:px-0 lg:pt-4">
                         <div className="mx-auto max-w-2xl">
                             <div className="max-w-lg">
                                 <div className="-mt-6">
-
-
                                     <a
                                         href="#"
                                         className="inline-flex space-x-6"
@@ -37,13 +34,15 @@ export default function Home() {
                                         </span>
                                     </a>
                                 </div>
-                                <h1 className="mt-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl !leading-[75px]">
+                                <h1 className="mt-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl md:!leading-[75px]">
                                     Supercharge your wallets
                                 </h1>
-                                <p className="mt-6 text-lg leading-8 text-gray-600">
-                                    Create & customize an account with one click. Link any wallet or social with your account.
+                                <p className="mt-3 text-lg leading-8 text-gray-600 md:mt-6">
+                                    Create & customize an account with one
+                                    click. Link any wallet or social with your
+                                    account.
                                 </p>
-                                <div className="mt-10 flex items-center gap-x-8">
+                                <div className="mt-6 flex items-center gap-x-8 md:mt-10">
                                     <a
                                         href="#"
                                         onClick={() => {
@@ -53,33 +52,31 @@ export default function Home() {
                                                 )
                                                 ?.click();
                                         }}
-                                        className="rounded-md bg-indigo-600 px-6 py-3 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition hover:scale-105 hover:shadow-sm"
+                                        className="text-md rounded-md bg-indigo-600 px-6 py-3 font-semibold text-white shadow-sm transition hover:scale-105 hover:bg-indigo-500 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     >
                                         Connect Wallet
                                     </a>
                                     {JSON.parse(
                                         typeof window !== "undefined"
-                                ? localStorage.getItem("globalId") ?? "null"
-                                : "null",
-                                ) ? (
-                                    <>
-                                    <a
-                                        href="/dashboard"
-                                        className="text-md font-semibold leading-6 text-gray-900 flex justify-center items-center gap-2 transition hover:scale-105"
-                                    >
-                                        View Profile{" "}
-                                        <span aria-hidden="true">
-                                            <IconArrowRight size="18" />
-                                        </span>
-                                    </a>
-                                    </>
-                                    ) : ( <>
-                                        
+                                            ? localStorage.getItem(
+                                                  "globalId",
+                                              ) ?? "null"
+                                            : "null",
+                                    ) ? (
+                                        <>
+                                            <a
+                                                href="/dashboard"
+                                                className="text-md flex items-center justify-center gap-2 font-semibold leading-6 text-gray-900 transition hover:scale-105"
+                                            >
+                                                View Profile{" "}
+                                                <span aria-hidden="true">
+                                                    <IconArrowRight size="18" />
+                                                </span>
+                                            </a>
                                         </>
-
-                                        ) 
-                                        
-                                        }
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                             </div>
                         </div>
