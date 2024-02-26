@@ -127,30 +127,6 @@ export default function Navbar() {
 
     }, [connected, userInfo]);
 
-    const fetchLoginData = async () => {
-        if (!JSON.parse(localStorage.getItem("userData"))) {
-            // Assuming userInfo has a uuid property
-            // const uuid = JSON.parse(localStorage.getItem("globalId"))
-            //     ? JSON.parse(localStorage.getItem("globalId"))
-            //     : "n/a";
-            let userData = null
-            if (userInfo) {
-                userData = await fetchUserDataByUuid(userInfo.uuid);
-            }
-            console.log("RUN HERE", userData)
-            if (!userData && userInfo && account) {
-                localStorage.setItem(
-                    "userInfo",
-                    JSON.stringify([{ accountInfo: account, info: userInfo }]),
-                );
-                router.push("/onboard");
-            } else {
-                localStorage.setItem("userData", JSON.stringify(userData));
-                return true
-            }
-        }
-    };
-
     console.log("USER DATA CHECK", JSON.parse(localStorage.getItem("userData")))
     return (
         <div className="w-full mb-4">
@@ -210,12 +186,6 @@ export default function Navbar() {
                             {({ openConnectModal }) => {
                                 const handleConnect = async () => {
                                     openConnectModal();
-                                    const response = await fetchLoginData();
-                                    console.log("RESPONSE", response)
-                                    if (response) {
-                                        console.log("INSIDE", JSON.parse(localStorage.getItem("userData")))
-                                        // router.push("/dashboard")
-                                    }
                                     setConnected(true);
                                 };
                                 return (
