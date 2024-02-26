@@ -43,19 +43,6 @@ export default function Home() {
                                     account.
                                 </p>
                                 <div className="mt-6 flex items-center gap-x-8 md:mt-10">
-                                    <a
-                                        href="#"
-                                        onClick={() => {
-                                            document
-                                                .getElementById(
-                                                    "connect-wallet",
-                                                )
-                                                ?.click();
-                                        }}
-                                        className="text-md rounded-md bg-indigo-600 px-6 py-3 font-semibold text-white shadow-sm transition hover:scale-105 hover:bg-indigo-500 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    >
-                                        Connect Wallet
-                                    </a>
                                     {JSON.parse(
                                         typeof window !== "undefined"
                                             ? localStorage.getItem(
@@ -66,16 +53,25 @@ export default function Home() {
                                         <>
                                             <a
                                                 href="/dashboard"
-                                                className="text-md flex items-center justify-center gap-2 font-semibold leading-6 text-gray-900 transition hover:scale-105"
+                                                className="text-md rounded-md bg-indigo-600 px-6 py-3 font-semibold text-white shadow-sm transition hover:scale-105 hover:bg-indigo-500 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                             >
-                                                View Profile{" "}
-                                                <span aria-hidden="true">
-                                                    <IconArrowRight size="18" />
-                                                </span>
+                                                Go To Dashboard
                                             </a>
                                         </>
                                     ) : (
-                                        <></>
+                                        <a
+                                            href="#"
+                                            onClick={() => {
+                                                document
+                                                    .getElementById(
+                                                        "connect-wallet",
+                                                    )
+                                                    ?.click();
+                                            }}
+                                            className="text-md rounded-md bg-indigo-600 px-6 py-3 font-semibold text-white shadow-sm transition hover:scale-105 hover:bg-indigo-500 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        >
+                                            Connect Wallet
+                                        </a>
                                     )}
                                 </div>
                             </div>
