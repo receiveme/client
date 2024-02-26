@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import "../globals.css";
 import { Banner } from "@/src/components/profile/Banner";
 import { getUser } from "@/src/actions/getUser";
+import { IconEdit } from "@tabler/icons-react";
+import EditHandleButton from "@/src/components/handle/EditButton";
 
 async function getUserByHandle(handle: string) {
     try {
@@ -72,23 +74,30 @@ export default async function Profile({ params }: any) {
         <>
             <main className="">
                 <div
-                    className={`w-full bg-gradient-to-b ${bg} to-slate-900 p-2 flex justify-center flex-wrap flex-col gap-2 items-center h-screen `}
+                    className={`w-full bg-gradient-to-b ${bg} flex h-screen flex-col flex-wrap items-center justify-center gap-2 to-slate-900 p-2 `}
                 >
-                    <div className="max-w-[580px] w-full px-5 flex flex-col items-center mb-24">
+                    <div className="mb-24 flex w-full max-w-[580px] flex-col items-center px-5">
                         <Banner
                             handle={data.handle}
                             banner={data.profiles.background}
                             socials={data.Social}
                             className="my-6"
                         />
-                        <div className="w-full flex flex-col gap-3 max-w-[650px]">
-                            {data.Wallet.map((wallet: any, i) => {
+
+                        {/* Edit button if handle is same as in localstorage userData */}
+                        <EditHandleButton handle={handle} />
+
+                        <div className="flex w-full max-w-[650px] flex-col gap-3">
+                            {data.Wallet.map((wallet: any, i: number) => {
                                 const preferrednetworks =
                                     wallet.preferrednetworks;
                                 return (
-                                    <div className="flex flex-col gap-3">
+                                    <div
+                                        className="flex flex-col gap-3"
+                                        key={i}
+                                    >
                                         {wallet.preferrednetworks.map(
-                                            (e, i) => {
+                                            (__n: any, i: number) => {
                                                 return (
                                                     <Wallet
                                                         address={wallet.address}
@@ -105,8 +114,8 @@ export default async function Profile({ params }: any) {
                             })}
                         </div>
 
-                        <div className="mt-4 flex w-full justify-center items-center">
-                            <span className="text-sm text-gray-400 font-bold">
+                        <div className="mt-4 flex w-full items-center justify-center">
+                            <span className="text-sm font-bold text-gray-400">
                                 @receive.me
                             </span>
                         </div>

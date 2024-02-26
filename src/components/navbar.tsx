@@ -129,9 +129,9 @@ export default function Navbar() {
 
     console.log("USER DATA CHECK", JSON.parse(localStorage.getItem("userData")))
     return (
-        <div className="w-full mb-4">
+        <div className="sticky top-4 z-50 mb-4 w-full">
             <nav
-                className="bg-gradient-to-r from-indigo-500 to-indigo-600 w-full rounded-2xl shadow-md flex items-center justify-between p-4 lg:px-6"
+                className="flex w-full items-center justify-between rounded-2xl bg-gradient-to-r from-indigo-500 to-indigo-600 p-4 shadow-md lg:px-6"
                 aria-label="Global"
             >
                 <div className="flex lg:flex-1">
@@ -164,18 +164,25 @@ export default function Navbar() {
                                         "_blank",
                                     )
                                 }
-                                className="bg-white rounded-md h-full py-3 px-4 text-black font-bold text-sm transition hover:scale-105"
+                                className="h-full rounded-md bg-white px-4 py-3 text-sm font-bold text-black transition hover:scale-105"
                                 type="button"
                             >
-                                <span className="text-gray-400 font-normal">
+                                <span className="font-normal text-gray-400">
                                     @
                                 </span>
-                                <span></span>
+                                <span>
+                                    {
+                                        JSON.parse(
+                                            localStorage.getItem("userData") ??
+                                                '{"handle": "hello"}',
+                                        ).handle
+                                    }
+                                </span>
                             </button>
 
                             <button
                                 onClick={signOut}
-                                className="bg-white rounded-md h-full px-6 py-3 flex justify-center items-center text-black font-bold text-sm transition hover:scale-105"
+                                className="flex h-full items-center justify-center rounded-md bg-white px-6 py-3 text-sm font-bold text-black transition hover:scale-105"
                                 type="button"
                             >
                                 Sign Out
@@ -192,7 +199,7 @@ export default function Navbar() {
                                     <div>
                                         <button
                                             onClick={handleConnect}
-                                            className="bg-white rounded-md h-full px-6 py-3 flex justify-center items-center text-black font-bold text-sm transition hover:scale-105"
+                                            className="flex h-full items-center justify-center rounded-md bg-white px-6 py-3 text-sm font-bold text-black transition hover:scale-105"
                                             type="button"
                                             id="connect-wallet"
                                         >
