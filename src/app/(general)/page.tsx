@@ -1,5 +1,6 @@
 "use client";
 
+import { useAppState } from "@/src/hooks/useAppState";
 import {
     IconChevronRight as ChevronRightIcon,
     IconAlignRight,
@@ -8,6 +9,8 @@ import {
 } from "@tabler/icons-react";
 
 export default function Home() {
+    const [appState] = useAppState();
+
     return (
         <div className="bg-white">
             <div className="relative isolate">
@@ -42,12 +45,8 @@ export default function Home() {
                                     click. Link any wallet or social with your
                                     account.
                                 </p>
-                                <div className="mt-6 flex items-center gap-x-8 md:mt-10">     {/* app-state-marker */}
-                                    {JSON.parse(
-                                        typeof window !== "undefined"
-                                            ? localStorage.getItem("userData") ?? "null" 
-                                            : "null",
-                                    ) ? (
+                                <div className="mt-6 flex items-center gap-x-8 md:mt-10">
+                                    {appState.userData ? (
                                         <>
                                             <a
                                                 href="/dashboard"

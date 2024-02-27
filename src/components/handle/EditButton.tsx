@@ -1,20 +1,14 @@
 "use client";
 
+import { useAppState } from "@/src/hooks/useAppState";
 import { IconEdit } from "@tabler/icons-react";
 
-type HandleEditButtonProps = {
-    id: string;
-    onEdit: (id: string) => void;
-};
+export default function EditHandleButton({ handle }: any) {
+    const [appState, setAppState] = useAppState();
 
-export default function EditHandleButton(handle: any) { {/* app-state-marker */}
     return (
         <>
-            {handle ==
-            JSON.parse(
-                localStorage.getItem("userData") ??
-                    '{"handle": "-----------------"}',
-            ).handle ? (
+            {handle == appState.userData?.handle ? (
                 <a
                     href="/dashboard"
                     className="mb-6 flex w-full items-center justify-center gap-1 rounded-lg bg-indigo-600 py-2 text-sm font-bold text-white transition hover:bg-indigo-700"

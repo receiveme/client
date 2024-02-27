@@ -20,6 +20,8 @@ import {
 } from "@particle-network/connect-react-ui";
 import { getUserData, getUserDataByUuid } from "../actions";
 import { useRouter } from "next/navigation";
+import { useAppState } from "../hooks/useAppState";
+import { InitialAppState } from "../types/state/app-state.type";
 
 const features = [
     {
@@ -66,12 +68,15 @@ export default function Navbar() {
     const router = useRouter();
     const [connected, setConnected] = useState(false);
 
-    async function signOut() { {/* app-state-marker */}
-        localStorage.clear();
+    const [appState, setAppState] = useAppState();
+
+    async function signOut() {
+        setAppState(InitialAppState);
+
         connectKit.particle.auth.logout();
     }
 
-    // useEffect(() => {  {/* app-state-marker */}
+    // useEffect(() => {
     //     // Seems non-functional, eventually will be replaced by endpoint
     //     if (!account && !userInfo) {
     //         localStorage.removeItem("userInfo");
@@ -89,45 +94,41 @@ export default function Navbar() {
     //     }
     // }, [account, userInfo]);
 
-    const fetchUserDataByUuid = async (uuid) => {
-        return await getUserDataByUuid(uuid)
-    }
+    const fetchUserDataByUuid = async (uuid: string) => {
+        return await getUserDataByUuid(uuid);
+    };
 
     useEffect(() => {
         // const fetchUserData = async (uuid) => {
         //     return await getUserData(uuid); // Assuming getUserData is defined elsewhere
         // };
 
-
- 
-        const fetchData = async () => { {/* app-state-marker */} {/* app-state-marker */}
-            if (!JSON.parse(localStorage.getItem("userData"))) {
+        const fetchData = async () => {
+            if (!appState.userData) {
                 // Assuming userInfo has a uuid property
                 // const uuid = JSON.parse(localStorage.getItem("globalId"))
                 //     ? JSON.parse(localStorage.getItem("globalId"))
                 //     : "n/a";
-                let userData = null
-                if (userInfo) {
-                    userData = await fetchUserDataByUuid(userInfo.uuid);
-                }
+                const userData = userInfo
+                    ? await fetchUserDataByUuid(userInfo.uuid)
+                    : null;
 
                 if (!userData && userInfo && account) {
-                    localStorage.setItem(
-                        "userInfo",
-                        JSON.stringify([{ accountInfo: account, info: userInfo }]),
-                    );
+                    setAppState({
+                        userInfo: { accountInfo: account, info: userInfo },
+                    });
                     router.push("/onboard");
                 } else {
-                    localStorage.setItem("userData", JSON.stringify(userData));
+                    setAppState({
+                        userData,
+                    });
                 }
             }
         };
 
         fetchData();
-
     }, [connected, userInfo]);
 
-    console.log("USER DATA CHECK", JSON.parse(localStorage.getItem("userData")))
     return (
         <div className="sticky top-4 z-50 mb-4 w-full">
             <nav
@@ -145,22 +146,13 @@ export default function Navbar() {
                     </Link>
                 </div>
 
-                <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4"> {/* app-state-marker */} {/* app-state-marker */}
-                    {JSON.parse(
-                        typeof window !== "undefined"
-                            ? localStorage.getItem("userData") ?? "null"
-                            : "null",
-                    ) ? (
+                <div className=" flex lg:flex lg:flex-1 lg:justify-end gap-x-4">
+                    {!!appState.userData ? (
                         <>
                             <button
                                 onClick={() =>
                                     window.open(
-                                        `/${JSON.parse(
-                                            localStorage.getItem(
-                                                "userData",
-                                            ) ?? '{"handle": "hello"}',
-                                        ).handle
-                                        }`,
+                                        `/${appState.userData?.handle}`,
                                         "_blank",
                                     )
                                 }
@@ -170,14 +162,7 @@ export default function Navbar() {
                                 <span className="font-normal text-gray-400">
                                     @
                                 </span>
-                                <span> {/* app-state-marker */}
-                                    {
-                                        JSON.parse(
-                                            localStorage.getItem("userData") ??
-                                                '{"handle": "hello"}',
-                                        ).handle
-                                    }
-                                </span>
+                                <span>{appState.userData?.handle}</span>
                             </button>
 
                             <button
@@ -192,7 +177,7 @@ export default function Navbar() {
                         <ConnectButton.Custom>
                             {({ openConnectModal }) => {
                                 const handleConnect = async () => {
-                                    openConnectModal();
+                                    openConnectModal!();
                                     setConnected(true);
                                 };
                                 return (

@@ -8,6 +8,7 @@ import { BannerOption } from "../profile/BannerOption";
 import axios from "axios";
 import Toast from "../toast";
 import { IconLoader2 } from "@tabler/icons-react";
+import { useAppState } from "@/src/hooks/useAppState";
 
 type DashboardProfileProps = {
     handle: string;
@@ -26,23 +27,23 @@ export function DashboardProfile({
     const [isLoading, setIsLoading] = useState(false);
     const [saved, setSaved] = useState(false);
 
+    const [appState, setAppState] = useAppState();
+
     useEffect(() => {
         setTheme(initialTheme);
         setBanner(initialBackground);
     }, [initialTheme, initialBackground]);
 
-    async function save() { {/* app-state-marker */}
+    async function save() {
         setIsLoading(true);
 
-        const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
-
-        if (!userInfo) {
+        if (!appState.userInfo) {
             setIsLoading(false);
             return;
         }
 
-        const uuid = userInfo[0].info.uuid;
-        const token = userInfo[0].info.token;
+        const uuid = appState.userInfo.info.uuid;
+        const token = appState.userInfo.info.token;
 
         // Send API request
         const response = await axios.post(
@@ -50,8 +51,9 @@ export function DashboardProfile({
             { uuid, token, theme, background: banner },
         );
 
-        // Save to localStorage     {/* app-state-marker */}
-        localStorage.setItem("userData", JSON.stringify(response.data.data));
+        // Save to localStorage
+        const userData = response.data.data;
+        setAppState({ userData });
 
         setIsLoading(false);
 

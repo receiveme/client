@@ -1,7 +1,7 @@
 "use client";
 
 import { IconCircleXFilled, IconLoader2 } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { ParticleNetwork, UserInfo } from "@particle-network/auth";
 import { Avalanche } from "@particle-network/chains";
 import { createUserProfile } from "@/src/actions";
@@ -9,10 +9,15 @@ import { useRouter } from "next/navigation";
 import { ThemeOption } from "@/src/components/profile/ThemeOption";
 import { BannerOption } from "@/src/components/profile/BannerOption";
 import { Banner } from "@/src/components/profile/Banner";
+import { useAppState } from "@/src/hooks/useAppState";
+import { AppState } from "@/src/types/state/app-state.type";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
+
 type StageProps = {
     show: boolean;
+    appState: AppState;
+    setAppState: (state: Partial<AppState>) => void;
 } & Record<string, any>;
 
 const particle = new ParticleNetwork({
@@ -27,7 +32,13 @@ const particle = new ParticleNetwork({
     },
 });
 
-function Handle({ show, updateHandle, next }: StageProps) {
+function Handle({
+    show,
+    updateHandle,
+    next,
+    appState,
+    setAppState,
+}: StageProps) {
     const [handleInput, setHandleInput] = useState("");
     const [isLoading, setLoading] = useState(false);
 
@@ -109,7 +120,7 @@ function Handle({ show, updateHandle, next }: StageProps) {
     );
 }
 
-function Link({ handle, show, next }: StageProps) {
+function Link({ handle, show, next, appState, setAppState }: StageProps) {
     const [isLoading, setLoading] = useState(false);
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
     const [avaxBalance, setAvaxBalance] = useState<string | null>(null);
@@ -122,7 +133,7 @@ function Link({ handle, show, next }: StageProps) {
         return <></>;
     }
 
-    const handleLogin = async ( 
+    const handleLogin = async (
         preferredAuthType:
             | "google"
             | "twitter"
@@ -130,42 +141,35 @@ function Link({ handle, show, next }: StageProps) {
             | "github"
             | "discord"
             | "linkedin",
-    ) => {  {/* app-state-marker */} {/* app-state-marker */} {/* app-state-marker */}
-
-    
+    ) => {
         const user = await particle.auth.login({ preferredAuthType });
-        localStorage.setItem("wallets", JSON.stringify([])); 
-        //@ts-ignore
-        const socials = JSON.parse(localStorage.getItem("socials"))
-            ? //@ts-ignore
-            JSON.parse(localStorage.getItem("socials"))
-            : [];
+        const socials = appState.socials;
 
         setUserInfo(user);
+        setAppState({ wallets: [], userInfo: user });
 
-
-
-        //@ts-ignore
         let socialIndex = socials.findIndex(
-            (social) => social.authType == preferredAuthType,
+            (social: any) => social.authType == preferredAuthType,
         );
-        console.log(socialIndex);
-        if (socialIndex < 0)
+
+        if (socialIndex < 0) {
             socials.push({
                 authType: preferredAuthType,
                 socialUuid: user.uuid,
-                socialUsername: user.thirdparty_user_info.user_info.name,
+                socialUsername: user.thirdparty_user_info?.user_info.name,
                 socialInfo: user,
                 socialImg: user.avatar,
-                socialId: String(user.thirdparty_user_info.user_info.id),
+                socialId: String(user.thirdparty_user_info?.user_info.id),
             });
-        //store the specific auth type user info in different storage items
-        localStorage.setItem("socials", JSON.stringify(socials)); {/* app-state-marker */}
-        localStorage.setItem(`${preferredAuthType}`, JSON.stringify(user)); {/* app-state-marker */}
+        }
+
+        setAppState({
+            socials,
+            logins: [...appState.logins, preferredAuthType],
+        });
     };
 
-
-    function connectMetamask() { {/* app-state-marker */} {/* app-state-marker */}
+    function connectMetamask() {
         return new Promise(async (resolve, reject) => {
             const chainId = await window["ethereum"]?.request({
                 method: "eth_chainId",
@@ -176,28 +180,30 @@ function Link({ handle, show, next }: StageProps) {
                     console.error("METAMASK ERR:", e);
                     return reject();
                 });
-            // After connection 
+            // After connection
 
-
-            if (accounts?.length && accounts[0] && chainId) { 
+            if (accounts?.length && accounts[0] && chainId) {
                 setMetamaskAddress(accounts[0]);
-                const wallets = JSON.parse(localStorage.getItem("wallets"))
-                    ? JSON.parse(localStorage.getItem("wallets"))
-                    : [];
+
+                const wallets = appState.wallets;
+
                 let walletIndex = wallets.findIndex(
                     (wallet) => wallet.walletProvider == "metamask",
                 );
-                if (walletIndex < 0)
+
+                if (walletIndex < 0) {
                     wallets.push({
                         walletProvider: "metamask",
                         walletAddress: accounts[0],
                     });
-                localStorage.setItem("wallets", JSON.stringify(wallets)); 
+                }
+
+                setAppState({ wallets });
             } else return reject();
         });
     }
 
-    function connectTronlink() { {/* app-state-marker */} {/* app-state-marker */} 
+    function connectTronlink() {
         return new Promise(async (resolve, reject) => {
             try {
                 //@ts-ignore
@@ -209,24 +215,25 @@ function Link({ handle, show, next }: StageProps) {
                 }); //@ts-ignore
                 let tronLink = { ...(await window["tronLink"]) };
 
-                // After connection 
+                // After connection
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account);
 
-
-                const wallets = JSON.parse(localStorage.getItem("wallets"))
-                    ? JSON.parse(localStorage.getItem("wallets"))
-                    : [];
+                const wallets = appState.wallets;
                 let walletIndex = wallets.findIndex(
                     (wallet) => wallet.walletProvider == "tron",
                 );
-                if (walletIndex < 0)
+                if (walletIndex < 0) {
                     wallets.push({
                         walletProvider: "tron",
                         walletAddress: account,
                     });
-                localStorage.setItem("wallets", JSON.stringify(wallets));
+                }
+
+                setAppState({ wallets });
+
                 if (!account) return reject();
+
                 return resolve({ account, chain: "tron" });
             } catch (e) {
                 console.log(e);
@@ -235,15 +242,12 @@ function Link({ handle, show, next }: StageProps) {
         });
     }
 
-    
-
     function configWalletModal(): void {
         throw new Error("Function not implemented.");
     }
 
-    return ( 
+    return (
         <>
-        
             <div className="flex flex-col gap-4">
                 <div className="mt-6 relative">
                     <div className="rounded-xl absolute w-full h-full p-4 flex items-end justify-between bg-gradient-to-t from-black to-transparent">
@@ -263,9 +267,9 @@ function Link({ handle, show, next }: StageProps) {
                     <h3 className="font-regular text-sm mt-1">
                         Link your socials to display them on your profile.
                     </h3>
-                    {/* app-state-marker */}
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">    {/* app-state-marker */}
-                        {localStorage.getItem("discord") ? ( 
+
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-2 gap-y-2">
+                        {appState.logins.includes("discord") ? (
                             <>
                                 <button
                                     onClick={() => handleLogin("discord")}
@@ -304,10 +308,8 @@ function Link({ handle, show, next }: StageProps) {
                                     </span>
                                 </button>
                             </>
-                        )}    
-
-
-                        {localStorage.getItem("github") ? (
+                        )}
+                        {appState.logins.includes("github") ? (
                             <>
                                 <button
                                     onClick={() => handleLogin("github")}
@@ -344,8 +346,7 @@ function Link({ handle, show, next }: StageProps) {
                                 </button>
                             </>
                         )}
-
-                        {localStorage.getItem("twitch") ? (
+                        {appState.logins.includes("twitch") ? (
                             <>
                                 <button
                                     onClick={() => handleLogin("twitch")}
@@ -382,8 +383,7 @@ function Link({ handle, show, next }: StageProps) {
                                 </button>
                             </>
                         )}
-
-                        {localStorage.getItem("twitter") ? (
+                        {appState.logins.includes("twitter") ? (
                             <>
                                 <button
                                     onClick={() => handleLogin("twitter")}
@@ -421,8 +421,7 @@ function Link({ handle, show, next }: StageProps) {
                                 </button>
                             </>
                         )}
-
-                        {localStorage.getItem("linkedin") ? (
+                        {appState.logins.includes("linkedin") ? (
                             <>
                                 <button
                                     onClick={() => handleLogin("linkedin")}
@@ -460,7 +459,6 @@ function Link({ handle, show, next }: StageProps) {
                                 </button>
                             </>
                         )}
-
                         <button
                             disabled
                             type="button"
@@ -476,7 +474,6 @@ function Link({ handle, show, next }: StageProps) {
                                 Link PayPal
                             </span>
                         </button>
-
                         <button
                             disabled
                             type="button"
@@ -502,8 +499,8 @@ function Link({ handle, show, next }: StageProps) {
                         Link your wallets and start getting paid.
                     </h3>
 
-                    <div className="mt-4 grid grid-cols-1  gap-x-2 gap-y-2"> {/* app-state-marker */}  {/* app-state-marker */} 
-                        {localStorage.getItem("userInfo") ? (
+                    <div className="mt-4 grid grid-cols-1  gap-x-2 gap-y-2">
+                        {appState.userInfo ? (
                             <>
                                 <button
                                     onClick={() => configWalletModal()}
@@ -586,7 +583,6 @@ function Link({ handle, show, next }: StageProps) {
                                 </button>
                             </>
                         )}
-
                         {!tronlinkAddress ? (
                             <>
                                 <button
@@ -660,7 +656,14 @@ function Link({ handle, show, next }: StageProps) {
     );
 }
 
-function Profile({ handle, next, setProfile, show }: StageProps) {
+function Profile({
+    handle,
+    next,
+    setProfile,
+    show,
+    appState,
+    setAppState,
+}: StageProps) {
     const [theme, setTheme] = useState("yellow-300/none");
     const [banner, setBanner] = useState("whale/white");
 
@@ -677,8 +680,9 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
         <>
             <div className="flex flex-col gap-4">
                 <div
-                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${theme.split("/")[0]
-                        } background-animate to-slate-900`}
+                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${
+                        theme.split("/")[0]
+                    } background-animate to-slate-900`}
                 >
                     <Banner handle={handle} banner={banner} />
                 </div>
@@ -832,7 +836,15 @@ function Profile({ handle, next, setProfile, show }: StageProps) {
     );
 }
 
-function Preview({ handle, links, profile, show, complete }: StageProps) {
+function Preview({
+    handle,
+    links,
+    profile,
+    show,
+    complete,
+    appState,
+    setAppState,
+}: StageProps) {
     if (!show) {
         return <></>;
     }
@@ -843,13 +855,14 @@ function Preview({ handle, links, profile, show, complete }: StageProps) {
         <>
             <div className="flex flex-col gap-4">
                 <div
-                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${theme.split("/")[0]
-                        } background-animate to-slate-900`}
-                // className={`mt-6 p-6 rounded-xl background-animate`}
-                // style={{
-                //     background:
-                //         "linear-gradient(180deg, #fff 0%, #f6e05e 100%)",
-                // }}
+                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${
+                        theme.split("/")[0]
+                    } background-animate to-slate-900`}
+                    // className={`mt-6 p-6 rounded-xl background-animate`}
+                    // style={{
+                    //     background:
+                    //         "linear-gradient(180deg, #fff 0%, #f6e05e 100%)",
+                    // }}
                 >
                     <Banner handle={handle} banner={banner} />
                 </div>
@@ -870,6 +883,9 @@ export default function Onboard() {
     const [links, setLinks] = useState({});
     const [profile, setProfile] = useState<any>({});
     const router = useRouter();
+
+    const [appState, setAppState] = useAppState();
+
     const [stage, setStage] = useState<Stage>("handle");
 
     const nextStage = () => {
@@ -884,15 +900,10 @@ export default function Onboard() {
         else if (stage === "link") setStage("handle");
     };
 
-    const complete = async () => {     {/* HUGE app-state-marker */}    {/* app-state-marker */}    {/* app-state-marker */}
-        //@ts-ignore
-        const userInfo = JSON.parse(localStorage.getItem("userInfo")); // sucks
-        const wallets = JSON.parse(localStorage.getItem("wallets"))
-            ? JSON.parse(localStorage.getItem("wallets"))
-            : [];
-        const socials = JSON.parse(localStorage.getItem("socials"))
-            ? JSON.parse(localStorage.getItem("socials"))
-            : [];
+    const complete = async () => {
+        const userInfo = appState.userInfo;
+        const wallets = appState.wallets;
+        const socials = appState.socials;
 
         const fetchSocialDetails = async () => {
             for (let i = 0; i < socials.length; i++) {
@@ -903,9 +914,11 @@ export default function Onboard() {
                             `https://api.github.com/user/${id}`,
                         );
                         if (!res.ok) throw new Error("bad");
-                        res = await res.json(); //@ts-ignore
-                        socials[i].socialUsername = res.login;
-                        socials[i].socialImg = res.avatar_url;
+
+                        const json = await res.json();
+
+                        socials[i].socialUsername = json.login;
+                        socials[i].socialImg = json.avatar_url;
                     }
                 } else if (socials[i].authType == "twitch") {
                     //TODO
@@ -922,8 +935,8 @@ export default function Onboard() {
             userInfo,
             handle,
             profile,
-        ); // Assuming this is an async functions
-        localStorage.setItem("globalId", JSON.stringify(globalId));     {/* app-state-marker */}    {/* app-state-marker */}
+        );
+        setAppState({ globalId });
         router.push("/");
     };
 
@@ -935,10 +948,10 @@ export default function Onboard() {
                         {stage === "handle"
                             ? "First things first..."
                             : stage === "link"
-                                ? "Next, link up your wallets & socials"
-                                : stage === "profile"
-                                    ? "Finally, customize your profile"
-                                    : "Preview your profile"}
+                            ? "Next, link up your wallets & socials"
+                            : stage === "profile"
+                            ? "Finally, customize your profile"
+                            : "Preview your profile"}
                     </h1>
 
                     <div>
@@ -951,10 +964,10 @@ export default function Onboard() {
                                             stage === "handle"
                                                 ? "0%"
                                                 : stage === "link"
-                                                    ? "30%"
-                                                    : stage === "profile"
-                                                        ? "60%"
-                                                        : "85%",
+                                                ? "30%"
+                                                : stage === "profile"
+                                                ? "60%"
+                                                : "85%",
                                     }}
                                 />
                             </div>
@@ -965,12 +978,16 @@ export default function Onboard() {
                         updateHandle={setHandle}
                         show={stage === "handle"}
                         next={nextStage}
+                        appState={appState}
+                        setAppState={setAppState}
                     />
 
                     <Link
                         show={stage === "link"}
                         handle={handle}
                         next={nextStage}
+                        appState={appState}
+                        setAppState={setAppState}
                     />
 
                     <Profile
@@ -978,6 +995,8 @@ export default function Onboard() {
                         handle={handle}
                         setProfile={setProfile}
                         next={nextStage}
+                        appState={appState}
+                        setAppState={setAppState}
                     />
 
                     <Preview
@@ -986,6 +1005,8 @@ export default function Onboard() {
                         links={links}
                         profile={profile}
                         complete={complete}
+                        appState={appState}
+                        setAppState={setAppState}
                     />
                 </div>
             </main>

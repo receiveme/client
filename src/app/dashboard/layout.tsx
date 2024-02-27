@@ -22,6 +22,7 @@ import {
 import "@particle-network/connect-react-ui/dist/index.css";
 import { ConnectButton } from "@particle-network/connect-react-ui";
 import { DashboardProfile } from "@/src/components/dashboard/DashboardProfile";
+import { useAppState } from "@/src/hooks/useAppState";
 
 const navigation = [
     { name: "Appearance", href: "#", icon: IconPalette },
@@ -56,29 +57,26 @@ export default function RootLayout({
     const [theme, setTheme] = useState("blue-400/none");
     const [background, setBackground] = useState("waves/blue");
 
+    const [appState, setAppState] = useAppState();
+
     useEffect(() => {
-        if (localStorage) {     {/* app-state-marker */}
-            const storage =
-                localStorage.getItem("userData") ||
-                '{ "handle": "", "theme": "", "background": "" }';
-            const storageParsed = JSON.parse(storage);
+        const userData = appState.userData;
 
-            if (storageParsed) {
-                const storageHandle = storageParsed.handle;
-                const storageTheme = storageParsed.Profile[0].theme;
-                const storageBackground = storageParsed.Profile[0].background;
+        if (userData) {
+            const storageHandle = userData.handle;
+            const storageTheme = userData.Profile[0].theme;
+            const storageBackground = userData.Profile[0].background;
 
-                if (storageHandle) {
-                    setHandle(storageHandle);
-                }
+            if (storageHandle) {
+                setHandle(storageHandle);
+            }
 
-                if (storageTheme) {
-                    setTheme(storageTheme);
-                }
+            if (storageTheme) {
+                setTheme(storageTheme);
+            }
 
-                if (storageBackground) {
-                    setBackground(storageBackground);
-                }
+            if (storageBackground) {
+                setBackground(storageBackground);
             }
         }
     }, []);

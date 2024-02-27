@@ -1,6 +1,7 @@
 "use client";
 
 import { getUser } from "@/src/actions/getUser";
+import { useAppState } from "@/src/hooks/useAppState";
 import { useState, useEffect } from "react";
 
 export function DashboardProfile() {
@@ -10,15 +11,17 @@ export function DashboardProfile() {
     const [user, setUser] = useState<any>(undefined);
     const handle = "hello";
 
-    useEffect(() => {     {/* app-state-marker */}
+    const [appState, setAppState] = useAppState();
+
+    useEffect(() => {
         if (typeof window !== "undefined") {
-            setTheme(localStorage?.getItem("theme") || "yellow-300");
-            setBanner(localStorage?.getItem("banner") || "white");
+            setTheme(appState.theme || "yellow-300");
+            setBanner(appState.banner || "white");
         }
     }, [typeof window !== "undefined"]);
 
-    useEffect(() => {     {/* app-state-marker */}
-        let raw: any = localStorage.getItem("userInfo");
+    useEffect(() => {
+        let raw: any = appState.userInfo;
         if (raw) {
             (async () => {
                 let obj: any = JSON.parse(raw)?.[0];
@@ -29,9 +32,8 @@ export function DashboardProfile() {
         }
     }, [localStorage.getItem("userInfo")]);
 
-    function save() {     {/* app-state-marker */}     {/* app-state-marker */}
-        localStorage.setItem("banner", banner);
-        localStorage.setItem("theme", theme);
+    function save() {
+        setAppState({ banner, theme });
         setSaveStatus(true);
         setTimeout(() => setSaveStatus(false), 2000);
     }
