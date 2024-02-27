@@ -10,34 +10,24 @@ import Toast from "../toast";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useAppState } from "@/src/hooks/useAppState";
 
-type DashboardProfileProps = {
-    handle: string;
-    initialTheme: string;
-    initialBackground: string;
-};
+export function DashboardProfile() {
+    const [appState, setAppState] = useAppState();
 
-export function DashboardProfile({
-    handle,
-    initialTheme,
-    initialBackground,
-}: DashboardProfileProps) {
-    const [theme, setTheme] = useState(initialTheme);
-    const [banner, setBanner] = useState(initialBackground);
+    console.log(appState);
+
+    const [handle] = useState(appState.userData?.handle);
+    const [theme, setTheme] = useState(appState.userData?.Profile[0].theme);
+    const [banner, setBanner] = useState(
+        appState.userData?.Profile[0].background,
+    );
 
     const [isLoading, setIsLoading] = useState(false);
     const [saved, setSaved] = useState(false);
 
-    const [appState, setAppState] = useAppState();
-
-    useEffect(() => {
-        setTheme(initialTheme);
-        setBanner(initialBackground);
-    }, [initialTheme, initialBackground]);
-
     async function save() {
         setIsLoading(true);
 
-        if (!appState.userInfo) {
+        if (!appState.userInfo || !appState.userData) {
             setIsLoading(false);
             return;
         }

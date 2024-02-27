@@ -30,7 +30,7 @@ export function DashboardProfile() {
                 setUser({ ...obj, ...covalent_resp } || undefined);
             })();
         }
-    }, [localStorage.getItem("userInfo")]);
+    }, [appState.userInfo]);
 
     function save() {
         setAppState({ banner, theme });

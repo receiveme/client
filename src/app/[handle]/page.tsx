@@ -84,7 +84,6 @@ export default async function Profile({ params }: any) {
                             className="my-6"
                         />
 
-                        {/* Edit button if handle is same as in localstorage userData */}
                         <EditHandleButton handle={data.handle} />
 
                         <div className="flex w-full max-w-[650px] flex-col gap-3">

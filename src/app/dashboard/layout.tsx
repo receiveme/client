@@ -9,7 +9,7 @@ import "./dashboard.css";
 
 const archivo = Archivo({ subsets: ["latin"] });
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
     Icon12Hours,
@@ -21,8 +21,8 @@ import {
 
 import "@particle-network/connect-react-ui/dist/index.css";
 import { ConnectButton } from "@particle-network/connect-react-ui";
-import { DashboardProfile } from "@/src/components/dashboard/DashboardProfile";
-import { useAppState } from "@/src/hooks/useAppState";
+import DashboardHandleDisplay from "@/src/components/dashboard/DashboardHandleDisplay";
+import DashboardSidebarNavigation from "@/src/components/dashboard/DashboardSidebarNavigation";
 
 const navigation = [
     { name: "Appearance", href: "#", icon: IconPalette },
@@ -54,32 +54,6 @@ export default function RootLayout({
 
     const [current, setCurrent] = useState("Appearance");
     const [handle, setHandle] = useState("");
-    const [theme, setTheme] = useState("blue-400/none");
-    const [background, setBackground] = useState("waves/blue");
-
-    const [appState, setAppState] = useAppState();
-
-    useEffect(() => {
-        const userData = appState.userData;
-
-        if (userData) {
-            const storageHandle = userData.handle;
-            const storageTheme = userData.Profile[0].theme;
-            const storageBackground = userData.Profile[0].background;
-
-            if (storageHandle) {
-                setHandle(storageHandle);
-            }
-
-            if (storageTheme) {
-                setTheme(storageTheme);
-            }
-
-            if (storageBackground) {
-                setBackground(storageBackground);
-            }
-        }
-    }, []);
 
     return (
         <html lang="en">
@@ -260,55 +234,11 @@ export default function RootLayout({
                                         className="flex flex-1 flex-col gap-y-7"
                                     >
                                         <li>
-                                            <ul
-                                                role="list"
-                                                className="-mx-2 space-y-1"
-                                            >
-                                                {navigation.map((item) => (
-                                                    <li key={item.name}>
-                                                        <a
-                                                            href={item.href}
-                                                            onClick={() =>
-                                                                item.profile
-                                                                    ? window.open(
-                                                                          `/${handle}`,
-                                                                          "_blank",
-                                                                      )
-                                                                    : !item.disabled
-                                                                    ? setCurrent(
-                                                                          item.name,
-                                                                      )
-                                                                    : null
-                                                            }
-                                                            className={classNames(
-                                                                current ===
-                                                                    item.name
-                                                                    ? "bg-gray-50 text-indigo-600"
-                                                                    : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
-                                                                "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition",
-                                                                item.disabled
-                                                                    ? "!text-gray-400 !hover:text-gray-500"
-                                                                    : "",
-                                                            )}
-                                                        >
-                                                            <item.icon
-                                                                className={classNames(
-                                                                    current ===
-                                                                        item.name
-                                                                        ? "text-indigo-600"
-                                                                        : "text-gray-400 group-hover:text-indigo-600",
-                                                                    "h-6 w-6 shrink-0 transition",
-                                                                    item.disabled
-                                                                        ? "!text-gray-300 !hover:text-gray-400 !group-hover:text-gray-400"
-                                                                        : "",
-                                                                )}
-                                                                aria-hidden="true"
-                                                            />
-                                                            {item.name}
-                                                        </a>
-                                                    </li>
-                                                ))}
-                                            </ul>
+                                            <DashboardSidebarNavigation
+                                                navigation={navigation}
+                                                current={current}
+                                                setCurrent={setCurrent}
+                                            />
                                         </li>
                                     </ul>
                                 </nav>
@@ -345,7 +275,7 @@ export default function RootLayout({
                                                     <span className="text-gray-400 font-normal">
                                                         @
                                                     </span>
-                                                    {handle}
+                                                    <DashboardHandleDisplay />
                                                 </span>
                                             </div>
                                         </div>
@@ -357,11 +287,7 @@ export default function RootLayout({
 
                             <main className="py-6">
                                 <div className="px-4 sm:px-6 lg:px-8 h-full w-full">
-                                    <DashboardProfile
-                                        handle={handle}
-                                        initialTheme={theme}
-                                        initialBackground={background}
-                                    />
+                                    {children}
                                 </div>
                             </main>
                         </div>

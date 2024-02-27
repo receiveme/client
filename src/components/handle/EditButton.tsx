@@ -4,7 +4,7 @@ import { useAppState } from "@/src/hooks/useAppState";
 import { IconEdit } from "@tabler/icons-react";
 
 export default function EditHandleButton({ handle }: any) {
-    const [appState, setAppState] = useAppState();
+    const [appState] = useAppState();
 
     return (
         <>

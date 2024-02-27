@@ -1,11 +1,9 @@
-import { DashboardProfile } from "@/src/components/dashboard/Profile";
+import { DashboardProfile } from "@/src/components/dashboard/DashboardProfile";
 
 export default function Dashboard() {
     return (
         <>
-            <main className="flex justify-center items-center h-full w-full">
-                <DashboardProfile />
-            </main>
+            <DashboardProfile />
         </>
     );
 }
