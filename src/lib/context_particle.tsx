@@ -3,7 +3,10 @@
 import { createContext, useEffect, useState } from "react";
 import { AppState, InitialAppState } from "../types/state/app-state.type";
 import { AuthCoreContextProvider } from "@particle-network/auth-core-modal";
-import { ModalProvider } from "@particle-network/connect-react-ui";
+import {
+    ModalProvider,
+    useConnectKit,
+} from "@particle-network/connect-react-ui";
 import { WalletEntryPosition } from "@particle-network/auth";
 import {
     Ethereum,
@@ -14,6 +17,7 @@ import {
     ArbitrumNova,
 } from "@particle-network/chains";
 import { evmWallets } from "@particle-network/connect";
+import UserInfoSetter from "./UserInfoSetter";
 
 export const AppContext = createContext<AppState | any>({});
 
@@ -23,10 +27,14 @@ export const AppStateProvider = ({
 }: {
     children: React.ReactNode;
 }) => {
-    const appStateLS = window.localStorage.getItem("app-state");
-    const [appState, setAppState] = useState<AppState>(
-        appStateLS ? JSON.parse(appStateLS) : InitialAppState,
-    );
+    const connectKit = useConnectKit();
+    const userInfo = connectKit?.particle?.auth.getUserInfo();
+
+    const appStateLS = localStorage.getItem("app-state");
+    const [appState, setAppState] = useState<AppState>({
+        ...(appStateLS ? JSON.parse(appStateLS) : InitialAppState),
+        userInfo,
+    });
 
     // Save the app state to local storage every time it is updated
     useEffect(() => {
@@ -91,6 +99,8 @@ export const AppStateProvider = ({
             >
                 <AppContext.Provider value={{ appState, setAppState }}>
                     {children}
+
+                    <UserInfoSetter />
                 </AppContext.Provider>
             </ModalProvider>
         </AuthCoreContextProvider>

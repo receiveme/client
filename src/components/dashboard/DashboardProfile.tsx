@@ -32,8 +32,8 @@ export function DashboardProfile() {
             return;
         }
 
-        const uuid = appState.userInfo.info.uuid;
-        const token = appState.userInfo.info.token;
+        const uuid = appState.userInfo.uuid;
+        const token = appState.userInfo.token;
 
         // Send API request
         const response = await axios.post(

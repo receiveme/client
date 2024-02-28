@@ -115,7 +115,7 @@ export default function Navbar() {
 
                 if (!userData && userInfo && account) {
                     setAppState({
-                        userInfo: { accountInfo: account, info: userInfo },
+                        userInfo,
                     });
                     router.push("/onboard");
                 } else {
