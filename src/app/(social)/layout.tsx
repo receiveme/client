@@ -1,16 +1,17 @@
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
 import "../globals.css";
+import Providers from "../providers";
 
 export const metadata = {
     title: `receive.me`,
-    description: 'receive.me Social',
-}
+    description: "receive.me Social",
+};
 
 export default function RootLayout({
     children,
 }: {
-    children: React.ReactNode
+    children: React.ReactNode;
 }) {
     return (
         <html lang="en">
@@ -41,10 +42,10 @@ export default function RootLayout({
                 />
                 <meta name="theme-color" content="#ffffff" />
             </Head>
-            <body className="text-white ">
-                {children}
+            <body className="text-white">
+                <Providers>{children}</Providers>
                 <Toaster position="top-right" />
             </body>
         </html>
-    )
+    );
 }
