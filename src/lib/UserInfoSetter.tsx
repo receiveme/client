@@ -4,7 +4,7 @@ import { AppContext } from "../lib/context_particle";
 import { useAppState } from "../hooks/useAppState";
 
 const UserInfoSetter = () => {
-    const [appState, setAppState] = useAppState();
+    const [_, setAppState] = useAppState();
 
     const connectKit = useConnectKit();
     const userInfo = connectKit?.particle?.auth.getUserInfo();
@@ -13,7 +13,7 @@ const UserInfoSetter = () => {
         if (userInfo) {
             setAppState({ userInfo });
         }
-    }, [userInfo, setAppState]);
+    }, []);
 
     return null;
 };
