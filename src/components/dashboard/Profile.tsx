@@ -18,7 +18,7 @@ export function DashboardProfile() {
             setTheme(appState.theme || "yellow-300");
             setBanner(appState.banner || "white");
         }
-    }, [typeof window !== "undefined"]);
+    }, []);
 
     useEffect(() => {
         let raw: any = appState.userInfo;

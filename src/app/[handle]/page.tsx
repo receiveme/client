@@ -40,7 +40,10 @@ async function getUserByHandle(handle: string) {
         user.profiles = user.Profile[0];
         return user;
     } catch (error) {
-        console.error("Failed to fetch user:", error);
+        // Errrors can happen because /[handle] can be any 404 url
+        // e.g. robots.txt, sitemap.xml
+
+        return null;
     }
 }
 
@@ -48,8 +51,8 @@ export default async function Profile({ params }: any) {
     const handle: any = params.handle;
     const data: any = await getUserByHandle(handle);
 
-    let data_each_wallet: any = {};
-    let total_balance: number = 0;
+    // let data_each_wallet: any = {};
+    // let total_balance: number = 0;
 
     // for (let wallet of (data?.["Wallet"] || [])) {
     //     // const covalent: any = await getUser({ address: wallet?.["address"] });
@@ -76,7 +79,7 @@ export default async function Profile({ params }: any) {
                 <div
                     className={`w-full bg-gradient-to-b ${bg} flex h-screen flex-col flex-wrap items-center justify-center gap-2 to-slate-900 p-2 `}
                 >
-                    <div className="mb-24 flex w-full max-w-[580px] flex-col items-center px-5">
+                    <div className="mb-24 flex w-full max-w-[580px] flex-col items-center px-3 lg:px-5">
                         <Banner
                             handle={data.handle}
                             banner={data.profiles.background}

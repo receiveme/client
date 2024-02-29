@@ -24,10 +24,10 @@ export const AppStateProvider = ({
 }: {
     children: React.ReactNode;
 }) => {
-    const appStateLS = localStorage.getItem("app-state");
-    const [appState, setAppState] = useState<AppState>(
-        appStateLS ? JSON.parse(appStateLS) : InitialAppState,
-    );
+    const [appState, setAppState] = useState<AppState>(() => {
+        const appStateLS = localStorage.getItem("app-state");
+        return appStateLS ? JSON.parse(appStateLS) : InitialAppState;
+    });
 
     // Save the app state to local storage every time it is updated
     useEffect(() => {

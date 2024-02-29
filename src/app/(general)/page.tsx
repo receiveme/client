@@ -7,6 +7,7 @@ import {
     IconArrowRight,
     IconSparkles,
 } from "@tabler/icons-react";
+import Link from "next/link";
 
 export default function Home() {
     const [appState] = useAppState();
@@ -48,12 +49,12 @@ export default function Home() {
                                 <div className="mt-6 flex items-center gap-x-8 md:mt-10">
                                     {appState.userData ? (
                                         <>
-                                            <a
+                                            <Link
                                                 href="/dashboard"
                                                 className="text-md rounded-md bg-indigo-600 px-6 py-3 font-semibold text-white shadow-sm transition hover:scale-105 hover:bg-indigo-500 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                             >
                                                 Go To Dashboard
-                                            </a>
+                                            </Link>
                                         </>
                                     ) : (
                                         <a

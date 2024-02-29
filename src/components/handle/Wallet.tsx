@@ -1,33 +1,30 @@
 "use client";
 
 import { IconCopy, IconQrcode } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Toast from "../toast";
 import { WalletQRCodeModal } from "./WalletQRCodeModal";
-import Algorand from "../../../public/img/3p/algorand.png"
-import Eth from "../../../public/img/3p/eth.png"
-import Polygon from "../../../public/img/3p/polygonsvg.png"
-import Avax from "../../../public/img/3p/avaxpng.png"
-import Tron from "../../../public/img/3p/tron.png"
+import Algorand from "../../../public/img/3p/algorand.png";
+import Eth from "../../../public/img/3p/eth.png";
+import Polygon from "../../../public/img/3p/polygonsvg.png";
+import Avax from "../../../public/img/3p/avaxpng.png";
+import Tron from "../../../public/img/3p/tron.png";
 // import styles from "Wallet.module.css"
-import "../../app/globals.css"
+import "../../app/globals.css";
 
 type WalletProps = {
     address: string;
-    preferrednetwork: any
+    preferrednetwork: any;
 };
 
 export function Wallet({ address, preferrednetwork }: WalletProps) {
     const originalWalletAddress = address;
-    const [selectedNetwork, setSelectedNetwork] = useState(0)
-    const [walletAddress, setWalletAddress] = useState(address);
-    const [showSelectedNetworks, setShowSelectedNetworks] = useState(false);
+    const [walletAddress, setWalletAddress] = useState(
+        `${address.substring(0, 8)}.....${address.slice(-10)}`,
+    );
 
-    if (walletAddress.length > 50) {
-        setWalletAddress(
-            `${walletAddress.substring(0, 8)}.....${walletAddress.slice(-10)}`,
-        );
-    }
+    const [selectedNetwork, setSelectedNetwork] = useState(0);
+    const [showSelectedNetworks, setShowSelectedNetworks] = useState(false);
 
     const [copied, setCopied] = useState(false);
 
@@ -91,7 +88,6 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                 setIsOpen={setIsQRCodeModalOpen}
                 network={preferrednetwork}
                 address={originalWalletAddress}
-
             />
 
             <div className="flex bg-white rounded-lg shadow-sm py-2 px-1">
@@ -132,31 +128,36 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                                 preferrednetwork === "eth"
                                     ? Eth.src
                                     : preferrednetwork === "tron"
-                                        ? Tron.src
-                                        : preferrednetwork === "avax"
-                                            ? Avax.src
-                                            : preferrednetwork === "algorand"
-                                                ? Algorand.src
-                                                : preferrednetwork === "polygon"
-                                                    ? Polygon.src
-                                                    : null
+                                    ? Tron.src
+                                    : preferrednetwork === "avax"
+                                    ? Avax.src
+                                    : preferrednetwork === "algorand"
+                                    ? Algorand.src
+                                    : preferrednetwork === "polygon"
+                                    ? Polygon.src
+                                    : ""
                             }
                             className={`w-[28px] h-[auto] selected-network-item`}
                         />
                     </div>
-
                 </div>
                 <div className="ml-3 w-full flex flex-col flex-shrink-1">
                     <p className="text-sm font-bold overflow-ellipsis">
                         {preferrednetwork.toUpperCase()}
                     </p>
-                    <span className="text-xs font-light">{walletAddress}</span>
+                    <span className="hidden xs:block text-xs font-light">
+                        {originalWalletAddress}
+                    </span>
+                    <span className="block xs:hidden text-xs font-light">
+                        {walletAddress}
+                    </span>
                 </div>
                 <div className="ml-auto mr-1 flex gap-1.5">
                     <button
                         onClick={copyAddress}
-                        className={`bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full ${copied ? "bg-green-400 text-white" : ""
-                            }`}
+                        className={`bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full ${
+                            copied ? "bg-green-400 text-white" : ""
+                        }`}
                     >
                         <IconCopy className="w-4 h-4" />
                     </button>
@@ -168,7 +169,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                         <IconQrcode className="h-4 w-4" />
                     </button>
                 </div>
-            </div >
+            </div>
         </>
     );
 }

@@ -3,7 +3,6 @@
 import { IconCircleXFilled, IconLoader2 } from "@tabler/icons-react";
 import { use, useEffect, useState } from "react";
 import { ParticleNetwork, UserInfo } from "@particle-network/auth";
-import { Avalanche } from "@particle-network/chains";
 import { createUserProfile } from "@/src/actions";
 import { useRouter } from "next/navigation";
 import { ThemeOption } from "@/src/components/profile/ThemeOption";
@@ -11,6 +10,7 @@ import { BannerOption } from "@/src/components/profile/BannerOption";
 import { Banner } from "@/src/components/profile/Banner";
 import { useAppState } from "@/src/hooks/useAppState";
 import { AppState } from "@/src/types/state/app-state.type";
+import particle from "../../lib/particle";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -19,18 +19,6 @@ type StageProps = {
     appState: AppState;
     setAppState: (state: Partial<AppState>) => void;
 } & Record<string, any>;
-
-const particle = new ParticleNetwork({
-    projectId: "19880450-9512-4857-a7a9-c29d16110034",
-    clientKey: "cbIQ6bvFEBm8ZgVkpox4q0mpxJtxAgqj3ra4VQtf",
-    appId: "124f61c4-f5ca-486c-a686-ae80b6966b72",
-    chainName: Avalanche.name,
-    chainId: Avalanche.id,
-    wallet: {
-        displayWalletEntry: true,
-        uiMode: "dark",
-    },
-});
 
 function Handle({
     show,
