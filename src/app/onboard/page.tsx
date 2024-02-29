@@ -11,7 +11,7 @@ import { Banner } from "@/src/components/profile/Banner";
 import { useAppState } from "@/src/hooks/useAppState";
 import { AppState } from "@/src/types/state/app-state.type";
 import particle from "../../lib/particle";
-import {PeraWalletConnect} from "@perawallet/connect"
+import { PeraWalletConnect } from "@perawallet/connect";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -118,7 +118,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
     const [metamaskAddress, setMetamaskAddress] = useState<string | null>();
     const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
     const [algorandAddress, setAlgorandAddress] = useState<string | null>();
-    const peraWallet = new PeraWalletConnect()
+    const peraWallet = new PeraWalletConnect();
 
     if (!show) {
         return <></>;
@@ -235,36 +235,41 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
 
     async function connectAlgorandWallet() {
         try {
-            const connect = await peraWallet.connect()
-            .then((newAccounts) => {
-              // Setup the disconnect event listener
-              peraWallet.connector?.on("disconnect", disconnectAlgorandWallet);
-              setAlgorandAddress(newAccounts[0]);
+            const connect = await peraWallet
+                .connect()
+                .then((newAccounts: any) => {
+                    // Setup the disconnect event listener
+                    peraWallet.connector?.on(
+                        "disconnect",
+                        disconnectAlgorandWallet,
+                    );
+                    setAlgorandAddress(newAccounts[0]);
 
-              const wallets = appState.wallets;
-              let walletIndex = wallets.findIndex(
-                  (wallet) => wallet.walletProvider == "algo",
-              );
-              if (walletIndex < 0) {
-                  wallets.push({
-                      walletProvider: "algo",
-                      walletAddress: newAccounts[0],
-                  });
-              }
+                    const wallets = appState.wallets;
+                    let walletIndex = wallets.findIndex(
+                        (wallet) => wallet.walletProvider == "algo",
+                    );
+                    if (walletIndex < 0) {
+                        wallets.push({
+                            walletProvider: "algo",
+                            walletAddress: newAccounts[0],
+                        });
+                    }
 
-              setAppState({ wallets });
-            })
-        } catch (error) { //@ts-ignore
+                    setAppState({ wallets });
+                });
+        } catch (error) {
+            //@ts-ignore
             if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
-                console.log(error)
-              }
+                console.log(error);
+            }
         }
-      }
-      function disconnectAlgorandWallet() {
+    }
+    function disconnectAlgorandWallet() {
         peraWallet.disconnect();
         setAlgorandAddress(null);
-        }
-    
+    }
+
     function configWalletModal(): void {
         // throw new Error("Function not implemented.");
     }
@@ -644,7 +649,6 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                             </>
                         )}
 
-
                         {!algorandAddress ? (
                             <>
                                 <button
@@ -698,7 +702,6 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                 </button>
                             </>
                         )}
-
 
                         <button
                             disabled

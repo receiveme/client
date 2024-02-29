@@ -4,8 +4,9 @@ import React, { useState } from "react";
 
 import { useAppState } from "@/src/hooks/useAppState";
 
-import { UserInfo } from "@particle-network/auth";
 import particle from "../../lib/particle";
+
+import { PeraWalletConnect } from "@perawallet/connect";
 
 const SOCIALS = [
     { id: "discord", name: "Discord", image: "discord.png" },
@@ -25,6 +26,7 @@ const WALLETS = [
     { id: "particle", name: "Particle Network", image: "particle.png" },
     { id: "metamask", name: "Metamask", image: "metamask.png" },
     { id: "tronlink", name: "Tronlink", image: "tron.png" },
+    { id: "algorand", name: "Algorand (MyPera Wallet)", image: "algorand.png" },
     {
         id: "unstoppabledomains",
         name: "Unstoppable Domains",
@@ -36,6 +38,11 @@ const WALLETS = [
 export default function DashboardWalletsSocials() {
     const [appState, setAppState] = useAppState();
     const { logins } = appState;
+
+    const [metamaskAddress, setMetamaskAddress] = useState<string | null>();
+    const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
+    const [algorandAddress, setAlgorandAddress] = useState<string | null>();
+    const peraWallet = new PeraWalletConnect();
 
     const handleSocialLogin = async (social: any) => {
         console.log(`Login for ${social.name} initiated`);
@@ -68,13 +75,128 @@ export default function DashboardWalletsSocials() {
         });
     };
 
+    function connectMetamask() {
+        return new Promise(async (resolve, reject) => {
+            const chainId = await window["ethereum"]?.request({
+                method: "eth_chainId",
+            });
+            const accounts = await window["ethereum"]
+                ?.request({ method: "eth_requestAccounts" }) // @ts-ignore
+                .catch((e) => {
+                    console.error("METAMASK ERR:", e);
+                    return reject();
+                });
+            // After connection
+
+            if (accounts?.length && accounts[0] && chainId) {
+                setMetamaskAddress(accounts[0]);
+
+                const wallets = appState.wallets;
+
+                let walletIndex = wallets.findIndex(
+                    (wallet) => wallet.walletProvider == "metamask",
+                );
+
+                if (walletIndex < 0) {
+                    wallets.push({
+                        walletProvider: "metamask",
+                        walletAddress: accounts[0],
+                    });
+                }
+
+                setAppState({ wallets });
+            } else return reject();
+        });
+    }
+
+    function connectTronlink() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                //@ts-ignore
+                await window["tronLink"]?.request({
+                    method: "tron_requestAccounts",
+                    params: {
+                        websiteName: "receive.me",
+                    },
+                }); //@ts-ignore
+                let tronLink = { ...(await window["tronLink"]) };
+
+                // After connection
+                let account = tronLink.tronWeb.defaultAddress.base58;
+                setTronlinkAddress(account);
+
+                const wallets = appState.wallets;
+                let walletIndex = wallets.findIndex(
+                    (wallet) => wallet.walletProvider == "tron",
+                );
+                if (walletIndex < 0) {
+                    wallets.push({
+                        walletProvider: "tron",
+                        walletAddress: account,
+                    });
+                }
+
+                setAppState({ wallets });
+
+                if (!account) return reject();
+
+                return resolve({ account, chain: "tron" });
+            } catch (e) {
+                console.log(e);
+                return reject();
+            }
+        });
+    }
+
+    async function connectAlgorandWallet() {
+        try {
+            const connect = await peraWallet
+                .connect()
+                .then((newAccounts: any) => {
+                    // Setup the disconnect event listener
+                    peraWallet.connector?.on(
+                        "disconnect",
+                        disconnectAlgorandWallet,
+                    );
+                    setAlgorandAddress(newAccounts[0]);
+
+                    const wallets = appState.wallets;
+                    let walletIndex = wallets.findIndex(
+                        (wallet) => wallet.walletProvider == "algo",
+                    );
+                    if (walletIndex < 0) {
+                        wallets.push({
+                            walletProvider: "algo",
+                            walletAddress: newAccounts[0],
+                        });
+                    }
+
+                    setAppState({ wallets });
+                });
+        } catch (error) {
+            //@ts-ignore
+            if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
+                console.log(error);
+            }
+        }
+    }
+
+    function disconnectAlgorandWallet() {
+        peraWallet.disconnect();
+        setAlgorandAddress(null);
+    }
+
     // Function to connect wallets
     const connectWallet = async (wallet: any) => {
         console.log(`Connect ${wallet.name} wallet initiated`);
 
         if (wallet.id === "particle") {
         } else if (wallet.id === "metamask") {
+            connectMetamask();
         } else if (wallet.id === "tronlink") {
+            connectTronlink();
+        } else if (wallet.id === "algorand") {
+            connectAlgorandWallet();
         }
     };
 
