@@ -159,37 +159,55 @@ export default function DashboardWalletsSocials() {
     }
 
     async function connectAlgorandWallet() {
+
         try {
-            const connect = await peraWallet
+            const connect = peraWallet
                 .connect()
                 .then((newAccounts: any) => {
-                    // Setup the disconnect event listener
+                    console.log(newAccounts)
                     peraWallet.connector?.on(
                         "disconnect",
                         disconnectAlgorandWallet,
                     );
-                    setAlgorandAddress(newAccounts[0]);
-
+                    setAlgorandAddress(newAccounts[0]); // @ts-ignore
+                    // const algorandAccount = localStorage.getItem('walletconnect').accounts[0]
                     const wallets = appState.wallets;
                     let walletIndex = wallets.findIndex(
                         (wallet) => wallet.walletProvider == "algo",
                     );
-                    if (walletIndex < 0) {
+
+                    if (walletIndex < 0 && newAccounts.length) {
                         wallets.push({
                             walletProvider: "algo",
-                            walletAddress: newAccounts[0],
+                            walletAddress: newAccounts[0]
                         });
                     }
 
                     setAppState({ wallets });
                 });
-        } catch (error) {
-            //@ts-ignore
+        } catch (error) { //@ts-ignore
+            if (error?.message.includes('Session currently connected')) disconnectAlgorandWallet()            //@ts-ignore
             if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
                 console.log(error);
             }
         }
     }
+    // function connectAlgorandWallet() {
+    //     peraWallet
+    //       .connect()
+    //       .then((newAccounts) => {
+    //         // Setup the disconnect event listener
+    //         peraWallet.connector?.on("disconnect", disconnectAlgorandWallet);
+    //         console.log(newAccounts)
+    //         setAlgorandAddress(newAccounts[0]); //@ts-ignore
+    //       }).reject((error) => {
+    //         // You MUST handle the reject because once the user closes the modal, peraWallet.connect() promise will be rejected.
+    //         // For the async/await syntax you MUST use try/catch
+    //         if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
+    //           // log the necessary errors
+    //         }
+    //       });
+    //   }
 
     function disconnectAlgorandWallet() {
         peraWallet.disconnect();

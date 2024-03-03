@@ -236,7 +236,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
     async function connectAlgorandWallet() {
 
         try {
-            const connect = await peraWallet
+            const connect = peraWallet
                 .connect()
                 .then((newAccounts: any) => {
                     console.log(newAccounts)
@@ -244,13 +244,14 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                         "disconnect",
                         disconnectAlgorandWallet,
                     );
-                    setAlgorandAddress(newAccounts[0]);
-
+                    setAlgorandAddress(newAccounts[0]); // @ts-ignore
+                    // const algorandAccount = localStorage.getItem('walletconnect').accounts[0]
                     const wallets = appState.wallets;
                     let walletIndex = wallets.findIndex(
-                        (wallet) => wallet.walletProvider == "algo",
+                        (wallet) => wallet.walletProvider == "algo" && wallet.walletAddress,
                     );
-                    if (walletIndex < 0) {
+
+                    if (walletIndex < 0 && newAccounts.length) {
                         wallets.push({
                             walletProvider: "algo",
                             walletAddress: newAccounts[0],
@@ -259,14 +260,14 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
 
                     setAppState({ wallets });
                 });
-        } catch (error) {
-            //@ts-ignore
+        } catch (error) { //@ts-ignore
+            if (error?.message.includes('Session currently connected')) disconnectAlgorandWallet()            //@ts-ignore
             if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
-                if (error?.message.includes('Session currently connected')) disconnectAlgorandWallet()
                 console.log(error);
             }
         }
     }
+
     function disconnectAlgorandWallet() {
         peraWallet.disconnect();
         setAlgorandAddress(null);
