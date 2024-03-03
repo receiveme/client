@@ -234,11 +234,12 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
     }
 
     async function connectAlgorandWallet() {
+
         try {
             const connect = await peraWallet
                 .connect()
                 .then((newAccounts: any) => {
-                    // Setup the disconnect event listener
+                    console.log(newAccounts)
                     peraWallet.connector?.on(
                         "disconnect",
                         disconnectAlgorandWallet,
@@ -261,6 +262,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
         } catch (error) {
             //@ts-ignore
             if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
+                if (error?.message.includes('Session currently connected')) disconnectAlgorandWallet()
                 console.log(error);
             }
         }
@@ -656,16 +658,16 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                     className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
                                 >
                                     <img
-                                        src="/img/3p/algorand.png"
+                                        src="/img/3p/mypera.png"
                                         alt="Link Metamask"
-                                        className=" h-5"
+                                        className="mr-2 h-5 w-5"
                                     />
 
                                     <span
                                         onClick={connectAlgorandWallet}
                                         className="text-sm font-semibold"
                                     >
-                                        Link Algorand (MyPera Wallet)
+                                        Link MyPera Wallet (Algorand)
                                     </span>
                                 </button>
                             </>
@@ -675,7 +677,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                     <img
                                         src="/img/3p/algorand.png"
                                         alt="Link Metamask"
-                                        className=" w-5"
+                                        className="mr-2 h-5 w-5"
                                     />
 
                                     <span
@@ -690,9 +692,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                         {algorandAddress.substring(53, 57)}
                                     </span>
 
-                                    <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                        Networks: ETH, AVAX... (EVM)
-                                    </span>
+
                                     <div className="px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
                                         <img
                                             src="/icons/settings.png"

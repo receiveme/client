@@ -89,9 +89,10 @@ export async function getUserWallets(userId) {
 
 export async function createUserProfile(socials: any, wallets: any, userInfo: any, handle: String, profile: any) { // TODO; seperate socials & wallets
     const { theme, banner } = profile
-    const info_token = userInfo[0].info.token
-    const uuid = userInfo[0].info.uuid
-    const particleWalletAddress = userInfo[0].info.wallets[0].public_address
+    console.log(userInfo)
+    const info_token = userInfo.token
+    const uuid = userInfo.uuid
+    const particleWalletAddress = userInfo.wallets[0].public_address
     try {
         const user = await prisma.user.create({
             data: {

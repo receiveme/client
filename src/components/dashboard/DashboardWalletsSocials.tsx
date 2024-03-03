@@ -7,6 +7,7 @@ import { useAppState } from "@/src/hooks/useAppState";
 import particle from "../../lib/particle";
 
 import { PeraWalletConnect } from "@perawallet/connect";
+import { IconLoader2 } from "@tabler/icons-react";
 
 const SOCIALS = [
     { id: "discord", name: "Discord", image: "discord.png" },
@@ -23,10 +24,10 @@ const SOCIALS = [
     },
 ];
 const WALLETS = [
-    { id: "particle", name: "Particle Network", image: "particle.png" },
+    { id: "particle", name: "Particle Wallet", image: "particle.png" }, // Particle Wallet ... is kinda tricky .. what do we do about this one ? we should make a 
     { id: "metamask", name: "Metamask", image: "metamask.png" },
     { id: "tronlink", name: "Tronlink", image: "tron.png" },
-    { id: "algorand", name: "Algorand (MyPera Wallet)", image: "algorand.png" },
+    { id: "algorand", name: "MyPera Wallet (Algorand)", image: "mypera.png" },
     {
         id: "unstoppabledomains",
         name: "Unstoppable Domains",
@@ -37,12 +38,18 @@ const WALLETS = [
 
 export default function DashboardWalletsSocials() {
     const [appState, setAppState] = useAppState();
-    const { logins } = appState;
+    const { logins, wallets, userData } = appState;
 
     const [metamaskAddress, setMetamaskAddress] = useState<string | null>();
     const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
     const [algorandAddress, setAlgorandAddress] = useState<string | null>();
+    const [isLoading, setIsLoading] = useState(false);
+    const [saved, setSaved] = useState(false);
+
+    
     const peraWallet = new PeraWalletConnect();
+
+    console.log(logins, wallets, userData)
 
     const handleSocialLogin = async (social: any) => {
         console.log(`Login for ${social.name} initiated`);
@@ -73,6 +80,9 @@ export default function DashboardWalletsSocials() {
             socials: userSocials,
             logins: [...appState.logins, social.id],
         });
+
+
+
     };
 
     function connectMetamask() {
@@ -200,6 +210,9 @@ export default function DashboardWalletsSocials() {
         }
     };
 
+    function save() {
+        
+    }
     return (
         <div className="flex flex-col gap-4">
             <div className="w-full">
@@ -242,8 +255,12 @@ export default function DashboardWalletsSocials() {
                     Link your wallets and start getting paid.
                 </h3>
                 <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
-                    {WALLETS.map((wallet) => {
-                        const linked = logins.includes(wallet.id);
+                    {WALLETS.map((wallet) => { // Changed to findIndex because we need to match wallets[].walletProvider
+                        let walletIndex = wallets.findIndex(linkedWallet => linkedWallet.walletProvider == wallet.id)
+                        
+                        const linked = walletIndex > -1
+                        let linkedWallet = linked ? wallets[walletIndex] : false // we should do something with this data ...
+
                         return (
                             <button
                                 key={wallet.id}
@@ -258,7 +275,7 @@ export default function DashboardWalletsSocials() {
                                     alt={`Link ${wallet.name}`}
                                     className="mr-2 h-5 w-5"
                                 />
-                                <span className="text-sm font-semibold">
+                                <span className="text-sm font-semibold">{wallet.id != 'particle'}
                                     {linked
                                         ? `Linked ${wallet.name}`
                                         : `Link ${wallet.name}`}
@@ -269,6 +286,18 @@ export default function DashboardWalletsSocials() {
                     })}
                 </div>
             </div>
+            <button
+                    className="mt-3 hover:scale-[1.01] duration-500 transition w-full bg-indigo-600 hover:bg-indigo-700 text-lg py-3 px-4 rounded-md text-white font-bold flex items-center justify-center"
+                    onClick={save}
+                >
+                    {isLoading ? (
+                        <>
+                            <IconLoader2 className="animate-spin" />
+                        </>
+                    ) : (
+                        <>Save</>
+                    )}
+            </button>
         </div>
     );
 }
