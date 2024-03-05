@@ -2,7 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 
 import CAKEABI from "./cakeabi.json";
-import { Contract, ethers, formatEther } from "ethers";
+import { Contract, ethers } from "ethers";
 
 type CakeInteractionModalProps = {
     isOpen: boolean;
@@ -27,7 +27,7 @@ export function CakeInteractionModal({
         let provider = new ethers.JsonRpcProvider(
             "https://binance.nodereal.io",
         );
-        let contract = new Contract(
+        let contract = new ethers.Contract(
             "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
             CAKEABI,
             provider,
@@ -36,8 +36,8 @@ export function CakeInteractionModal({
         const _balance = await contract.balanceOf(address);
 
         // Convert bigint to normal price
-        console.log(formatEther(_balance));
-        setBalance(formatEther(_balance));
+        console.log(ethers.utils.formatEther(_balance));
+        setBalance(ethers.utils.formatEther(_balance));
     }
 
     async function connectMetamask() {

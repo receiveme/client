@@ -9,7 +9,7 @@ import CAKESTAKEABI from './cakepool.json';
 import { IconChevronRight } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { CakeInteractionModal } from "./CakeInteractionModal";
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 
 export default function PancakeSwap() {
     const [isCakeInteractionModalOpen, setIsCakeInteractionModalOpen] =
@@ -31,7 +31,7 @@ export default function PancakeSwap() {
             "https://binance.nodereal.io",
         );
         // let signer = await provider.getSigner();
-        let contract = new Contract(
+        let contract = new ethers.Contract(
             "0x45c54210128a065de780C4B0Df3d16664f7f859e",
             CAKESTAKEABI,
            provider,
@@ -79,7 +79,7 @@ export default function PancakeSwap() {
                                 Chain, is a decentralized exchange (DEX)
                                 enabling users to swap cryptocurrencies, provide
                                 liquidity, and earn CAKE tokens. Dive into
-                                decentralized finance with PancakeSwap's
+                                decentralized finance with PancakeSwap&apos;s
                                 seamless, rewarding experience!
                             </p>
                         </div>

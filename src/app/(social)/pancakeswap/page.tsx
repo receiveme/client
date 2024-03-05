@@ -37,7 +37,7 @@ export default function PancakeSwap() {
                             </a>
                         </h1>
                         <p className="text-gray-300">
-                            PancakeSwap, a DeFi platform on Binance Smart Chain, is a decentralized exchange (DEX) enabling users to swap cryptocurrencies, provide liquidity, and earn CAKE tokens. Dive into decentralized finance with PancakeSwap's seamless, rewarding experience!
+                            PancakeSwap, a DeFi platform on Binance Smart Chain, is a decentralized exchange (DEX) enabling users to swap cryptocurrencies, provide liquidity, and earn CAKE tokens. Dive into decentralized finance with PancakeSwap&apos;s seamless, rewarding experience!
                         </p>
                     </div>
                 </div>
