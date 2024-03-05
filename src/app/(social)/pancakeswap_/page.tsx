@@ -3,9 +3,13 @@
 import "../../globals.css";
 import toast from "react-hot-toast";
 
+import CAKESTAKEABI from './cakepool.json';
+
+
 import { IconChevronRight } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { CakeInteractionModal } from "./CakeInteractionModal";
+import { Contract, ethers } from "ethers";
 
 export default function PancakeSwap() {
     const [isCakeInteractionModalOpen, setIsCakeInteractionModalOpen] =
@@ -20,6 +24,21 @@ export default function PancakeSwap() {
             console.error(e);
             toast.error("Address cannot be copied");
         }
+    }
+
+    async function checkCAKESTAKE(address: string) {
+        let provider = new ethers.providers.JsonRpcProvider(
+            "https://binance.nodereal.io",
+        );
+        // let signer = await provider.getSigner();
+        let contract = new Contract(
+            "0x45c54210128a065de780C4B0Df3d16664f7f859e",
+            CAKESTAKEABI,
+           provider,
+        );
+        // let _contract = contract.connect(provider);
+        const userInfo = await contract.userInfo(address);
+        console.log(userInfo)
     }
 
     return (
@@ -99,13 +118,13 @@ export default function PancakeSwap() {
                     </div>
                 </div>
 
-                <div className="flex flex-col h-fit w-[45%] bg-[#22c7d3] mt-4 rounded-xl relative">
+                <div className="flex flex-col h-fit w-[45%] bg-[#22c7d3] mt-4 gap-2 rounded-xl relative">
                     <div className="flex flex-col">
                         <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
                             <div className="flex items-center">
                                 <img className="h-6" src="/img/3p/cake.png" />
                                 <span className="break-all ml-3 mr-4 font-bold">
-                                    Check if you have interacted with $CAKE
+                                    Check if you HODL or owned any $CAKE
                                 </span>
                             </div>
                             <div>
@@ -122,6 +141,29 @@ export default function PancakeSwap() {
                             </div>
                         </div>
                     </div>
+                    <div className="flex flex-col">
+                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
+                            <div className="flex items-center">
+                                <img className="h-6" src="/img/3p/cake.png" />
+                                <span className="break-all ml-3 mr-4 font-bold">
+                                    Check if you staked/pooled any $CAKE
+                                </span>
+                            </div>
+                            <div>
+                                <button
+                                    onClick={() =>
+                                        setIsCakeInteractionModalOpen(true)
+                                    }
+                                    className="
+                                    flex items-center justify-center h-7 w-7
+                                    bg-white rounded-md transition hover:bg-gray-200 hover:scale-110"
+                                >
+                                    <IconChevronRight fill="black" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </>
