@@ -135,6 +135,8 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                                     ? Algorand.src
                                     : preferrednetwork === "polygon"
                                     ? Polygon.src
+                                    : preferrednetwork === "bnb"
+                                    ? "https://cryptologos.cc/logos/bnb-bnb-logo.png"
                                     : ""
                             }
                             className={`w-[28px] h-[auto] selected-network-item`}

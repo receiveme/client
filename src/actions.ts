@@ -1,5 +1,5 @@
-"use server"
-import prisma from "@/lib/prisma"
+"use server";
+import prisma from "@/lib/prisma";
 
 export async function getUserSocials(userId) {
     try {
@@ -33,7 +33,7 @@ export async function getUserData(userId) {
                 Wallet: true,
             },
         });
-        console.log(userData)
+        console.log(userData);
         await prisma.$disconnect();
 
         return userData;
@@ -45,7 +45,7 @@ export async function getUserData(userId) {
 }
 
 export async function getUserDataByUuid(userId) {
-    console.log("UUID CHECK", userId)
+    console.log("UUID CHECK", userId);
     try {
         const userData = await prisma.user.findFirst({
             where: {
@@ -57,7 +57,7 @@ export async function getUserDataByUuid(userId) {
                 Wallet: true,
             },
         });
-        console.log(userData)
+        console.log(userData);
         await prisma.$disconnect();
 
         return userData;
@@ -87,25 +87,32 @@ export async function getUserWallets(userId) {
     }
 }
 
-export async function createUserProfile(socials: any, wallets: any, userInfo: any, handle: String, profile: any) { // TODO; seperate socials & wallets
-    const { theme, banner } = profile
-    console.log(userInfo)
-    const info_token = userInfo.token
-    const uuid = userInfo.uuid
-    const particleWalletAddress = userInfo.wallets[0].public_address
+export async function createUserProfile(
+    socials: any,
+    wallets: any,
+    userInfo: any,
+    handle: String,
+    profile: any,
+) {
+    // TODO; seperate socials & wallets
+    const { theme, banner } = profile;
+    console.log(userInfo);
+    const info_token = userInfo.token;
+    const uuid = userInfo.uuid;
+    const particleWalletAddress = userInfo.wallets[0].public_address;
     try {
         const user = await prisma.user.create({
             data: {
                 //@ts-ignore
                 handle: handle.toLowerCase(),
-                authuuid: uuid
+                authuuid: uuid,
             },
         });
 
         await prisma.profile.create({
             data: {
                 userid: user.id, // Use the existing user's ID
-                theme: theme,   // Optional, specify the theme if provided
+                theme: theme, // Optional, specify the theme if provided
                 background: banner, // Optional, specify the background if provided
             },
         });
@@ -120,8 +127,12 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                             networkid: String(socials[i].socialId),
                             particle_token: String(info_token),
                             particle_uuid: String(uuid),
-                            name: socials[i].socialUsername ? socials[i].socialUsername : "",
-                            imageurl: socials[i].socialImage ? socials[i].socialImg : ""
+                            name: socials[i].socialUsername
+                                ? socials[i].socialUsername
+                                : "",
+                            imageurl: socials[i].socialImage
+                                ? socials[i].socialImg
+                                : "",
                         },
                     });
                     console.log(`Social inserted successfully.`);
@@ -139,10 +150,17 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                             userid: user.id,
                             network: wallets[i].walletProvider,
                             address: wallets[i].walletAddress,
-                            preferrednetworks: wallets[i].walletProvider == 'metamask' ? ['eth', 'avax'] : wallets[i].walletProvider == 'particle' ? ['eth', 'avax'] : wallets[i].walletProvider == 'tron' ? ['tron'] : ['algo']
+                            preferrednetworks:
+                                wallets[i].walletProvider == "metamask"
+                                    ? ["eth", "avax", "bnb"]
+                                    : wallets[i].walletProvider == "particle"
+                                    ? ["eth", "avax", "bnb"]
+                                    : wallets[i].walletProvider == "tron"
+                                    ? ["tron"]
+                                    : ["algo"],
                         },
                     });
-                    console.log('successuflly inserted wallet')
+                    console.log("successuflly inserted wallet");
                 } catch (error) {
                     console.error("Wallet insertion err:", error);
                 }
@@ -153,12 +171,12 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
                 await prisma.wallet.create({
                     data: {
                         userid: user.id,
-                        network: 'particle',
+                        network: "particle",
                         address: String(particleWalletAddress),
-                        preferrednetworks: ['eth', 'avax',]
+                        preferrednetworks: ["eth", "avax", "bnb"],
                     },
                 });
-                console.log('successuflly inserted particle wallet')
+                console.log("successuflly inserted particle wallet");
             } catch (error) {
                 console.error("Wallet insertion err:", error);
             }
@@ -167,7 +185,7 @@ export async function createUserProfile(socials: any, wallets: any, userInfo: an
         await prisma.$disconnect();
         return user.id;
     } catch (error) {
-        console.error('Error creating user:', error);
+        console.error("Error creating user:", error);
         await prisma.$disconnect();
         throw error;
     }
@@ -177,33 +195,33 @@ export async function getUserByHandle(handle: string) {
     try {
         const user = await prisma.user.findUnique({
             where: {
-                handle: handle
+                handle: handle,
             },
             include: {
                 Profile: {
                     select: {
                         theme: true,
                         background: true,
-
                     },
-
-                }, Social: {
+                },
+                Social: {
                     select: {
                         platform: true,
                         name: true,
                         networkid: true,
-                    }
-                }, Wallet: {
+                    },
+                },
+                Wallet: {
                     select: {
                         address: true,
-                        network: true
-                    }
-                }
-            }
+                        network: true,
+                    },
+                },
+            },
         });
 
-        //@ts-ignore    
-        user.profiles = user.Profile[0]
+        //@ts-ignore
+        user.profiles = user.Profile[0];
         console.log(user);
         return user.id;
     } catch (error) {
