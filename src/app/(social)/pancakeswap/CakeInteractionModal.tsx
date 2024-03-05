@@ -1,7 +1,10 @@
+"use client";
+
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 
 import CAKEABI from "./cakeabi.json";
+import CAKESTAKEABI from "./cakepool.json";
 import { Contract, ethers } from "ethers";
 
 type CakeInteractionModalProps = {
@@ -171,11 +174,11 @@ export function CakeInteractionModal({
                                                     ? "bg-indigo-100 hover:bg-indigo-200 text-indigo-700"
                                                     : "bg-green-200 hover:bg-green-300 text-green-700"
                                             } px-4 py-3 text-md font-medium transition`}
-                                            onClick={
+                                            onClick={() => {
                                                 type === "own"
                                                     ? connectMetamask
-                                                    : checkCAKESTAKE
-                                            }
+                                                    : checkCAKESTAKE;
+                                            }}
                                         >
                                             {!!metamaskAddress ? (
                                                 <>Connected</>

@@ -1,4 +1,5 @@
 "use client";
+
 import "../../globals.css";
 import toast from "react-hot-toast";
 
