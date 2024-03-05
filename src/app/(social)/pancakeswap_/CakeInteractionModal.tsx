@@ -24,7 +24,7 @@ export function CakeInteractionModal({
     }
 
     async function checkCAKEBNB(address: string) {
-        let provider = new ethers.JsonRpcProvider(
+        let provider = new ethers.providers.JsonRpcProvider(
             "https://binance.nodereal.io",
         );
         let contract = new ethers.Contract(
