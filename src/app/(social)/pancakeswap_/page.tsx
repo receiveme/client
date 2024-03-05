@@ -27,7 +27,7 @@ export default function PancakeSwap() {
     }
 
     async function checkCAKESTAKE(address: string) {
-        let provider = new ethers.providers.JsonRpcProvider(
+        let provider = new ethers.JsonRpcProvider(
             "https://binance.nodereal.io",
         );
         // let signer = await provider.getSigner();

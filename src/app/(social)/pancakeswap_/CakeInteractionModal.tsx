@@ -24,7 +24,7 @@ export function CakeInteractionModal({
     }
 
     async function checkCAKEBNB(address: string) {
-        let provider = new ethers.providers.JsonRpcProvider(
+        let provider = new ethers.JsonRpcProvider(
             "https://binance.nodereal.io",
         );
         let contract = new ethers.Contract(
@@ -36,8 +36,8 @@ export function CakeInteractionModal({
         const _balance = await contract.balanceOf(address);
 
         // Convert bigint to normal price
-        console.log(ethers.utils.formatEther(_balance));
-        setBalance(ethers.utils.formatEther(_balance));
+        console.log(ethers.formatEther(_balance));
+        setBalance(ethers.formatEther(_balance));
     }
 
     async function connectMetamask() {
