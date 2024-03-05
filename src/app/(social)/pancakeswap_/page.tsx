@@ -16,15 +16,31 @@ export default function PancakeSwap() {
             toast.error("Address cannot be copied");
         }
     }
-    async function checkCAKEBNB() {
-        console.log('test')
-        let provider = new ethers.JsonRpcProvider('https://binance.nodereal.io');
-        let signer = provider.getSigner();
-        let contract = new Contract('0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', CAKEABI, provider)
+    async function checkCAKEBNB(address:string) {
+        try {
+            let provider = new ethers.JsonRpcProvider('https://binance.nodereal.io');
+            let signer = provider.getSigner();
+            let contract = new Contract('0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', CAKEABI, provider)
+            const balance = await contract.balanceOf(address)
+            console.log(balance)
+        } catch (e) {
+            console.log(e)
+        }
+    } 
 
-        console.log(await contract.balanceOf('0x1C92aa917c97DBA6f743B5Aab57Cc6DF0E7b2717'))
 
-    } checkCAKEBNB()
+    
+    async function checkCAKEopBNB(address:string) {
+        try {
+            let provider = new ethers.JsonRpcProvider('https://opbnb-mainnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3');
+            let signer = provider.getSigner();
+            let contract = new Contract('0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', CAKEABI, provider)
+            const balance = await contract.balanceOf(address)
+            console.log(balance)
+        } catch (e) {
+            console.log(e)
+        }
+    } 
     return (
         <div
             className="
@@ -93,7 +109,7 @@ export default function PancakeSwap() {
                         <div>
                             <button
                                 onClick={() =>
-                                    checkCAKEBNB
+                                    checkCAKEopBNB('0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82')
                                 }
                                 className="
                                     flex items-center justify-center h-7 w-7
