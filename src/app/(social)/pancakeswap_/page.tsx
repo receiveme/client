@@ -31,16 +31,15 @@ export default function PancakeSwap() {
                 setMetamaskAddress={setMetamaskAddress}
             />
 
-            <div
-                className="
-            awpswap-socials
-            w-full h-[100dvh] flex flex-col items-center justify-center"
-            >
-                <div className="flex flex-col h-fit w-[45%] bg-[#ffffff2a] rounded-xl relative">
+            <div className="w-full h-[100dvh] flex flex-col items-center justify-center bg-[#261640]">
+                <div className="flex flex-col h-fit w-[45%] bg-[#543785] rounded-xl relative">
                     <div
                         className="
-                    w-full h-52
-                    bg-banner bg-bottom bg-[length:auto] bg-no-repeat rounded-tl-xl rounded-tr-xl"
+                    w-full h-52 bg-no-repeat rounded-tl-xl rounded-tr-xl"
+                        style={{
+                            backgroundImage:
+                                "url(/img/socials/pcake-banner.png)",
+                        }}
                     >
                         <div
                             className="
@@ -100,12 +99,12 @@ export default function PancakeSwap() {
                     </div>
                 </div>
 
-                <div className="flex flex-col h-fit w-[45%] bg-[#ffffff2a] mt-4 rounded-xl relative">
+                <div className="flex flex-col h-fit w-[45%] bg-[#22c7d3] mt-4 rounded-xl relative">
                     <div className="flex flex-col">
                         <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
                             <div className="flex items-center">
                                 <img className="h-6" src="/img/3p/cake.png" />
-                                <span className="break-all ml-3 mr-4">
+                                <span className="break-all ml-3 mr-4 font-bold">
                                     Check if you have interacted with $CAKE
                                 </span>
                             </div>
