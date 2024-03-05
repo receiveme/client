@@ -25,6 +25,7 @@
     "@walletconnect/universal-provider": "^2.11.1",
     "algosdk": "^2.7.0",
     "axios": "^1.6.7",
+    "ethers": "5.7.0",
     "next": "14.0.4",
     "next-nprogress-bar": "^2.1.2",
     "pino": "^8.18.0",
