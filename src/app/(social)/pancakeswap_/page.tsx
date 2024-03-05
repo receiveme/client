@@ -3,11 +3,8 @@
 import "../../globals.css";
 import toast from "react-hot-toast";
 
-import CAKEABI from "./cakeabi.json";
-
-import { Contract, ethers } from "ethers";
 import { IconChevronRight } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CakeInteractionModal } from "./CakeInteractionModal";
 
 export default function PancakeSwap() {
@@ -24,23 +21,13 @@ export default function PancakeSwap() {
             toast.error("Address cannot be copied");
         }
     }
-    async function checkCAKEBNB(address: string) {
-        let provider = new ethers.JsonRpcProvider(
-            "https://binance.nodereal.io",
-        );
-        let contract = new Contract(
-            "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
-            CAKEABI,
-            provider,
-        );
-        const balance = await contract.balanceOf(address);
-    }
 
     return (
         <>
             <CakeInteractionModal
                 isOpen={isCakeInteractionModalOpen}
                 setIsOpen={setIsCakeInteractionModalOpen}
+                metamaskAddress={metamaskAddress}
                 setMetamaskAddress={setMetamaskAddress}
             />
 
