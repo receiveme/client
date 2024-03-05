@@ -9,6 +9,7 @@ type CakeInteractionModalProps = {
     setIsOpen: any;
     metamaskAddress: string;
     setMetamaskAddress: any;
+    type: "own" | "stake";
 };
 
 export function CakeInteractionModal({
@@ -16,8 +17,10 @@ export function CakeInteractionModal({
     setIsOpen,
     metamaskAddress,
     setMetamaskAddress,
+    type,
 }: CakeInteractionModalProps) {
     const [balance, setBalance] = useState("");
+    const [userInfo, setUserInfo] = useState(null);
 
     function closeModal() {
         setIsOpen(false);
@@ -38,6 +41,22 @@ export function CakeInteractionModal({
         // Convert bigint to normal price
         console.log(ethers.formatEther(_balance));
         setBalance(ethers.formatEther(_balance));
+    }
+
+    async function checkCAKESTAKE(address: string) {
+        let provider = new ethers.JsonRpcProvider(
+            "https://binance.nodereal.io",
+        );
+        // let signer = await provider.getSigner();
+        let contract = new ethers.Contract(
+            "0x45c54210128a065de780C4B0Df3d16664f7f859e",
+            CAKESTAKEABI,
+            provider,
+        );
+
+        const _userInfo = await contract.userInfo(address);
+
+        setUserInfo(_userInfo);
     }
 
     async function connectMetamask() {
@@ -152,7 +171,11 @@ export function CakeInteractionModal({
                                                     ? "bg-indigo-100 hover:bg-indigo-200 text-indigo-700"
                                                     : "bg-green-200 hover:bg-green-300 text-green-700"
                                             } px-4 py-3 text-md font-medium transition`}
-                                            onClick={connectMetamask}
+                                            onClick={
+                                                type === "own"
+                                                    ? connectMetamask
+                                                    : checkCAKESTAKE
+                                            }
                                         >
                                             {!!metamaskAddress ? (
                                                 <>Connected</>

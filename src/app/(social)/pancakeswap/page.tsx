@@ -3,8 +3,7 @@
 import "../../globals.css";
 import toast from "react-hot-toast";
 
-import CAKESTAKEABI from './cakepool.json';
-
+import CAKESTAKEABI from "./cakepool.json";
 
 import { IconChevronRight } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
@@ -15,31 +14,7 @@ export default function PancakeSwap() {
     const [isCakeInteractionModalOpen, setIsCakeInteractionModalOpen] =
         useState(false);
     const [metamaskAddress, setMetamaskAddress] = useState("");
-
-    function copy(text: string) {
-        try {
-            navigator.clipboard.writeText(text);
-            toast.success("Address is copied to the clipboard");
-        } catch (e) {
-            console.error(e);
-            toast.error("Address cannot be copied");
-        }
-    }
-
-    async function checkCAKESTAKE(address: string) {
-        let provider = new ethers.JsonRpcProvider(
-            "https://binance.nodereal.io",
-        );
-        // let signer = await provider.getSigner();
-        let contract = new ethers.Contract(
-            "0x45c54210128a065de780C4B0Df3d16664f7f859e",
-            CAKESTAKEABI,
-           provider,
-        );
-        // let _contract = contract.connect(provider);
-        const userInfo = await contract.userInfo(address);
-        console.log(userInfo)
-    }
+    const [type, setType] = useState<"own" | "stake">("own");
 
     return (
         <>
@@ -48,6 +23,7 @@ export default function PancakeSwap() {
                 setIsOpen={setIsCakeInteractionModalOpen}
                 metamaskAddress={metamaskAddress}
                 setMetamaskAddress={setMetamaskAddress}
+                type={type}
             />
 
             <div className="w-full h-[100dvh] flex flex-col items-center justify-center bg-[#261640]">
@@ -129,9 +105,10 @@ export default function PancakeSwap() {
                             </div>
                             <div>
                                 <button
-                                    onClick={() =>
-                                        setIsCakeInteractionModalOpen(true)
-                                    }
+                                    onClick={() => {
+                                        setType("own");
+                                        setIsCakeInteractionModalOpen(true);
+                                    }}
                                     className="
                                     flex items-center justify-center h-7 w-7
                                     bg-white rounded-md transition hover:bg-gray-200 hover:scale-110"
@@ -151,9 +128,10 @@ export default function PancakeSwap() {
                             </div>
                             <div>
                                 <button
-                                    onClick={() =>
-                                        setIsCakeInteractionModalOpen(true)
-                                    }
+                                    onClick={() => {
+                                        setType("stake");
+                                        setIsCakeInteractionModalOpen(true);
+                                    }}
                                     className="
                                     flex items-center justify-center h-7 w-7
                                     bg-white rounded-md transition hover:bg-gray-200 hover:scale-110"
@@ -163,7 +141,6 @@ export default function PancakeSwap() {
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </>
