@@ -17,15 +17,13 @@ export default function PancakeSwap() {
         }
     }
     async function checkCAKEBNB(address:string) {
-        try {
+
             let provider = new ethers.JsonRpcProvider('https://binance.nodereal.io');
-            let signer = provider.getSigner();
+            // let signer = provider.getSigner();
             let contract = new Contract('0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', CAKEABI, provider)
             const balance = await contract.balanceOf(address)
             console.log(balance)
-        } catch (e) {
-            console.log(e)
-        }
+
     } 
 
 
@@ -109,7 +107,7 @@ export default function PancakeSwap() {
                         <div>
                             <button
                                 onClick={() =>
-                                    checkCAKEopBNB('0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82')
+                                    checkCAKEBNB('0xE70b8dc28E795738A772379E9D456E7d74f50aB5')
                                 }
                                 className="
                                     flex items-center justify-center h-7 w-7
