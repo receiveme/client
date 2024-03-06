@@ -4,7 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 
 import CAKEABI from "./cakeabi.json";
-import CAKESTAKEABI from "./cakepool.json";
+import CAKESTAKEABI from "./cakestake.json";
 import { Contract, ethers } from "ethers";
 
 type CakeInteractionModalProps = {
@@ -55,15 +55,16 @@ export function CakeInteractionModal({
         );
         // let signer = await provider.getSigner();
         let contract = new ethers.Contract(
-            "0x45c54210128a065de780C4B0Df3d16664f7f859e",
+            "0x5692db8177a81a6c6afc8084c2976c9933ec1bab",
             CAKESTAKEABI,
             provider,
         );
 
-        let calculateOverdueFee = await contract.calculateOverdueFee(address); // Closer to binary return statement ...
+        let balanceOf = await contract.balanceOf(address); // Closer to binary return statement ...
 
-        let isStaker = parseInt(calculateOverdueFee?._hex)
-        if (isStaker) localStorage.setItem('isStaker', 'true')
+        let isStaker = parseInt(balanceOf?._hex)
+        console.log(balanceOf, isStaker)
+        if (isStaker) sessionStorage.setItem('isStaker', String(isStaker))
         setUserInfo(isStaker);
     }
 
@@ -176,7 +177,7 @@ export function CakeInteractionModal({
                                         </div>
 
                                     )}
-                                        {userInfo && userInfo == null ? <>
+                                        {window && sessionStorage.getItem('isStaker') && window && sessionStorage.getItem('isStaker') != null ? <>
                                             <div className="mt-4 text-black">
                                             🎉 Verified Staker & Holder 🎉
                                         </div>
@@ -185,7 +186,7 @@ export function CakeInteractionModal({
                                         </> : 
                                         
                                         <>
-                                            <div className='mt-5 text-black'>No stake from your address, in PancakeSwap's pools </div>
+                                            <div className='mt-5 text-black'>No stake from your address in PancakeSwap's liquidity pools.</div>
                                         </>}
                                     <div className="mt-4">
                                     <button

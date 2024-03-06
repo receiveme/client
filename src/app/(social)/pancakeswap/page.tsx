@@ -3,7 +3,7 @@
 import "../../globals.css";
 import toast from "react-hot-toast";
 
-import CAKESTAKEABI from "./cakepool.json";
+import CAKESTAKEABI from "./cakestake.json";
 
 import { IconChevronRight, IconCheck } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
