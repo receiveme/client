@@ -23,13 +23,14 @@ export function CakeInteractionModal({
     type,
 }: CakeInteractionModalProps) {
     const [balance, setBalance] = useState("");
-    const [userInfo, setUserInfo] = useState(null);
+    const [userInfo, setUserInfo] = useState<number|null>(null);
 
     function closeModal() {
         setIsOpen(false);
     }
 
     async function checkCAKEBNB(address: string) {
+        console.log(123)
         let provider = new ethers.providers.JsonRpcProvider(
             "https://binance.nodereal.io",
         );
@@ -44,9 +45,11 @@ export function CakeInteractionModal({
         // Convert bigint to normal price
         console.log(ethers.utils.formatEther(_balance));
         setBalance(ethers.utils.formatEther(_balance));
+        sessionStorage.setItem('cake_balance', ethers.utils.formatEther(_balance))
     }
 
     async function checkCAKESTAKE(address: string) {
+        console.log(address)
         let provider = new ethers.providers.JsonRpcProvider(
             "https://binance.nodereal.io",
         );
@@ -57,9 +60,11 @@ export function CakeInteractionModal({
             provider,
         );
 
-        const _userInfo = await contract.userInfo(address);
+        let calculateOverdueFee = await contract.calculateOverdueFee(address); // Closer to binary return statement ...
 
-        setUserInfo(_userInfo);
+        let isStaker = parseInt(calculateOverdueFee?._hex)
+        if (isStaker) localStorage.setItem('isStaker', 'true')
+        setUserInfo(isStaker);
     }
 
     async function connectMetamask() {
@@ -153,32 +158,48 @@ export function CakeInteractionModal({
                                                     {metamaskAddress}
                                                 </div>
 
-                                                <div className="text-black text-lg mt-4">
-                                                    {balance} $CAKE
+                                                <div className="text-black text-md mt-4">
+                                                    {balance ? <>
+                                                    🎉 {balance} $CAKE 🎉
+                                                    <span></span>
+                                                    </> : <>
+                                                    0 $CAKE
+                                                    </>} 
                                                 </div>
                                             </div>
                                         </>
                                     ) : (
                                         <div className="mt-4 text-black">
                                             Connect your metamask wallet to see
-                                            if you have interacted with the
-                                            $CAKE contract.
+                                            if you HODL or STAKE any
+                                            $CAKE!
                                         </div>
-                                    )}
 
+                                    )}
+                                        {userInfo && userInfo == null ? <>
+                                            <div className="mt-4 text-black">
+                                            🎉 Verified Staker & Holder 🎉
+                                        </div>
+                                        </> : userInfo == null ? <>
+                                            
+                                        </> : 
+                                        
+                                        <>
+                                            <div className='mt-5 text-black'>No stake from your address, in PancakeSwap's pools </div>
+                                        </>}
                                     <div className="mt-4">
-                                        <button
+                                    <button
                                             type="button"
                                             className={`w-full justify-center rounded-md border border-transparent ${
                                                 !metamaskAddress
                                                     ? "bg-indigo-100 hover:bg-indigo-200 text-indigo-700"
                                                     : "bg-green-200 hover:bg-green-300 text-green-700"
                                             } px-4 py-3 text-md font-medium transition`}
-                                            onClick={() => {
+                                            onClick={
                                                 type === "own"
                                                     ? connectMetamask
-                                                    : checkCAKESTAKE;
-                                            }}
+                                                    :()=> checkCAKESTAKE(metamaskAddress)
+                                            }
                                         >
                                             {!!metamaskAddress ? (
                                                 <>Connected</>
@@ -186,6 +207,29 @@ export function CakeInteractionModal({
                                                 <>Connect</>
                                             )}
                                         </button>
+                                        {metamaskAddress ? <>
+                                            <button
+                                                type="button"
+                                                className={`w-full justify-center rounded-md border border-transparent ${!metamaskAddress ? "bg-indigo-100 hover:bg-indigo-200 text-indigo-700"
+                                                        : "bg-green-200 hover:bg-green-300 text-green-700"
+                                                } px-4 py-3 text-md font-medium transition`}
+                                                onClick={()=> checkCAKESTAKE(metamaskAddress)}
+                                            >
+
+                                            {metamaskAddress ? (
+                                                <>Check if staked CAKE</>
+                                            ) : (
+                                                <>
+                                                
+                                                </>
+                                            )}
+                                            </button>
+
+                                            </> : <>
+                                            
+                                            </>}
+                                        
+
                                     </div>
                                 </Dialog.Panel>
                             </Transition.Child>
