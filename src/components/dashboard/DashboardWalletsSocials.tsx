@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useAppState } from "@/src/hooks/useAppState";
 
 import particle from "../../lib/particle";
-
+import { createSocial } from "@/src/actions";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { IconLoader2 } from "@tabler/icons-react";
 
@@ -23,6 +23,7 @@ const SOCIALS = [
         disabled: true,
     },
 ];
+
 const WALLETS = [
     { id: "particle", name: "Particle Wallet", image: "particle.png" }, // Particle Wallet ... is kinda tricky .. what do we do about this one ? we should make a 
     { id: "metamask", name: "Metamask", image: "metamask.png" },
@@ -46,7 +47,6 @@ export default function DashboardWalletsSocials() {
     const [isLoading, setIsLoading] = useState(false);
     const [saved, setSaved] = useState(false);
 
-    
     const peraWallet = new PeraWalletConnect();
 
     console.log(logins, wallets, userData)
@@ -57,6 +57,7 @@ export default function DashboardWalletsSocials() {
         const user = await particle.auth.login({
             preferredAuthType: social.id,
         });
+        const userId = userData.Profile[0].userid;
         const userSocials = appState.socials;
 
         setAppState({ wallets: [], userInfo: user });
@@ -74,15 +75,46 @@ export default function DashboardWalletsSocials() {
                 socialImg: user.avatar,
                 socialId: String(user.thirdparty_user_info?.user_info.id),
             });
-        }
+        };
 
+        const newSocials = userSocials[userSocials.length - 1];
+
+        const fetchSocialDetails = async () => {
+            if (newSocials.authType == "github") {
+                if (!newSocials.name && newSocials.socialId) {
+                    let id = newSocials.socialId;
+                    let res = await fetch(
+                        `https://api.github.com/user/${id}`,
+                    );
+                    if (!res.ok) throw new Error("bad");
+
+                    const json = await res.json();
+
+                    newSocials.socialUsername = json.login;
+                    newSocials.socialImg = json.avatar_url;
+                }
+            } else if (newSocials.authType == "twitch") {
+                //TODO
+            } else if (newSocials.authType == "twitter") {
+                //TODO
+            }
+        }
+        await fetchSocialDetails();
+
+        const socialsData = {
+            userid: userId,
+            networkid: newSocials.authType === "github" ? newSocials.socialId : null,
+            imageUrl: newSocials.socialImg ? newSocials.socialImg : null,
+            name: newSocials.socialUsername ? newSocials.socialUsername : null,
+            particle_token: newSocials.socialInfo.token ? newSocials.socialInfo.token : null,
+            particle_uuid: newSocials.socialUuid ? newSocials.socialUuid : null,
+            platform: newSocials.authType ? newSocials.authType : null
+        }
+        createSocial(userId, socialsData);
         setAppState({
             socials: userSocials,
             logins: [...appState.logins, social.id],
         });
-
-
-
     };
 
     function connectMetamask() {
@@ -192,6 +224,7 @@ export default function DashboardWalletsSocials() {
             }
         }
     }
+
     // function connectAlgorandWallet() {
     //     peraWallet
     //       .connect()
@@ -228,9 +261,12 @@ export default function DashboardWalletsSocials() {
         }
     };
 
-    function save() {
-        
+    const save = async () => {
+        // const userId = userData.Profile[0].userid;
+        // const userSocials = appState.socials;
+        // createSocial(userId, userSocials);
     }
+
     return (
         <div className="flex flex-col gap-4">
             <div className="w-full">
@@ -246,9 +282,8 @@ export default function DashboardWalletsSocials() {
                                 key={social.id}
                                 disabled={social.disabled || linked}
                                 onClick={() => handleSocialLogin(social)}
-                                className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
-                                    linked ? "border border-green-500/50" : ""
-                                } ${social.disabled ? "opacity-60" : ""}`}
+                                className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${linked ? "border border-green-500/50" : ""
+                                    } ${social.disabled ? "opacity-60" : ""}`}
                             >
                                 <img
                                     src={`/img/3p/${social.image}`}
@@ -275,7 +310,7 @@ export default function DashboardWalletsSocials() {
                 <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
                     {WALLETS.map((wallet) => { // Changed to findIndex because we need to match wallets[].walletProvider
                         let walletIndex = wallets.findIndex(linkedWallet => linkedWallet.walletProvider == wallet.id)
-                        
+
                         const linked = walletIndex > -1
                         let linkedWallet = linked ? wallets[walletIndex] : false // we should do something with this data ...
 
@@ -284,9 +319,8 @@ export default function DashboardWalletsSocials() {
                                 key={wallet.id}
                                 onClick={() => connectWallet(wallet)}
                                 disabled={wallet.disabled || linked}
-                                className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
-                                    linked ? "border border-green-500/50" : ""
-                                } ${wallet.disabled ? "opacity-60" : ""}`}
+                                className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${linked ? "border border-green-500/50" : ""
+                                    } ${wallet.disabled ? "opacity-60" : ""}`}
                             >
                                 <img
                                     src={`/img/3p/${wallet.image}`}
@@ -305,16 +339,19 @@ export default function DashboardWalletsSocials() {
                 </div>
             </div>
             <button
-                    className="mt-3 hover:scale-[1.01] duration-500 transition w-full bg-indigo-600 hover:bg-indigo-700 text-lg py-3 px-4 rounded-md text-white font-bold flex items-center justify-center"
-                    onClick={save}
-                >
-                    {isLoading ? (
-                        <>
-                            <IconLoader2 className="animate-spin" />
-                        </>
-                    ) : (
-                        <>Save</>
-                    )}
+                className="mt-3 hover:scale-[1.01] duration-500 transition w-full bg-indigo-600 hover:bg-indigo-700 text-lg py-3 px-4 rounded-md text-white font-bold flex items-center justify-center"
+                onClick={() => {
+                    console.log("RUN SAVE");
+                    save()
+                }}
+            >
+                {isLoading ? (
+                    <>
+                        <IconLoader2 className="animate-spin" />
+                    </>
+                ) : (
+                    <>Save</>
+                )}
             </button>
         </div>
     );

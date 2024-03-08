@@ -764,9 +764,8 @@ function Profile({
         <>
             <div className="flex flex-col gap-4">
                 <div
-                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${
-                        theme.split("/")[0]
-                    } background-animate to-slate-900`}
+                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${theme.split("/")[0]
+                        } background-animate to-slate-900`}
                 >
                     <Banner handle={handle} banner={banner} />
                 </div>
@@ -939,14 +938,13 @@ function Preview({
         <>
             <div className="flex flex-col gap-4">
                 <div
-                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${
-                        theme.split("/")[0]
-                    } background-animate to-slate-900`}
-                    // className={`mt-6 p-6 rounded-xl background-animate`}
-                    // style={{
-                    //     background:
-                    //         "linear-gradient(180deg, #fff 0%, #f6e05e 100%)",
-                    // }}
+                    className={`transition animate-pulse mt-6 p-6 rounded-xl bg-gradient-to-b from-${theme.split("/")[0]
+                        } background-animate to-slate-900`}
+                // className={`mt-6 p-6 rounded-xl background-animate`}
+                // style={{
+                //     background:
+                //         "linear-gradient(180deg, #fff 0%, #f6e05e 100%)",
+                // }}
                 >
                     <Banner handle={handle} banner={banner} />
                 </div>
@@ -1013,6 +1011,7 @@ export default function Onboard() {
         };
 
         await fetchSocialDetails();
+
         const globalId = await createUserProfile(
             socials,
             wallets,
@@ -1032,10 +1031,10 @@ export default function Onboard() {
                         {stage === "handle"
                             ? "First things first..."
                             : stage === "link"
-                            ? "Next, link up your wallets & socials"
-                            : stage === "profile"
-                            ? "Finally, customize your profile"
-                            : "Preview your profile"}
+                                ? "Next, link up your wallets & socials"
+                                : stage === "profile"
+                                    ? "Finally, customize your profile"
+                                    : "Preview your profile"}
                     </h1>
 
                     <div>
@@ -1048,10 +1047,10 @@ export default function Onboard() {
                                             stage === "handle"
                                                 ? "0%"
                                                 : stage === "link"
-                                                ? "30%"
-                                                : stage === "profile"
-                                                ? "60%"
-                                                : "85%",
+                                                    ? "30%"
+                                                    : stage === "profile"
+                                                        ? "60%"
+                                                        : "85%",
                                     }}
                                 />
                             </div>

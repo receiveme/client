@@ -14,4 +14,4 @@ export async function getUser({ address, chain = "eth-mainnet" }: { address: str
 
     // Return the user data
     return raw_response;
-}
+};

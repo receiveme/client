@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 
 export default function Home() {
-    const [appState] = useAppState();
+    const [appState, setAppState] = useAppState();
 
     return (
         <div className="bg-white">

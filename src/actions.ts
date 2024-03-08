@@ -19,7 +19,7 @@ export async function getUserSocials(userId) {
         await prisma.$disconnect();
         throw error;
     }
-}
+};
 
 export async function getUserData(userId) {
     try {
@@ -42,10 +42,9 @@ export async function getUserData(userId) {
         await prisma.$disconnect();
         throw error;
     }
-}
+};
 
 export async function getUserDataByUuid(userId) {
-    console.log("UUID CHECK", userId);
     try {
         const userData = await prisma.user.findFirst({
             where: {
@@ -66,7 +65,7 @@ export async function getUserDataByUuid(userId) {
         await prisma.$disconnect();
         throw error;
     }
-}
+};
 
 export async function getUserWallets(userId) {
     try {
@@ -85,7 +84,7 @@ export async function getUserWallets(userId) {
         await prisma.$disconnect();
         throw error;
     }
-}
+};
 
 export async function createUserProfile(
     socials: any,
@@ -154,10 +153,10 @@ export async function createUserProfile(
                                 wallets[i].walletProvider == "metamask"
                                     ? ["eth", "avax", "bnb"]
                                     : wallets[i].walletProvider == "particle"
-                                    ? ["eth", "avax", "bnb"]
-                                    : wallets[i].walletProvider == "tron"
-                                    ? ["tron"]
-                                    : ["algo"],
+                                        ? ["eth", "avax", "bnb"]
+                                        : wallets[i].walletProvider == "tron"
+                                            ? ["tron"]
+                                            : ["algo"],
                         },
                     });
                     console.log("successuflly inserted wallet");
@@ -189,7 +188,7 @@ export async function createUserProfile(
         await prisma.$disconnect();
         throw error;
     }
-}
+};
 
 export async function getUserByHandle(handle: string) {
     try {
@@ -227,4 +226,24 @@ export async function getUserByHandle(handle: string) {
     } catch (error) {
         console.error("Failed to fetch user:", error);
     }
-}
+};
+
+export async function createSocial(userId: string, data: any) {
+    try {
+        const social = await prisma.social.create({
+            data: {
+                userid: userId,
+                particle_token: data.particle_token,
+                particle_uuid: data.particle_uuid,
+                name: data.name,
+                platform: data.platform,
+                imageurl: data.imageurl
+            }
+        });
+
+        //@ts-ignore
+        return social
+    } catch (error) {
+        console.error("Failed to create social:", error);
+    }
+};
