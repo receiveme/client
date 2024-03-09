@@ -13,13 +13,16 @@ import { useAppState } from "@/src/hooks/useAppState";
 export function DashboardProfile() {
     const [appState, setAppState] = useAppState();
 
-    console.log(appState);
-
     const [handle] = useState(appState.userData?.handle);
     const [theme, setTheme] = useState(appState.userData?.Profile[0].theme);
     const [banner, setBanner] = useState(
         appState.userData?.Profile[0].background,
     );
+
+    useEffect(() => {
+        setTheme(appState.userData?.Profile[0].theme);
+        setBanner(appState.userData?.Profile[0].background);
+    }, [appState]);
 
     const [isLoading, setIsLoading] = useState(false);
     const [saved, setSaved] = useState(false);

@@ -73,16 +73,16 @@ export function WalletSettingsModal({
                                     >
                                         <div className="flex gap-2 justify-center items-center">
                                             <img
-                                                src={`/img/3p/${wallet.image}`}
-                                                alt={`Link ${wallet.name}`}
+                                                src={`/img/3p/${wallet?.image}`}
+                                                alt={`Link ${wallet?.name}`}
                                                 className="h-8 w-8"
                                             />
-                                            <span>{wallet.name}</span>
+                                            <span>{wallet?.name}</span>
                                         </div>
                                     </Dialog.Title>
 
                                     <div className="mt-4 text-black">
-                                        {wallet.walletAddress}
+                                        {wallet?.walletAddress}
 
                                         <div className="mt-4 flex flex-col gap-2">
                                             {selectedWallets.map(

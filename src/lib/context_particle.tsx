@@ -27,14 +27,17 @@ export const AppStateProvider = ({
 
     useEffect(() => {
         const appStateLS = localStorage.getItem("app-state");
-        setAppState(appStateLS ? JSON.parse(appStateLS) : InitialAppState());
+        setAppState(
+            appStateLS ? JSON.parse(appStateLS) : InitialAppState(false),
+        );
     }, []);
 
     // Save the app state to local storage every time it is updated
     useEffect(() => {
+        console.log("wait new", appState);
         if (appState.server) return;
         localStorage.setItem("app-state", JSON.stringify(appState));
-    }, [setAppState]);
+    }, [appState, setAppState]);
 
     return (
         <AuthCoreContextProvider
