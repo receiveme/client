@@ -177,17 +177,19 @@ export function CakeInteractionModal({
                                         </div>
 
                                     )}
-                                        {window && sessionStorage.getItem('isStaker') && window && sessionStorage.getItem('isStaker') != null ? <>
+                                        {window !== undefined ? <>{sessionStorage.getItem('isStaker') && window && sessionStorage.getItem('isStaker') != null ? <>
                                             <div className="mt-4 text-black">
                                             🎉 Verified Staker & Holder 🎉
                                         </div>
+                                        </> : <></> } 
                                         </> : userInfo == null ? <>
                                             
-                                        </> : 
-                                        
-                                        <>
-                                            <div className='mt-5 text-black'>No stake from your address in PancakeSwap's liquidity pools.</div>
-                                        </>}
+                                            </> : 
+                                            
+                                            <>
+                                                <div className='mt-5 text-black'>No stake from your address in PancakeSwap&apos;s liquidity pools.</div>
+                                            </>}
+  
                                     <div className="mt-4">
                                     <button
                                             type="button"

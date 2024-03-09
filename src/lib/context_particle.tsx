@@ -24,20 +24,23 @@ export const AppStateProvider = ({
 }: {
     children: React.ReactNode;
 }) => {
-    if (window && localStorage) {
-        
-    }
+    if (typeof window !== 'undefined') {
+        // Perform localStorage action
+        const item = localStorage.getItem('key')
+      }
     const [appState, setAppState] = useState<AppState>(() => {
-        const appStateLS = window && localStorage ? localStorage.getItem("app-state") : undefined;
-        return appStateLS ? JSON.parse(appStateLS) : InitialAppState;
+        if (typeof window !== 'undefined') {
+            const appStateLS = localStorage.getItem("app-state")
+            return appStateLS ? JSON.parse(appStateLS) : InitialAppState;
+          }
+          
 
 
     });
 
     // Save the app state to local storage every time it is updated
     useEffect(() => {
-        if (window && localStorage)
-        window.localStorage.setItem("app-state", JSON.stringify(appState));
+        if (typeof window !== 'undefined') window.localStorage.setItem("app-state", JSON.stringify(appState));
     }, [appState, setAppState]);
 
     return (

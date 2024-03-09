@@ -39,7 +39,11 @@ const WALLETS = [
 export default function DashboardWalletsSocials() {
     const [appState, setAppState] = useAppState();
     const { logins, wallets, userData } = appState;
-
+    let nuwallets;
+    if (userData) {
+        nuwallets = userData.Wallet;
+        console.log(nuwallets)
+    }
     const [metamaskAddress, setMetamaskAddress] = useState<string | null>();
     const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
     const [algorandAddress, setAlgorandAddress] = useState<string | null>();

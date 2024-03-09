@@ -159,11 +159,13 @@ export default function PancakeSwap() {
                                     flex items-center justify-center h-7 w-7
                                     bg-white rounded-md transition hover:bg-gray-200 hover:scale-110"
                                 >
-                                {sessionStorage.getItem('isStaker') ? <>
+                                {window !== undefined ? <>
+                                    {sessionStorage.getItem('isStaker') ? <>
                                         <IconCheck color="green" />
                                     </>:<>
                                         <IconChevronRight fill="black" />
                                     </>}
+                                </> : <></>}
                                 </button>
                             </div>
                         </div>
@@ -228,7 +230,8 @@ export default function PancakeSwap() {
                             </div>
                         </div>
                     </div>
-                    {/* <div className="flex flex-col">
+                    {/*
+                    <div className="flex flex-col">
                         <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
                             <div className="flex items-center">
                                 <img className="h-6" src="/img/3p/cake.png" />
@@ -254,8 +257,6 @@ export default function PancakeSwap() {
                                 </button> 
                             </div>
                         </div>
-
-
                     </div> */}
 
                     

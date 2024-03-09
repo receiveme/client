@@ -47,7 +47,8 @@ export default function Home() {
                                     account.
                                 </p>
                                 <div className="mt-6 flex items-center gap-x-8 md:mt-10">
-                                    {appState.userData ? (
+                                    {window !== undefined ? <>
+                                        {appState.userData ? (
                                         <>
                                             <Link
                                                 href="/dashboard"
@@ -71,6 +72,8 @@ export default function Home() {
                                             Connect Wallet
                                         </a>
                                     )}
+                                    </> : <></>}
+                                   
                                 </div>
                             </div>
                         </div>

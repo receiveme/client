@@ -21,13 +21,7 @@ type StageProps = {
     setAppState: (state: Partial<AppState>) => void;
 } & Record<string, any>;
 
-function Handle({
-    show,
-    updateHandle,
-    next,
-    appState,
-    setAppState,
-}: StageProps) {
+function Handle({show,updateHandle,next,appState,setAppState}: StageProps) {
     const [handleInput, setHandleInput] = useState("");
     const [isLoading, setLoading] = useState(false);
 

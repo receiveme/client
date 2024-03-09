@@ -70,6 +70,7 @@ export async function getUserDataByUuid(userId) {
 
 export async function getUserWallets(userId) {
     try {
+        //@ts-ignore
         const userWallets = await prisma.user.findUnique({
             where: {
                 id: userId,
