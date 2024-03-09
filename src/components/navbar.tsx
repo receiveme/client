@@ -71,7 +71,7 @@ export default function Navbar() {
     const [appState, setAppState] = useAppState();
 
     async function signOut() {
-        setAppState(InitialAppState);
+        setAppState(InitialAppState(false));
 
         connectKit.particle.auth.logout();
     }
@@ -126,7 +126,9 @@ export default function Navbar() {
             }
         };
 
-        fetchData();
+        if (connected) {
+            fetchData();
+        }
     }, [connected, userInfo]);
 
     return (

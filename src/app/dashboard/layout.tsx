@@ -9,52 +9,11 @@ import "./dashboard.css";
 
 const archivo = Archivo({ subsets: ["latin"] });
 
-import { Fragment, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import {
-    Icon12Hours,
-    IconChartAreaLine,
-    IconPalette,
-    IconSocial,
-    IconUserBolt,
-} from "@tabler/icons-react";
-
-import "@particle-network/connect-react-ui/dist/index.css";
-import { ConnectButton } from "@particle-network/connect-react-ui";
-import DashboardHandleDisplay from "@/src/components/dashboard/DashboardHandleDisplay";
-import DashboardSidebarNavigation from "@/src/components/dashboard/DashboardSidebarNavigation";
-
-const navigation = [
-    { name: "Appearance", href: "#", icon: IconPalette },
-    { name: "Wallets & Socials", href: "#", icon: IconSocial, link: true },
-    { name: "My Profile", href: "#", icon: IconUserBolt, profile: true },
-    {
-        name: "Analytics",
-        href: "#",
-        icon: IconChartAreaLine,
-        disabled: true,
-    },
-];
-
-const userNavigation = [
-    { name: "Your profile", href: "#" },
-    { name: "Sign out", href: "#" },
-];
-
-function classNames(...classes: any[]) {
-    return classes.filter(Boolean).join(" ");
-}
-
 export default function RootLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-
-    const [current, setCurrent] = useState("Appearance");
-    const [handle, setHandle] = useState("");
-
     return (
         <html lang="en">
             <Head>

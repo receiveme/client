@@ -19,24 +19,22 @@ import UserInfoSetter from "./UserInfoSetter";
 export const AppContext = createContext<AppState | any>({});
 
 export const AppStateProvider = ({
-    // TODO MAKE THIS WORK
     children,
 }: {
     children: React.ReactNode;
 }) => {
+    const [appState, setAppState] = useState<AppState>(InitialAppState());
 
-    const [appState, setAppState] = useState<AppState>(() => {
-        const appStateLS = window && localStorage ? localStorage.getItem("app-state") : undefined;
-        return appStateLS ? JSON.parse(appStateLS) : InitialAppState;
-
-
-    });
+    useEffect(() => {
+        const appStateLS = localStorage.getItem("app-state");
+        setAppState(appStateLS ? JSON.parse(appStateLS) : InitialAppState());
+    }, []);
 
     // Save the app state to local storage every time it is updated
     useEffect(() => {
-        if (window && localStorage)
-            window.localStorage.setItem("app-state", JSON.stringify(appState));
-    }, [appState, setAppState]);
+        if (appState.server) return;
+        localStorage.setItem("app-state", JSON.stringify(appState));
+    }, [setAppState]);
 
     return (
         <AuthCoreContextProvider

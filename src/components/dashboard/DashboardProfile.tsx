@@ -66,7 +66,7 @@ export function DashboardProfile() {
 
                 <div
                     className={`p-6 py-12 rounded-xl bg-gradient-to-b from-${
-                        theme.split("/")[0]
+                        theme?.split("/")[0]
                     } to-slate-900 flex justify-center items-center w-full`}
                 >
                     <Banner

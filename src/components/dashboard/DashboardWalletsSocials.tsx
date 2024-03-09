@@ -7,7 +7,8 @@ import { useAppState } from "@/src/hooks/useAppState";
 import particle from "../../lib/particle";
 import { createSocial } from "@/src/actions";
 import { PeraWalletConnect } from "@perawallet/connect";
-import { IconLoader2 } from "@tabler/icons-react";
+import { IconLoader2, IconSettings } from "@tabler/icons-react";
+import { WalletSettingsModal } from "./WalletSettingsModal";
 
 const SOCIALS = [
     { id: "discord", name: "Discord", image: "discord.png" },
@@ -25,7 +26,7 @@ const SOCIALS = [
 ];
 
 const WALLETS = [
-    { id: "particle", name: "Particle Wallet", image: "particle.png" }, // Particle Wallet ... is kinda tricky .. what do we do about this one ? we should make a 
+    { id: "particle", name: "Particle Wallet", image: "particle.png" }, // Particle Wallet ... is kinda tricky .. what do we do about this one ? we should make a
     { id: "metamask", name: "Metamask", image: "metamask.png" },
     { id: "tronlink", name: "Tronlink", image: "tron.png" },
     { id: "algorand", name: "MyPera Wallet (Algorand)", image: "mypera.png" },
@@ -47,9 +48,18 @@ export default function DashboardWalletsSocials() {
     const [isLoading, setIsLoading] = useState(false);
     const [saved, setSaved] = useState(false);
 
+    const [isWalletSettingsModalOpen, setIsWalletSettingsModalOpen] =
+        useState(false);
+    const [currentWallet, setCurrentWallet] = useState(null);
+
+    const openWalletModal = async (wallet: any) => {
+        setCurrentWallet(wallet);
+        setIsWalletSettingsModalOpen(true);
+    };
+
     const peraWallet = new PeraWalletConnect();
 
-    console.log(logins, wallets, userData)
+    console.log(logins, wallets, userData);
 
     const handleSocialLogin = async (social: any) => {
         console.log(`Login for ${social.name} initiated`);
@@ -57,7 +67,7 @@ export default function DashboardWalletsSocials() {
         const user = await particle.auth.login({
             preferredAuthType: social.id,
         });
-        const userId = userData.Profile[0].userid;
+        const userId = userData?.Profile[0].userid;
         const userSocials = appState.socials;
 
         setAppState({ wallets: [], userInfo: user });
@@ -191,34 +201,33 @@ export default function DashboardWalletsSocials() {
     }
 
     async function connectAlgorandWallet() {
-
         try {
-            const connect = peraWallet
-                .connect()
-                .then((newAccounts: any) => {
-                    console.log(newAccounts)
-                    peraWallet.connector?.on(
-                        "disconnect",
-                        disconnectAlgorandWallet,
-                    );
-                    setAlgorandAddress(newAccounts[0]); // @ts-ignore
-                    // const algorandAccount = localStorage.getItem('walletconnect').accounts[0]
-                    const wallets = appState.wallets;
-                    let walletIndex = wallets.findIndex(
-                        (wallet) => wallet.walletProvider == "algo",
-                    );
+            const connect = peraWallet.connect().then((newAccounts: any) => {
+                console.log(newAccounts);
+                peraWallet.connector?.on(
+                    "disconnect",
+                    disconnectAlgorandWallet,
+                );
+                setAlgorandAddress(newAccounts[0]); // @ts-ignore
+                // const algorandAccount = localStorage.getItem('walletconnect').accounts[0]
+                const wallets = appState.wallets;
+                let walletIndex = wallets.findIndex(
+                    (wallet) => wallet.walletProvider == "algo",
+                );
 
-                    if (walletIndex < 0 && newAccounts.length) {
-                        wallets.push({
-                            walletProvider: "algo",
-                            walletAddress: newAccounts[0]
-                        });
-                    }
+                if (walletIndex < 0 && newAccounts.length) {
+                    wallets.push({
+                        walletProvider: "algo",
+                        walletAddress: newAccounts[0],
+                    });
+                }
 
-                    setAppState({ wallets });
-                });
-        } catch (error) { //@ts-ignore
-            if (error?.message.includes('Session currently connected')) disconnectAlgorandWallet()            //@ts-ignore
+                setAppState({ wallets });
+            });
+        } catch (error) {
+            //@ts-ignore
+            if (error?.message.includes("Session currently connected"))
+                disconnectAlgorandWallet(); //@ts-ignore
             if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
                 console.log(error);
             }
@@ -261,98 +270,136 @@ export default function DashboardWalletsSocials() {
         }
     };
 
-    const save = async () => {
-        // const userId = userData.Profile[0].userid;
-        // const userSocials = appState.socials;
-        // createSocial(userId, userSocials);
-    }
+    function save() {}
 
     return (
-        <div className="flex flex-col gap-4">
-            <div className="w-full">
-                <h1 className="font-semibold text-lg">Socials</h1>
-                <h3 className="font-regular text-sm mt-1">
-                    Link your socials to display them on your profile.
-                </h3>
-                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-2">
-                    {SOCIALS.map((social) => {
-                        const linked = logins.includes(social.id);
-                        return (
-                            <button
-                                key={social.id}
-                                disabled={social.disabled || linked}
-                                onClick={() => handleSocialLogin(social)}
-                                className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${linked ? "border border-green-500/50" : ""
+        <>
+            <WalletSettingsModal
+                isOpen={isWalletSettingsModalOpen}
+                setIsOpen={setIsWalletSettingsModalOpen}
+                wallet={currentWallet}
+            />
+
+            <div className="flex flex-col gap-4">
+                <div className="w-full">
+                    <h1 className="font-semibold text-lg">Socials</h1>
+                    <h3 className="font-regular text-sm mt-1">
+                        Link your socials to display them on your profile.
+                    </h3>
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-2">
+                        {SOCIALS.map((social) => {
+                            const linked = logins.includes(social.id);
+                            return (
+                                <button
+                                    key={social.id}
+                                    disabled={social.disabled || linked}
+                                    onClick={() => handleSocialLogin(social)}
+                                    className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
+                                        linked
+                                            ? "border border-green-500/50"
+                                            : ""
                                     } ${social.disabled ? "opacity-60" : ""}`}
-                            >
-                                <img
-                                    src={`/img/3p/${social.image}`}
-                                    alt={`Link ${social.name}`}
-                                    className="mr-2 h-auto w-5"
-                                />
-                                <span className="text-sm font-semibold">
-                                    {linked
-                                        ? `Linked ${social.name}`
-                                        : `Link ${social.name}`}
-                                    {social.disabled ? " (Coming Soon)" : ""}
-                                </span>
-                            </button>
-                        );
-                    })}
+                                >
+                                    <img
+                                        src={`/img/3p/${social.image}`}
+                                        alt={`Link ${social.name}`}
+                                        className="mr-2 h-auto w-5"
+                                    />
+                                    <span className="text-sm font-semibold">
+                                        {linked
+                                            ? `Linked ${social.name}`
+                                            : `Link ${social.name}`}
+                                        {social.disabled
+                                            ? " (Coming Soon)"
+                                            : ""}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
 
-            <div className="w-full mt-6">
-                <h2 className="font-semibold text-lg">Wallets</h2>
-                <h3 className="font-regular text-sm mt-1">
-                    Link your wallets and start getting paid.
-                </h3>
-                <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
-                    {WALLETS.map((wallet) => { // Changed to findIndex because we need to match wallets[].walletProvider
-                        let walletIndex = wallets.findIndex(linkedWallet => linkedWallet.walletProvider == wallet.id)
+                <div className="w-full mt-6">
+                    <h2 className="font-semibold text-lg">Wallets</h2>
+                    <h3 className="font-regular text-sm mt-1">
+                        Link your wallets and start getting paid.
+                    </h3>
+                    <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
+                        {WALLETS.map((wallet) => {
+                            // Changed to findIndex because we need to match wallets[].walletProvider
+                            let walletIndex = wallets.findIndex(
+                                (linkedWallet) =>
+                                    linkedWallet.walletProvider == wallet.id,
+                            );
 
-                        const linked = walletIndex > -1
-                        let linkedWallet = linked ? wallets[walletIndex] : false // we should do something with this data ...
+                            const linked = walletIndex > -1;
+                            let linkedWallet = linked
+                                ? wallets[walletIndex]
+                                : false; // we should do something with this data ...
 
-                        return (
-                            <button
-                                key={wallet.id}
-                                onClick={() => connectWallet(wallet)}
-                                disabled={wallet.disabled || linked}
-                                className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${linked ? "border border-green-500/50" : ""
-                                    } ${wallet.disabled ? "opacity-60" : ""}`}
-                            >
-                                <img
-                                    src={`/img/3p/${wallet.image}`}
-                                    alt={`Link ${wallet.name}`}
-                                    className="mr-2 h-5 w-5"
-                                />
-                                <span className="text-sm font-semibold">{wallet.id != 'particle'}
-                                    {linked
-                                        ? `Linked ${wallet.name}`
-                                        : `Link ${wallet.name}`}
-                                    {wallet.disabled ? " (Coming Soon)" : ""}
-                                </span>
-                            </button>
-                        );
-                    })}
+                            return (
+                                <div key={wallet.id}>
+                                    <div
+                                        onClick={() =>
+                                            !linked ? connectWallet(wallet) : {}
+                                        }
+                                        className={`cursor-pointer transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
+                                            linked
+                                                ? "border border-green-500/50"
+                                                : ""
+                                        } ${
+                                            wallet.disabled ? "opacity-60" : ""
+                                        }`}
+                                    >
+                                        <img
+                                            src={`/img/3p/${wallet.image}`}
+                                            alt={`Link ${wallet.name}`}
+                                            className="mr-2 h-5 w-5"
+                                        />
+                                        <span className="text-sm font-semibold">
+                                            {linked
+                                                ? `Linked ${wallet.name}`
+                                                : `Link ${wallet.name}`}
+                                            {wallet.disabled
+                                                ? " (Coming Soon)"
+                                                : ""}
+                                        </span>
+
+                                        {linked && (
+                                            <div
+                                                onClick={() =>
+                                                    openWalletModal({
+                                                        ...wallet,
+                                                        ...(linkedWallet as Record<
+                                                            string,
+                                                            any
+                                                        >),
+                                                    })
+                                                }
+                                                className="ml-auto p-1.5 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                                            >
+                                                <IconSettings size="16" />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
+                <button
+                    className="mt-3 hover:scale-[1.01] duration-500 transition w-full bg-indigo-600 hover:bg-indigo-700 text-lg py-3 px-4 rounded-md text-white font-bold flex items-center justify-center"
+                    onClick={save}
+                >
+                    {isLoading ? (
+                        <>
+                            <IconLoader2 className="animate-spin" />
+                        </>
+                    ) : (
+                        <>Save</>
+                    )}
+                </button>
             </div>
-            <button
-                className="mt-3 hover:scale-[1.01] duration-500 transition w-full bg-indigo-600 hover:bg-indigo-700 text-lg py-3 px-4 rounded-md text-white font-bold flex items-center justify-center"
-                onClick={() => {
-                    console.log("RUN SAVE");
-                    save()
-                }}
-            >
-                {isLoading ? (
-                    <>
-                        <IconLoader2 className="animate-spin" />
-                    </>
-                ) : (
-                    <>Save</>
-                )}
-            </button>
-        </div>
+        </>
     );
 }

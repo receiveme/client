@@ -7,9 +7,10 @@ export type AppState = {
     theme?: string | null; // For storing the theme preference
     banner?: string | null; // For storing the banner preference
     logins: string[];
+    server: boolean;
 };
 
-export const InitialAppState = {
+export const InitialAppState = (server = true) => ({
     userData: null,
     userInfo: null,
     wallets: [],
@@ -18,4 +19,5 @@ export const InitialAppState = {
     theme: null,
     banner: null,
     logins: [],
-};
+    server,
+});

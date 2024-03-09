@@ -15,8 +15,8 @@ export function Banner({
     socials,
     balance = 0,
 }: BannerProps) {
-    const bannerType = banner.split("/")[0];
-    const color = banner.split("/")[1];
+    const bannerType = banner?.split("/")[0];
+    const color = banner?.split("/")[1];
 
     let src;
     let bg;
