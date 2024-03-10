@@ -247,3 +247,20 @@ export async function createSocial(userId: string, data: any) {
         console.error("Failed to create social:", error);
     }
 };
+
+export async function createWallet(userId: string, data: any) {
+    try {
+        const wallet = await prisma.wallet.create({
+            data: {
+                userid: userId,
+                address: data.address,
+                network: data.network,
+            }
+        });
+
+        //@ts-ignore
+        return wallet
+    } catch (error) {
+        console.error("Failed to create social:", error);
+    }
+};

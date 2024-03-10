@@ -56,7 +56,7 @@ model wallet {
   network           String?
   created           DateTime? @default(now())
   user              User      @relation(fields: [userid], references: [id], onDelete: Cascade)
-  preferrednetworks String[]
+  preferrednetworks String[] 
   visible           Boolean   @default(true)
 
   @@map("wallets")

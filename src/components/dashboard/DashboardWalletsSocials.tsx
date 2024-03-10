@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useAppState } from "@/src/hooks/useAppState";
 
 import particle from "../../lib/particle";
-import { createSocial } from "@/src/actions";
+import { createSocial, createWallet } from "@/src/actions";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { IconLoader2, IconSettings } from "@tabler/icons-react";
 import { WalletSettingsModal } from "./WalletSettingsModal";
@@ -48,8 +48,7 @@ export default function DashboardWalletsSocials() {
     const [isLoading, setIsLoading] = useState(false);
     const [saved, setSaved] = useState(false);
 
-    const [isWalletSettingsModalOpen, setIsWalletSettingsModalOpen] =
-        useState(false);
+    const [isWalletSettingsModalOpen, setIsWalletSettingsModalOpen] = useState(false);
     const [currentWallet, setCurrentWallet] = useState(null);
 
     const openWalletModal = async (wallet: any) => {
@@ -58,8 +57,6 @@ export default function DashboardWalletsSocials() {
     };
 
     const peraWallet = new PeraWalletConnect();
-
-    console.log(logins, wallets, userData);
 
     const handleSocialLogin = async (social: any) => {
         console.log(`Login for ${social.name} initiated`);
@@ -109,6 +106,7 @@ export default function DashboardWalletsSocials() {
                 //TODO
             }
         }
+
         await fetchSocialDetails();
 
         const socialsData = {
@@ -126,38 +124,47 @@ export default function DashboardWalletsSocials() {
             logins: [...appState.logins, social.id],
         });
     };
-
     function connectMetamask() {
-        return new Promise(async (resolve, reject) => {
-            const chainId = await window["ethereum"]?.request({
-                method: "eth_chainId",
-            });
-            const accounts = await window["ethereum"]
-                ?.request({ method: "eth_requestAccounts" }) // @ts-ignore
-                .catch((e) => {
-                    console.error("METAMASK ERR:", e);
-                    return reject();
+        return new Promise((resolve, reject) => {
+            window["ethereum"]?.request({ method: "eth_chainId" })
+                .then(chainId => {
+                    return window["ethereum"]?.request({ method: "eth_requestAccounts" });
+                })
+                .then(accounts => {
+                    if (accounts && accounts.length > 0) {
+                        const accountAddress = accounts[0];
+                        setMetamaskAddress(accountAddress);
+
+                        const existingWalletIndex = appState.wallets.findIndex(wallet => wallet.walletProvider === "metamask");
+
+                        if (existingWalletIndex < 0) {
+                            appState.wallets.push({
+                                walletProvider: "metamask",
+                                walletAddress: accountAddress,
+                            });
+                        }
+
+                        const walletData = {
+                            network: "metamask",
+                            address: accountAddress,
+                        };
+
+                        setAppState(prevState => ({
+                            ...prevState,
+                            wallets: [...prevState.wallets]
+                        }));
+                        // Here, we update the state before resolving the promise.
+                        setAppState(appState.wallets);
+
+                        resolve(walletData); // Resolve the promise with wallet data
+                    } else {
+                        reject(new Error("No accounts returned from Metamask."));
+                    }
+                })
+                .catch(error => {
+                    console.error("METAMASK ERR:", error);
+                    reject(new Error("Metamask connection failed: " + error.message));
                 });
-            // After connection
-
-            if (accounts?.length && accounts[0] && chainId) {
-                setMetamaskAddress(accounts[0]);
-
-                const wallets = appState.wallets;
-
-                let walletIndex = wallets.findIndex(
-                    (wallet) => wallet.walletProvider == "metamask",
-                );
-
-                if (walletIndex < 0) {
-                    wallets.push({
-                        walletProvider: "metamask",
-                        walletAddress: accounts[0],
-                    });
-                }
-
-                setAppState({ wallets });
-            } else return reject();
         });
     }
 
@@ -192,7 +199,12 @@ export default function DashboardWalletsSocials() {
 
                 if (!account) return reject();
 
-                return resolve({ account, chain: "tron" });
+                const walletData = {
+                    network: "tron",
+                    address: account,
+                };
+
+                return resolve(walletData);
             } catch (e) {
                 console.log(e);
                 return reject();
@@ -202,8 +214,8 @@ export default function DashboardWalletsSocials() {
 
     async function connectAlgorandWallet() {
         try {
-            const connect = peraWallet.connect().then((newAccounts: any) => {
-                console.log(newAccounts);
+            peraWallet.connect().then((newAccounts: any) => {
+                console.log("ALGO", newAccounts);
                 peraWallet.connector?.on(
                     "disconnect",
                     disconnectAlgorandWallet,
@@ -223,6 +235,12 @@ export default function DashboardWalletsSocials() {
                 }
 
                 setAppState({ wallets });
+
+                const walletData = {
+                    network: "algorand",
+                    address: newAccounts[0],
+                };
+                return walletData
             });
         } catch (error) {
             //@ts-ignore
@@ -249,7 +267,7 @@ export default function DashboardWalletsSocials() {
     //           // log the necessary errors
     //         }
     //       });
-    //   }
+    //   };
 
     function disconnectAlgorandWallet() {
         peraWallet.disconnect();
@@ -259,18 +277,24 @@ export default function DashboardWalletsSocials() {
     // Function to connect wallets
     const connectWallet = async (wallet: any) => {
         console.log(`Connect ${wallet.name} wallet initiated`);
+        const userId = userData?.Profile[0].userid;
 
         if (wallet.id === "particle") {
         } else if (wallet.id === "metamask") {
-            connectMetamask();
+            const metamaskWalletData = await connectMetamask();
+            createWallet(userId, metamaskWalletData);
         } else if (wallet.id === "tronlink") {
-            connectTronlink();
+            const tronWalletData = await connectTronlink();
+            createWallet(userId, tronWalletData);
         } else if (wallet.id === "algorand") {
-            connectAlgorandWallet();
+            const algorandWalletData = await connectAlgorandWallet();
+            createWallet(userId, algorandWalletData);
         }
     };
 
-    function save() {}
+    function save() {
+
+    }
 
     return (
         <>
@@ -294,11 +318,10 @@ export default function DashboardWalletsSocials() {
                                     key={social.id}
                                     disabled={social.disabled || linked}
                                     onClick={() => handleSocialLogin(social)}
-                                    className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
-                                        linked
-                                            ? "border border-green-500/50"
-                                            : ""
-                                    } ${social.disabled ? "opacity-60" : ""}`}
+                                    className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${linked
+                                        ? "border border-green-500/50"
+                                        : ""
+                                        } ${social.disabled ? "opacity-60" : ""}`}
                                 >
                                     <img
                                         src={`/img/3p/${social.image}`}
@@ -343,13 +366,11 @@ export default function DashboardWalletsSocials() {
                                         onClick={() =>
                                             !linked ? connectWallet(wallet) : {}
                                         }
-                                        className={`cursor-pointer transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
-                                            linked
-                                                ? "border border-green-500/50"
-                                                : ""
-                                        } ${
-                                            wallet.disabled ? "opacity-60" : ""
-                                        }`}
+                                        className={`cursor-pointer transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${linked
+                                            ? "border border-green-500/50"
+                                            : ""
+                                            } ${wallet.disabled ? "opacity-60" : ""
+                                            }`}
                                     >
                                         <img
                                             src={`/img/3p/${wallet.image}`}
