@@ -255,12 +255,16 @@ export async function createWallet(userId: string, data: any) {
                 userid: userId,
                 address: data.address,
                 network: data.network,
-            }
+            },
         });
 
-        //@ts-ignore
-        return wallet
+        // Ensure the connection is terminated after operation is complete
+        await prisma.$disconnect();
+
+        return wallet;
     } catch (error) {
-        console.error("Failed to create social:", error);
+        console.error("Failed to create wallet:", error);
+        await prisma.$disconnect(); // Ensure disconnection even if there's an error
+        throw error; // Rethrow the error to handle it or log it outside this function
     }
 };

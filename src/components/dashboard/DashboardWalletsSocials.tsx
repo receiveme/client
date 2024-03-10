@@ -124,6 +124,7 @@ export default function DashboardWalletsSocials() {
             logins: [...appState.logins, social.id],
         });
     };
+
     function connectMetamask() {
         return new Promise((resolve, reject) => {
             window["ethereum"]?.request({ method: "eth_chainId" })
@@ -137,8 +138,10 @@ export default function DashboardWalletsSocials() {
 
                         const existingWalletIndex = appState.wallets.findIndex(wallet => wallet.walletProvider === "metamask");
 
+                        let wallets = appState.wallets
+
                         if (existingWalletIndex < 0) {
-                            appState.wallets.push({
+                            wallets.push({
                                 walletProvider: "metamask",
                                 walletAddress: accountAddress,
                             });
@@ -149,12 +152,8 @@ export default function DashboardWalletsSocials() {
                             address: accountAddress,
                         };
 
-                        setAppState(prevState => ({
-                            ...prevState,
-                            wallets: [...prevState.wallets]
-                        }));
                         // Here, we update the state before resolving the promise.
-                        setAppState(appState.wallets);
+                        setAppState(wallets);
 
                         resolve(walletData); // Resolve the promise with wallet data
                     } else {
@@ -185,12 +184,14 @@ export default function DashboardWalletsSocials() {
                 setTronlinkAddress(account);
 
                 const wallets = appState.wallets;
+
                 let walletIndex = wallets.findIndex(
                     (wallet) => wallet.walletProvider == "tron",
                 );
+
                 if (walletIndex < 0) {
                     wallets.push({
-                        walletProvider: "tron",
+                        walletProvider: "tronlink",
                         walletAddress: account,
                     });
                 }
@@ -200,7 +201,7 @@ export default function DashboardWalletsSocials() {
                 if (!account) return reject();
 
                 const walletData = {
-                    network: "tron",
+                    network: "tronlink",
                     address: account,
                 };
 
@@ -215,7 +216,6 @@ export default function DashboardWalletsSocials() {
     async function connectAlgorandWallet() {
         try {
             peraWallet.connect().then((newAccounts: any) => {
-                console.log("ALGO", newAccounts);
                 peraWallet.connector?.on(
                     "disconnect",
                     disconnectAlgorandWallet,
@@ -229,7 +229,7 @@ export default function DashboardWalletsSocials() {
 
                 if (walletIndex < 0 && newAccounts.length) {
                     wallets.push({
-                        walletProvider: "algo",
+                        walletProvider: "algorand",
                         walletAddress: newAccounts[0],
                     });
                 }
@@ -240,6 +240,7 @@ export default function DashboardWalletsSocials() {
                     network: "algorand",
                     address: newAccounts[0],
                 };
+
                 return walletData
             });
         } catch (error) {
@@ -351,11 +352,13 @@ export default function DashboardWalletsSocials() {
                         {WALLETS.map((wallet) => {
                             // Changed to findIndex because we need to match wallets[].walletProvider
                             let walletIndex = wallets.findIndex(
-                                (linkedWallet) =>
-                                    linkedWallet.walletProvider == wallet.id,
+                                (linkedWallet) => {
+                                    return linkedWallet.walletProvider === wallet.id
+                                }
                             );
 
                             const linked = walletIndex > -1;
+
                             let linkedWallet = linked
                                 ? wallets[walletIndex]
                                 : false; // we should do something with this data ...
