@@ -33,7 +33,7 @@ export function DashboardProfile() {
         if (!appState.userInfo || !appState.userData) {
             setIsLoading(false);
             return;
-        }
+        };
 
         const uuid = appState.userInfo.uuid;
         const token = appState.userInfo.token;
@@ -68,9 +68,8 @@ export function DashboardProfile() {
                 <h3 className="text-2xl font-bold">Appearance</h3>
 
                 <div
-                    className={`p-6 py-12 rounded-xl bg-gradient-to-b from-${
-                        theme?.split("/")[0]
-                    } to-slate-900 flex justify-center items-center w-full`}
+                    className={`p-6 py-12 rounded-xl bg-gradient-to-b from-${theme?.split("/")[0]
+                        } to-slate-900 flex justify-center items-center w-full`}
                 >
                     <Banner
                         banner={banner}

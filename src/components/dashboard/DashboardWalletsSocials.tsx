@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useAppState } from "@/src/hooks/useAppState";
 
 import particle from "../../lib/particle";
-import { createSocial, createWallet } from "@/src/actions";
+import { createSocials, createWallets } from "@/src/actions";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { IconLoader2, IconSettings } from "@tabler/icons-react";
 import { WalletSettingsModal } from "./WalletSettingsModal";
@@ -40,7 +40,10 @@ const WALLETS = [
 
 export default function DashboardWalletsSocials() {
     const [appState, setAppState] = useAppState();
-    const { logins, wallets, userData } = appState;
+    const [newWallets, setNewWallets] = useState([]);
+    const [newSocials, setNewSocials] = useState([]);
+
+    const { userData } = appState;
 
     const [metamaskAddress, setMetamaskAddress] = useState<string | null>();
     const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
@@ -57,39 +60,30 @@ export default function DashboardWalletsSocials() {
     };
 
     const peraWallet = new PeraWalletConnect();
-
     const handleSocialLogin = async (social: any) => {
         console.log(`Login for ${social.name} initiated`);
 
         const user = await particle.auth.login({
             preferredAuthType: social.id,
         });
+
         const userId = userData?.Profile[0].userid;
-        const userSocials = appState.socials;
 
         setAppState({ wallets: [], userInfo: user });
 
-        let userSocialsIndex = userSocials.findIndex(
-            (userSocial: any) => userSocial.authType == social.id,
-        );
-
-        if (userSocialsIndex < 0) {
-            userSocials.push({
-                authType: social.id,
-                socialUuid: user.uuid,
-                socialUsername: user.thirdparty_user_info?.user_info.name,
-                socialInfo: user,
-                socialImg: user.avatar,
-                socialId: String(user.thirdparty_user_info?.user_info.id),
-            });
-        };
-
-        const newSocials = userSocials[userSocials.length - 1];
+        const newSocial = {
+            authType: social.id,
+            socialUuid: user.uuid,
+            socialUsername: user.thirdparty_user_info?.user_info.name,
+            socialInfo: user,
+            socialImg: user.avatar,
+            socialId: String(user.thirdparty_user_info?.user_info.id),
+        }
 
         const fetchSocialDetails = async () => {
-            if (newSocials.authType == "github") {
-                if (!newSocials.name && newSocials.socialId) {
-                    let id = newSocials.socialId;
+            if (newSocial.authType == "github") {
+                if (!newSocial.name && newSocial.socialId) {
+                    let id = newSocial.socialId;
                     let res = await fetch(
                         `https://api.github.com/user/${id}`,
                     );
@@ -97,12 +91,12 @@ export default function DashboardWalletsSocials() {
 
                     const json = await res.json();
 
-                    newSocials.socialUsername = json.login;
-                    newSocials.socialImg = json.avatar_url;
+                    newSocial.socialUsername = json.login;
+                    newSocial.socialImg = json.avatar_url;
                 }
-            } else if (newSocials.authType == "twitch") {
+            } else if (newSocial.authType == "twitch") {
                 //TODO
-            } else if (newSocials.authType == "twitter") {
+            } else if (newSocial.authType == "twitter") {
                 //TODO
             }
         }
@@ -111,18 +105,15 @@ export default function DashboardWalletsSocials() {
 
         const socialsData = {
             userid: userId,
-            networkid: newSocials.authType === "github" ? newSocials.socialId : null,
-            imageUrl: newSocials.socialImg ? newSocials.socialImg : null,
-            name: newSocials.socialUsername ? newSocials.socialUsername : null,
-            particle_token: newSocials.socialInfo.token ? newSocials.socialInfo.token : null,
-            particle_uuid: newSocials.socialUuid ? newSocials.socialUuid : null,
-            platform: newSocials.authType ? newSocials.authType : null
+            networkid: newSocial.authType === "github" ? newSocial.socialId : null,
+            imageUrl: newSocial.socialImg ? newSocial.socialImg : null,
+            name: newSocial.socialUsername ? newSocial.socialUsername : null,
+            particle_token: newSocial.socialInfo.token ? newSocial.socialInfo.token : null,
+            particle_uuid: newSocial.socialUuid ? newSocial.socialUuid : null,
+            platform: newSocial.authType ? newSocial.authType : null
         }
-        createSocial(userId, socialsData);
-        setAppState({
-            socials: userSocials,
-            logins: [...appState.logins, social.id],
-        });
+
+        setNewSocials(prevSocials => [...prevSocials, socialsData]);
     };
 
     function connectMetamask() {
@@ -136,9 +127,9 @@ export default function DashboardWalletsSocials() {
                         const accountAddress = accounts[0];
                         setMetamaskAddress(accountAddress);
 
-                        const existingWalletIndex = appState.wallets.findIndex(wallet => wallet.walletProvider === "metamask");
+                        const existingWalletIndex = appState.userData.Wallet.findIndex(wallet => wallet.walletProvider === "metamask");
 
-                        let wallets = appState.wallets
+                        let wallets = appState.userData.Wallet
 
                         if (existingWalletIndex < 0) {
                             wallets.push({
@@ -153,8 +144,7 @@ export default function DashboardWalletsSocials() {
                         };
 
                         // Here, we update the state before resolving the promise.
-                        setAppState(wallets);
-
+                        setNewWallets(walletData)
                         resolve(walletData); // Resolve the promise with wallet data
                     } else {
                         reject(new Error("No accounts returned from Metamask."));
@@ -177,13 +167,14 @@ export default function DashboardWalletsSocials() {
                         websiteName: "receive.me",
                     },
                 }); //@ts-ignore
+
                 let tronLink = { ...(await window["tronLink"]) };
 
                 // After connection
                 let account = tronLink.tronWeb.defaultAddress.base58;
                 setTronlinkAddress(account);
 
-                const wallets = appState.wallets;
+                const wallets = appState.userData.Wallet;
 
                 let walletIndex = wallets.findIndex(
                     (wallet) => wallet.walletProvider == "tron",
@@ -196,15 +187,13 @@ export default function DashboardWalletsSocials() {
                     });
                 }
 
-                setAppState({ wallets });
-
                 if (!account) return reject();
 
                 const walletData = {
                     network: "tronlink",
                     address: account,
                 };
-
+                setNewWallets(walletData)
                 return resolve(walletData);
             } catch (e) {
                 console.log(e);
@@ -222,7 +211,7 @@ export default function DashboardWalletsSocials() {
                 );
                 setAlgorandAddress(newAccounts[0]); // @ts-ignore
                 // const algorandAccount = localStorage.getItem('walletconnect').accounts[0]
-                const wallets = appState.wallets;
+                const wallets = appState.userData.Wallet;
                 let walletIndex = wallets.findIndex(
                     (wallet) => wallet.walletProvider == "algo",
                 );
@@ -234,13 +223,12 @@ export default function DashboardWalletsSocials() {
                     });
                 }
 
-                setAppState({ wallets });
-
                 const walletData = {
                     network: "algorand",
                     address: newAccounts[0],
                 };
 
+                setNewWallets(walletData)
                 return walletData
             });
         } catch (error) {
@@ -278,22 +266,26 @@ export default function DashboardWalletsSocials() {
     // Function to connect wallets
     const connectWallet = async (wallet: any) => {
         console.log(`Connect ${wallet.name} wallet initiated`);
-        const userId = userData?.Profile[0].userid;
 
         if (wallet.id === "particle") {
         } else if (wallet.id === "metamask") {
-            const metamaskWalletData = await connectMetamask();
-            createWallet(userId, metamaskWalletData);
+            await connectMetamask();
         } else if (wallet.id === "tronlink") {
-            const tronWalletData = await connectTronlink();
-            createWallet(userId, tronWalletData);
+            await connectTronlink();
         } else if (wallet.id === "algorand") {
-            const algorandWalletData = await connectAlgorandWallet();
-            createWallet(userId, algorandWalletData);
+            await connectAlgorandWallet();
         }
     };
 
-    function save() {
+    async function save() {
+        const userId = userData?.Profile[0].userid;
+        if (newWallets.length > 0) {
+            await createWallets(userId, newWallets)
+        }
+
+        if (newSocials.length > 0) {
+            await createSocials(userId, newSocials);
+        }
 
     }
 
@@ -313,7 +305,14 @@ export default function DashboardWalletsSocials() {
                     </h3>
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-2">
                         {SOCIALS.map((social) => {
-                            const linked = logins.includes(social.id);
+                            let socialIndex = userData.Social.findIndex(
+                                (linkedSocial) => {
+                                    return linkedSocial.platform === social.id
+                                }
+                            );
+
+                            const linked = socialIndex > -1;
+
                             return (
                                 <button
                                     key={social.id}
@@ -351,16 +350,16 @@ export default function DashboardWalletsSocials() {
                     <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
                         {WALLETS.map((wallet) => {
                             // Changed to findIndex because we need to match wallets[].walletProvider
-                            let walletIndex = wallets.findIndex(
+                            let walletIndex = userData.Wallet.findIndex(
                                 (linkedWallet) => {
-                                    return linkedWallet.walletProvider === wallet.id
+                                    return linkedWallet.network === wallet.id
                                 }
                             );
 
                             const linked = walletIndex > -1;
 
                             let linkedWallet = linked
-                                ? wallets[walletIndex]
+                                ? userData.Wallet[walletIndex]
                                 : false; // we should do something with this data ...
 
                             return (

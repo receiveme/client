@@ -228,17 +228,20 @@ export async function getUserByHandle(handle: string) {
     }
 };
 
-export async function createSocial(userId: string, data: any) {
+export async function createSocials(userId: string, data: any) {
     try {
-        const social = await prisma.social.create({
-            data: {
-                userid: userId,
-                particle_token: data.particle_token,
-                particle_uuid: data.particle_uuid,
-                name: data.name,
-                platform: data.platform,
-                imageurl: data.imageurl
-            }
+        const dataToInsert = data.map(social => ({
+            userid: userId,
+            particle_token: social.particle_token,
+            particle_uuid: social.particle_uuid,
+            name: social.name,
+            platform: social.platform,
+            imageurl: social.imageurl
+        }));
+        console.log("DATA TO INSERT", dataToInsert)
+        const social = await prisma.social.createMany({
+            data: dataToInsert,
+            skipDuplicates: true
         });
 
         //@ts-ignore
@@ -248,23 +251,23 @@ export async function createSocial(userId: string, data: any) {
     }
 };
 
-export async function createWallet(userId: string, data: any) {
+export async function createWallets(userId: string, walletsData: any[]) {
     try {
-        const wallet = await prisma.wallet.create({
-            data: {
-                userid: userId,
-                address: data.address,
-                network: data.network,
-            },
+        // Map over the walletsData to add the userId to each wallet object
+        const dataToInsert = walletsData.map(wallet => ({
+            userid: userId,
+            address: wallet.address,
+            network: wallet.network,
+        }));
+
+        const wallets = await prisma.wallet.createMany({
+            data: dataToInsert,
+            skipDuplicates: true, // Optional: skip inserting a record if it would create a duplicate
         });
 
-        // Ensure the connection is terminated after operation is complete
-        await prisma.$disconnect();
-
-        return wallet;
+        return wallets;
     } catch (error) {
-        console.error("Failed to create wallet:", error);
-        await prisma.$disconnect(); // Ensure disconnection even if there's an error
+        console.error("Failed to create wallets:", error);
         throw error; // Rethrow the error to handle it or log it outside this function
     }
 };
