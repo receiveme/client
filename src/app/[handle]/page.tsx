@@ -49,6 +49,7 @@ async function getUserByHandle(handle: string) {
 
 export default async function Profile({ params }: any) {
     const handle: any = params.handle;
+    
     const data: any = await getUserByHandle(handle);
 
     // let data_each_wallet: any = {};
