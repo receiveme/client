@@ -8,7 +8,7 @@ import particle from "../../lib/particle";
 import { createSocial, createWallet } from "@/src/actions";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { IconLoader2, IconSettings } from "@tabler/icons-react";
-import { WalletSettingsModal } from "./WalletSettingsModal";
+import { WalletSettingsModal, WalletSettingsModalNonEVM } from "./WalletSettingsModal";
 
 const SOCIALS = [
     { id: "discord", name: "Discord", image: "discord.png" },
@@ -49,6 +49,8 @@ export default function DashboardWalletsSocials() {
     const [saved, setSaved] = useState(false);
 
     const [isWalletSettingsModalOpen, setIsWalletSettingsModalOpen] = useState(false);
+
+    const [isNonEVMWalletSettingsModalOpen, setIsNonEVMWalletSettingsModalOpen] = useState(false);
     const [currentWallet, setCurrentWallet] = useState(null);
 
     const openWalletModal = async (wallet: any) => {
@@ -56,6 +58,10 @@ export default function DashboardWalletsSocials() {
         setIsWalletSettingsModalOpen(true);
     };
 
+    const openNonEVMWalletModal = async (wallet: any) => {
+        setCurrentWallet(wallet);
+        setIsNonEVMWalletSettingsModalOpen(true);
+    };
     const peraWallet = new PeraWalletConnect();
 
     const handleSocialLogin = async (social: any) => {
@@ -305,6 +311,12 @@ export default function DashboardWalletsSocials() {
                 wallet={currentWallet}
             />
 
+            <WalletSettingsModalNonEVM
+                isOpen={isNonEVMWalletSettingsModalOpen}
+                setIsOpen={setIsNonEVMWalletSettingsModalOpen}
+                wallet={currentWallet}
+            />
+
             <div className="flex flex-col gap-4">
                 <div className="w-full">
                     <h1 className="font-semibold text-lg">Socials</h1>
@@ -391,8 +403,14 @@ export default function DashboardWalletsSocials() {
 
                                         {linked && (
                                             <div
-                                                onClick={() =>
+                                                onClick={wallet.id == 'metamask' || wallet.id == 'particle' ? (e)=>
                                                     openWalletModal({
+                                                        ...wallet,
+                                                        ...(linkedWallet as Record<
+                                                            string,
+                                                            any
+                                                        >),
+                                                    }) : (e)=> openNonEVMWalletModal({
                                                         ...wallet,
                                                         ...(linkedWallet as Record<
                                                             string,
