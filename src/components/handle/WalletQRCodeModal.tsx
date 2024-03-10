@@ -57,14 +57,21 @@ export function WalletQRCodeModal({
                                     </Dialog.Title>
 
                                     <div className="mt-6 flex flex-col items-center justify-center">
+
                                         <QRCodeSVG value={address} size={256} />
 
                                         <p className="font-medium mt-4">
                                             {network.toUpperCase() == '(ETH) EVM' ? 'EVM (ETH, AVAX...)' : network.toUpperCase()}
                                         </p>
+
                                         <p className="text-xs font-light text-gray-700">
                                             {address}
                                         </p>
+
+                                        <p className="text-xs font-light italic text-gray-700 mb-3">
+                                            Send {network.toUpperCase() == 'TRON' ? 'TRC20 tokens on TRON network to this address.' : network.toUpperCase() == 'ETH' ? 'ERC20 tokens on TRON network to this address.' : network.toUpperCase() == 'AVAX' ? 'Send ERC20 tokens on AVAX network to this address.' : network.toUpperCase() == 'BNB' ? 'Send BRC20 tokens on BSC network to this address.' : ''}
+                                        </p>
+                                        
                                     </div>
 
                                     <div className="mt-6">
