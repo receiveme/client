@@ -5,6 +5,7 @@
     "@next/next/no-page-custom-font": "off",
     "jsx-a11y/alt-text": "off",
     "react-hooks/exhaustive-deps": "off",
-    "react/jsx-key": "off"
+    "react/jsx-key": "off",
+    "react/no-unescaped-entities": "off"
   }
 }

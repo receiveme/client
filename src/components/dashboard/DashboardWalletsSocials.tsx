@@ -29,7 +29,7 @@ const WALLETS = [
     { id: "particle", name: "Particle Wallet", image: "particle.png" }, // Particle Wallet ... is kinda tricky .. what do we do about this one ? we should make a
     { id: "metamask", name: "Metamask", image: "metamask.png" },
     { id: "tronlink", name: "Tronlink", image: "tron.png" },
-    { id: "algorand", name: "MyPera Wallet [Algorand Wallet]", image: "mypera.png", disabled: true },
+    { id: "algorand", name: "MyPera Wallet [Algorand]", image: "mypera.png", disabled: true },
     {
         id: "unstoppabledomains",
         name: "Unstoppable Domains",

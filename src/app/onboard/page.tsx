@@ -655,8 +655,9 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                         {!algorandAddress ? (
                             <>
                                 <button
+                                    disabled
                                     onClick={() => connectAlgorandWallet()}
-                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-70"
                                 >
                                     <img
                                         src="/img/3p/mypera.png"
@@ -668,7 +669,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                         onClick={connectAlgorandWallet}
                                         className="text-sm font-semibold"
                                     >
-                                        Link MyPera Wallet (Algorand)
+                                        Link MyPera Wallet [Algorand] (Coming Soon)
                                     </span>
                                 </button>
                             </>
