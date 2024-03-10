@@ -23,8 +23,8 @@ export function WalletSettingsModal({
     const [selectedWallets, setSelectedWallets] = useState([
         { key: "eth", state: false, image: "/img/3p/eth.png", name: "ETH" },
         { key: "tron", state: false, image: "/img/3p/tron.png", name: "TRON" },
-        { key: "avax", state: false,image: "/img/3p/avaxpng.png", name: "AVAX"},
-        { key: "matic", state: false,image: "/img/3p/matic.png", name: "POLYGON"},
+        { key: "avax", state: false, image: "/img/3p/avaxpng.png", name: "AVAX" },
+        { key: "matic", state: false, image: "/img/3p/matic.png", name: "POLYGON" },
     ]);
 
     const handleWalletSelect = (key: string) => {
@@ -37,7 +37,7 @@ export function WalletSettingsModal({
         );
     };
 
-    const verifyMessageTRON = async (address:string) => { // probably still needs more, but good...
+    const verifyMessageTRON = async (address: string) => { // probably still needs more, but good...
         //@ts-ignore
         const tronWeb = window.tronWeb
         const signature = await tronWeb.trx.signMessageV2(address)
@@ -48,7 +48,7 @@ export function WalletSettingsModal({
     }
 
 
-    const verifyMessageEVM = async (address:string) => {
+    const verifyMessageEVM = async (address: string) => {
         const provider = new ethers.providers.Web3Provider(window["ethereum"])
         const signer = provider.getSigner()
         const verifyMessage = await signer.signMessage(`${address}`)
@@ -125,11 +125,10 @@ export function WalletSettingsModal({
                                                             </span>
                                                         </div>
                                                         <button
-                                                            className={`w-20 rounded-md px-2 py-1 text-sm font-semibold ${
-                                                                selectedWallet.state
+                                                            className={`w-20 rounded-md px-2 py-1 text-sm font-semibold ${selectedWallet.state
                                                                     ? "bg-green-400 hover:bg-green-500"
                                                                     : "bg-gray-200 hover:bg-gray-300"
-                                                            }`}
+                                                                }`}
                                                             onClick={() =>
                                                                 handleWalletSelect(
                                                                     selectedWallet.key,
@@ -148,7 +147,7 @@ export function WalletSettingsModal({
 
                                     <div className="mt-4">
                                         <button
-                                            onClick={(e)=>verifyMessageEVM(wallet?.walletAddress)}
+                                            onClick={(e) => verifyMessageEVM(wallet?.walletAddress)}
                                             type="button"
                                             className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
                                         >
@@ -205,7 +204,7 @@ export function WalletSettingsModalNonEVM({
     };
 
 
-    const verifyMessageTRON = async (address:string) => { // probably still needs more, but good...
+    const verifyMessageTRON = async (address: string) => { // probably still needs more, but good...
         //@ts-ignore
         const tronWeb = window.tronWeb
         const signature = await tronWeb.trx.signMessageV2(address)
@@ -309,7 +308,7 @@ export function WalletSettingsModalNonEVM({
 
                                     <div className="mt-4">
                                         <button
-                                        onClick={(e)=>verifyMessageTRON(wallet?.walletAddress)}
+                                            onClick={(e) => verifyMessageTRON(wallet?.walletAddress)}
                                             type="button"
                                             className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
                                         >

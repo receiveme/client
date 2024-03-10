@@ -238,7 +238,6 @@ export async function createSocials(userId: string, data: any) {
             platform: social.platform,
             imageurl: social.imageurl
         }));
-        console.log("DATA TO INSERT", dataToInsert)
         const social = await prisma.social.createMany({
             data: dataToInsert,
             skipDuplicates: true

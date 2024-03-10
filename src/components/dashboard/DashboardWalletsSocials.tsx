@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useAppState } from "@/src/hooks/useAppState";
 
 import particle from "../../lib/particle";
-import { createSocials, createWallets } from "@/src/actions";
+import { createSocials, createWallets, getUserData } from "@/src/actions";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { IconLoader2, IconSettings } from "@tabler/icons-react";
 import { WalletSettingsModal, WalletSettingsModalNonEVM } from "./WalletSettingsModal";
@@ -126,7 +126,10 @@ export default function DashboardWalletsSocials() {
         return new Promise((resolve, reject) => {
             window["ethereum"]?.request({ method: "eth_chainId" })
                 .then(chainId => {
-                    return window["ethereum"]?.request({ method: "eth_requestAccounts" });
+                    return window["ethereum"]?.request({
+                        method:
+                            "eth_requestAccounts"
+                    });
                 })
                 .then(accounts => {
                     if (accounts && accounts.length > 0) {
@@ -150,7 +153,7 @@ export default function DashboardWalletsSocials() {
                         };
 
                         // Here, we update the state before resolving the promise.
-                        setNewWallets(walletData)
+                        setNewSocials(prevWallets => [...prevWallets, walletData]);
                         resolve(walletData); // Resolve the promise with wallet data
                     } else {
                         reject(new Error("No accounts returned from Metamask."));
@@ -199,7 +202,7 @@ export default function DashboardWalletsSocials() {
                     network: "tronlink",
                     address: account,
                 };
-                setNewWallets(walletData)
+                setNewWallets(prevWallets => [...prevWallets, walletData]);
                 return resolve(walletData);
             } catch (e) {
                 console.log(e);
@@ -234,7 +237,7 @@ export default function DashboardWalletsSocials() {
                     address: newAccounts[0],
                 };
 
-                setNewWallets(walletData)
+                setNewWallets(prevWallets => [...prevWallets, walletData]);
                 return walletData
             });
         } catch (error) {
@@ -293,6 +296,9 @@ export default function DashboardWalletsSocials() {
             await createSocials(userId, newSocials);
         }
 
+        const updatedUserData = await getUserData(userId)
+        appState.userData = updatedUserData;
+        setAppState(appState)
     }
 
     return (
@@ -317,13 +323,19 @@ export default function DashboardWalletsSocials() {
                     </h3>
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-2">
                         {SOCIALS.map((social) => {
-                            let socialIndex = userData.Social.findIndex(
+                            let socialIndexUserData = userData.Social.findIndex(
                                 (linkedSocial) => {
                                     return linkedSocial.platform === social.id
                                 }
                             );
 
-                            const linked = socialIndex > -1;
+                            let socialIndexNewSocials = newSocials.findIndex(
+                                (linkedSocial) => {
+                                    return linkedSocial.platform === social.id
+                                }
+                            );
+
+                            const linked = socialIndexUserData > -1 || socialIndexNewSocials > -1;
 
                             return (
                                 <button
@@ -362,13 +374,19 @@ export default function DashboardWalletsSocials() {
                     <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
                         {WALLETS.map((wallet) => {
                             // Changed to findIndex because we need to match wallets[].walletProvider
-                            let walletIndex = userData.Wallet.findIndex(
+                            let walletIndexUserData = userData.Wallet.findIndex(
+                                (linkedWallet) => {
+                                    return linkedWallet.network === wallet.id
+                                }
+                            );
+                            let walletIndexNewWallets = newWallets.findIndex(
                                 (linkedWallet) => {
                                     return linkedWallet.network === wallet.id
                                 }
                             );
 
-                            const linked = walletIndex > -1;
+                            const linked = walletIndexUserData > -1 || walletIndexNewWallets > -1;
+                            const walletIndex = walletIndexUserData > -1 ? walletIndexUserData : walletIndexNewWallets
 
                             let linkedWallet = linked
                                 ? userData.Wallet[walletIndex]
@@ -402,14 +420,14 @@ export default function DashboardWalletsSocials() {
 
                                         {linked && (
                                             <div
-                                                onClick={wallet.id == 'metamask' || wallet.id == 'particle' ? (e)=>
+                                                onClick={wallet.id == 'metamask' || wallet.id == 'particle' ? (e) =>
                                                     openWalletModal({
                                                         ...wallet,
                                                         ...(linkedWallet as Record<
                                                             string,
                                                             any
                                                         >),
-                                                    }) : (e)=> openNonEVMWalletModal({
+                                                    }) : (e) => openNonEVMWalletModal({
                                                         ...wallet,
                                                         ...(linkedWallet as Record<
                                                             string,
