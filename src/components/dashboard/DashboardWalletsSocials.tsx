@@ -29,7 +29,7 @@ const WALLETS = [
     { id: "particle", name: "Particle Wallet", image: "particle.png" }, // Particle Wallet ... is kinda tricky .. what do we do about this one ? we should make a
     { id: "metamask", name: "Metamask", image: "metamask.png" },
     { id: "tronlink", name: "Tronlink", image: "tron.png" },
-    { id: "algorand", name: "MyPera Wallet (Algorand)", image: "mypera.png" },
+    { id: "algorand", name: "MyPera Wallet [Algorand Wallet]", image: "mypera.png", disabled: true },
     {
         id: "unstoppabledomains",
         name: "Unstoppable Domains",
@@ -125,6 +125,7 @@ export default function DashboardWalletsSocials() {
     function connectMetamask() {
         return new Promise((resolve, reject) => {
             window["ethereum"]?.request({ method: "eth_chainId" })
+
                 .then(chainId => {
                     return window["ethereum"]?.request({
                         method:
@@ -250,22 +251,6 @@ export default function DashboardWalletsSocials() {
         }
     }
 
-    // function connectAlgorandWallet() {
-    //     peraWallet
-    //       .connect()
-    //       .then((newAccounts) => {
-    //         // Setup the disconnect event listener
-    //         peraWallet.connector?.on("disconnect", disconnectAlgorandWallet);
-    //         console.log(newAccounts)
-    //         setAlgorandAddress(newAccounts[0]); //@ts-ignore
-    //       }).reject((error) => {
-    //         // You MUST handle the reject because once the user closes the modal, peraWallet.connect() promise will be rejected.
-    //         // For the async/await syntax you MUST use try/catch
-    //         if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
-    //           // log the necessary errors
-    //         }
-    //       });
-    //   };
 
     function disconnectAlgorandWallet() {
         peraWallet.disconnect();
@@ -277,7 +262,8 @@ export default function DashboardWalletsSocials() {
         console.log(`Connect ${wallet.name} wallet initiated`);
 
         if (wallet.id === "particle") {
-        } else if (wallet.id === "metamask") {
+        
+        } else if (wallet.id === "Metamask") {
             await connectMetamask();
         } else if (wallet.id === "tronlink") {
             await connectTronlink();
@@ -307,6 +293,7 @@ export default function DashboardWalletsSocials() {
                 isOpen={isWalletSettingsModalOpen}
                 setIsOpen={setIsWalletSettingsModalOpen}
                 wallet={currentWallet}
+
             />
 
             <WalletSettingsModalNonEVM
@@ -420,7 +407,7 @@ export default function DashboardWalletsSocials() {
 
                                         {linked && (
                                             <div
-                                                onClick={wallet.id == 'metamask' || wallet.id == 'particle' ? (e) =>
+                                                onClick={wallet.name == 'Metamask' || wallet.id == 'particle' ? (e) =>
                                                     openWalletModal({
                                                         ...wallet,
                                                         ...(linkedWallet as Record<
