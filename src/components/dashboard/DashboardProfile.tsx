@@ -40,7 +40,7 @@ export function DashboardProfile() {
 
         // Send API request
         const response = await axios.post(
-            process.env.NEXT_PUBLIC_SERVER_URL + "profiles",
+            `https://seal-app-8277b.ondigitalocean.app/` + "profiles",
             { uuid, token, theme, background: banner },
         );
 
