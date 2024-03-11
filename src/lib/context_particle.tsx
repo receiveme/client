@@ -10,7 +10,6 @@ import {
     EthereumGoerli,
     Avalanche,
     AvalancheTestnet,
-    ArbitrumGoerli,
     ArbitrumNova,
 } from "@particle-network/chains";
 import { evmWallets } from "@particle-network/connect";
@@ -97,7 +96,6 @@ export const AppStateProvider = ({
             >
                 <AppContext.Provider value={{ appState, setAppState }}>
                     {children}
-
                     <UserInfoSetter />
                 </AppContext.Provider>
             </ModalProvider>
