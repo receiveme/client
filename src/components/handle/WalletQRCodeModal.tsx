@@ -69,7 +69,7 @@ export function WalletQRCodeModal({
                                         </p>
 
                                         <p className="text-xs font-light italic text-gray-700 mb-3">
-                                            Send {network.toUpperCase() == 'TRON' ? 'TRC20 tokens on TRON network to this address.' : network.toUpperCase() == 'ETH' ? 'ERC20 tokens on Ethereum network to this address.' : network.toUpperCase() == 'AVAX' ? 'Send ERC20 tokens on AVAX network to this address.' : network.toUpperCase() == 'BNB' ? 'Send BRC20 tokens on BSC network to this address.' : ''}
+                                            Send {network.toUpperCase() == 'TRON' ? 'TRC20 & other tokens tokens on TRON network to this address.' : network.toUpperCase() == 'ETH' ? 'ERC20 & other tokens/value on Ethereum network to this address.' : network.toUpperCase() == 'AVAX' ? 'ERC20 tokens on AVAX network to this address.' : network.toUpperCase() == 'BNB' ? 'BRC20 & other tokens/value on BSC network to this address.' : ''}
                                         </p>
                                         
                                     </div>
