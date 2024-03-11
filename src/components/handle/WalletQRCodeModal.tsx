@@ -20,7 +20,16 @@ export function WalletQRCodeModal({
     function closeModal() {
         setIsOpen(false);
     }
-
+    let explorerLink 
+    if (network.toUpperCase() == 'TRON') {
+        explorerLink = `https://tronscan.org/address/${address}`
+    } else if (network.toUpperCase() == 'ETH') {
+        explorerLink = `https://etherscan.io/address/${address}`
+    } else if (network.toUpperCase() == 'BNB') {
+        explorerLink = `https://bscscan.com/address/${address}`
+    } else if (network.toUpperCase() == 'MATIC') {
+        explorerLink = `https://polygonscan.com/address/${address}`
+    }
     return (
         <>
             <Transition appear show={isOpen} as={Fragment}>
@@ -69,7 +78,7 @@ export function WalletQRCodeModal({
                                         </p>
 
                                         <p className="text-xs font-light italic text-gray-700 mb-3">
-                                            Send {network.toUpperCase() == 'TRON' ? 'TRC20 & other tokens tokens on TRON network to this address.' : network.toUpperCase() == 'ETH' ? 'ERC20 & other tokens/value on Ethereum network to this address.' : network.toUpperCase() == 'AVAX' ? 'ERC20 tokens on AVAX network to this address.' : network.toUpperCase() == 'BNB' ? 'BRC20 & other tokens/value on BSC network to this address.' : ''}
+                                            Send {network.toUpperCase() == 'TRON' ? 'TRC20 & other tokens/value on TRON network to this address.' : network.toUpperCase() == 'ETH' ? 'ERC20 & other tokens/value on Ethereum network to this address.' : network.toUpperCase() == 'AVAX' ? 'ERC20 tokens on AVAX network to this address.' : network.toUpperCase() == 'BNB' ? 'BRC20 & other tokens/value on BSC network to this address.' : ''}
                                         </p>
                                         
                                     </div>
