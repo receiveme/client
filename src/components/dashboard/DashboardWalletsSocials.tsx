@@ -9,6 +9,7 @@ import { createSocials, createWallets, getUserData } from "@/src/actions";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { IconLoader2, IconSettings } from "@tabler/icons-react";
 import { WalletSettingsModal, WalletSettingsModalNonEVM } from "./WalletSettingsModal";
+import Toast from "../toast";
 
 const SOCIALS = [
     { id: "discord", name: "Discord", image: "discord.png" },
@@ -62,6 +63,7 @@ export default function DashboardWalletsSocials() {
     };
 
     const openNonEVMWalletModal = async (wallet: any) => {
+        console.log(wallet)
         setCurrentWallet(wallet);
         setIsNonEVMWalletSettingsModalOpen(true);
     };
@@ -182,18 +184,19 @@ export default function DashboardWalletsSocials() {
 
                 // After connection
                 let account = tronLink.tronWeb.defaultAddress.base58;
+                console.log(account)
                 setTronlinkAddress(account);
 
                 const wallets = appState.userData.Wallet;
-
+                console.log(wallets)
                 let walletIndex = wallets.findIndex(
-                    (wallet) => wallet.walletProvider == "tron",
+                    (wallet) => wallet.walletProvider == "tronlink",
                 );
 
                 if (walletIndex < 0) {
                     wallets.push({
                         walletProvider: "tronlink",
-                        walletAddress: account,
+                        address: account,
                     });
                 }
 
@@ -259,13 +262,14 @@ export default function DashboardWalletsSocials() {
 
     // Function to connect wallets
     const connectWallet = async (wallet: any) => {
+        console.log(wallet)
         console.log(`Connect ${wallet.name} wallet initiated`);
 
         if (wallet.id === "particle") {
         
-        } else if (wallet.id === "Metamask") {
+        } else if (wallet.name === "Metamask") {
             await connectMetamask();
-        } else if (wallet.id === "tronlink") {
+        } else if (wallet.name === "Tronlink") {
             await connectTronlink();
         } else if (wallet.id === "algorand") {
             await connectAlgorandWallet();
@@ -289,6 +293,12 @@ export default function DashboardWalletsSocials() {
 
     return (
         <>
+            <Toast
+                show={saved}
+                setShow={setSaved}
+                type="success"
+                title="Updated wallet settings"
+            />
             <WalletSettingsModal
                 isOpen={isWalletSettingsModalOpen}
                 setIsOpen={setIsWalletSettingsModalOpen}

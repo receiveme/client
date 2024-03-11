@@ -1,5 +1,6 @@
 "use client";
 
+import { updateUserWallet } from "@/src/actions";
 import { Dialog, Transition } from "@headlessui/react";
 import { verify } from "crypto";
 import { ethers } from "ethers";
@@ -10,6 +11,15 @@ type WalletSettingsModalProps = {
     setIsOpen: any;
     wallet: any;
 };
+
+type supportedWallet = {
+    key: string;
+    state: boolean;
+    image: string;
+    name: string;
+
+}
+type SupportedWallets = supportedWallet[]
 
 export function WalletSettingsModal({
     isOpen,
@@ -36,9 +46,10 @@ export function WalletSettingsModal({
 
     const [selectedWallets, setSelectedWallets] = useState([]);
     const [walletVisiblity, setWalletVisibility] = useState<boolean>(true);
+    const [saved, setSaved] = useState(false);
 
     useEffect(() => {
-        const initialWallets = [
+        const initialWallets:SupportedWallets = [
             { key: "eth", state: false, image: "/img/3p/eth.png", name: "ETH" },
             { key: "avax", state: false, image: "/img/3p/avaxpng.png", name: "AVAX" },
             { key: "matic", state: false, image: "/img/3p/matic.png", name: "POLYGON" },
@@ -63,13 +74,19 @@ export function WalletSettingsModal({
         }));
     };
 
-    const verifyMessageEVM = async (address: string) => {
+    const verifyMessageEVM = async (address: string, wallet:any, preferrednetworks: SupportedWallets, visible:boolean) => {
         const provider = new ethers.providers.Web3Provider(window["ethereum"])
         const signer = provider.getSigner()
         const verifyMessage = await signer.signMessage(`${address}`)
-        // todo: add selected networks to address... 
-
+        // todo: add selected networks to address...
+        // console.log(wallet, preferrednetworks, visible)
         // todo: send this to backend ...shods
+
+        console.log(preferrednetworks)
+
+        // console.log(networks)
+        const update = await  updateUserWallet(address, wallet, preferrednetworks, visible)
+        if (update) setSaved(true)
     };
 
     return (
@@ -117,7 +134,12 @@ export function WalletSettingsModal({
                                     <div className="mt-4 text-black">
                                         <span className='text-sm text-gray'>{wallet?.address}</span>
                                         {/* <span>d fkjdjkdsfjkdsf</span> */}
-                                        <p className='text-sm text-start mt-2'>Select different networks to be visible on your profile, then sign a message.</p>
+                                        {!saved ? <>
+                                            <p className='text-sm text-start mt-2'>Select different networks to be visible on your profile, then sign a message.</p>
+                                        </> : <>
+                                            <p className='text-sm text-start mt-2'>Successfully saved wallet settings.</p>
+                                        </>}
+                                        
                                         <div className="mt-4 flex flex-col gap-2">
                                             <div
 
@@ -191,7 +213,7 @@ export function WalletSettingsModal({
 
                                     <div className="mt-4">
                                         <button
-                                            onClick={(e) => verifyMessageEVM(wallet?.walletAddress)}
+                                            onClick={(e) => verifyMessageEVM(wallet?.address, wallet, selectedWallets, walletVisiblity)}
                                             type="button"
                                             className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
                                         >
@@ -222,6 +244,7 @@ export function WalletSettingsModalNonEVM({
     setIsOpen,
     wallet,
 }: WalletSettingsModalProps) {
+    console.log(wallet)
     function closeModal() {
         setIsOpen(false);
     }
@@ -352,7 +375,7 @@ export function WalletSettingsModalNonEVM({
         if (wallet.id === "particle") {
         } else if (wallet.id === "metamask") {
 
-        } else if (wallet.network === "tronlink") {
+        } else if (wallet.name=== "Tronlink") {
             await connectTronlink();
         } else if (wallet.id === "algorand") {
             // await connectAlgorandWallet();

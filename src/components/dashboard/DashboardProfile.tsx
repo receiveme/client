@@ -13,7 +13,7 @@ import { useAppState } from "@/src/hooks/useAppState";
 export function DashboardProfile() {
     const [appState, setAppState] = useAppState();
 
-    const [handle] = useState(appState.userData?.handle);
+    const handle = appState?.userData?.handle;
     const [theme, setTheme] = useState(appState.userData?.Profile[0].theme);
     const [banner, setBanner] = useState(
         appState.userData?.Profile[0].background,

@@ -1,6 +1,45 @@
 "use server";
 import prisma from "@/lib/prisma";
 
+type supportedWallet = {
+    key: string;
+    state: boolean;
+    image: string;
+    name: string;
+
+}
+type SupportedWallets = supportedWallet[]
+
+export async function updateUserWallet(address: string, wallet:any, preferrednetworks: SupportedWallets, visible:boolean) {
+    console.log(preferrednetworks)
+    let networks = preferrednetworks.filter(network => network.state == true).map(network => network.key)
+    // for (let i = 0; preferrednetworks.length; i++) {
+    //     if (preferrednetworks[i]?.state) networks.push(preferrednetworks[i].key)
+    // }
+    console.log(networks)
+    try {
+        const userWallet = await prisma.wallet.update({
+            where: {
+                id: wallet.id,
+            },
+            data: 
+            {
+                preferrednetworks: networks,
+                visible: visible
+            }
+        });
+
+        await prisma.$disconnect();
+        console.log(userWallet)
+        return userWallet; // Return only the Social array
+    } catch (error) {
+        console.error("Error retrieving user socials:", error);
+        await prisma.$disconnect();
+        throw error;
+    }
+};
+
+
 export async function getUserSocials(userId) {
     try {
         const userSocials = await prisma.user.findUnique({

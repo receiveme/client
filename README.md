@@ -1,6 +1,6 @@
-# RCVME2.0
+# Receive.me
 
-
-## particle auth
-
-
+Nick Mura
+fakes1lent
+Sebastian Barkan
+oynozan
