@@ -9,13 +9,16 @@ import { IconChevronRight, IconCheck } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { CakeInteractionModal } from "./CakeInteractionModal";
 import { ethers } from "ethers";
+import { useAppState } from "@/src/hooks/useAppState";
+import { AppState } from "@/src/types/state/app-state.type";
+
 
 export default function PancakeSwap() {
     const [isCakeInteractionModalOpen, setIsCakeInteractionModalOpen] =
         useState(false);
     const [metamaskAddress, setMetamaskAddress] = useState("");
     const [type, setType] = useState<"own" | "stake">("own");
-
+    const [ appState, setAppState ] = useAppState()
     return (
         <>
             <CakeInteractionModal
@@ -131,7 +134,7 @@ export default function PancakeSwap() {
                                     flex items-center justify-center h-7 w-7
                                     bg-white rounded-md transition hover:bg-gray-200 hover:scale-110"
                                 >
-                                    {metamaskAddress && window && sessionStorage.getItem('cake_balance') ? <>
+                                    {metamaskAddress && appState?.org?.balance ? <>
                                         <IconCheck color="green" />
                                     </>:<>
                                         <IconChevronRight fill="black" />
@@ -159,7 +162,7 @@ export default function PancakeSwap() {
                                     flex items-center justify-center h-7 w-7
                                     bg-white rounded-md transition hover:bg-gray-200 hover:scale-110"
                                 >
-                                {sessionStorage.getItem('isStaker') ? <>
+                                {appState?.org?.staker ? <>
                                         <IconCheck color="green" />
                                     </>:<>
                                         <IconChevronRight fill="black" />

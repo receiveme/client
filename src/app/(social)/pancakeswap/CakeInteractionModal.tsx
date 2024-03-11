@@ -6,6 +6,7 @@ import { Fragment, useEffect, useState } from "react";
 import CAKEABI from "./cakeabi.json";
 import CAKESTAKEABI from "./cakestake.json";
 import { Contract, ethers } from "ethers";
+import { useAppState } from "@/src/hooks/useAppState";
 
 type CakeInteractionModalProps = {
     isOpen: boolean;
@@ -22,15 +23,19 @@ export function CakeInteractionModal({
     setMetamaskAddress,
     type,
 }: CakeInteractionModalProps) {
+    const [appState, setAppState] = useAppState();
+    const org = { ...appState?.org }
+
     const [balance, setBalance] = useState("");
     const [userInfo, setUserInfo] = useState<number|null>(null);
+
 
     function closeModal() {
         setIsOpen(false);
     }
 
     async function checkCAKEBNB(address: string) {
-        console.log(123)
+
         let provider = new ethers.providers.JsonRpcProvider(
             "https://binance.nodereal.io",
         );
@@ -45,6 +50,8 @@ export function CakeInteractionModal({
         // Convert bigint to normal price
         console.log(ethers.utils.formatEther(_balance));
         setBalance(ethers.utils.formatEther(_balance));
+        if (org) org.balance = ethers.utils.formatEther(_balance)
+        setAppState({ org })
         sessionStorage.setItem('cake_balance', ethers.utils.formatEther(_balance))
     }
 
@@ -59,13 +66,18 @@ export function CakeInteractionModal({
             CAKESTAKEABI,
             provider,
         );
-
+        
         let balanceOf = await contract.balanceOf(address); // Closer to binary return statement ...
 
         let isStaker = parseInt(balanceOf?._hex)
         console.log(balanceOf, isStaker)
-        if (isStaker) sessionStorage.setItem('isStaker', String(isStaker))
-        setUserInfo(isStaker);
+        if (isStaker) {
+            
+            org.staker = true
+            setAppState({ org })
+            sessionStorage.setItem('isStaker', String(isStaker))
+            setUserInfo(isStaker);
+        }
     }
 
     async function connectMetamask() {
@@ -159,12 +171,13 @@ export function CakeInteractionModal({
                                                     {metamaskAddress}
                                                 </div>
 
-                                                <div className="text-black text-md mt-4">
-                                                    {balance ? <>
+                                                <div className="text-black text-md mt-4 flex-col flex">
+                                                    {balance && Number(balance) > 0 ? <>
                                                     🎉 {balance} $CAKE 🎉
-                                                    <span></span>
+                                                    <span>You are a verified holder of $CAKE!</span>
                                                     </> : <>
-                                                    0 $CAKE
+                                                    <span>0 $CAKE</span>
+                                                    <span>Buy some CAKE to be eligible!</span>
                                                     </>} 
                                                 </div>
                                             </div>
@@ -177,7 +190,7 @@ export function CakeInteractionModal({
                                         </div>
 
                                     )}
-                                        {window && sessionStorage.getItem('isStaker') && window && sessionStorage.getItem('isStaker') != null ? <>
+                                        {appState?.org?.staker ? <>
                                             <div className="mt-4 text-black">
                                             🎉 Verified Staker & Holder 🎉
                                         </div>
