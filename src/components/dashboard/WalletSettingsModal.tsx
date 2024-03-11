@@ -144,7 +144,6 @@ export function WalletSettingsModal({
                                                     {walletVisiblity == true ? 'ON' : 'OFF'}
                                                 </button>
                                             </div>
-                                            {console.log("RENDER SLEECTE", selectedWallets)}
                                             {selectedWallets.map(
                                                 (selectedWallet, i) => {
                                                     return (
