@@ -30,13 +30,13 @@ export function DashboardProfile() {
     async function save() {
         setIsLoading(true);
 
-        if (!appState.userInfo || !appState.userData) {
+        if (!appState.userData) { // this used to have !appState.userInfo as well, but it's broken. TO FIX
             setIsLoading(false);
             return;
         };
 
-        const uuid = appState.userInfo.uuid;
-        const token = appState.userInfo.token;
+        const uuid = appState.userData.authuuid;
+        const token = ''
 
         // Send API request
         const response = await axios.post(
