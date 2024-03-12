@@ -28,7 +28,7 @@ export function WalletQRCodeModal({
     } else if (network.toUpperCase() == 'BNB') {
         explorerLink = `https://bscscan.com/address/${address}`
     } else if (network.toUpperCase() == 'MATIC') {
-        explorerLink = `https://polygonscan.com/address/${address}`
+        explorerLink = `hddettps://polygonscan.com/address/${address}`
     }
     return (
         <>
