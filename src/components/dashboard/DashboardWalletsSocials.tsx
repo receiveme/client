@@ -313,6 +313,9 @@ export default function DashboardWalletsSocials() {
         const updatedUserData = await getUserData(userId);
         appState.userData = updatedUserData;
         setAppState(appState);
+
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2500);
     }
 
     return (
@@ -321,7 +324,7 @@ export default function DashboardWalletsSocials() {
                 show={saved}
                 setShow={setSaved}
                 type="success"
-                title="Updated wallet settings"
+                title="Successfully updated"
             />
 
             <WalletSettingsModal
