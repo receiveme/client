@@ -50,7 +50,7 @@ async function getUserByHandle(handle: string) {
 
 export default async function Profile({ params }: any) {
     const handle: any = params.handle;
-    
+
     const data: any = await getUserByHandle(handle);
 
     // let data_each_wallet: any = {};
@@ -86,7 +86,7 @@ export default async function Profile({ params }: any) {
                             handle={data.handle}
                             banner={data.profiles.background}
                             socials={data.Social}
-                            className="my-6"
+                            className="my-4"
                         />
 
                         <EditHandleButton handle={data.handle} />

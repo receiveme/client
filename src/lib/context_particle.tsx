@@ -11,9 +11,13 @@ import {
     Avalanche,
     AvalancheTestnet,
     ArbitrumNova,
+    BNBChain,
+    BNBChainTestnet,
 } from "@particle-network/chains";
 import { evmWallets } from "@particle-network/connect";
 import UserInfoSetter from "./UserInfoSetter";
+import particle from "./particle";
+// import {} from ""
 
 export const AppContext = createContext<AppState | any>({});
 
@@ -33,9 +37,15 @@ export const AppStateProvider = ({
 
     // Save the app state to local storage every time it is updated
     useEffect(() => {
-        console.log("wait new", appState);
-        if (appState.server) return;
-        localStorage.setItem("app-state", JSON.stringify(appState));
+        let currentAppState = appState;
+
+        if (currentAppState.server) return;
+
+        if (!currentAppState.userInfo && currentAppState.userData) {
+            currentAppState.userInfo = particle.auth.getUserInfo();
+        }
+
+        localStorage.setItem("app-state", JSON.stringify(currentAppState));
     }, [appState, setAppState]);
 
     return (
@@ -56,6 +66,8 @@ export const AppStateProvider = ({
                         EthereumGoerli,
                         Avalanche,
                         AvalancheTestnet,
+                        BNBChain,
+                        BNBChainTestnet,
                     ],
                     particleWalletEntry: {
                         //optional: particle wallet config
@@ -67,6 +79,8 @@ export const AppStateProvider = ({
                             Avalanche,
                             AvalancheTestnet,
                             ArbitrumNova,
+                            BNBChain,
+                            BNBChainTestnet,
                         ],
                         customStyle: {}, //optional: custom wallet style
                     },

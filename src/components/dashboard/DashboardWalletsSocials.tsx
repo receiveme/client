@@ -8,7 +8,10 @@ import particle from "../../lib/particle";
 import { createSocials, createWallets, getUserData } from "@/src/actions";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { IconLoader2, IconSettings } from "@tabler/icons-react";
-import { WalletSettingsModal, WalletSettingsModalNonEVM } from "./WalletSettingsModal";
+import {
+    WalletSettingsModal,
+    WalletSettingsModalNonEVM,
+} from "./WalletSettingsModal";
 import Toast from "../toast";
 
 const SOCIALS = [
@@ -30,7 +33,12 @@ const WALLETS = [
     { id: "particle", name: "Particle Wallet", image: "particle.png" }, // Particle Wallet ... is kinda tricky .. what do we do about this one ? we should make a
     { id: "metamask", name: "Metamask", image: "metamask.png" },
     { id: "tronlink", name: "Tronlink", image: "tron.png" },
-    { id: "algorand", name: "MyPera Wallet [Algorand]", image: "mypera.png", disabled: true },
+    {
+        id: "algorand",
+        name: "MyPera Wallet [Algorand]",
+        image: "mypera.png",
+        disabled: true,
+    },
     {
         id: "unstoppabledomains",
         name: "Unstoppable Domains",
@@ -52,9 +60,13 @@ export default function DashboardWalletsSocials() {
     const [isLoading, setIsLoading] = useState(false);
     const [saved, setSaved] = useState(false);
 
-    const [isWalletSettingsModalOpen, setIsWalletSettingsModalOpen] = useState(false);
+    const [isWalletSettingsModalOpen, setIsWalletSettingsModalOpen] =
+        useState(false);
 
-    const [isNonEVMWalletSettingsModalOpen, setIsNonEVMWalletSettingsModalOpen] = useState(false);
+    const [
+        isNonEVMWalletSettingsModalOpen,
+        setIsNonEVMWalletSettingsModalOpen,
+    ] = useState(false);
     const [currentWallet, setCurrentWallet] = useState(null);
 
     const openWalletModal = async (wallet: any) => {
@@ -63,7 +75,7 @@ export default function DashboardWalletsSocials() {
     };
 
     const openNonEVMWalletModal = async (wallet: any) => {
-        console.log(wallet)
+        console.log(wallet);
         setCurrentWallet(wallet);
         setIsNonEVMWalletSettingsModalOpen(true);
     };
@@ -86,15 +98,13 @@ export default function DashboardWalletsSocials() {
             socialInfo: user,
             socialImg: user.avatar,
             socialId: String(user.thirdparty_user_info?.user_info.id),
-        }
+        };
 
         const fetchSocialDetails = async () => {
             if (newSocial.authType == "github") {
                 if (!newSocial.name && newSocial.socialId) {
                     let id = newSocial.socialId;
-                    let res = await fetch(
-                        `https://api.github.com/user/${id}`,
-                    );
+                    let res = await fetch(`https://api.github.com/user/${id}`);
                     if (!res.ok) throw new Error("bad");
 
                     const json = await res.json();
@@ -107,41 +117,48 @@ export default function DashboardWalletsSocials() {
             } else if (newSocial.authType == "twitter") {
                 //TODO
             }
-        }
+        };
 
         await fetchSocialDetails();
 
         const socialsData = {
             userid: userId,
-            networkid: newSocial.authType === "github" ? newSocial.socialId : null,
+            networkid:
+                newSocial.authType === "github" ? newSocial.socialId : null,
             imageUrl: newSocial.socialImg ? newSocial.socialImg : null,
             name: newSocial.socialUsername ? newSocial.socialUsername : null,
-            particle_token: newSocial.socialInfo.token ? newSocial.socialInfo.token : null,
+            particle_token: newSocial.socialInfo.token
+                ? newSocial.socialInfo.token
+                : null,
             particle_uuid: newSocial.socialUuid ? newSocial.socialUuid : null,
-            platform: newSocial.authType ? newSocial.authType : null
-        }
+            platform: newSocial.authType ? newSocial.authType : null,
+        };
 
-        setNewSocials(prevSocials => [...prevSocials, socialsData]);
+        setNewSocials((prevSocials) => [...prevSocials, socialsData]);
     };
 
     function connectMetamask() {
         return new Promise((resolve, reject) => {
-            window["ethereum"]?.request({ method: "eth_chainId" })
+            window["ethereum"]
+                ?.request({ method: "eth_chainId" })
 
-                .then(chainId => {
+                .then((chainId) => {
                     return window["ethereum"]?.request({
-                        method:
-                            "eth_requestAccounts"
+                        method: "eth_requestAccounts",
                     });
                 })
-                .then(accounts => {
+                .then((accounts) => {
                     if (accounts && accounts.length > 0) {
                         const accountAddress = accounts[0];
                         setMetamaskAddress(accountAddress);
 
-                        const existingWalletIndex = appState.userData.Wallet.findIndex(wallet => wallet.walletProvider === "metamask");
+                        const existingWalletIndex =
+                            appState.userData.Wallet.findIndex(
+                                (wallet) =>
+                                    wallet.walletProvider === "metamask",
+                            );
 
-                        let wallets = appState.userData.Wallet
+                        let wallets = appState.userData.Wallet;
 
                         if (existingWalletIndex < 0) {
                             wallets.push({
@@ -156,15 +173,24 @@ export default function DashboardWalletsSocials() {
                         };
 
                         // Here, we update the state before resolving the promise.
-                        setNewSocials(prevWallets => [...prevWallets, walletData]);
+                        setNewSocials((prevWallets) => [
+                            ...prevWallets,
+                            walletData,
+                        ]);
                         resolve(walletData); // Resolve the promise with wallet data
                     } else {
-                        reject(new Error("No accounts returned from Metamask."));
+                        reject(
+                            new Error("No accounts returned from Metamask."),
+                        );
                     }
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error("METAMASK ERR:", error);
-                    reject(new Error("Metamask connection failed: " + error.message));
+                    reject(
+                        new Error(
+                            "Metamask connection failed: " + error.message,
+                        ),
+                    );
                 });
         });
     }
@@ -184,11 +210,11 @@ export default function DashboardWalletsSocials() {
 
                 // After connection
                 let account = tronLink.tronWeb.defaultAddress.base58;
-                console.log(account)
+                console.log(account);
                 setTronlinkAddress(account);
 
                 const wallets = appState.userData.Wallet;
-                console.log(wallets)
+                console.log(wallets);
                 let walletIndex = wallets.findIndex(
                     (wallet) => wallet.walletProvider == "tronlink",
                 );
@@ -206,7 +232,7 @@ export default function DashboardWalletsSocials() {
                     network: "tronlink",
                     address: account,
                 };
-                setNewWallets(prevWallets => [...prevWallets, walletData]);
+                setNewWallets((prevWallets) => [...prevWallets, walletData]);
                 return resolve(walletData);
             } catch (e) {
                 console.log(e);
@@ -241,8 +267,8 @@ export default function DashboardWalletsSocials() {
                     address: newAccounts[0],
                 };
 
-                setNewWallets(prevWallets => [...prevWallets, walletData]);
-                return walletData
+                setNewWallets((prevWallets) => [...prevWallets, walletData]);
+                return walletData;
             });
         } catch (error) {
             //@ts-ignore
@@ -254,7 +280,6 @@ export default function DashboardWalletsSocials() {
         }
     }
 
-
     function disconnectAlgorandWallet() {
         peraWallet.disconnect();
         setAlgorandAddress(null);
@@ -262,11 +287,10 @@ export default function DashboardWalletsSocials() {
 
     // Function to connect wallets
     const connectWallet = async (wallet: any) => {
-        console.log(wallet)
+        console.log(wallet);
         console.log(`Connect ${wallet.name} wallet initiated`);
 
         if (wallet.id === "particle") {
-        
         } else if (wallet.name === "Metamask") {
             await connectMetamask();
         } else if (wallet.name === "Tronlink") {
@@ -279,16 +303,16 @@ export default function DashboardWalletsSocials() {
     async function save() {
         const userId = userData?.Profile[0].userid;
         if (newWallets.length > 0) {
-            await createWallets(userId, newWallets)
+            await createWallets(userId, newWallets);
         }
 
         if (newSocials.length > 0) {
             await createSocials(userId, newSocials);
         }
 
-        const updatedUserData = await getUserData(userId)
+        const updatedUserData = await getUserData(userId);
         appState.userData = updatedUserData;
-        setAppState(appState)
+        setAppState(appState);
     }
 
     return (
@@ -299,17 +323,19 @@ export default function DashboardWalletsSocials() {
                 type="success"
                 title="Updated wallet settings"
             />
+
             <WalletSettingsModal
                 isOpen={isWalletSettingsModalOpen}
                 setIsOpen={setIsWalletSettingsModalOpen}
                 wallet={currentWallet}
-
+                key={currentWallet}
             />
 
             <WalletSettingsModalNonEVM
                 isOpen={isNonEVMWalletSettingsModalOpen}
                 setIsOpen={setIsNonEVMWalletSettingsModalOpen}
                 wallet={currentWallet}
+                key={currentWallet}
             />
 
             <div className="flex flex-col gap-4">
@@ -322,27 +348,30 @@ export default function DashboardWalletsSocials() {
                         {SOCIALS.map((social) => {
                             let socialIndexUserData = userData.Social.findIndex(
                                 (linkedSocial) => {
-                                    return linkedSocial.platform === social.id
-                                }
+                                    return linkedSocial.platform === social.id;
+                                },
                             );
 
                             let socialIndexNewSocials = newSocials.findIndex(
                                 (linkedSocial) => {
-                                    return linkedSocial.platform === social.id
-                                }
+                                    return linkedSocial.platform === social.id;
+                                },
                             );
 
-                            const linked = socialIndexUserData > -1 || socialIndexNewSocials > -1;
+                            const linked =
+                                socialIndexUserData > -1 ||
+                                socialIndexNewSocials > -1;
 
                             return (
                                 <button
                                     key={social.id}
                                     disabled={social.disabled || linked}
                                     onClick={() => handleSocialLogin(social)}
-                                    className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${linked
-                                        ? "border border-green-500/50"
-                                        : ""
-                                        } ${social.disabled ? "opacity-60" : ""}`}
+                                    className={`transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
+                                        linked
+                                            ? "border border-green-500/50"
+                                            : ""
+                                    } ${social.disabled ? "opacity-60" : ""}`}
                                 >
                                     <img
                                         src={`/img/3p/${social.image}`}
@@ -373,17 +402,22 @@ export default function DashboardWalletsSocials() {
                             // Changed to findIndex because we need to match wallets[].walletProvider
                             let walletIndexUserData = userData.Wallet.findIndex(
                                 (linkedWallet) => {
-                                    return linkedWallet.network === wallet.id
-                                }
+                                    return linkedWallet.network === wallet.id;
+                                },
                             );
                             let walletIndexNewWallets = newWallets.findIndex(
                                 (linkedWallet) => {
-                                    return linkedWallet.network === wallet.id
-                                }
+                                    return linkedWallet.network === wallet.id;
+                                },
                             );
 
-                            const linked = walletIndexUserData > -1 || walletIndexNewWallets > -1;
-                            const walletIndex = walletIndexUserData > -1 ? walletIndexUserData : walletIndexNewWallets
+                            const linked =
+                                walletIndexUserData > -1 ||
+                                walletIndexNewWallets > -1;
+                            const walletIndex =
+                                walletIndexUserData > -1
+                                    ? walletIndexUserData
+                                    : walletIndexNewWallets;
 
                             let linkedWallet = linked
                                 ? userData.Wallet[walletIndex]
@@ -395,11 +429,13 @@ export default function DashboardWalletsSocials() {
                                         onClick={() =>
                                             !linked ? connectWallet(wallet) : {}
                                         }
-                                        className={`cursor-pointer transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${linked
-                                            ? "border border-green-500/50"
-                                            : ""
-                                            } ${wallet.disabled ? "opacity-60" : ""
-                                            }`}
+                                        className={`cursor-pointer transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
+                                            linked
+                                                ? "border border-green-500/50"
+                                                : ""
+                                        } ${
+                                            wallet.disabled ? "opacity-60" : ""
+                                        }`}
                                     >
                                         <img
                                             src={`/img/3p/${wallet.image}`}
@@ -417,20 +453,27 @@ export default function DashboardWalletsSocials() {
 
                                         {linked && (
                                             <div
-                                                onClick={wallet.name == 'Metamask' || wallet.id == 'particle' ? (e) =>
-                                                    openWalletModal({
-                                                        ...wallet,
-                                                        ...(linkedWallet as Record<
-                                                            string,
-                                                            any
-                                                        >),
-                                                    }) : (e) => openNonEVMWalletModal({
-                                                        ...wallet,
-                                                        ...(linkedWallet as Record<
-                                                            string,
-                                                            any
-                                                        >),
-                                                    })
+                                                onClick={
+                                                    wallet.name == "Metamask" ||
+                                                    wallet.id == "particle"
+                                                        ? (e) =>
+                                                              openWalletModal({
+                                                                  ...wallet,
+                                                                  ...(linkedWallet as Record<
+                                                                      string,
+                                                                      any
+                                                                  >),
+                                                              })
+                                                        : (e) =>
+                                                              openNonEVMWalletModal(
+                                                                  {
+                                                                      ...wallet,
+                                                                      ...(linkedWallet as Record<
+                                                                          string,
+                                                                          any
+                                                                      >),
+                                                                  },
+                                                              )
                                                 }
                                                 className="ml-auto p-1.5 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer"
                                             >

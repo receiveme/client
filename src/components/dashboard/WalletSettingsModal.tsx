@@ -17,19 +17,17 @@ type supportedWallet = {
     state: boolean;
     image: string;
     name: string;
-
-}
-type SupportedWallets = supportedWallet[]
+};
+type SupportedWallets = supportedWallet[];
 
 export function WalletSettingsModal({
     isOpen,
     setIsOpen,
     wallet,
 }: WalletSettingsModalProps) {
-
     function closeModal() {
         setIsOpen(false);
-    };
+    }
 
     // const walletOptions = ;
 
@@ -43,50 +41,71 @@ export function WalletSettingsModal({
     //     }
     // });
 
-
     const [selectedWallets, setSelectedWallets] = useState([]);
     const [walletVisiblity, setWalletVisibility] = useState<boolean>(true);
     const [saved, setSaved] = useState(false);
 
     useEffect(() => {
-        const initialWallets:SupportedWallets = [
+        const initialWallets: SupportedWallets = [
             { key: "eth", state: false, image: "/img/3p/eth.png", name: "ETH" },
-            { key: "avax", state: false, image: "/img/3p/avaxpng.png", name: "AVAX" },
-            { key: "matic", state: false, image: "/img/3p/matic.png", name: "POLYGON" },
+            {
+                key: "avax",
+                state: false,
+                image: "/img/3p/avaxpng.png",
+                name: "AVAX",
+            },
+            {
+                key: "matic",
+                state: false,
+                image: "/img/3p/matic.png",
+                name: "POLYGON",
+            },
             { key: "bnb", state: false, image: "/img/3p/bnb.png", name: "BSC" },
-        ].map(walletObj => {
-            return ({
+        ].map((walletObj) => {
+            return {
                 ...walletObj,
-                state: wallet?.preferrednetworks?.includes(walletObj.key) ?? false
-            })
+                state:
+                    wallet?.preferrednetworks?.includes(walletObj.key) ?? false,
+            };
         });
 
         setSelectedWallets(initialWallets);
     }, [wallet?.preferrednetworks]);
 
     const handleWalletSelect = (key: string) => {
-
-        setSelectedWallets(prevState => prevState.map(wallet => {
-            if (wallet.key === key) {
-                return { ...wallet, state: !wallet.state }; // Toggle the state for the matched wallet
-            }
-            return wallet;
-        }));
+        setSelectedWallets((prevState) =>
+            prevState.map((wallet) => {
+                if (wallet.key === key) {
+                    return { ...wallet, state: !wallet.state }; // Toggle the state for the matched wallet
+                }
+                return wallet;
+            }),
+        );
     };
 
-    const verifyMessageEVM = async (address: string, wallet:any, preferrednetworks: SupportedWallets, visible:boolean) => {
-        const provider = new ethers.providers.Web3Provider(window["ethereum"])
-        const signer = provider.getSigner()
-        const verifyMessage = await signer.signMessage(`${address}`)
+    const verifyMessageEVM = async (
+        address: string,
+        wallet: any,
+        preferrednetworks: SupportedWallets,
+        visible: boolean,
+    ) => {
+        const provider = new ethers.providers.Web3Provider(window["ethereum"]);
+        const signer = provider.getSigner();
+        const verifyMessage = await signer.signMessage(`${address}`);
         // todo: add selected networks to address...
         // console.log(wallet, preferrednetworks, visible)
         // todo: send this to backend ...shods
 
-        console.log(preferrednetworks)
+        console.log(preferrednetworks);
 
         // console.log(networks)
-        const update = await  updateUserWallet(address, wallet, preferrednetworks, visible)
-        if (update) setSaved(true)
+        const update = await updateUserWallet(
+            address,
+            wallet,
+            preferrednetworks,
+            visible,
+        );
+        if (update) setSaved(true);
     };
 
     return (
@@ -127,24 +146,33 @@ export function WalletSettingsModal({
                                                 className="h-8 w-8"
                                             />
                                             <span>{wallet?.name}</span>
-
                                         </div>
                                     </Dialog.Title>
 
                                     <div className="mt-4 text-black">
-                                        <span className='text-sm text-gray'>{wallet?.address}</span>
+                                        <span className="text-sm text-gray">
+                                            {wallet?.address}
+                                        </span>
                                         {/* <span>d fkjdjkdsfjkdsf</span> */}
-                                        {!saved ? <>
-                                            <p className='text-sm text-start mt-2'>Select different networks to be visible on your profile, then sign a message.</p>
-                                        </> : <>
-                                            <p className='text-sm text-start mt-2'>Successfully saved wallet settings.</p>
-                                        </>}
-                                        
-                                        <div className="mt-4 flex flex-col gap-2">
-                                            <div
+                                        {!saved ? (
+                                            <>
+                                                <p className="text-sm text-start mt-2">
+                                                    Select different networks to
+                                                    be visible on your profile,
+                                                    then sign a message.
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="text-sm text-start mt-2">
+                                                    Successfully saved wallet
+                                                    settings.
+                                                </p>
+                                            </>
+                                        )}
 
-                                                className="cursor-pointer transition-all hover:bg-gray-200 flex items-center justify-between rounded-md bg-gray-100 shadow-sm px-3 py-2"
-                                            >
+                                        <div className="mt-4 flex flex-col gap-2">
+                                            <div className="cursor-pointer transition-all hover:bg-gray-200 flex items-center justify-between rounded-md bg-gray-100 shadow-sm px-3 py-2">
                                                 <div className="flex items-center">
                                                     {/* <img
                                                                 src={
@@ -156,21 +184,36 @@ export function WalletSettingsModal({
                                                                 className="mr-2 h-5 w-5"
                                                             /> */}
                                                     <span className="text-sm font-semibold">
-                                                        VISIBLE
+                                                        Show on profile
                                                     </span>
                                                 </div>
-                                                <button onClick={(e) => setWalletVisibility(!walletVisiblity)} className={`w-20 rounded-md px-2 py-1 text-sm font-semibold uppercase ${walletVisiblity
-                                                    ? "bg-green-400 hover:bg-green-500"
-                                                    : "bg-gray-200 hover:bg-gray-300"
-                                                    }`}>
-                                                    {walletVisiblity == true ? 'ON' : 'OFF'}
+                                                <button
+                                                    onClick={(e) =>
+                                                        setWalletVisibility(
+                                                            !walletVisiblity,
+                                                        )
+                                                    }
+                                                    className={`w-20 rounded-md px-2 py-1 text-sm font-semibold ${
+                                                        walletVisiblity
+                                                            ? "bg-green-400 hover:bg-green-500"
+                                                            : "bg-gray-200 hover:bg-gray-300"
+                                                    }`}
+                                                >
+                                                    {walletVisiblity == true
+                                                        ? "Visible"
+                                                        : "Hidden"}
                                                 </button>
                                             </div>
+
+                                            <hr className="my-2" />
+
                                             {selectedWallets.map(
                                                 (selectedWallet, i) => {
                                                     return (
                                                         <div
-                                                            key={selectedWallet.key}
+                                                            key={
+                                                                selectedWallet.key
+                                                            }
                                                             className="cursor-pointer transition-all hover:bg-gray-200 flex items-center justify-between rounded-md bg-gray-100 shadow-sm px-3 py-2"
                                                         >
                                                             <div className="flex items-center">
@@ -190,30 +233,38 @@ export function WalletSettingsModal({
                                                                 </span>
                                                             </div>
                                                             <button
-                                                                className={`w-20 rounded-md px-2 py-1 text-sm font-semibold ${selectedWallet.state
-                                                                    ? "bg-green-400 hover:bg-green-500"
-                                                                    : "bg-gray-200 hover:bg-gray-300"
-                                                                    }`}
+                                                                className={`w-20 rounded-md px-2 py-1 text-sm font-semibold ${
+                                                                    selectedWallet.state
+                                                                        ? "bg-green-400 hover:bg-green-500"
+                                                                        : "bg-gray-200 hover:bg-gray-300"
+                                                                }`}
                                                                 onClick={() =>
                                                                     handleWalletSelect(
                                                                         selectedWallet.key,
                                                                     )
                                                                 }
                                                             >
-
                                                                 {selectedWallet.state
                                                                     ? "Selected"
                                                                     : "Select"}
                                                             </button>
                                                         </div>
-                                                    )
-                                                })}
+                                                    );
+                                                },
+                                            )}
                                         </div>
                                     </div>
 
                                     <div className="mt-4">
                                         <button
-                                            onClick={(e) => verifyMessageEVM(wallet?.address, wallet, selectedWallets, walletVisiblity)}
+                                            onClick={(e) =>
+                                                verifyMessageEVM(
+                                                    wallet?.address,
+                                                    wallet,
+                                                    selectedWallets,
+                                                    walletVisiblity,
+                                                )
+                                            }
                                             type="button"
                                             className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
                                         >
@@ -238,13 +289,12 @@ export function WalletSettingsModal({
     );
 }
 
-
 export function WalletSettingsModalNonEVM({
     isOpen,
     setIsOpen,
     wallet,
 }: WalletSettingsModalProps) {
-    console.log(wallet)
+    console.log(wallet);
     function closeModal() {
         setIsOpen(false);
     }
@@ -260,21 +310,22 @@ export function WalletSettingsModalNonEVM({
         },
     ]);
 
-    const [tronlinkAddress, setTronlinkAddress] = useState<string | null>()
-    const [algorandAddress, setAlgorandAddress] = useState<string | null>()
+    const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
+    const [algorandAddress, setAlgorandAddress] = useState<string | null>();
 
-    const [walletVisiblity, setWalletVisibility] = useState<boolean>(true)
+    const [walletVisiblity, setWalletVisibility] = useState<boolean>(true);
 
     const existingPreferredNetworks = wallet?.preferrednetworks;
 
-
     const handleWalletSelect = (key: string) => {
-        setSelectedWallets(prevState => prevState.map(wallet => {
-            if (wallet.key === key) {
-                return { ...wallet, state: !wallet.state }; // Toggle the state for the matched wallet
-            }
-            return wallet; // Return other wallets unchanged
-        }));
+        setSelectedWallets((prevState) =>
+            prevState.map((wallet) => {
+                if (wallet.key === key) {
+                    return { ...wallet, state: !wallet.state }; // Toggle the state for the matched wallet
+                }
+                return wallet; // Return other wallets unchanged
+            }),
+        );
     };
 
     function connectTronlink() {
@@ -361,36 +412,37 @@ export function WalletSettingsModalNonEVM({
     //     }
     // }
 
-
     // function disconnectAlgorandWallet() {
     //     peraWallet.disconnect();
     //     setAlgorandAddress(null);
     // }
 
-
     const connectWallet = async (wallet: any) => {
-        console.log(wallet)
+        console.log(wallet);
         console.log(`Connect ${wallet.name} wallet initiated`);
 
         if (wallet.id === "particle") {
         } else if (wallet.id === "metamask") {
-
-        } else if (wallet.name=== "Tronlink") {
+        } else if (wallet.name === "Tronlink") {
             await connectTronlink();
         } else if (wallet.id === "algorand") {
             // await connectAlgorandWallet();
         }
     };
 
-    const verifyMessageTRON = async (address: string) => { // probably still needs more, but good...
-        console.log(address)
+    const verifyMessageTRON = async (address: string) => {
+        // probably still needs more, but good...
+        console.log(address);
         //@ts-ignore
-        const tronWeb = window.tronWeb
-        const signature = await tronWeb.trx.signMessageV2(address)
-        const verifyMessage = await tronWeb.trx.verifyMessageV2(address, signature)
-        console.log(verifyMessage, signature)
+        const tronWeb = window.tronWeb;
+        const signature = await tronWeb.trx.signMessageV2(address);
+        const verifyMessage = await tronWeb.trx.verifyMessageV2(
+            address,
+            signature,
+        );
+        console.log(verifyMessage, signature);
         // todo: send signature to backend ...shods
-    }
+    };
 
     return (
         <>
@@ -431,69 +483,94 @@ export function WalletSettingsModalNonEVM({
                                                 className="h-8 w-8"
                                             />
                                             <span>{wallet?.name}</span>
-
                                         </div>
                                     </Dialog.Title>
 
                                     <div className="mt-4 text-black">
-                                        <span className='text-sm text-gray'>{wallet?.address}</span>
+                                        <span className="text-sm text-gray">
+                                            {wallet?.address}
+                                        </span>
                                         {/* <span>d fkjdjkdsfjkdsf</span> */}
 
-                                        <p className='text-sm text-start mt-2'>Sign a message to verify your wallet as valid.</p>
+                                        <p className="text-sm text-start mt-2">
+                                            Sign a message to verify your wallet
+                                            as valid.
+                                        </p>
 
                                         <div className="cursor-pointer transition-all hover:bg-gray-200 flex items-center justify-between rounded-md bg-gray-100 shadow-sm px-3 py-2">
                                             <div className="flex items-center">
-
                                                 <span className="text-sm font-semibold">
                                                     VISIBLE
                                                 </span>
                                             </div>
-                                            <button onClick={(e) => setWalletVisibility(!walletVisiblity)} className={`w-20 rounded-md px-2 py-1 text-sm font-semibold uppercase ${walletVisiblity
-                                                ? "bg-green-400 hover:bg-green-500"
-                                                : "bg-gray-200 hover:bg-gray-300"
-                                                }`}>
-                                                {walletVisiblity == true ? 'ON' : 'OFF'}
+                                            <button
+                                                onClick={(e) =>
+                                                    setWalletVisibility(
+                                                        !walletVisiblity,
+                                                    )
+                                                }
+                                                className={`w-20 rounded-md px-2 py-1 text-sm font-semibold uppercase ${
+                                                    walletVisiblity
+                                                        ? "bg-green-400 hover:bg-green-500"
+                                                        : "bg-gray-200 hover:bg-gray-300"
+                                                }`}
+                                            >
+                                                {walletVisiblity == true
+                                                    ? "ON"
+                                                    : "OFF"}
                                             </button>
-
-
                                         </div>
                                     </div>
 
                                     <div className="mt-4 gap-y-4 ">
-                                        {!tronlinkAddress ? <>
+                                        {!tronlinkAddress ? (
+                                            <>
+                                                <button
+                                                    onClick={(e) =>
+                                                        connectWallet(wallet)
+                                                    }
+                                                    type="button"
+                                                    className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition mb-1`}
+                                                >
+                                                    Connect {wallet?.name}
+                                                </button>
 
-                                            <button
-                                                onClick={(e) => connectWallet(wallet)}
-                                                type="button"
-                                                className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition mb-1`}>
-                                                Connect {wallet?.name}
-                                            </button>
+                                                <button
+                                                    disabled
+                                                    onClick={(e) =>
+                                                        verifyMessageTRON(
+                                                            wallet?.address,
+                                                        )
+                                                    }
+                                                    type="button"
+                                                    className={`bg-green-400 opacity-70 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
+                                                >
+                                                    Verify
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button
+                                                    disabled
+                                                    type="button"
+                                                    className={`bg-green-400 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition mb-1 disabled opacity-70`}
+                                                >
+                                                    Connected
+                                                </button>
 
-                                            <button
-                                                disabled
-                                                onClick={(e) => verifyMessageTRON(wallet?.address)}
-                                                type="button"
-                                                className={`bg-green-400 opacity-70 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
-                                            >
-                                                Verify
-                                            </button>
-                                        </> : <>
-                                            <button
-                                                disabled
-                                                type="button"
-                                                className={`bg-green-400 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition mb-1 disabled opacity-70`}>
-                                                Connected
-                                            </button>
-
-                                            <button
-                                                onClick={(e) => verifyMessageTRON(wallet?.address)}
-                                                type="button"
-                                                className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
-                                            >
-                                                Verify
-                                            </button>
-
-                                        </>}
+                                                <button
+                                                    onClick={(e) =>
+                                                        verifyMessageTRON(
+                                                            wallet?.address,
+                                                        )
+                                                    }
+                                                    type="button"
+                                                    className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
+                                                >
+                                                    Verify
+                                                </button>
+                                            </>
+                                        )}
 
                                         <button
                                             type="button"
