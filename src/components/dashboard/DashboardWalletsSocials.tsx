@@ -32,7 +32,7 @@ const SOCIALS = [
 const WALLETS = [
     { id: "particle", name: "Particle Wallet", image: "particle.png" }, // Particle Wallet ... is kinda tricky .. what do we do about this one ? we should make a
     { id: "metamask", name: "Metamask", image: "metamask.png" },
-    { id: "tronlink", name: "Tronlink", image: "tron.png" },
+    { id: "tron", name: "Tronlink", image: "tron.png" },
     {
         id: "algorand",
         name: "MyPera Wallet [Algorand]",

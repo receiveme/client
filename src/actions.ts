@@ -6,39 +6,43 @@ type supportedWallet = {
     state: boolean;
     image: string;
     name: string;
+};
+type SupportedWallets = supportedWallet[];
 
-}
-type SupportedWallets = supportedWallet[]
-
-export async function updateUserWallet(address: string, wallet:any, preferrednetworks: SupportedWallets, visible:boolean) {
-    console.log(preferrednetworks)
-    let networks = preferrednetworks.filter(network => network.state == true).map(network => network.key)
+export async function updateUserWallet(
+    address: string,
+    wallet: any,
+    preferrednetworks: SupportedWallets,
+    visible: boolean,
+) {
+    console.log(preferrednetworks);
+    let networks = preferrednetworks
+        .filter((network) => network.state == true)
+        .map((network) => network.key);
     // for (let i = 0; preferrednetworks.length; i++) {
     //     if (preferrednetworks[i]?.state) networks.push(preferrednetworks[i].key)
     // }
-    console.log(networks)
+    console.log(networks);
     try {
         const userWallet = await prisma.wallet.update({
             where: {
                 id: wallet.id,
             },
-            data: 
-            {
+            data: {
                 preferrednetworks: networks,
-                visible: visible
-            }
+                visible: visible,
+            },
         });
 
         await prisma.$disconnect();
-        console.log(userWallet)
+        console.log(userWallet);
         return userWallet; // Return only the Social array
     } catch (error) {
         console.error("Error retrieving user socials:", error);
         await prisma.$disconnect();
         throw error;
     }
-};
-
+}
 
 export async function getUserSocials(userId) {
     try {
@@ -58,7 +62,7 @@ export async function getUserSocials(userId) {
         await prisma.$disconnect();
         throw error;
     }
-};
+}
 
 export async function getUserData(userId) {
     try {
@@ -81,7 +85,7 @@ export async function getUserData(userId) {
         await prisma.$disconnect();
         throw error;
     }
-};
+}
 
 export async function getUserDataByUuid(userId) {
     try {
@@ -104,7 +108,7 @@ export async function getUserDataByUuid(userId) {
         await prisma.$disconnect();
         throw error;
     }
-};
+}
 
 export async function getUserWallets(userId) {
     try {
@@ -123,7 +127,7 @@ export async function getUserWallets(userId) {
         await prisma.$disconnect();
         throw error;
     }
-};
+}
 
 export async function createUserProfile(
     socials: any,
@@ -192,10 +196,10 @@ export async function createUserProfile(
                                 wallets[i].walletProvider == "metamask"
                                     ? ["eth", "avax", "bnb"]
                                     : wallets[i].walletProvider == "particle"
-                                        ? ["eth", "avax", "bnb"]
-                                        : wallets[i].walletProvider == "tron"
-                                            ? ["tron"]
-                                            : ["algo"],
+                                    ? ["eth", "avax", "bnb"]
+                                    : wallets[i].walletProvider == "tron"
+                                    ? ["tron"]
+                                    : ["algo"],
                         },
                     });
                     console.log("successuflly inserted wallet");
@@ -227,7 +231,7 @@ export async function createUserProfile(
         await prisma.$disconnect();
         throw error;
     }
-};
+}
 
 export async function getUserByHandle(handle: string) {
     try {
@@ -265,47 +269,57 @@ export async function getUserByHandle(handle: string) {
     } catch (error) {
         console.error("Failed to fetch user:", error);
     }
-};
+}
 
-export async function createSocials(userId: string, data: any) {
+export async function createSocials(userId: string, data: any[]) {
     try {
-        const dataToInsert = data.map(social => ({
+        const dataToInsert = data.map((social) => ({
             userid: userId,
             particle_token: social.particle_token,
             particle_uuid: social.particle_uuid,
             name: social.name,
             platform: social.platform,
-            imageurl: social.imageurl
+            imageurl: social.imageurl,
         }));
-        const social = await prisma.social.createMany({
-            data: dataToInsert,
-            skipDuplicates: true
+
+        dataToInsert.forEach(async (social) => {
+            const already = await prisma.social.findFirst({ where: social });
+
+            if (!already) {
+                await prisma.social.create({
+                    data: social,
+                });
+            }
         });
 
-        //@ts-ignore
-        return social
+        return dataToInsert;
     } catch (error) {
         console.error("Failed to create social:", error);
     }
-};
+}
 
 export async function createWallets(userId: string, walletsData: any[]) {
     try {
         // Map over the walletsData to add the userId to each wallet object
-        const dataToInsert = walletsData.map(wallet => ({
+        const dataToInsert = walletsData.map((wallet) => ({
             userid: userId,
             address: wallet.address,
             network: wallet.network,
         }));
 
-        const wallets = await prisma.wallet.createMany({
-            data: dataToInsert,
-            skipDuplicates: true, // Optional: skip inserting a record if it would create a duplicate
+        dataToInsert.forEach(async (wallet) => {
+            const already = await prisma.wallet.findFirst({ where: wallet });
+
+            if (!already) {
+                await prisma.wallet.create({
+                    data: wallet,
+                });
+            }
         });
 
-        return wallets;
+        return dataToInsert;
     } catch (error) {
         console.error("Failed to create wallets:", error);
         throw error; // Rethrow the error to handle it or log it outside this function
     }
-};
+}
