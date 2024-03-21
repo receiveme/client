@@ -89,6 +89,7 @@ export function WalletSettingsModal({
         preferrednetworks: SupportedWallets,
         visible: boolean,
     ) => {
+        console.log(wallet)
         const provider = new ethers.providers.Web3Provider(window["ethereum"]);
         const signer = provider.getSigner();
         const verifyMessage = await signer.signMessage(`${address}`);
@@ -256,6 +257,7 @@ export function WalletSettingsModal({
                                     </div>
 
                                     <div className="mt-4">
+                                                
                                         <button
                                             onClick={(e) =>
                                                 verifyMessageEVM(

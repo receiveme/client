@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Providers from "../providers";
 
 export const metadata = {
@@ -12,6 +13,27 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
+            <Head>
+            <title>receive.me</title>
+                <link
+                    rel="apple-touch-icon"
+                    sizes="180x180"
+                    href="/icons/apple-touch-icon.png"
+                />
+                <link
+                    rel="icon"
+                    href="/favicon.ico"
+                />
+
+
+                <meta name="msapplication-TileColor" content="#da532c" />
+                <meta
+                    name="msapplication-config"
+                    content="/icons/browserconfig.xml"
+                />
+
+                <meta name="theme-color" content="#ffffff" />
+            </Head>
             <Providers>
                 <body>{children}</body>
             </Providers>

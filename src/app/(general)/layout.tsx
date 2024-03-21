@@ -32,16 +32,11 @@ export default function RootLayout({
                 />
                 <link
                     rel="icon"
-                    type="image/png"
-                    sizes="32x32"
-                    href="/icons/favicon-32x32.png"
+                    
+
+                    href="/favicon.ico"
                 />
-                <link
-                    rel="icon"
-                    type="image/png"
-                    sizes="16x16"
-                    href="/icons/favicon-16x16.png"
-                />
+                <title>receive.me</title>
                 <link rel="manifest" href="/icons/site.webmanifest" />
                 <link rel="shortcut icon" href="/icons/favicon.ico" />
                 <meta name="msapplication-TileColor" content="#da532c" />
