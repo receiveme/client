@@ -91,7 +91,7 @@ export default function PancakeSwap() {
 
 
                         <a
-                            href="https://twitter.com"
+                            href="https://twitter.com/awpswapio"
                             target="_blank"
                             className="p-4 transition flex items-center hover:bg-[#ffffff2b]"
                         >
@@ -103,7 +103,7 @@ export default function PancakeSwap() {
                         </a>
                         <a
                             href="https://discord.com/invite/pancakeswap"
-                            target="_blank"
+                            target=""
                             className="p-4 transition flex items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl"
                         >
                             <img

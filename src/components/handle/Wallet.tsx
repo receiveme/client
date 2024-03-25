@@ -9,6 +9,7 @@ import Eth from "../../../public/img/3p/eth.png";
 import Polygon from "../../../public/img/3p/polygonsvg.png";
 import Avax from "../../../public/img/3p/avaxpng.png";
 import Tron from "../../../public/img/3p/tron.png";
+import Matic from "../../../public/img/3p/matic.png"
 // import styles from "Wallet.module.css"
 import "../../app/globals.css";
 
@@ -16,6 +17,8 @@ type WalletProps = {
     address: string;
     preferrednetwork: any;
 };
+
+
 
 export function Wallet({ address, preferrednetwork }: WalletProps) {
     const originalWalletAddress = address;
@@ -28,6 +31,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
 
     const [copied, setCopied] = useState(false);
 
+    
     function copyAddress() {
         if (!navigator.clipboard) {
             var textArea = document.createElement("textarea");
@@ -137,6 +141,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                                     ? Polygon.src
                                     : preferrednetwork === "bnb"
                                     ? "https://cryptologos.cc/logos/bnb-bnb-logo.png"
+                                    : preferrednetwork == "matic" ? Matic.src
                                     : ""
                             }
                             className={`w-[28px] h-[auto] selected-network-item`}

@@ -326,13 +326,12 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                 <button
                                     onClick={() => handleLogin("discord")}
                                     type="button"
-                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
-                                >
-                                    <img
-                                        src="/img/3p/discord.png"
-                                        alt="Link Discord"
-                                        className="mr-2 h-auto w-5"
-                                    />
+                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                        <img
+                                            src="/img/3p/discord.png"
+                                            alt="Link Discord"
+                                            className="mr-2 h-auto w-5"/>
+                                        
 
                                     <span className="text-sm font-semibold">
                                         Link Discord

@@ -4,74 +4,78 @@
 
 @media (prefers-color-scheme: dark) {}
 
-.background-animate {
 
-  background-size: 400%;
+@layer utilities {
+  .background-animate {
 
-  -webkit-animation: gradient-animation 3s ease infinite;
-  -moz-animation: gradient-animation 3s ease infinite;
-  animation: gradient-animation 3s ease infinite;
-}
-
-@keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
+    background-size: 400%;
+  
+    -webkit-animation: gradient-animation 3s ease infinite;
+    -moz-animation: gradient-animation 3s ease infinite;
+    animation: gradient-animation 3s ease infinite;
+  }
+  
+  @keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+  
+    50% {
+      background-position: 100% 50%;
+    }
+  
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .preferred-networks {
+    position: relative;
+  }
+  
+  .selected-network-item {
+    cursor: pointer;
+  }
+  
+  .selected-network-item:hover {
+    cursor: pointer;
+    border-radius: 4px;
+  
+  }
+  
+  .preferred-networks-dropdown-hide {
+    display: none;
+  
+  }
+  
+  .network-map {
+    display: flex;
+    flex-direction: column;
+    row-gap: .5rem;
+  }
+  
+  .preferred-networks-dropdown {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    border-radius: 4px;
+    row-gap: .25rem;
+    top: 0;
+    left: 0;
+  }
+  
+  .network-dropdown-item {
+    cursor: pointer;
+    background-color: white;
+    border-radius: 4px;
+  }
+  
+  .network-dropdown-item:hover {
+    background-color: rgb(201, 201, 201);
+  }
+  
+  .awpswap-socials {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.06) -17.86%, rgba(117, 38, 119, 0.06) 100%), linear-gradient(0deg, #150511 0%, #150511 100%), #1F1F24;
   }
 
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.preferred-networks {
-  position: relative;
-}
-
-.selected-network-item {
-  cursor: pointer;
-}
-
-.selected-network-item:hover {
-  cursor: pointer;
-  border-radius: 4px;
-
-}
-
-.preferred-networks-dropdown-hide {
-  display: none;
-
-}
-
-.network-map {
-  display: flex;
-  flex-direction: column;
-  row-gap: .5rem;
-}
-
-.preferred-networks-dropdown {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  border-radius: 4px;
-  row-gap: .25rem;
-  top: 0;
-  left: 0;
-}
-
-.network-dropdown-item {
-  cursor: pointer;
-  background-color: white;
-  border-radius: 4px;
-}
-
-.network-dropdown-item:hover {
-  background-color: rgb(201, 201, 201);
-}
-
-.awpswap-socials {
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.06) -17.86%, rgba(117, 38, 119, 0.06) 100%), linear-gradient(0deg, #150511 0%, #150511 100%), #1F1F24;
 }
