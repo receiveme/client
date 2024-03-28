@@ -35,7 +35,7 @@ export function Banner({
             color[0].toUpperCase() + color.slice(1).toLowerCase()
         }.png`;
     }
-
+    console.log(socials)
     return (
         <div className={className}>
             <div className={`relative rounded-xl bg-${bg ?? ""}`}>
