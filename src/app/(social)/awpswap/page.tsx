@@ -4,6 +4,25 @@ import { IconChevronRight } from "@tabler/icons-react";
 import "../../globals.css";
 import toast from "react-hot-toast";
 
+const SOCIALS = [
+    {
+        platform: "github",
+        name: "awpswap",
+    },
+    {
+        platform: "twitch",
+        name: "awpswap",
+    },
+    {
+        platform: "twitter",
+        name: "awpswap",
+    },
+    {
+        platform: "discord",
+        networkid: "awpswap",
+    },
+];
+
 export default function AWPSwap() {
     function copy(text: string) {
         try {
@@ -33,17 +52,66 @@ export default function AWPSwap() {
                         rounded-tl-xl rounded-tr-xl bg-black opacity-50"
                     ></div>
                     <div className="relative z-10 h-full flex flex-col justify-end p-4">
-                        <h1 className="font-inter font-semibold text-2xl">
-                            <a href="https://app.awpswap.io/" target="_blank">
-                                AWPSwap
-                            </a>
-                        </h1>
-                        <p className="text-gray-300">
-                            AWPSwap.io is a trading CS2 platform. Buy, sell, and trade skins more quickly and easily. Join our community. Earn rewards.
-                        </p>
+                        <div className="flex">
+                            <div>
+                                <h1 className="font-inter font-semibold text-2xl">
+                                    <a
+                                        href="https://app.awpswap.io/"
+                                        target="_blank"
+                                    >
+                                        AWPSwap
+                                    </a>
+                                </h1>
+                                <p className="text-gray-300">
+                                    AWPSwap.io is a trading CS2 platform. Buy,
+                                    sell, and trade skins more quickly and
+                                    easily. Join our community. Earn rewards.
+                                </p>
+                            </div>
+                            <div className="min-w-[150px] flex justify-center items-center gap-2">
+                                {SOCIALS.map((social) => (
+                                    <div
+                                        className="flex gap-2 h-7"
+                                        key={social.platform}
+                                    >
+                                        <a
+                                            href={
+                                                social.platform == "github"
+                                                    ? `https://github.com/${social.name}/`
+                                                    : social.platform ==
+                                                      "twitter"
+                                                    ? `https://twitter.com/${social.name}`
+                                                    : social.platform ==
+                                                      "twitch"
+                                                    ? `https://twitch.com/${social.name}/`
+                                                    : social.platform ==
+                                                      "discord"
+                                                    ? `discord://-/users/${social.networkid}`
+                                                    : ""
+                                            }
+                                            target="_blank"
+                                            className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
+                                        >
+                                            <img
+                                                src={
+                                                    social.platform == "github"
+                                                        ? "/img/3p/github.png"
+                                                        : social.platform ==
+                                                          "twitter"
+                                                        ? "/img/3p/twitter.png"
+                                                        : social.platform ==
+                                                          "twitch"
+                                                        ? "/img/3p/twitch.png"
+                                                        : "/img/3p/discord.png"
+                                                }
+                                                className={`w-[20px] h-auto`}
+                                            />
+                                        </a>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-
-
                 </div>
                 <div className="flex flex-col">
                     <a
@@ -52,7 +120,9 @@ export default function AWPSwap() {
                         className="p-4 transition flex items-center hover:bg-[#ffffff2b]"
                     >
                         <img className="w-6" src="/icons/home.svg" />
-                        <span className="ml-3 font-bold">awpswap.io - Home</span>
+                        <span className="ml-3 font-bold">
+                            awpswap.io - Home
+                        </span>
                     </a>
 
                     <a
@@ -61,7 +131,9 @@ export default function AWPSwap() {
                         className="p-4 transition flex items-center hover:bg-[#ffffff2b]"
                     >
                         <img className="w-6" src="/icons/instantswap.svg" />
-                        <span className="ml-3 font-bold">awpswap.io - Instant Swap</span>
+                        <span className="ml-3 font-bold">
+                            awpswap.io - Instant Swap
+                        </span>
                     </a>
 
                     <a
@@ -78,10 +150,10 @@ export default function AWPSwap() {
                         className="p-4 transition flex items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl"
                     >
                         <img className="w-6" src="/img/3p/discord-white.png" />
-                        <span className="ml-3 font-bold">Join our Discord community</span>
+                        <span className="ml-3 font-bold">
+                            Join our Discord community
+                        </span>
                     </a>
-
-
                 </div>
             </div>
 
@@ -129,62 +201,78 @@ export default function AWPSwap() {
                             </button>
                         </div>
                     </div>  */}
-                    
                 </div>
-                    
+
                 <div className="flex flex-col">
                     <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
-                            <a href='https://devpost.com/software/awpswap-io' target="_blank">
-                                <div className="flex items-center">
-                                    <span className='h-6  ml-1'>🏆</span>
-                                    {/* <img className="h-6 rounded-lg" src="/img/3p/xrp.png" /> */}
-                                    <span className="break-all ml-3 mr-4 font-bold ">
-                                        Devpost Submission
-                                    </span>
-                                    <span className='text-xs text-gray hover:underline hover:scale-105 transition truncate'>devpost.com/hackathons/</span>
-                                </div>
-                                </a>
-                            <div>
-                                
-                                <IconChevronRight color="black" />
-
+                        <a
+                            href="https://devpost.com/software/awpswap-io"
+                            target="_blank"
+                        >
+                            <div className="flex items-center">
+                                <span className="h-6  ml-1">🏆</span>
+                                {/* <img className="h-6 rounded-lg" src="/img/3p/xrp.png" /> */}
+                                <span className="break-all ml-3 mr-4 font-bold ">
+                                    Devpost Submission
+                                </span>
+                                <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                    devpost.com/hackathons/
+                                </span>
                             </div>
-                        </div>
-                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
-                            <a href='https://evm-sidechain.xrpl.org/address/0x47DEF30C9F19357fA810703c5c630AD81a757DDf' target="_blank">
-                                <div className="flex items-center">
-                                    <img className="h-6 rounded-lg" src="/img/3p/xrp.png" />
-                                    <span className="break-all ml-3 mr-4 font-bold ">
-                                        Contract - SwapValue
-                                    </span>
-                                    <span className='text-xs text-gray hover:underline hover:scale-105 transition truncate'>0x47DEF30C9F19357fA810703c5c630AD81a757DDf (Explorer)</span>
-                                </div>
-                                </a>
-                            <div>
-                                
-                                <IconChevronRight color="black" />
-
-                            </div>
-                        </div>
-                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
-                            <a href='https://evm-sidechain.xrpl.org/address/0x47DEF30C9F19357fA810703c5c630AD81a757DDf' target="_blank">
-                                <div className="flex items-center">
-                                    <img className="h-6 rounded-lg" src="/img/3p/tron.png" />
-                                    <span className="break-all ml-3 mr-4 font-bold ">
-                                        Contract - SwapValue
-                                    </span>
-                                    <span className='text-xs text-gray hover:underline hover:scale-105 transition truncate'>0x47DEF30C9F19357fA810703c5c630AD81a757DDf (Explorer)</span>
-                                </div>
-                                </a>
-                            <div>
-                                
-                                <IconChevronRight color="black" />
-
-                            </div>
+                        </a>
+                        <div>
+                            <IconChevronRight color="black" />
                         </div>
                     </div>
+                    <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
+                        <a
+                            href="https://evm-sidechain.xrpl.org/address/0x47DEF30C9F19357fA810703c5c630AD81a757DDf"
+                            target="_blank"
+                        >
+                            <div className="flex items-center">
+                                <img
+                                    className="h-6 rounded-lg"
+                                    src="/img/3p/xrp.png"
+                                />
+                                <span className="break-all ml-3 mr-4 font-bold ">
+                                    Contract - SwapValue
+                                </span>
+                                <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                    0x47DEF30C9F19357fA810703c5c630AD81a757DDf
+                                    (Explorer)
+                                </span>
+                            </div>
+                        </a>
+                        <div>
+                            <IconChevronRight color="black" />
+                        </div>
+                    </div>
+                    <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
+                        <a
+                            href="https://evm-sidechain.xrpl.org/address/0x47DEF30C9F19357fA810703c5c630AD81a757DDf"
+                            target="_blank"
+                        >
+                            <div className="flex items-center">
+                                <img
+                                    className="h-6 rounded-lg"
+                                    src="/img/3p/tron.png"
+                                />
+                                <span className="break-all ml-3 mr-4 font-bold ">
+                                    Contract - SwapValue
+                                </span>
+                                <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                    0x47DEF30C9F19357fA810703c5c630AD81a757DDf
+                                    (Explorer)
+                                </span>
+                            </div>
+                        </a>
+                        <div>
+                            <IconChevronRight color="black" />
+                        </div>
+                    </div>
+                </div>
 
-                    {/* <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                         <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
                             <a href='https://bscscan.com/address/0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865' target="_blank">
                                 <div className="flex items-center">
@@ -203,8 +291,6 @@ export default function AWPSwap() {
                         </div>
                     </div> */}
             </div>
-
-            
         </div>
     );
 }
