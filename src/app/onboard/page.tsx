@@ -12,6 +12,8 @@ import { useAppState } from "@/src/hooks/useAppState";
 import { AppState } from "@/src/types/state/app-state.type";
 import particle from "../../lib/particle";
 import { PeraWalletConnect } from "@perawallet/connect";
+import { useDebounce } from "@/src/hooks/useDebounce";
+import axios from "axios";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -29,12 +31,38 @@ function Handle({
     setAppState,
 }: StageProps) {
     const [handleInput, setHandleInput] = useState("");
+
     const [isLoading, setLoading] = useState(false);
 
-    // Once input hasn't been changed for 200-500ms,
-    // check with server/db if handle is available.
-    // If not, let user know.
+    const debouncedHandleValue = useDebounce(handleInput, 400);
+
     const [available, setAvailable] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        // console.log(debouncedHandleValue, "<=");
+        (async () => {
+            if (!debouncedHandleValue) return setAvailable(null);
+            setLoading(true);
+            const res = (
+                await axios.get(
+                    `http://localhost:5001/users/handle/taken?q=${debouncedHandleValue}`,
+                )
+            ).data;
+
+            if (res?.success) {
+                if (res?.data) {
+                    // taken
+                    // console.log("taken");
+                    setAvailable(false);
+                } else {
+                    // console.log("not");
+                    setAvailable(true);
+                    // not taken
+                }
+            }
+            setLoading(false);
+        })();
+    }, [debouncedHandleValue]);
 
     function changeHandle(value: string) {
         setHandleInput(value);
@@ -82,6 +110,11 @@ function Handle({
                     placeholder="myhandle"
                     className="block w-full pl-8 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-3 py-2"
                 />
+                {isLoading && (
+                    <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center pl-3">
+                        <IconLoader2 className="animate-spin" />
+                    </div>
+                )}
             </div>
 
             {available === false && (
@@ -94,16 +127,11 @@ function Handle({
             )}
 
             <button
-                className="mt-4 hover:scale-[1.01] duration-500 transition w-full bg-indigo-600 hover:bg-indigo-700 text-lg py-3 px-4 rounded-md text-white font-bold flex items-center justify-center"
+                className="mt-4 not:disabled:hover:scale-[1.01] duration-500 transition w-full bg-indigo-600 not:disabled:hover:bg-indigo-700 text-lg py-3 px-4 rounded-md text-white font-bold flex items-center justify-center disabled:pointer-events-auto disabled:opacity-50"
                 onClick={createHandle}
+                disabled={isLoading || !available}
             >
-                {isLoading ? (
-                    <>
-                        <IconLoader2 className="animate-spin" />
-                    </>
-                ) : (
-                    <>Create Handle {handleInput ? `@${handleInput}` : ""}</>
-                )}
+                Create Handle {handleInput ? `@${handleInput}` : ""}
             </button>
         </>
     );
@@ -326,12 +354,13 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                 <button
                                     onClick={() => handleLogin("discord")}
                                     type="button"
-                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                        <img
-                                            src="/img/3p/discord.png"
-                                            alt="Link Discord"
-                                            className="mr-2 h-auto w-5"/>
-                                        
+                                    className="transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3"
+                                >
+                                    <img
+                                        src="/img/3p/discord.png"
+                                        alt="Link Discord"
+                                        className="mr-2 h-auto w-5"
+                                    />
 
                                     <span className="text-sm font-semibold">
                                         Link Discord
