@@ -67,27 +67,7 @@ export default function AWPSwap() {
                                     </p>
                                 </div>
                                 <div className="min-w-[150px] flex justify-center items-end gap-2">
-                                    {SOCIALS.map((social) => (
-                                        <div
-                                            className="flex gap-2 h-7"
-                                            key={social.platform}
-                                        >
-                                            <a
-                                                href={
-                                                    social.link
-                                                }
-                                                target="_blank"
-                                                className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
-                                            >
-                                                <img
-                                                    src={
-                                                        social.src
-                                                    }
-                                                    className={`w-[20px] h-auto`}
-                                                />
-                                            </a>
-                                        </div>
-                                    ))}
+ 
                                 </div>
                             </div>
                         </div>
@@ -108,19 +88,33 @@ export default function AWPSwap() {
                             target=""
                             className="p-4 transition flex items-center hover:bg-[#ffffff2b]"
                         >
+                            <img className="w-6" src="/icons/home.svg" />
+                            <span className="ml-3 font-bold">
+                                awpswap.io - Home 
+                            </span>
+                        </a>
+
+                        <a
+                            href="https://awpswap.io"
+                            target=""
+                            className="p-4 transition flex items-center hover:bg-[#ffffff2b]"
+                        >
                             <img className="w-6" src="/icons/instantswap.svg" />
                             <span className="ml-3 font-bold">
                                 awpswap.io - Instant Swap
                             </span>
                         </a>
-                        {/* <a
-                            href="https://twitter.com/intent/follow?screen_name=Awpswapio"
-                            target="_blank"
+
+                        <a
+                            href="https://awpswap.io"
+                            target=""
                             className="p-4 transition flex items-center hover:bg-[#ffffff2b]"
                         >
                             <img className="w-6" src="/img/3p/twitter-white.png" />
-                            <span className="ml-3 font-bold">Twitter</span>
-                        </a> */}
+                            <span className="ml-3 font-bold">
+                                Twitter
+                            </span>
+                        </a>
                         <a
                             href="https://discord.gg/NtK7RWpMHJ"
                             target="_blank"
@@ -136,6 +130,8 @@ export default function AWPSwap() {
                         </a>
                     </div>
                 </div>
+
+                
                 <div className="flex flex-col h-fit w-[45%] bg-[#ffffff2a] mt-4 rounded-xl relative">
                     <div className="flex flex-col">
                         {/* <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
@@ -182,26 +178,7 @@ export default function AWPSwap() {
                         </div>  */}
                     </div>
                     <div className="flex flex-col">
-                        {/* <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
-                            <a
-                                href="https://devpost.com/software/awpswap-io"
-                                target="_blank"
-                            >
-                                <div className="flex items-center">
-                                    <span className="h-6  ml-1">🏆</span>
-                                    <img className="h-6 rounded-lg" src="/img/3p/xrp.png" />
-                                    <span className="break-all ml-3 mr-4 font-bold ">
-                                        Devpost Submission
-                                    </span>
-                                    <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
-                                        devpost.com/hackathons/
-                                    </span>
-                                </div>
-                            </a>
-                            <div>
-                                <IconChevronRight color="black" />
-                            </div>
-                        </div> */}
+ 
                         <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
                             <button
                                 onClick={() =>
@@ -220,18 +197,50 @@ export default function AWPSwap() {
                                         @awpswapio
                                     </span>
                                 </span>
+
+                                
                             </button>
+                            
                             <div>
-                                {/* <IconChevronRight color="black" /> */}
-                                {/* {false ? (
-                                    <>
-                                        <IconCheck color="green" />
-                                    </>
-                                ) : ( */}
+
+                            
+                               
                                 <>
                                     <IconChevronRight color="black" />
                                 </>
-                                {/* )} */}
+
+                            </div>
+                        </div>
+                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
+                            <button
+                                onClick={() =>
+                                    setFollowOnTwitterModalIsOpen(true)
+                                }
+                            >
+                                <span className="flex items-center">
+                                    <img
+                                        className="h-6 rounded-lg"
+                                        src="/img/3p/discord-white.png"
+                                    />
+                                    <span className="break-all ml-3 mr-4 font-bold ">
+                                        Join our Discord community
+                                    </span>
+                                    <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                        @awpswapio
+                                    </span>
+                                </span>
+
+                                
+                            </button>
+                            
+                            <div>
+
+                            
+                               
+                                <>
+                                    <IconChevronRight color="black" />
+                                </>
+
                             </div>
                         </div>
                         <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b]">
