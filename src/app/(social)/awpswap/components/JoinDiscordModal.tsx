@@ -1,14 +1,14 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
 
-export const FollowOnTwitterModal = ({
+export const JoinDiscordModal = ({
     isOpen,
     setIsOpen,
-    setIsTwitterLinkClicked,
+    setIsDiscordLinkClicked,
 }: {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
-    setIsTwitterLinkClicked: Dispatch<SetStateAction<boolean>>;
+    setIsDiscordLinkClicked: Dispatch<SetStateAction<boolean>>;
 }) => {
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -45,12 +45,12 @@ export const FollowOnTwitterModal = ({
                                     as="h3"
                                     className="text-2xl font-bold leading-6 text-gray-900"
                                 >
-                                    Follow @awpswapio on twitter
+                                    Join awpswapio community on discord
                                 </Dialog.Title>
 
                                 <div className="mt-4 text-black">
-                                    You will be redirected to twitter account
-                                    for awpswap.
+                                    You will be redirected to discord community
+                                    of awpswap
                                 </div>
 
                                 <div className="mt-4">
@@ -59,16 +59,16 @@ export const FollowOnTwitterModal = ({
                                         className={`w-full justify-center rounded-md border border-transparent  "bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-4 py-3 text-md font-medium transition`}
                                         onClick={() => {
                                             localStorage.setItem(
-                                                "awpswap:twitter-link-clicked",
+                                                "awpswap:discord-link-clicked",
                                                 "true",
                                             );
 
                                             window.open(
-                                                "https://twitter.com/intent/follow?screen_name=Awpswapio",
+                                                "https://discord.gg/NtK7RWpMHJ",
                                                 "_blank",
                                             );
                                             setIsOpen(false);
-                                            setIsTwitterLinkClicked(true);
+                                            setIsDiscordLinkClicked(true);
                                         }}
                                     >
                                         Continue

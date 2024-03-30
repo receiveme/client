@@ -5,16 +5,47 @@ import "../../globals.css";
 import toast from "react-hot-toast";
 import { FollowOnTwitterModal } from "./components/FollowOnTwitterModal";
 import { useState } from "react";
+import { JoinDiscordModal } from "./components/JoinDiscordModal";
 
 let SOCIALS = [
-    {platform: 'awpswap', link: `https://awpswap.io`, src: `/img/3p/swap-icon.png`},
-    {platfrom: 'twitter', link: `https://twitter.com/awpswapio`, src: `/img/3p/twitter.png`},
-    {platform: 'discord', link: 'https://discord.gg/NtK7RWpMHJ', src: `/img/3p/discord.png`}
-]
+    {
+        platform: "awpswap",
+        link: `https://awpswap.io`,
+        src: `/img/3p/swap-icon.png`,
+    },
+    {
+        platfrom: "twitter",
+        link: `https://twitter.com/awpswapio`,
+        src: `/img/3p/twitter.png`,
+    },
+    {
+        platform: "discord",
+        link: "https://discord.gg/NtK7RWpMHJ",
+        src: `/img/3p/discord.png`,
+    },
+];
 
 export default function AWPSwap() {
     const [followOnTwitterModalIsOpen, setFollowOnTwitterModalIsOpen] =
         useState(false);
+    const [joinDiscordModalIsOpen, setJoinDiscordModalIsOpen] = useState(false);
+
+    const [isTwitterLinkClicked, setIsTwitterLinkClicked] = useState(() => {
+        // if (typeof window === "undefined") return false;
+
+        return (
+            Boolean(localStorage?.getItem("awpswap:twitter-link-clicked")) ||
+            false
+        );
+    });
+    const [isDiscordLinkClicked, setIsDiscordLinkClicked] = useState(() => {
+        // if (typeof window === "undefined") return false;
+
+        return (
+            Boolean(localStorage?.getItem("awpswap:discord-link-clicked")) ||
+            false
+        );
+    });
 
     function copy(text: string) {
         try {
@@ -31,13 +62,19 @@ export default function AWPSwap() {
             <FollowOnTwitterModal
                 isOpen={followOnTwitterModalIsOpen}
                 setIsOpen={setFollowOnTwitterModalIsOpen}
+                setIsTwitterLinkClicked={setIsTwitterLinkClicked}
+            />
+            <JoinDiscordModal
+                isOpen={joinDiscordModalIsOpen}
+                setIsOpen={setJoinDiscordModalIsOpen}
+                setIsDiscordLinkClicked={setIsDiscordLinkClicked}
             />
             <div
                 className="
                     awpswap-socials
                     w-full h-[100dvh] flex flex-col items-center justify-center"
             >
-                <div className="flex flex-col h-fit w-[45%] bg-[#B026BA] rounded-xl relative">
+                <div className="flex flex-col h-fit w-[45%] border border-[#B026BA] rounded-xl relative">
                     <div
                         className="
                         w-full h-52
@@ -66,12 +103,11 @@ export default function AWPSwap() {
                                         rewards.
                                     </p>
                                 </div>
-                                <div className="min-w-[150px] flex justify-center items-end gap-2">
- 
-                                </div>
+                                <div className="min-w-[150px] flex justify-center items-end gap-2"></div>
                             </div>
                         </div>
                     </div>
+                    {/* socials section */}
                     <div className="flex flex-col">
                         {/* <a
                             href="https://awpswap.io"
@@ -90,7 +126,7 @@ export default function AWPSwap() {
                         >
                             <img className="w-6" src="/icons/home.svg" />
                             <span className="ml-3 font-bold">
-                                awpswap.io - Home 
+                                awpswap.io - Home
                             </span>
                         </a>
 
@@ -110,10 +146,11 @@ export default function AWPSwap() {
                             target=""
                             className="p-4 transition flex items-center hover:bg-[#ffffff2b]"
                         >
-                            <img className="w-6" src="/img/3p/twitter-white.png" />
-                            <span className="ml-3 font-bold">
-                                Twitter
-                            </span>
+                            <img
+                                className="w-6"
+                                src="/img/3p/twitter-white.png"
+                            />
+                            <span className="ml-3 font-bold">Twitter</span>
                         </a>
                         <a
                             href="https://discord.gg/NtK7RWpMHJ"
@@ -131,7 +168,82 @@ export default function AWPSwap() {
                     </div>
                 </div>
 
-                
+                {/* tasks section */}
+                <div className="bg-[#B026BA] mt-4 rounded-xl w-[45%]">
+                    <div className="flex flex-col">
+                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
+                            <button
+                                onClick={() =>
+                                    setFollowOnTwitterModalIsOpen(true)
+                                }
+                            >
+                                <span className="flex items-center">
+                                    <img
+                                        className="h-6 rounded-lg"
+                                        src="/img/3p/twitter-white.png"
+                                    />
+                                    <span className="break-all ml-3 mr-4 font-bold ">
+                                        Follow us on twitter
+                                    </span>
+                                    <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                        @awpswapio
+                                    </span>
+                                </span>
+                            </button>
+                            <div>
+                                <button
+                                    onClick={() => {
+                                        setFollowOnTwitterModalIsOpen(true);
+                                    }}
+                                    className="
+                                    flex items-center justify-center h-7 w-7
+                                    bg-white rounded-md transition hover:bg-gray-200 hover:scale-110"
+                                >
+                                    {isTwitterLinkClicked ? (
+                                        <IconCheck color="green" />
+                                    ) : (
+                                        <IconChevronRight fill="black" />
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-b-xl">
+                        <button onClick={() => setJoinDiscordModalIsOpen(true)}>
+                            <span className="flex items-center">
+                                <img
+                                    className="h-6 rounded-lg"
+                                    src="/img/3p/discord-white.png"
+                                />
+                                <span className="break-all ml-3 mr-4 font-bold ">
+                                    Join our Discord community
+                                </span>
+                                <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                    @awpswapio
+                                </span>
+                            </span>
+                        </button>
+
+                        <div>
+                            <button
+                                onClick={() => {
+                                    setJoinDiscordModalIsOpen(true);
+                                }}
+                                className="
+                                    flex items-center justify-center h-7 w-7
+                                    bg-white rounded-md transition hover:bg-gray-200 hover:scale-110"
+                            >
+                                {isDiscordLinkClicked ? (
+                                    <IconCheck color="green" />
+                                ) : (
+                                    <IconChevronRight fill="black" />
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="flex flex-col h-fit w-[45%] bg-[#ffffff2a] mt-4 rounded-xl relative">
                     <div className="flex flex-col">
                         {/* <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
@@ -178,71 +290,6 @@ export default function AWPSwap() {
                         </div>  */}
                     </div>
                     <div className="flex flex-col">
- 
-                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
-                            <button
-                                onClick={() =>
-                                    setFollowOnTwitterModalIsOpen(true)
-                                }
-                            >
-                                <span className="flex items-center">
-                                    <img
-                                        className="h-6 rounded-lg"
-                                        src="/img/3p/twitter-white.png"
-                                    />
-                                    <span className="break-all ml-3 mr-4 font-bold ">
-                                        Follow us on twitter
-                                    </span>
-                                    <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
-                                        @awpswapio
-                                    </span>
-                                </span>
-
-                                
-                            </button>
-                            
-                            <div>
-
-                            
-                               
-                                <>
-                                    <IconChevronRight color="black" />
-                                </>
-
-                            </div>
-                        </div>
-                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
-                            <button
-                                onClick={() =>
-                                    setFollowOnTwitterModalIsOpen(true)
-                                }
-                            >
-                                <span className="flex items-center">
-                                    <img
-                                        className="h-6 rounded-lg"
-                                        src="/img/3p/discord-white.png"
-                                    />
-                                    <span className="break-all ml-3 mr-4 font-bold ">
-                                        Join our Discord community
-                                    </span>
-                                    <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
-                                        @awpswapio
-                                    </span>
-                                </span>
-
-                                
-                            </button>
-                            
-                            <div>
-
-                            
-                               
-                                <>
-                                    <IconChevronRight color="black" />
-                                </>
-
-                            </div>
-                        </div>
                         <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b]">
                             <a
                                 href="https://evm-sidechain.xrpl.org/address/0x47DEF30C9F19357fA810703c5c630AD81a757DDf"
