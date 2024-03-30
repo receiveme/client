@@ -62,7 +62,7 @@ export default function AWPSwap() {
                             rounded-tl-xl rounded-tr-xl bg-black opacity-50"
                         ></div>
                         <div className="relative z-10 h-full flex flex-col justify-end p-4">
-                            <div className="flex gap-4">
+                            <div className="flex justify-between gap-4">
                                 <div>
                                     <h1 className="font-inter font-semibold text-2xl">
                                         <a
