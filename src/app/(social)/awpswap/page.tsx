@@ -4,7 +4,7 @@ import { IconCheck, IconChevronRight } from "@tabler/icons-react";
 import "../../globals.css";
 import toast from "react-hot-toast";
 import { FollowOnTwitterModal } from "./components/FollowOnTwitterModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { JoinDiscordModal } from "./components/JoinDiscordModal";
 
 let SOCIALS = [
@@ -30,22 +30,8 @@ export default function AWPSwap() {
         useState(false);
     const [joinDiscordModalIsOpen, setJoinDiscordModalIsOpen] = useState(false);
 
-    const [isTwitterLinkClicked, setIsTwitterLinkClicked] = useState(() => {
-        // if (typeof window === "undefined") return false;
-
-        return (
-            Boolean(localStorage?.getItem("awpswap:twitter-link-clicked")) ||
-            false
-        );
-    });
-    const [isDiscordLinkClicked, setIsDiscordLinkClicked] = useState(() => {
-        // if (typeof window === "undefined") return false;
-
-        return (
-            Boolean(localStorage?.getItem("awpswap:discord-link-clicked")) ||
-            false
-        );
-    });
+    const [isTwitterLinkClicked, setIsTwitterLinkClicked] = useState(false);
+    const [isDiscordLinkClicked, setIsDiscordLinkClicked] = useState(false);
 
     function copy(text: string) {
         try {
@@ -56,6 +42,22 @@ export default function AWPSwap() {
             toast.error("Address cannot be copied");
         }
     }
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const twitterLinkClicked =
+            Boolean(localStorage?.getItem("awpswap:twitter-link-clicked")) ||
+            false;
+
+        setIsTwitterLinkClicked(twitterLinkClicked);
+
+        const discordLinkClicked =
+            Boolean(localStorage?.getItem("awpswap:discord-link-clicked")) ||
+            false;
+
+        setIsDiscordLinkClicked(discordLinkClicked);
+    }, []);
 
     return (
         <>
