@@ -6,11 +6,24 @@ import toast from "react-hot-toast";
 import { FollowOnTwitterModal } from "./components/FollowOnTwitterModal";
 import { useState } from "react";
 
-let SOCIALS = [
-    {platform: 'awpswap', link: `https://awpswap.io`, src: `/img/3p/swap-icon.png`},
-    {platfrom: 'twitter', link: `https://twitter.com/awpswapio`, src: `/img/3p/twitter.png`},
-    {platform: 'discord', link: 'https://discord.gg/NtK7RWpMHJ', src: `/img/3p/discord.png`}
-]
+const SOCIALS = [
+    {
+        platform: "github",
+        name: "awpswap",
+    },
+    {
+        platform: "twitch",
+        name: "awpswap",
+    },
+    {
+        platform: "twitter",
+        name: "awpswap",
+    },
+    {
+        platform: "discord",
+        networkid: "awpswap",
+    },
+];
 
 export default function AWPSwap() {
     const [followOnTwitterModalIsOpen, setFollowOnTwitterModalIsOpen] =
@@ -74,14 +87,34 @@ export default function AWPSwap() {
                                         >
                                             <a
                                                 href={
-                                                    social.link
+                                                    social.platform == "github"
+                                                        ? `https://github.com/${social.name}/`
+                                                        : social.platform ==
+                                                          "twitter"
+                                                        ? `https://twitter.com/${social.name}`
+                                                        : social.platform ==
+                                                          "twitch"
+                                                        ? `https://twitch.com/${social.name}/`
+                                                        : social.platform ==
+                                                          "discord"
+                                                        ? `discord://-/users/${social.networkid}`
+                                                        : ""
                                                 }
                                                 target="_blank"
                                                 className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-md flex justify-center items-center bg-white`}
                                             >
                                                 <img
                                                     src={
-                                                        social.src
+                                                        social.platform ==
+                                                        "github"
+                                                            ? "/img/3p/github.png"
+                                                            : social.platform ==
+                                                              "twitter"
+                                                            ? "/img/3p/twitter.png"
+                                                            : social.platform ==
+                                                              "twitch"
+                                                            ? "/img/3p/twitch.png"
+                                                            : "/img/3p/discord.png"
                                                     }
                                                     className={`w-[20px] h-auto`}
                                                 />
