@@ -25,7 +25,7 @@ let SOCIALS = [
     },
 ];
 
-export default function AWPSwap() {
+export default function SUNSwap() {
     const [followOnTwitterModalIsOpen, setFollowOnTwitterModalIsOpen] =
         useState(false);
     const [joinDiscordModalIsOpen, setJoinDiscordModalIsOpen] = useState(false);
@@ -73,16 +73,15 @@ export default function AWPSwap() {
             />
             <div
                 className="
-                    awpswap-socials
+                    sunswap-socials
                     w-full h-[100dvh] flex flex-col items-center justify-center"
             >
                 <div className="flex flex-col h-fit w-[45%] =border  rounded-xl relative">
                     <div
                         className="
-                        w-full h-52
-                        bg-banner bg-cover bg-no-repeat rounded-tl-xl rounded-tr-xl"
+                        w-full h-52 bg-sunbanner bg-cover bg-no-repeat rounded-tl-xl rounded-tr-xl"
                         style={{
-                            backgroundPosition: "0px -100px",
+                            backgroundPosition: "0px 0px",
                         }}
                     >
                         <div className="absolute w-full h-52 top-0 rounded-tl-xl rounded-tr-xl bg-black opacity-50" />
@@ -91,16 +90,15 @@ export default function AWPSwap() {
                                 <div>
                                     <h1 className="font-inter font-semibold text-2xl">
                                         <a
-                                            href="https://app.awpswap.io/"
+                                            href="https://sun.io/"
                                             target="_blank"
                                         >
-                                            AWPSwap
+                                            SUN.io (SUNSwap)
                                         </a>
                                     </h1>
                                     <p className="text-gray-300">
-                                        AWPSwap.io is a trading & gaming CS2 platform.
-                                        Buy, sell, and trade Counter Strike 2 skins easily. Join our community. Earn
-                                        rewards.
+                                    SUN.io, a DeFi (DEX) platform on TRON blockchain
+                                    enabling users to swap cryptocurrencies, pool & farm liquidity. Explore the realm of decentralized finance with SUNSwap!
                                     </p>
                                 </div>
                                 <div className="min-w-[150px] flex justify-center items-end gap-2"></div>
@@ -120,13 +118,13 @@ export default function AWPSwap() {
                             </span>
                         </a> */}
                         <a
-                            href="https://awpswap.io"
+                            href="https://sun.io"
                             target=""
                             className="p-4 transition flex items-center hover:bg-[#ffffff2b]"
                         >
                             <img className="w-6" src="/icons/home.svg" />
                             <span className="ml-3 font-bold">
-                                awpswap.io - Home
+                                sun.io - Home
                             </span>
                         </a>
 
@@ -137,12 +135,21 @@ export default function AWPSwap() {
                         >
                             <img className="w-6" src="/icons/instantswap.svg" />
                             <span className="ml-3 font-bold">
-                                awpswap.io - Instant Swap
+                                sunswap.com - Instant Swap
                             </span>
                         </a>
-
                         <a
                             href="https://awpswap.io"
+                            target=""
+                            className="p-4 transition flex items-center hover:bg-[#ffffff2b]"
+                        >
+                            <img className="w-6" src="/icons/docs.png" />
+                            <span className="ml-3 font-bold">
+                                SUNSwap Docs
+                            </span>
+                        </a>
+                        <a
+                            href="https://twitter.com/defi_sunio"
                             target=""
                             className="p-4 transition flex items-center hover:bg-[#ffffff2b]"
                         >
@@ -153,7 +160,7 @@ export default function AWPSwap() {
                             <span className="ml-3 font-bold">Twitter</span>
                         </a>
                         <a
-                            href="https://discord.gg/NtK7RWpMHJ"
+                            href="https://discord.gg/fFNgs75wgV"
                             target="_blank"
                             className="p-4 transition flex items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl"
                         >
@@ -162,14 +169,14 @@ export default function AWPSwap() {
                                 src="/img/3p/discord-white.png"
                             />
                             <span className="ml-3 font-bold">
-                                Join our Discord community
+                                Discord
                             </span>
                         </a>
                     </div>
                 </div>
 
                 {/* tasks section */}
-                <div className="bg-[#B026BA] mt-4 rounded-xl w-[45%]">
+                <div className="bg-[#ff5858] mt-4 rounded-xl w-[45%]">
                     <div className="flex flex-col">
                         <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
                             <button
@@ -186,7 +193,7 @@ export default function AWPSwap() {
                                         Follow us on twitter
                                     </span>
                                     <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
-                                        @awpswapio
+                                        @defi_sunio
                                     </span>
                                 </span>
                             </button>
@@ -220,7 +227,7 @@ export default function AWPSwap() {
                                     Join our Discord community
                                 </span>
                                 <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
-                                    @awpswapio
+                                    
                                 </span>
                             </span>
                         </button>
@@ -293,7 +300,7 @@ export default function AWPSwap() {
 
                     <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl">
                             <a
-                                href="https://shasta.tronscan.org/#/contract/TYQMs4Nw9bF1a8UivDjK1QPVMeymueRauM"
+                                href="https://tronscan.org/#/contract/TThJt8zaJzJMhCEScH7zWKnp5buVZqys9x"
                                 target="_blank"
                             >
                                 <div className="flex items-center">
@@ -302,10 +309,54 @@ export default function AWPSwap() {
                                         src="/img/3p/tron.png"
                                     />
                                     <span className="break-all ml-3 mr-4 font-bold ">
-                                        Contract - SwapValue
+                                        Contract - Factory
                                     </span>
                                     <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
-                                        TYQMs4Nw9bF1a8UivDjK1QPVMeymueRauM
+                                        TThJt8zaJzJMhCEScH7zWKnp5buVZqys9x
+                                        (Explorer)
+                                    </span>
+                                </div>
+                            </a>
+                            <div>
+                                <IconChevronRight color="black" />
+                            </div>
+                        </div>
+                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl">
+                            <a href="https://tronscan.org/#/contract/TQAvWQpT9H916GckwWDJNhYZvQMkuRL7PN"
+                                target="_blank"
+                            >
+                                <div className="flex items-center">
+                                    <img
+                                        className="h-6 rounded-lg"
+                                        src="/img/3p/tron.png"
+                                    />
+                                    <span className="break-all ml-3 mr-4 font-bold ">
+                                        Contract - SwapRouter
+                                    </span>
+                                    <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                        TThJt8zaJzJMhCEScH7zWKnp5buVZqys9x
+                                        (Explorer)
+                                    </span>
+                                </div>
+                            </a>
+                            <div>
+                                <IconChevronRight color="black" />
+                            </div>
+                        </div>
+                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl">
+                            <a href="https://tronscan.org/#/contract/TLSWrv7eC1AZCXkRjpqMZUmvgd99cj7pPF"
+                                target="_blank"
+                            >
+                                <div className="flex items-center">
+                                    <img
+                                        className="h-6 rounded-lg"
+                                        src="/img/3p/tron.png"
+                                    />
+                                    <span className="break-all ml-3 mr-4 font-bold ">
+                                        Contract - NonfungiblePositionManager
+                                    </span>
+                                    <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                        TLSWrv7eC1AZCXkRjpqMZUmvgd99cj7pPF
                                         (Explorer)
                                     </span>
                                 </div>
@@ -315,47 +366,7 @@ export default function AWPSwap() {
                             </div>
                         </div>
 
-                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b]">
-                            <a
-                                href="https://evm-sidechain.xrpl.org/address/0x47DEF30C9F19357fA810703c5c630AD81a757DDf"
-                                target="_blank"
-                            >
-                                <div className="flex items-center">
-                                    <img
-                                        className="h-6 rounded-lg"
-                                        src="/img/3p/xrp.png"
-                                    />
-                                    <span className="break-all ml-3 mr-4 font-bold ">
-                                        Contract - SwapValue
-                                    </span>
-                                    <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
-                                        0x47DEF30C9F19357fA810703c5c630AD81a757DDf
-                                        (Explorer)
-                                    </span>
-                                </div>
-                            </a>
-                            <div>
-                                <IconChevronRight color="black" />
-                            </div>
-                        </div>
                     </div>
-                    {/* <div className="flex flex-col">
-                            <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
-                                <a href='https://bscscan.com/address/0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865' target="_blank">
-                                    <div className="flex items-center">
-                                        <img className="h-6" src="/img/3p/cake.png" />
-                                        <span className="break-all ml-3 mr-4 font-bold ">
-                                            Contract - Main Staking (MasterChef V3)
-                                        </span>
-                                        <span className='text-xs text-gray hover:underline hover:scale-105 transition truncate'>0x0BFb...1865 (Explorer)</span>
-                                    </div>
-                                    </a>
-                                <div>
-            
-                                <IconChevronRight color="black" />
-                                </div>
-                            </div>
-                        </div> */}
                 </div>
             </div>
         </>

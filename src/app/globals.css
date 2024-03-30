@@ -78,4 +78,8 @@
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.06) -17.86%, rgba(117, 38, 119, 0.06) 100%), linear-gradient(0deg, #150511 0%, #150511 100%), #1F1F24;
   }
 
+  .sunswap-socials {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.06) -17.86%, rgba(255, 200, 200, 0.06) 100%), linear-gradient(0deg, #150511 0%, #150511 100%), #1F1F24;
+  }
+
 }
