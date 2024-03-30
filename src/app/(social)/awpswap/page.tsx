@@ -76,17 +76,16 @@ export default function AWPSwap() {
                     awpswap-socials
                     w-full h-[100dvh] flex flex-col items-center justify-center"
             >
-                <div className="flex flex-col h-fit w-[45%] border border-[#B026BA] rounded-xl relative">
+                <div className="flex flex-col h-fit w-[45%] =border =border-[#B026BA] rounded-xl relative">
                     <div
                         className="
                         w-full h-52
-                        bg-banner bg-bottom bg-[length:auto] bg-no-repeat rounded-tl-xl rounded-tr-xl"
+                        bg-banner bg-cover bg-no-repeat rounded-tl-xl rounded-tr-xl"
+                        style={{
+                            backgroundPosition: "50% 65%",
+                        }}
                     >
-                        <div
-                            className="
-                            absolute w-full h-52 top-0
-                            rounded-tl-xl rounded-tr-xl bg-black opacity-50"
-                        ></div>
+                        <div className="absolute w-full h-52 top-0 rounded-tl-xl rounded-tr-xl bg-black opacity-50" />
                         <div className="relative z-10 h-full flex flex-col justify-end p-4">
                             <div className="flex justify-between gap-4">
                                 <div>
