@@ -45,7 +45,7 @@ function Handle({
             setLoading(true);
             const res = (
                 await axios.get(
-                    `http://localhost:5001/users/handle/taken?q=${debouncedHandleValue}`,
+                    `https://seal-app-8277b.ondigitalocean.app/users/handle/taken?q=${debouncedHandleValue}`,
                 )
             ).data;
 
