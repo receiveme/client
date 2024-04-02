@@ -101,7 +101,7 @@ export default function AWPSwap() {
                                             community. Earn rewards.
                                         </p>
                                     </div>
-                                    <div className="min-w-[150px] flex justify-center items-end gap-2"></div>
+                                    {/* <div className="min-w-[150px] flex justify-center items-end gap-2"></div> */}
                                 </div>
                             </div>
                         </div>
