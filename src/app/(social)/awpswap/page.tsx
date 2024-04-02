@@ -71,18 +71,18 @@ export default function AWPSwap() {
                 setIsOpen={setJoinDiscordModalIsOpen}
                 setIsDiscordLinkClicked={setIsDiscordLinkClicked}
             />
-            <div className="awpswap-socials w-full  h-[100dvh] flex flex-col items-center justify-center">
+            <div className="awpswap-socials w-full  h-[100dvh] overflow-y-auto py-4 flex flex-col items-center justify-center">
                 <div className="px-4 sm:max-w-xl md:max-w-2xl">
                     <div className="flex flex-col h-fit =w-[45%] w-full =border =border-[#B026BA] rounded-xl relative">
                         <div
                             className="
-                            w-full h-52
+                            w-full sm:h-52 h-[20rem]
                             bg-banner bg-cover bg-no-repeat rounded-tl-xl rounded-tr-xl"
                             style={{
                                 backgroundPosition: "0px -100px",
                             }}
                         >
-                            <div className="absolute w-full h-52 top-0 rounded-tl-xl rounded-tr-xl bg-black opacity-50" />
+                            <div className="absolute h-[20rem] w-full sm:h-52 top-0 rounded-tl-xl rounded-tr-xl bg-black opacity-50" />
                             <div className="relative z-10 h-full flex flex-col justify-end p-4">
                                 <div className="flex justify-between gap-4">
                                     <div>
@@ -94,7 +94,7 @@ export default function AWPSwap() {
                                                 AWPSwap
                                             </a>
                                         </h1>
-                                        <p className="text-gray-300">
+                                        <p className="text-gray-3  00">
                                             AWPSwap.io is a trading CS2
                                             platform. Buy, sell, and trade skins
                                             more quickly and easily. Join our
@@ -183,7 +183,7 @@ export default function AWPSwap() {
                                         <span className="break-all ml-3 mr-4 font-bold ">
                                             Follow us on twitter
                                         </span>
-                                        <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                        <span className="hidden sm:inline text-xs text-gray hover:underline hover:scale-105 transition truncate">
                                             @awpswapio
                                         </span>
                                     </span>
@@ -218,7 +218,7 @@ export default function AWPSwap() {
                                     <span className="break-all ml-3 mr-4 font-bold ">
                                         Join our Discord community
                                     </span>
-                                    <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                    <span className="hidden sm:inline text-xs text-gray hover:underline hover:scale-105 transition truncate">
                                         @awpswapio
                                     </span>
                                 </span>
@@ -287,27 +287,27 @@ export default function AWPSwap() {
                             </div>  */}
                         </div>
                         <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl">
-                                <a
-                                    href="https://shasta.tronscan.org/#/address/TDUPV1LG3W7YnoWkJv4qtBLTsGWu3zhwfC"
-                                    target="_blank"
-                                >
-                                    <div className="flex items-center">
-                                        <img
-                                            className="h-6 rounded-lg"
-                                            src="/img/3p/tron.png"
-                                        />
-                                        <span className="break-all ml-3 mr-4 font-bold ">
-                                            Contract - SwapValue
-                                        </span>
-                                        <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
-                                            TDUPV1LG3W7YnoWkJv4qtBLTsGWu3zhwfC
-                                            (Explorer)
-                                        </span>
-                                    </div>
-                                </a>
-                                <div>
-                                    <IconChevronRight color="black" />
+                            <a
+                                href="https://shasta.tronscan.org/#/address/TDUPV1LG3W7YnoWkJv4qtBLTsGWu3zhwfC"
+                                target="_blank"
+                            >
+                                <div className="flex items-center">
+                                    <img
+                                        className="h-6 rounded-lg"
+                                        src="/img/3p/tron.png"
+                                    />
+                                    <span className="break-all ml-3 mr-4 font-bold ">
+                                        Contract - SwapValue
+                                    </span>
+                                    <span className="hidden sm:inline text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                        TDUPV1LG3W7YnoWkJv4qtBLTsGWu3zhwfC
+                                        (Explorer)
+                                    </span>
                                 </div>
+                            </a>
+                            <div>
+                                <IconChevronRight color="black" />
+                            </div>
                         </div>
                         <div className="flex flex-col">
                             <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b]">
@@ -323,7 +323,7 @@ export default function AWPSwap() {
                                         <span className="break-all ml-3 mr-4 font-bold ">
                                             Contract - SwapValue
                                         </span>
-                                        <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                        <span className="hidden sm:inline text-xs text-gray hover:underline hover:scale-105 transition truncate">
                                             0x47DEF30C9F19357fA810703c5c630AD81a757DDf
                                             (Explorer)
                                         </span>
@@ -333,7 +333,6 @@ export default function AWPSwap() {
                                     <IconChevronRight color="black" />
                                 </div>
                             </div>
-
                         </div>
                         {/* <div className="flex flex-col">
                                 <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
