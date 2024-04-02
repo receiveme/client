@@ -286,6 +286,29 @@ export default function AWPSwap() {
                                 </div>
                             </div>  */}
                         </div>
+                        <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl">
+                                <a
+                                    href="https://shasta.tronscan.org/#/address/TDUPV1LG3W7YnoWkJv4qtBLTsGWu3zhwfC"
+                                    target="_blank"
+                                >
+                                    <div className="flex items-center">
+                                        <img
+                                            className="h-6 rounded-lg"
+                                            src="/img/3p/tron.png"
+                                        />
+                                        <span className="break-all ml-3 mr-4 font-bold ">
+                                            Contract - SwapValue
+                                        </span>
+                                        <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                            TDUPV1LG3W7YnoWkJv4qtBLTsGWu3zhwfC
+                                            (Explorer)
+                                        </span>
+                                    </div>
+                                </a>
+                                <div>
+                                    <IconChevronRight color="black" />
+                                </div>
+                        </div>
                         <div className="flex flex-col">
                             <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b]">
                                 <a
@@ -310,29 +333,7 @@ export default function AWPSwap() {
                                     <IconChevronRight color="black" />
                                 </div>
                             </div>
-                            <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl">
-                                <a
-                                    href="https://evm-sidechain.xrpl.org/address/0x47DEF30C9F19357fA810703c5c630AD81a757DDf"
-                                    target="_blank"
-                                >
-                                    <div className="flex items-center">
-                                        <img
-                                            className="h-6 rounded-lg"
-                                            src="/img/3p/tron.png"
-                                        />
-                                        <span className="break-all ml-3 mr-4 font-bold ">
-                                            Contract - SwapValue
-                                        </span>
-                                        <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
-                                            0x47DEF30C9F19357fA810703c5c630AD81a757DDf
-                                            (Explorer)
-                                        </span>
-                                    </div>
-                                </a>
-                                <div>
-                                    <IconChevronRight color="black" />
-                                </div>
-                            </div>
+
                         </div>
                         {/* <div className="flex flex-col">
                                 <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
