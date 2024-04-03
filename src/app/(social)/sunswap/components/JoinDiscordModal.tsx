@@ -59,7 +59,7 @@ export const JoinDiscordModal = ({
                                         className={`w-full justify-center rounded-md border border-transparent  "bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-4 py-3 text-md font-medium transition`}
                                         onClick={() => {
                                             localStorage.setItem(
-                                                "awpswap:discord-link-clicked",
+                                                "sunswap:discord-link-clicked",
                                                 "true",
                                             );
 
