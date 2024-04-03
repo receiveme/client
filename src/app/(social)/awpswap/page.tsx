@@ -72,7 +72,7 @@ export default function AWPSwap() {
                 setIsDiscordLinkClicked={setIsDiscordLinkClicked}
             />
             <div className="awpswap-socials w-full  h-[100dvh] overflow-y-auto py-4 flex flex-col items-center justify-center">
-                <div className="px-4 sm:max-w-xl md:max-w-2xl">
+                <div className="px-4 sm:max-w-xl md:max-w-3xl">
                     <div className="flex flex-col h-fit =w-[45%] w-full =border =border-[#B026BA] rounded-xl relative">
                         <div
                             className="
