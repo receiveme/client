@@ -79,7 +79,7 @@ export default async function Profile({ params }: any) {
         <>
             <main className="">
                 <div
-                    className={`w-full bg-gradient-to-b ${bg} flex h-screen flex-col flex-wrap items-center justify-center gap-2 to-slate-900 p-2 `}
+                    className={`w-full bg-gradient-to-br ${bg} flex h-screen flex-col flex-wrap items-center justify-center gap-2 to-slate-900 p-2 `}
                 >
                     <div className="mb-24 flex w-full max-w-[580px] flex-col items-center px-3 lg:px-5">
                         <Banner
