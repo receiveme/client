@@ -30,13 +30,14 @@ export function DashboardProfile() {
     async function save() {
         setIsLoading(true);
 
-        if (!appState.userData) { // this used to have !appState.userInfo as well, but it's broken. TO FIX
+        if (!appState.userData) {
+            // this used to have !appState.userInfo as well, but it's broken. TO FIX
             setIsLoading(false);
             return;
-        };
+        }
 
         const uuid = appState.userData.authuuid;
-        const token = ''
+        const token = "";
 
         // Send API request
         const response = await axios.post(
@@ -68,8 +69,13 @@ export function DashboardProfile() {
                 <h3 className="text-2xl font-bold">Appearance</h3>
 
                 <div
-                    className={`p-6 py-12 rounded-xl bg-gradient-to-b from-${theme?.split("/")[0]
-                        } to-slate-900 flex justify-center items-center w-full`}
+                    className={`p-6 py-12 rounded-xl bg-gradient-to-br from-${
+                        theme?.split("/")[0]
+                    } to-slate-900 flex justify-center items-center w-full  ${
+                        theme?.includes("/animate")
+                            ? " background-animate gradient-animation "
+                            : ""
+                    }`}
                 >
                     <Banner
                         banner={banner}
