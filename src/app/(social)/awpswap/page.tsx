@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { FollowOnTwitterModal } from "./components/FollowOnTwitterModal";
 import { useEffect, useState } from "react";
 import { JoinDiscordModal } from "./components/JoinDiscordModal";
+import { AddSteamModal } from "./components/AddSteamModal";
 
 let SOCIALS = [
     {
@@ -29,10 +30,11 @@ export default function AWPSwap() {
     const [followOnTwitterModalIsOpen, setFollowOnTwitterModalIsOpen] =
         useState(false);
     const [joinDiscordModalIsOpen, setJoinDiscordModalIsOpen] = useState(false);
+    const [addSteamModalIsOpen, setAddSteamModalIsOpen] = useState(false);
 
     const [isTwitterLinkClicked, setIsTwitterLinkClicked] = useState(false);
     const [isDiscordLinkClicked, setIsDiscordLinkClicked] = useState(false);
-
+    const [isSteamProfileClicked, setIsSteamProfileClicked] = useState(false);
     function copy(text: string) {
         try {
             navigator.clipboard.writeText(text);
@@ -57,6 +59,12 @@ export default function AWPSwap() {
             false;
 
         setIsDiscordLinkClicked(discordLinkClicked);
+
+        const steamLinkClicked =
+        Boolean(localStorage?.getItem("awpswap:steam-link-clicked")) ||
+        false;
+
+        setIsSteamProfileClicked(steamLinkClicked);
     }, []);
 
     return (
@@ -70,6 +78,12 @@ export default function AWPSwap() {
                 isOpen={joinDiscordModalIsOpen}
                 setIsOpen={setJoinDiscordModalIsOpen}
                 setIsDiscordLinkClicked={setIsDiscordLinkClicked}
+            />
+
+            <AddSteamModal
+                isOpen={addSteamModalIsOpen}
+                setIsOpen={setAddSteamModalIsOpen}
+                setIsLinkClicked={setIsSteamProfileClicked}
             />
             <div className="awpswap-socials w-full  h-[100dvh] flex flex-col items-center justify-center">
                 <div className="px-4 sm:max-w-xl md:max-w-2xl">
@@ -170,7 +184,7 @@ export default function AWPSwap() {
                     <div className="bg-[#B026BA] mt-4 rounded-xl =w-[45%] w-full">
                         <div className="flex flex-col">
                             <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
-                                <button
+                                  <button
                                     onClick={() =>
                                         setFollowOnTwitterModalIsOpen(true)
                                     }
@@ -205,7 +219,10 @@ export default function AWPSwap() {
                                     </button>
                                 </div>
                             </div>
+                            
                         </div>
+
+                        
                         <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-b-xl">
                             <button
                                 onClick={() => setJoinDiscordModalIsOpen(true)}
@@ -240,7 +257,49 @@ export default function AWPSwap() {
                                 </button>
                             </div>
                         </div>
+
+                        <div className="flex flex-col">
+                            <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
+                                  <button
+                                    onClick={() =>
+                                        setFollowOnTwitterModalIsOpen(true)
+                                    }
+                                >
+                                    <span className="flex items-center">
+                                        <img
+                                            className="h-6 rounded-lg"
+                                            src="/img/3p/steam.png"
+                                        />
+                                        <span className="break-all ml-3 mr-4 font-bold ">
+                                            Add us on Steam
+                                        </span>
+                                        <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                            awpswap.io
+                                        </span>
+                                    </span>
+                                </button>
+                                <div>
+                                    <button
+                                        onClick={() => {
+                                            setAddSteamModalIsOpen(true);
+                                        }}
+                                        className="
+                                        flex items-center justify-center h-7 w-7
+                                        bg-white rounded-md transition hover:bg-gray-200 hover:scale-110"
+                                    >
+                                        {isTwitterLinkClicked ? (
+                                            <IconCheck color="green" />
+                                        ) : (
+                                            <IconChevronRight fill="black" />
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                            
+                        </div>
                     </div>
+
+                    
                     <div className="flex flex-col h-fit =w-[45%] w-full bg-[#ffffff2a] mt-4 rounded-xl relative">
                         <div className="flex flex-col">
                             {/* <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-tl-xl rounded-tr-xl">
@@ -309,8 +368,32 @@ export default function AWPSwap() {
                                     <IconChevronRight color="black" />
                                 </div>
                         </div>
+
+                                                <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl">
+                                <a
+                                    href="https://shasta.tronscan.org/#/address/TDUPV1LG3W7YnoWkJv4qtBLTsGWu3zhwfC"
+                                    target="_blank"
+                                >
+                                    <div className="flex items-center">
+                                        <img
+                                            className="h-6 rounded-lg"
+                                            src="/img/3p/tron.png"
+                                        />
+                                        <span className="break-all ml-3 mr-4 font-bold ">
+                                            Contract - SwapValue
+                                        </span>
+                                        <span className="text-xs text-gray hover:underline hover:scale-105 transition truncate">
+                                            TDUPV1LG3W7YnoWkJv4qtBLTsGWu3zhwfC
+                                            (Explorer)
+                                        </span>
+                                    </div>
+                                </a>
+                                <div>
+                                    <IconChevronRight color="black" />
+                                </div>
+                        </div>
                         <div className="flex flex-col">
-                            <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b]">
+                            {/* <div className="p-4 transition flex justify-between items-center hover:bg-[#ffffff2b]">
                                 <a
                                     href="https://evm-sidechain.xrpl.org/address/0x47DEF30C9F19357fA810703c5c630AD81a757DDf"
                                     target="_blank"
@@ -332,7 +415,7 @@ export default function AWPSwap() {
                                 <div>
                                     <IconChevronRight color="black" />
                                 </div>
-                            </div>
+                            </div> */}
 
                         </div>
                         {/* <div className="flex flex-col">
