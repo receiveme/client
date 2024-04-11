@@ -85,13 +85,12 @@ export default function AWPSwap() {
                 setIsOpen={setAddSteamModalIsOpen}
                 setIsLinkClicked={setIsSteamProfileClicked}
             />
+
+            
             <div className="awpswap-socials w-full  h-[100dvh] flex flex-col items-center justify-center">
                 <div className="px-4 sm:max-w-xl md:max-w-2xl">
                     <div className="flex flex-col h-fit =w-[45%] w-full =border =border-[#B026BA] rounded-xl relative">
-                        <div
-                            className="
-                            w-full h-52
-                            bg-banner bg-cover bg-no-repeat rounded-tl-xl rounded-tr-xl"
+                        <div className="w-full h-52 bg-banner bg-cover bg-no-repeat rounded-tl-xl rounded-tr-xl"
                             style={{
                                 backgroundPosition: "0px -100px",
                             }}
@@ -178,7 +177,22 @@ export default function AWPSwap() {
                                     Join our Discord community
                                 </span>
                             </a>
+                            <a
+                                href="https://steamcommunity.com/groups/AWPSwapio"
+                                target="_blank"
+                                className="p-4 transition flex items-center hover:bg-[#ffffff2b] rounded-bl-xl rounded-br-xl"
+                            >
+                                <img
+                                    className="w-6"
+                                    src="/img/3p/steam.png"
+                                />
+                                <span className="ml-3 font-bold">
+                                    Join our Steam community
+                                </span>
+                            </a>
                         </div>
+
+
                     </div>
                     {/* tasks section */}
                     <div className="bg-[#B026BA] mt-4 rounded-xl =w-[45%] w-full">
