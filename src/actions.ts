@@ -87,7 +87,7 @@ export async function getUserData(userId) {
     }
 }
 
-export async function getUserDataByUuid(userId) {
+export async function getUserDataByUuid(userId: string) {
     try {
         const userData = await prisma.user.findFirst({
             where: {
@@ -265,7 +265,7 @@ export async function getUserByHandle(handle: string) {
         //@ts-ignore
         user.profiles = user.Profile[0];
         console.log(user);
-        return user.id;
+        return user?.id;
     } catch (error) {
         console.error("Failed to fetch user:", error);
     }
