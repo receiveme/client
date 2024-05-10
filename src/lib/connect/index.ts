@@ -26,10 +26,7 @@ export const tron = () => {
             // @ts-ignore
             await window["tronLink"].request({
                 method: "tron_requestAccounts",
-                params: {
-                    websiteIcon: "https://app.awpswap.io/favicon.ico",
-                    websiteName: "awpswap.io",
-                },
+                params: {},
             });
             // @ts-ignore
             let tronLink = { ...(await window["tronLink"]) };

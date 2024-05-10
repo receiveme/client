@@ -4,7 +4,6 @@ html {
 }
 
 body,
-.particle-connect-ui,
-.particle-connect-ui > div {
+.particle-connect-ui {
     height: 100%;
 }

@@ -88,6 +88,7 @@ export async function getUserData(userId) {
 }
 
 export async function getUserDataByUuid(userId: string) {
+    // console.log(userId, "getUserDataByUuid");
     try {
         const userData = await prisma.user.findFirst({
             where: {
@@ -99,7 +100,7 @@ export async function getUserDataByUuid(userId: string) {
                 Wallet: true,
             },
         });
-        console.log(userData);
+        // console.log(userData, "getUserDataByUuid");
         await prisma.$disconnect();
 
         return userData;
@@ -121,7 +122,7 @@ export async function getUserWallets(userId) {
             },
         });
         await prisma.$disconnect();
-        return userWallets.Wallet; // Return only the Wallet array
+        return userWallets?.Wallet; // Return only the Wallet array
     } catch (error) {
         console.error("Error retrieving user wallets:", error);
         await prisma.$disconnect();
@@ -141,7 +142,7 @@ export async function createUserProfile(
     console.log(userInfo);
     const info_token = userInfo.token;
     const uuid = userInfo.uuid;
-    const particleWalletAddress = userInfo.wallets[0].public_address;
+    const particleWalletAddress = userInfo.wallets[0]?.public_address;
     try {
         const user = await prisma.user.create({
             data: {
@@ -225,6 +226,8 @@ export async function createUserProfile(
         }
 
         await prisma.$disconnect();
+
+        // console.log(user, "user created");
         return user.id;
     } catch (error) {
         console.error("Error creating user:", error);

@@ -4,6 +4,9 @@ import toast from "react-hot-toast";
 import { useWalletModal, useWalletStore } from "./connect-wallet.store";
 import { metamask, tron } from "@/src/lib/connect";
 import { Dialog } from "@headlessui/react";
+import { useEffect } from "react";
+import { useAppState } from "@/src/hooks/useAppState";
+import { useRouter } from "next/navigation";
 
 export function Wallet() {
     const isOpen = useWalletModal((state) => state.state);
@@ -11,34 +14,70 @@ export function Wallet() {
     const addWallet = useWalletStore((state) => state.addWallet);
     const selectWallet = useWalletStore((state) => state.selectWallet);
 
+    const [appState, setAppState] = useAppState();
+
+    const router = useRouter();
+
     const metamaskConnect = async () => {
+        const loadingToast = toast.loading(
+            "Connecting to your metamask account...",
+        );
         metamask()
             .then((res: any) => {
+                toast.remove(loadingToast);
                 toast.success("Metamask account is successfully connected");
                 localStorage.setItem("metamask-account", res["account"]);
                 addWallet(res["account"], parseInt(res["chainId"]));
                 selectWallet(res["account"]);
 
+                router.push(`/onboard?address=${res["account"]}`);
+
+                setAppState({
+                    // userInfo,
+                    userInfo: {
+                        token: null,
+                        uuid: res["account"],
+                        wallets: [],
+                    },
+                });
                 // Close the modal
-                setIsOpen(false);
             })
             .catch(() => {
+                toast.remove(loadingToast);
                 toast.error("Metamask connection request has been rejected");
             });
+        setIsOpen(false);
     };
 
     const tronConnect = async () => {
+        const loadingToast = toast.loading(
+            "Connecting to your tronlink account...",
+        );
         tron()
             .then((res: any) => {
+                console.log(res, "tron res");
+                toast.remove(loadingToast);
                 toast.success("TronLink account is successfully connected");
                 localStorage.setItem("tron-account", res["account"]);
                 addWallet(res["account"], 0xffffff);
                 selectWallet(res["account"]);
 
+                router.push(`/onboard?address=${res["account"]}`);
+
+                setAppState({
+                    // userInfo,
+                    userInfo: {
+                        token: null,
+                        uuid: res["account"],
+                        wallets: [],
+                    },
+                });
+
                 // Close the modal
                 setIsOpen(false);
             })
             .catch(() => {
+                toast.remove(loadingToast);
                 toast.error("TronLink connection request has been rejected");
             });
 
