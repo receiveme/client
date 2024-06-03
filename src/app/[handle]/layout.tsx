@@ -14,17 +14,13 @@ export default function RootLayout({
     return (
         <html lang="en">
             <Head>
-            <title>receive.me</title>
+                <title>receive.me</title>
                 <link
                     rel="apple-touch-icon"
                     sizes="180x180"
                     href="/icons/apple-touch-icon.png"
                 />
-                <link
-                    rel="icon"
-                    href="/favicon.ico"
-                />
-
+                <link rel="icon" href="/favicon.ico" />
 
                 <meta name="msapplication-TileColor" content="#da532c" />
                 <meta
@@ -34,9 +30,9 @@ export default function RootLayout({
 
                 <meta name="theme-color" content="#ffffff" />
             </Head>
-            <Providers>
-                <body>{children}</body>
-            </Providers>
+            <body>
+                <Providers>{children}</Providers>
+            </body>
         </html>
     );
 }
