@@ -9,16 +9,15 @@ import Eth from "../../../public/img/3p/eth.png";
 import Polygon from "../../../public/img/3p/polygonsvg.png";
 import Avax from "../../../public/img/3p/avaxpng.png";
 import Tron from "../../../public/img/3p/tron.png";
-import Matic from "../../../public/img/3p/matic.png"
+import Matic from "../../../public/img/3p/matic.png";
 // import styles from "Wallet.module.css"
 import "../../app/globals.css";
+import { useQuery } from "@tanstack/react-query";
 
 type WalletProps = {
     address: string;
     preferrednetwork: any;
 };
-
-
 
 export function Wallet({ address, preferrednetwork }: WalletProps) {
     const originalWalletAddress = address;
@@ -31,7 +30,21 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
 
     const [copied, setCopied] = useState(false);
 
-    
+    const { data: resolvedDomain } = useQuery<string>({
+        queryKey: ["/api/domains/resolve/reverse", { address }],
+        queryFn: async () => {
+            const res = await fetch(`/api/domains/resolve/reverse/${address}`);
+            const json = await res.json();
+
+            if (json?.data) {
+                return json?.data;
+            }
+
+            return null;
+        },
+        staleTime: Number.POSITIVE_INFINITY,
+    });
+
     function copyAddress() {
         if (!navigator.clipboard) {
             var textArea = document.createElement("textarea");
@@ -141,7 +154,8 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                                     ? Polygon.src
                                     : preferrednetwork === "bnb"
                                     ? "https://cryptologos.cc/logos/bnb-bnb-logo.png"
-                                    : preferrednetwork == "matic" ? Matic.src
+                                    : preferrednetwork == "matic"
+                                    ? Matic.src
                                     : ""
                             }
                             className={`w-[28px] h-[auto] selected-network-item`}
@@ -150,7 +164,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                 </div>
                 <div className="ml-3 w-full flex flex-col flex-shrink-1">
                     <p className="text-sm font-bold overflow-ellipsis">
-                        {preferrednetwork.toUpperCase()}
+                        {resolvedDomain || preferrednetwork.toUpperCase()}
                     </p>
                     <span className="hidden xs:block text-xs font-light">
                         {originalWalletAddress}
