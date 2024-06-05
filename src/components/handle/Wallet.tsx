@@ -31,9 +31,14 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
     const [copied, setCopied] = useState(false);
 
     const { data: resolvedDomain } = useQuery<string>({
-        queryKey: ["/api/domains/resolve/reverse", { address }],
+        queryKey: [
+            "/api/domains/resolve/multiple",
+            { address, preferrednetwork },
+        ],
         queryFn: async () => {
-            const res = await fetch(`/api/domains/resolve/reverse/${address}`);
+            const res = await fetch(
+                `/api/domains/resolve/multiple/${address}?chain=${preferrednetwork}`,
+            );
             const json = await res.json();
 
             if (json?.data) {
