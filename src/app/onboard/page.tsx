@@ -3,7 +3,7 @@
 import { IconCircleXFilled, IconLoader2 } from "@tabler/icons-react";
 import { use, useEffect, useState } from "react";
 import { ParticleNetwork, UserInfo } from "@particle-network/auth";
-import { createUserProfile } from "@/src/actions";
+import { createUserProfile, getUserDataByUuid } from "@/src/actions";
 import { useRouter } from "next/navigation";
 import { ThemeOption } from "@/src/components/profile/ThemeOption";
 import { BannerOption } from "@/src/components/profile/BannerOption";
@@ -14,6 +14,10 @@ import particle from "../../lib/particle";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { useDebounce } from "@/src/hooks/useDebounce";
 import axios from "axios";
+// @ts-ignore
+// import Uauth from "@uauth/js";
+import { v5 as uuidv5 } from "uuid";
+import { uauth } from "@/src/components/navbar";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -1053,6 +1057,55 @@ export default function Onboard() {
         setAppState({ globalId });
         router.push("/");
     };
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const authorization = await uauth.authorization();
+
+                console.log({ authorization });
+
+                const account = uauth.getAuthorizationAccount(authorization);
+
+                console.log({ account });
+
+                if (authorization) {
+                    const uuidv5OfUserAddress = uuidv5(
+                        account.address,
+                        uuidv5.URL,
+                    );
+
+                    console.log({ uuidv5OfUserAddress });
+
+                    const userData =
+                        (await getUserDataByUuid(uuidv5OfUserAddress)) || null;
+
+                    if (!userData && account) {
+                        setAppState({
+                            userInfo: {
+                                uuid: uuidv5OfUserAddress,
+                                token: uuidv5OfUserAddress,
+                                wallets: [
+                                    {
+                                        uuid: uuidv5OfUserAddress,
+                                        chain_name: "N/A",
+                                        public_address: account.address,
+                                    },
+                                ],
+                            },
+                        });
+                        router.push("/onboard");
+                    } else {
+                        setAppState({
+                            userData,
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+    }, []);
 
     return (
         <>
