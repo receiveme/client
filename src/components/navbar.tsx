@@ -22,7 +22,7 @@ import { getUserData, getUserDataByUuid } from "../actions";
 import { useRouter } from "next/navigation";
 import { useAppState } from "../hooks/useAppState";
 import { InitialAppState } from "../types/state/app-state.type";
-// @ts-ignore
+//@ts-ignore
 import Uauth from "@uauth/js";
 import { v5 as uuidv5 } from "uuid";
 
@@ -64,7 +64,7 @@ function classNames(...classes: any) {
 
 export const uauth = new Uauth({
     clientID: "61e04be9-ff48-4336-9704-a92b8d09bddc",
-    redirectUri: "http://localhost:3000",
+    redirectUri: process.env.NEXT_PUBLIC_REDIRECT_URL ?? 'http://localhost:3000',
     scope: "openid wallet messaging:notifications:optional",
 });
 
