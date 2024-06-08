@@ -1107,6 +1107,7 @@ export default function Onboard() {
                         setAppState({
                             userData,
                         });
+                        router.push("/");
                     }
                 }
             } catch (e) {

@@ -84,6 +84,8 @@ export default function Navbar() {
         setAppState(InitialAppState(false));
 
         connectKit.particle.auth.logout();
+
+        uauth.logout();
     }
 
     // useEffect(() => {
@@ -263,9 +265,24 @@ export default function Navbar() {
                                     // uauth.login();
                                     uauth
                                         .loginWithPopup()
-                                        .then((data: any) => {
+                                        .then(async (data: any) => {
                                             console.log(data, "data");
-                                            router.push("/onboard");
+                                            // router.push("/onboard");
+                                            const userWalletAddress =
+                                                data.idToken.wallet_address;
+
+                                            const userData =
+                                                (await getUserDataByUuid(
+                                                    userWalletAddress,
+                                                )) || null;
+
+                                            if (!userData) {
+                                                router.push("/onboard");
+                                            } else {
+                                                setAppState({
+                                                    userData,
+                                                });
+                                            }
                                         })
                                         .catch((e: unknown) =>
                                             console.error(e),
