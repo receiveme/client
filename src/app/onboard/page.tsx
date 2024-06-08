@@ -562,8 +562,9 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                         Link your wallets and start getting paid.
                     </h3>
 
-                    <div className="mt-4 grid grid-cols-1  gap-x-2 gap-y-2">
-                        {appState.userInfo ? (
+                    <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
+                        {appState.userInfo &&
+                        !appState.userInfo.isUnstoppableAuth ? (
                             <>
                                 <button
                                     onClick={() => configWalletModal()}
@@ -738,14 +739,18 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                         )}
 
                         <button
-                            disabled
-                            onClick={() => handleLogin("twitter")}
+                            disabled={!appState?.userInfo?.isUnstoppableAuth}
+                            // onClick={() => handleLogin("twitter")}
                             type="button"
-                            className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60"
+                            className={`transition-all flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 disabled:opacity-60 ${
+                                appState?.userInfo?.isUnstoppableAuth
+                                    ? "row-start-1 border border-green-500/50"
+                                    : ""
+                            }`}
                         >
                             <img
                                 src="/img/3p/unstoppabledomains.png"
-                                alt="Google"
+                                alt=""
                                 className="mr-2 h-5 w-5 rounded-md"
                             />
 
@@ -1017,6 +1022,8 @@ export default function Onboard() {
         else if (stage === "link") setStage("handle");
     };
 
+    console.log(appState, "appState");
+
     const complete = async () => {
         const userInfo = appState.userInfo;
         const wallets = appState.wallets;
@@ -1092,6 +1099,7 @@ export default function Onboard() {
                                         public_address: account.address,
                                     },
                                 ],
+                                isUnstoppableAuth: true,
                             },
                         });
                         router.push("/onboard");

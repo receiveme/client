@@ -64,7 +64,8 @@ function classNames(...classes: any) {
 
 export const uauth = new Uauth({
     clientID: "61e04be9-ff48-4336-9704-a92b8d09bddc",
-    redirectUri: process.env.NEXT_PUBLIC_REDIRECT_URL ?? 'http://localhost:3000',
+    redirectUri:
+        process.env.NEXT_PUBLIC_REDIRECT_URL ?? "http://localhost:3000",
     scope: "openid wallet messaging:notifications:optional",
 });
 
@@ -175,6 +176,7 @@ export default function Navbar() {
                                         public_address: account.address,
                                     },
                                 ],
+                                isUnstoppableAuth: true,
                             },
                         });
                         router.push("/onboard");
@@ -263,6 +265,7 @@ export default function Navbar() {
                                         .loginWithPopup()
                                         .then((data: any) => {
                                             console.log(data, "data");
+                                            router.push("/onboard");
                                         })
                                         .catch((e: unknown) =>
                                             console.error(e),
