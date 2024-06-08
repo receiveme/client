@@ -5,6 +5,7 @@ import { Banner } from "@/src/components/profile/Banner";
 import { getUser } from "@/src/actions/getUser";
 import { IconEdit } from "@tabler/icons-react";
 import EditHandleButton from "@/src/components/handle/EditButton";
+import { useQuery } from "@tanstack/react-query";
 
 async function getUserByHandle(handle: string) {
     try {
@@ -45,6 +46,8 @@ async function getUserByHandle(handle: string) {
         // e.g. robots.txt, sitemap.xml
 
         return null;
+    } finally {
+        await prisma.$disconnect();
     }
 }
 
@@ -63,6 +66,8 @@ export default async function Profile({ params }: any) {
     //     // total_balance += covalent["usd_balance"];
     // }
 
+    console.log(data);
+
     if (!data) {
         // Render 404
         return <>could not find</>;
@@ -74,6 +79,26 @@ export default async function Profile({ params }: any) {
               "",
           )} background-animate gradient-animation`
         : `from-${data.profiles.theme.replace("/none", "")} `;
+
+    // const { data: resolvedDomain } = useQuery<string>({
+    //     queryKey: [
+    //         "/api/domains/resolve/multiple",
+    //         { address, preferrednetwork },
+    //     ],
+    //     queryFn: async () => {
+    //         const res = await fetch(
+    //             `/api/domains/resolve/multiple/${address}?chain=${preferrednetwork}`,
+    //         );
+    //         const json = await res.json();
+
+    //         if (json?.data) {
+    //             return json?.data;
+    //         }
+
+    //         return null;
+    //     },
+    //     staleTime: Number.POSITIVE_INFINITY,
+    // });
 
     return (
         <>
@@ -95,13 +120,30 @@ export default async function Profile({ params }: any) {
                             {data.Wallet.map((wallet: any, i: number) => {
                                 const preferrednetworks =
                                     wallet.preferrednetworks;
+
+                                if (preferrednetworks.includes("matic")) {
+                                }
+
                                 return (
                                     <div
                                         className="flex flex-col gap-3"
                                         key={i}
                                     >
-                                        {wallet.preferrednetworks.map(
+                                        <Wallet
+                                            address={wallet.address}
+                                            preferrednetwork={
+                                                preferrednetworks.length === 1
+                                                    ? preferrednetworks[0]
+                                                    : preferrednetworks
+                                            }
+                                        />
+                                        {/* {wallet.preferrednetworks.map(
                                             (__n: any, i: number) => {
+                                                console.log(
+                                                    preferrednetworks,
+                                                    "preferrednetworks",
+                                                    wallet,
+                                                );
                                                 return (
                                                     <Wallet
                                                         address={wallet.address}
@@ -112,7 +154,7 @@ export default async function Profile({ params }: any) {
                                                     />
                                                 );
                                             },
-                                        )}
+                                        )} */}
                                     </div>
                                 );
                             })}
