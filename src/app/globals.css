@@ -95,4 +95,11 @@
             ),
             linear-gradient(0deg, #150511 0%, #150511 100%), #1f1f24;
     }
+
+    .hero-svg-mask {
+        -webkit-mask-image: url("/img/home/svg/3.svg");
+        mask-image: url("/img/home/svg/3.svg");
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+    }
 }
