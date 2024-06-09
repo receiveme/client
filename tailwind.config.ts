@@ -13,9 +13,12 @@ const config: Config = {
                 "gradient-conic":
                     "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
                 banner: "url('/img/socials/banner.jpeg')",
-                
+
                 sunbanner: "url('/img/socials/sunswap_banner.png')",
-                dcloudbanner: "url('/img/socials/dcloud-bg.png')"
+                dcloudbanner: "url('/img/socials/dcloud-bg.png')",
+            },
+            colors: {
+                primary: "#9D44B5",
             },
         },
         screens: {
