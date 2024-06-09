@@ -101,5 +101,8 @@
         mask-image: url("/img/home/svg/animating3.svg");
         -webkit-mask-repeat: no-repeat;
         mask-repeat: no-repeat;
+        mask-size: contain;
+        mask-position: center;
+        mask-origin: fill-box;
     }
 }

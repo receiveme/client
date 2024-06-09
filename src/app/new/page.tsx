@@ -75,7 +75,7 @@ export default function Home() {
                 </nav>
             </header>
             <main className="relative overflow-x-hidden">
-                <div className="max-w-screen-xl mx-auto flex items-center pt-20 justify-between gap-20">
+                <div className="max-w-screen-xl mx-auto flex items-center pt-12 justify-between gap-20">
                     <div className="basis-[55%]">
                         <div className="rounded-full w-min whitespace-nowrap mb-4 px-3 py-1 uppercase bg-gray-300 text-sm font-semibold text-black">
                             Receive Me
@@ -107,24 +107,55 @@ export default function Home() {
                             easily & help you manage your payments in one place.
                         </div>
                     </div>
-                    <div className="basis-[45%]">
+                    <div className="basis-[45%] relative">
                         <img
-                            src="/img/home/nick2.png"
-                            className="hero-svg-mask"
+                            src="/img/home/svg/grid.svg"
                             alt=""
+                            className="-z-10 absolute top-0 left-0"
                         />
+                        <div className="z-10 absolute top-0 right-8 h-44 w-44 bg-white/40 backdrop-blur-sm rounded-full shadow-black/10 shadow-inner drop-shadow-xl" />
+                        <div className="z-10 absolute bottom-0 right-20 h-32 w-32 bg-white/40 backdrop-blur-sm rounded-full shadow-black/10 shadow-inner drop-shadow-xl" />
+                        <div className="hero-svg-mask">
+                            <img src="/img/home/nick2.png" alt="" />
+                        </div>
                     </div>
                 </div>
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-24 top-[500px] -z-10 bg-blur-circle" />
-                <div className="max-w-screen-xl mx-auto flex justify-between items-center">
-                    <div className="basis-1/2">
+                <div className="max-w-screen-xl mx-auto flex justify-between items-center gap-32">
+                    <div className="basis-1/2 relative">
+                        <img
+                            src="/img/home/socials/github.png"
+                            className="w-20 left-40 top-12 absolute drop-shadow-lg"
+                            alt=""
+                        />
+                        <img
+                            src="/img/home/socials/twitch.png"
+                            className="w-24 left-24 top-40 -rotate-[15deg] absolute drop-shadow-lg"
+                            alt=""
+                        />
+                        <img
+                            src="/img/home/socials/linkedin.png"
+                            className="w-16 left-16 bottom-36 absolute drop-shadow-xl"
+                            alt=""
+                        />
+                        {/* main phones image  */}
                         <img
                             src="/img/home/phones.png"
                             alt=""
                             className="w-[800px] h-auto object-contain"
                         />
+                        <img
+                            src="/img/home/socials/discord.png"
+                            className="w-20 right-28 skew-x-[-20deg] skew-y-[20deg] top-8 absolute drop-shadow-xl"
+                            alt=""
+                        />
+                        <img
+                            src="/img/home/socials/x.png"
+                            className="w-14 right-20 bottom-32 rotate-[-15deg] absolute drop-shadow-xl"
+                            alt=""
+                        />
                     </div>
-                    <div className="basis-1/2 end">
+                    <div className="basis-1/2">
                         <div className="">
                             <div className="rounded-full w-min whitespace-nowrap mb-4 px-3 py-1 uppercase bg-gray-300 text-sm font-semibold text-black">
                                 About Us
