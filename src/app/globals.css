@@ -97,8 +97,8 @@
     }
 
     .hero-svg-mask {
-        -webkit-mask-image: url("/img/home/svg/3.svg");
-        mask-image: url("/img/home/svg/3.svg");
+        -webkit-mask-image: url("/img/home/svg/animating3.svg");
+        mask-image: url("/img/home/svg/animating3.svg");
         -webkit-mask-repeat: no-repeat;
         mask-repeat: no-repeat;
     }

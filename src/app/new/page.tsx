@@ -109,7 +109,7 @@ export default function Home() {
                     </div>
                     <div className="basis-[45%]">
                         <img
-                            src="/img/home/nick.png"
+                            src="/img/home/nick2.png"
                             className="hero-svg-mask"
                             alt=""
                         />
