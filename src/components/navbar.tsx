@@ -18,7 +18,7 @@ import {
     useAccount,
     useConnectKit,
 } from "@particle-network/connect-react-ui";
-import { getUserData, getUserDataByUuid } from "../actions";
+import { addDomainToUser, getUserData, getUserDataByUuid } from "../actions";
 import { useRouter } from "next/navigation";
 import { useAppState } from "../hooks/useAppState";
 import { InitialAppState } from "../types/state/app-state.type";
@@ -152,7 +152,7 @@ export default function Navbar() {
 
                 const account = uauth.getAuthorizationAccount(authorization);
 
-                console.log({ account });
+                // console.log({ account });
 
                 if (authorization) {
                     const uuidv5OfUserAddress = uuidv5(
@@ -160,7 +160,7 @@ export default function Navbar() {
                         uuidv5.URL,
                     );
 
-                    console.log({ uuidv5OfUserAddress });
+                    // console.log({ uuidv5OfUserAddress });
 
                     const userData =
                         (await fetchUserDataByUuid(uuidv5OfUserAddress)) ||
@@ -183,6 +183,15 @@ export default function Navbar() {
                         });
                         router.push("/onboard");
                     } else {
+                        const currentUserDomain = authorization.idToken.sub;
+
+                        if (
+                            userData &&
+                            !userData?.domain.includes(currentUserDomain)
+                        ) {
+                            addDomainToUser(userData?.id, currentUserDomain);
+                        }
+
                         setAppState({
                             userData,
                         });
