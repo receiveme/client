@@ -28,14 +28,14 @@ const AccordionTrigger = React.forwardRef<
         <AccordionPrimitive.Trigger
             ref={ref}
             className={cn(
-                "flex flex-1 bg-white border border-gray-400 rounded-xl p-4 items-center justify-between text-lg font-medium transition-all [&[data-state=open]>svg]:rotate-180",
+                "AccordionTrigger flex flex-1 bg-white border border-gray-400 rounded-xl p-4 items-center justify-between text-lg font-medium transition-all [&[data-state=open]>svg]:rotate-180",
                 className,
             )}
             {...props}
         >
             {children}
-            <span className="bg-gray-800 rounded-full p-1">
-                <IconChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 text-white" />
+            <span className="bg-gray-800 rounded-full p-1 transition-transform duration-200">
+                <IconChevronDown className="h-4 w-4 shrink-0 text-white" />
             </span>
         </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>

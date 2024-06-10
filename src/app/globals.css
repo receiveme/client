@@ -140,4 +140,11 @@
             transform: rotate(360deg);
         }
     }
+
+    .AccordionChevron {
+        transition: transform 300ms;
+    }
+    .AccordionTrigger[data-state="open"] > span {
+        transform: rotate(180deg);
+    }
 }
