@@ -1,6 +1,6 @@
 "use client";
 
-import { IconCircleXFilled, IconLoader2 } from "@tabler/icons-react";
+import { IconCheck, IconCircleXFilled, IconLoader2 } from "@tabler/icons-react";
 import { use, useEffect, useState } from "react";
 import { ParticleNetwork, UserInfo } from "@particle-network/auth";
 import { createUserProfile, getUserDataByUuid } from "@/src/actions";
@@ -742,21 +742,28 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                             disabled={!appState?.userInfo?.isUnstoppableAuth}
                             // onClick={() => handleLogin("twitter")}
                             type="button"
-                            className={`transition-all flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 disabled:opacity-60 ${
+                            className={`transition-all flex w-full justify-between items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 disabled:opacity-60 ${
                                 appState?.userInfo?.isUnstoppableAuth
-                                    ? "row-start-1 border border-green-500/50"
+                                    ? "row-start-1 border-2 border-green-500/50"
                                     : ""
                             }`}
                         >
-                            <img
-                                src="/img/3p/unstoppabledomains.png"
-                                alt=""
-                                className="mr-2 h-5 w-5 rounded-md"
-                            />
+                            <div className="flex items-center">
+                                <img
+                                    src="/img/3p/unstoppabledomains.png"
+                                    alt=""
+                                    className="mr-2 h-5 w-5 rounded-md"
+                                />
 
-                            <span className="text-sm font-semibold">
-                                Unstoppable Domains
-                            </span>
+                                <span className="text-sm font-semibold">
+                                    Unstoppable Domains{" "}
+                                    {appState?.userInfo?.domain &&
+                                        `(${appState?.userInfo?.domain})`}
+                                </span>
+                            </div>
+                            <div className="h-5 w-5 bg-green-500 grid place-items-center rounded-md">
+                                <IconCheck className="text-white" size={16} />
+                            </div>
                         </button>
                     </div>
                 </div>
@@ -1100,6 +1107,7 @@ export default function Onboard() {
                                     },
                                 ],
                                 isUnstoppableAuth: true,
+                                domain: authorization.idToken.sub,
                             },
                         });
                         router.push("/onboard");
@@ -1115,6 +1123,8 @@ export default function Onboard() {
             }
         })();
     }, []);
+
+    console.log(appState, "appState");
 
     return (
         <>
