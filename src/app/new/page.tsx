@@ -203,22 +203,42 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="basis-1/2">
-                        <div className="flex items-end">
-                            <img
-                                src="/img/home/wallet-1.png"
-                                alt=""
-                                className="h-[200px] w-auto object-contain"
-                            />
-                            <img
-                                src="/img/home/wallet-2.png"
-                                alt=""
-                                className="h-[250px] w-auto object-contain"
-                            />
-                            <img
-                                src="/img/home/wallet-3.png"
-                                alt=""
-                                className="h-[200px] w-auto object-contain"
-                            />
+                        <div className="h-[500px] overflow-hidden relative">
+                            <div className="bg-gradient-to-b from-transparent absolute bottom-0 left-0 right-0 h-60 z-10 via-transparent to-white" />
+                            <div className="relative rotating-wallets">
+                                <div className="">
+                                    <img
+                                        src="/img/home/wallet-screenshots/1.png"
+                                        alt=""
+                                        className="h-[250px] w-auto object-contain absolute rotate-0 top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                    />
+                                    <img
+                                        src="/img/home/wallet-screenshots/3.png"
+                                        alt=""
+                                        className="h-[250px] w-auto object-contain absolute rotate-[60deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                    />
+                                    <img
+                                        src="/img/home/wallet-screenshots/2.png"
+                                        alt=""
+                                        className="h-[250px] w-auto object-contain absolute rotate-[120deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                    />
+                                    <img
+                                        src="/img/home/wallet-screenshots/4.png"
+                                        alt=""
+                                        className="h-[250px] w-auto object-contain absolute rotate-[180deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                    />
+                                    <img
+                                        src="/img/home/wallet-screenshots/5.png"
+                                        alt=""
+                                        className="h-[250px] w-auto object-contain absolute rotate-[240deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                    />
+                                    <img
+                                        src="/img/home/wallet-screenshots/6.png"
+                                        alt=""
+                                        className="h-[250px] w-auto object-contain absolute rotate-[300deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -267,27 +287,27 @@ export default function Home() {
                             <img
                                 src="/img/home/wallets/tronlink.png"
                                 alt=""
-                                className="object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
+                                className="max-w-[250px] object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
                             />
                             <img
                                 src="/img/home/wallets/metamask.png"
                                 alt=""
-                                className="object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
+                                className="max-w-[250px] object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
                             />
                             <img
                                 src="/img/home/wallets/binance.png"
                                 alt=""
-                                className="object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
+                                className="max-w-[250px] object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
                             />
                             <img
                                 src="/img/home/wallets/coinbase.png"
                                 alt=""
-                                className="object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
+                                className="max-w-[250px] object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
                             />
                             <img
                                 src="/img/home/wallets/myalgo.png"
                                 alt=""
-                                className="object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
+                                className="max-w-[250px] object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
                             />
                         </div>
                     </div>

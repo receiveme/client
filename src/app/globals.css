@@ -105,4 +105,39 @@
         mask-position: center;
         mask-origin: fill-box;
     }
+
+    .rotating-wallets {
+        animation: rotatingWalletAnim 30s
+            /* cubic-bezier(0.79, 0.33, 0.14, 0.53) */
+            cubic-bezier(0.79, 0.33, 0.1, 1.01) 0s infinite backwards;
+        transform-origin: center 510px;
+        /* outline: 1px solid red; */
+    }
+
+    @keyframes rotatingWalletAnim {
+        0% {
+            transform: rotate(0deg);
+        }
+        16% {
+            transform: rotate(60deg);
+        }
+        32% {
+            transform: rotate(120deg);
+        }
+        48% {
+            transform: rotate(180deg);
+        }
+        64% {
+            transform: rotate(240deg);
+        }
+        80% {
+            transform: rotate(300deg);
+        }
+        96% {
+            transform: rotate(360deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 }
