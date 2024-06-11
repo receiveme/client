@@ -1,4 +1,7 @@
+import { Navbar } from "@/src/components/common/navbar";
 import { FuturePlanCard } from "@/src/components/landing/future-plans/Card";
+import { HeroSection } from "@/src/components/landing/hero";
+import { SupportedWallets } from "@/src/components/landing/supported-wallet";
 import {
     Accordion,
     AccordionContent,
@@ -6,6 +9,7 @@ import {
     AccordionTrigger,
 } from "@/src/components/ui/accordion";
 import { Button } from "@/src/components/ui/button";
+import { Chip } from "@/src/components/ui/chip";
 import {
     IconBrandFacebook,
     IconBrandFacebookFilled,
@@ -45,80 +49,10 @@ const FAQS = [
 export default function Home() {
     return (
         <div className={figtree.className}>
-            <header>
-                <div className="bg-primary">
-                    <div className="text-white text-sm py-3 text-center max-w-screen-xl mx-auto">
-                        Integrated Particle Network{" "}
-                        <a
-                            href="#"
-                            className="underline decoration-white underline-offset-2"
-                        >
-                            Learn More
-                        </a>
-                    </div>
-                </div>
-                <nav className="max-w-screen-xl mx-auto flex text-base justify-between items-center py-3">
-                    <div className="font-bold text-3xl text-primary">
-                        receive.me
-                    </div>
-                    <div className="flex gap-6 font-medium">
-                        <Link href="#">Home</Link>
-                        <Link href="#">About Us</Link>
-                        <Link href="#">Updates</Link>
-                        <Link href="#">Plans</Link>
-                        <Link href="#">FAQs</Link>
-                        <Link href="#">Contact Us</Link>
-                    </div>
-                    <div>
-                        <Button size="lg">Connect Wallet</Button>
-                    </div>
-                </nav>
-            </header>
+            <Navbar />
             <main className="relative overflow-x-hidden">
-                <div className="max-w-screen-xl mx-auto flex items-center pt-12 justify-between gap-20">
-                    <div className="basis-[55%]">
-                        <div className="rounded-full w-min whitespace-nowrap mb-4 px-3 py-1 uppercase bg-gray-300 text-sm font-semibold text-black">
-                            Receive Me
-                        </div>
-                        <p className="text-5xl font-medium leading-snug tracking-tight">
-                            We Provide Easy Solution To
-                            <br /> Link All Of Your{" "}
-                            <span className="relative whitespace-nowrap bg-gray-200 border-2 border-dashed px-3 border-gray-600">
-                                <span className="dot1 bg-gray-800 rounded-full h-2 w-2 absolute -top-1 -left-1"></span>
-                                <span className="dot2 bg-gray-800 rounded-full h-2 w-2 absolute -top-1 -right-1"></span>
-                                <span className="dot3 bg-gray-800 rounded-full h-2 w-2 absolute -bottom-1 -left-1"></span>
-                                <span className="dot4 bg-gray-800 rounded-full h-2 w-2 absolute -bottom-1 -right-1"></span>
-                                Wallets Easily
-                            </span>{" "}
-                            In One Place
-                        </p>
-                        <div className="mt-4 bg-gray-200 w-full flex items- rounded-full">
-                            <input
-                                type="text"
-                                placeholder="Write here..."
-                                className="bg-transparent w-full pl-6 pr-2 outline-none"
-                            />
-                            <Button className="py-3 h-full" size="lg">
-                                Search
-                            </Button>
-                        </div>
-                        <div className="text-lg mt-4 text-gray-600">
-                            Receive.me is a platform for linking your wallets
-                            easily & help you manage your payments in one place.
-                        </div>
-                    </div>
-                    <div className="basis-[45%] relative">
-                        <img
-                            src="/img/home/svg/grid.svg"
-                            alt=""
-                            className="-z-10 absolute top-0 left-0"
-                        />
-                        <div className="z-10 absolute top-0 right-8 h-44 w-44 bg-white/40 backdrop-blur-sm rounded-full shadow-black/10 shadow-inner drop-shadow-xl" />
-                        <div className="z-10 absolute bottom-0 right-20 h-32 w-32 bg-white/40 backdrop-blur-sm rounded-full shadow-black/10 shadow-inner drop-shadow-xl" />
-                        <div className="hero-svg-mask">
-                            <img src="/img/home/nick2.png" alt="" />
-                        </div>
-                    </div>
+                <div className="max-w-screen-xl mx-auto pt-12">
+                    <HeroSection />
                 </div>
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-24 top-[500px] -z-10 bg-blur-circle" />
                 <div className="max-w-screen-xl mx-auto flex justify-between items-center gap-32">
@@ -157,9 +91,7 @@ export default function Home() {
                     </div>
                     <div className="basis-1/2">
                         <div className="">
-                            <div className="rounded-full w-min whitespace-nowrap mb-4 px-3 py-1 uppercase bg-gray-300 text-sm font-semibold text-black">
-                                About Us
-                            </div>
+                            <Chip className="mb-2">About Us</Chip>
                             <p className="font-bold text-[40px]">
                                 Welcome To{" "}
                                 <span className="text-primary">Recieve.me</span>
@@ -181,9 +113,7 @@ export default function Home() {
                 <div className="max-w-screen-xl mx-auto flex justify-between items-center mt-20">
                     <div className="basis-1/2 end">
                         <div className="">
-                            <div className="rounded-full w-min whitespace-nowrap mb-4 px-3 py-1 uppercase bg-gray-300 text-sm font-semibold text-black">
-                                New Updates
-                            </div>
+                            <Chip className="mb-2">New Updates</Chip>
                             <p className="font-bold text-[40px]">
                                 Great Experience With <br />
                                 <span className="block text-primary -mt-3">
@@ -277,41 +207,9 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                <div className="max-w-screen-xl mx-auto pt-20">
-                    <p className="font-bold text-[40px] text-center">
-                        Connect With Any Kind Of{" "}
-                        <span className="text-primary ">Wallet</span>
-                    </p>
-                    <div className="mt-12">
-                        <div className="flex justify-evenly items-stretch">
-                            <img
-                                src="/img/home/wallets/tronlink.png"
-                                alt=""
-                                className="max-w-[250px] object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
-                            />
-                            <img
-                                src="/img/home/wallets/metamask.png"
-                                alt=""
-                                className="max-w-[250px] object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
-                            />
-                            <img
-                                src="/img/home/wallets/binance.png"
-                                alt=""
-                                className="max-w-[250px] object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
-                            />
-                            <img
-                                src="/img/home/wallets/coinbase.png"
-                                alt=""
-                                className="max-w-[250px] object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
-                            />
-                            <img
-                                src="/img/home/wallets/myalgo.png"
-                                alt=""
-                                className="max-w-[250px] object-contain bg-transparent hover:bg-orange-200/60 border border-transparent p-6 rounded-xl hover:border-orange-400"
-                            />
-                        </div>
-                    </div>
-                </div>
+                {/* <div className="max-w-screen-xl mx-auto pt-20">
+                    <SupportedWallets />
+                </div> */}
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -right-24 top-[2400px] -z-10 bg-blur-circle" />
                 <div className="max-w-screen-xl mx-auto pt-20">
                     <p className="font-bold text-[40px] text-center">

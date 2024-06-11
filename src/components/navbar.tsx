@@ -25,6 +25,7 @@ import { InitialAppState } from "../types/state/app-state.type";
 //@ts-ignore
 import Uauth from "@uauth/js";
 import { v5 as uuidv5 } from "uuid";
+import { uauth } from "./common/navbar";
 
 const features = [
     {
@@ -61,13 +62,6 @@ const callsToAction = [
 function classNames(...classes: any) {
     return classes.filter(Boolean).join(" ");
 }
-
-export const uauth = new Uauth({
-    clientID: "61e04be9-ff48-4336-9704-a92b8d09bddc",
-    redirectUri:
-        process.env.NEXT_PUBLIC_REDIRECT_URL ?? "http://localhost:3000",
-    scope: "openid wallet messaging:notifications:optional",
-});
 
 export default function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

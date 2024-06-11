@@ -1,10 +1,10 @@
 "use client";
 
 import { IconCheck, IconCircleXFilled, IconLoader2 } from "@tabler/icons-react";
-import { use, useEffect, useState } from "react";
-import { ParticleNetwork, UserInfo } from "@particle-network/auth";
+import { useEffect, useState } from "react";
+import { UserInfo } from "@particle-network/auth";
 import { createUserProfile, getUserDataByUuid } from "@/src/actions";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ThemeOption } from "@/src/components/profile/ThemeOption";
 import { BannerOption } from "@/src/components/profile/BannerOption";
 import { Banner } from "@/src/components/profile/Banner";
@@ -14,10 +14,8 @@ import particle from "../../lib/particle";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { useDebounce } from "@/src/hooks/useDebounce";
 import axios from "axios";
-// @ts-ignore
-// import Uauth from "@uauth/js";
 import { v5 as uuidv5 } from "uuid";
-import { uauth } from "@/src/components/navbar";
+import { uauth } from "@/src/components/common/navbar";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -41,6 +39,15 @@ function Handle({
     const debouncedHandleValue = useDebounce(handleInput, 400);
 
     const [available, setAvailable] = useState<boolean | null>(null);
+
+    const params = useSearchParams();
+
+    useEffect(() => {
+        const handle = params.get("handle");
+        if (handle) {
+            changeHandle(handle);
+        }
+    }, []);
 
     useEffect(() => {
         // console.log(debouncedHandleValue, "<=");
@@ -1029,8 +1036,6 @@ export default function Onboard() {
         else if (stage === "link") setStage("handle");
     };
 
-    console.log(appState, "appState");
-
     const complete = async () => {
         const userInfo = appState.userInfo;
         const wallets = appState.wallets;
@@ -1123,8 +1128,6 @@ export default function Onboard() {
             }
         })();
     }, []);
-
-    console.log(appState, "appState");
 
     return (
         <>
