@@ -44,7 +44,7 @@ export async function updateUserWallet(
     }
 }
 
-export async function getUserSocials(userId) {
+export async function getUserSocials(userId: string) {
     try {
         const userSocials = await prisma.user.findUnique({
             where: {
@@ -56,7 +56,7 @@ export async function getUserSocials(userId) {
         });
 
         await prisma.$disconnect();
-        return userSocials.Social; // Return only the Social array
+        return userSocials?.Social; // Return only the Social array
     } catch (error) {
         console.error("Error retrieving user socials:", error);
         await prisma.$disconnect();
@@ -64,7 +64,7 @@ export async function getUserSocials(userId) {
     }
 }
 
-export async function getUserData(userId) {
+export async function getUserData(userId: string) {
     try {
         const userData = await prisma.user.findUnique({
             where: {
@@ -87,7 +87,7 @@ export async function getUserData(userId) {
     }
 }
 
-export async function getUserDataByUuid(userId) {
+export async function getUserDataByUuid(userId: string) {
     try {
         const userData = await prisma.user.findFirst({
             where: {
@@ -110,7 +110,29 @@ export async function getUserDataByUuid(userId) {
     }
 }
 
-export async function getUserWallets(userId) {
+export async function addDomainToUser(userId: string, domain: string) {
+    try {
+        const userData = await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                domain: {
+                    push: domain,
+                },
+            },
+        });
+
+        return userData;
+    } catch (error) {
+        console.error("Error adding domain to user:", error);
+        throw error;
+    } finally {
+        await prisma.$disconnect();
+    }
+}
+
+export async function getUserWallets(userId: string) {
     try {
         const userWallets = await prisma.user.findUnique({
             where: {
@@ -121,7 +143,7 @@ export async function getUserWallets(userId) {
             },
         });
         await prisma.$disconnect();
-        return userWallets.Wallet; // Return only the Wallet array
+        return userWallets?.Wallet; // Return only the Wallet array
     } catch (error) {
         console.error("Error retrieving user wallets:", error);
         await prisma.$disconnect();
@@ -145,9 +167,9 @@ export async function createUserProfile(
     try {
         const user = await prisma.user.create({
             data: {
-                //@ts-ignore
                 handle: handle.toLowerCase(),
                 authuuid: uuid,
+                domain: userInfo?.domain ? [userInfo?.domain] : [],
             },
         });
 
@@ -265,7 +287,7 @@ export async function getUserByHandle(handle: string) {
         //@ts-ignore
         user.profiles = user.Profile[0];
         console.log(user);
-        return user.id;
+        return user?.id;
     } catch (error) {
         console.error("Failed to fetch user:", error);
     }

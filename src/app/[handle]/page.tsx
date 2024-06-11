@@ -5,12 +5,24 @@ import { Banner } from "@/src/components/profile/Banner";
 import { getUser } from "@/src/actions/getUser";
 import { IconEdit } from "@tabler/icons-react";
 import EditHandleButton from "@/src/components/handle/EditButton";
+import { useQuery } from "@tanstack/react-query";
+import { notFound } from "next/navigation";
 
 async function getUserByHandle(handle: string) {
     try {
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
             where: {
-                handle: handle,
+                // domain: handle,
+                OR: [
+                    {
+                        handle,
+                    },
+                    {
+                        domain: {
+                            has: handle,
+                        },
+                    },
+                ],
             },
             include: {
                 Profile: {
@@ -37,21 +49,25 @@ async function getUserByHandle(handle: string) {
             },
         });
 
-        //@ts-ignore
-        user.profiles = user.Profile[0];
-        return user;
+        return { ...user, profiles: user?.Profile[0] };
     } catch (error) {
         // Errrors can happen because /[handle] can be any 404 url
         // e.g. robots.txt, sitemap.xml
 
         return null;
+    } finally {
+        await prisma.$disconnect();
     }
 }
 
-export default async function Profile({ params }: any) {
-    const handle: any = params.handle;
+export default async function Profile({
+    params,
+}: {
+    params: { handle: string };
+}) {
+    const handle = params.handle;
 
-    const data: any = await getUserByHandle(handle);
+    const data = await getUserByHandle(handle);
 
     // let data_each_wallet: any = {};
     // let total_balance: number = 0;
@@ -63,17 +79,39 @@ export default async function Profile({ params }: any) {
     //     // total_balance += covalent["usd_balance"];
     // }
 
-    if (!data) {
+    console.log(data, "data from get user");
+
+    if (!data || !data.profiles) {
         // Render 404
         return <>could not find</>;
     }
 
-    const bg = data.profiles.theme.includes("/animate")
-        ? `from-${data.profiles.theme.replace(
+    const bg = data?.profiles?.theme?.includes("/animate")
+        ? `from-${data?.profiles.theme.replace(
               "/animate",
               "",
           )} background-animate gradient-animation`
-        : `from-${data.profiles.theme.replace("/none", "")} `;
+        : `from-${data?.profiles?.theme?.replace("/none", "")} `;
+
+    // const { data: resolvedDomain } = useQuery<string>({
+    //     queryKey: [
+    //         "/api/domains/resolve/multiple",
+    //         { address, preferrednetwork },
+    //     ],
+    //     queryFn: async () => {
+    //         const res = await fetch(
+    //             `/api/domains/resolve/multiple/${address}?chain=${preferrednetwork}`,
+    //         );
+    //         const json = await res.json();
+
+    //         if (json?.data) {
+    //             return json?.data;
+    //         }
+
+    //         return null;
+    //     },
+    //     staleTime: Number.POSITIVE_INFINITY,
+    // });
 
     return (
         <>
@@ -83,8 +121,8 @@ export default async function Profile({ params }: any) {
                 >
                     <div className="mb-24 flex w-full max-w-[580px] flex-col items-center px-3 lg:px-5">
                         <Banner
-                            handle={data.handle}
-                            banner={data.profiles.background}
+                            handle={data.handle!}
+                            banner={data?.profiles?.background!}
                             socials={data.Social}
                             className="my-4"
                         />
@@ -92,16 +130,33 @@ export default async function Profile({ params }: any) {
                         <EditHandleButton handle={data.handle} />
 
                         <div className="flex w-full max-w-[650px] flex-col gap-3">
-                            {data.Wallet.map((wallet: any, i: number) => {
+                            {data?.Wallet?.map((wallet: any, i: number) => {
                                 const preferrednetworks =
                                     wallet.preferrednetworks;
+
+                                if (preferrednetworks.includes("matic")) {
+                                }
+
                                 return (
                                     <div
                                         className="flex flex-col gap-3"
                                         key={i}
                                     >
-                                        {wallet.preferrednetworks.map(
+                                        <Wallet
+                                            address={wallet.address}
+                                            preferrednetwork={
+                                                preferrednetworks.length === 1
+                                                    ? preferrednetworks[0]
+                                                    : preferrednetworks
+                                            }
+                                        />
+                                        {/* {wallet.preferrednetworks.map(
                                             (__n: any, i: number) => {
+                                                console.log(
+                                                    preferrednetworks,
+                                                    "preferrednetworks",
+                                                    wallet,
+                                                );
                                                 return (
                                                     <Wallet
                                                         address={wallet.address}
@@ -112,7 +167,7 @@ export default async function Profile({ params }: any) {
                                                     />
                                                 );
                                             },
-                                        )}
+                                        )} */}
                                     </div>
                                 );
                             })}

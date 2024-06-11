@@ -1,9 +1,9 @@
 "use client";
 
-import { IconCircleXFilled, IconLoader2 } from "@tabler/icons-react";
+import { IconCheck, IconCircleXFilled, IconLoader2 } from "@tabler/icons-react";
 import { use, useEffect, useState } from "react";
 import { ParticleNetwork, UserInfo } from "@particle-network/auth";
-import { createUserProfile } from "@/src/actions";
+import { createUserProfile, getUserDataByUuid } from "@/src/actions";
 import { useRouter } from "next/navigation";
 import { ThemeOption } from "@/src/components/profile/ThemeOption";
 import { BannerOption } from "@/src/components/profile/BannerOption";
@@ -14,6 +14,10 @@ import particle from "../../lib/particle";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { useDebounce } from "@/src/hooks/useDebounce";
 import axios from "axios";
+// @ts-ignore
+// import Uauth from "@uauth/js";
+import { v5 as uuidv5 } from "uuid";
+import { uauth } from "@/src/components/navbar";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -558,8 +562,9 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                         Link your wallets and start getting paid.
                     </h3>
 
-                    <div className="mt-4 grid grid-cols-1  gap-x-2 gap-y-2">
-                        {appState.userInfo ? (
+                    <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
+                        {appState.userInfo &&
+                        !appState.userInfo.isUnstoppableAuth ? (
                             <>
                                 <button
                                     onClick={() => configWalletModal()}
@@ -734,20 +739,31 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                         )}
 
                         <button
-                            disabled
-                            onClick={() => handleLogin("twitter")}
+                            disabled={!appState?.userInfo?.isUnstoppableAuth}
+                            // onClick={() => handleLogin("twitter")}
                             type="button"
-                            className="transition-all  flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 opacity-60"
+                            className={`transition-all flex w-full justify-between items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 disabled:opacity-60 ${
+                                appState?.userInfo?.isUnstoppableAuth
+                                    ? "row-start-1 border-2 border-green-500/50"
+                                    : ""
+                            }`}
                         >
-                            <img
-                                src="/img/3p/unstoppabledomains.png"
-                                alt="Google"
-                                className="mr-2 h-5 w-5 rounded-md"
-                            />
+                            <div className="flex items-center">
+                                <img
+                                    src="/img/3p/unstoppabledomains.png"
+                                    alt=""
+                                    className="mr-2 h-5 w-5 rounded-md"
+                                />
 
-                            <span className="text-sm font-semibold">
-                                Unstoppable Domains
-                            </span>
+                                <span className="text-sm font-semibold">
+                                    Unstoppable Domains{" "}
+                                    {appState?.userInfo?.domain &&
+                                        `(${appState?.userInfo?.domain})`}
+                                </span>
+                            </div>
+                            <div className="h-5 w-5 bg-green-500 grid place-items-center rounded-md">
+                                <IconCheck className="text-white" size={16} />
+                            </div>
                         </button>
                     </div>
                 </div>
@@ -1013,6 +1029,8 @@ export default function Onboard() {
         else if (stage === "link") setStage("handle");
     };
 
+    console.log(appState, "appState");
+
     const complete = async () => {
         const userInfo = appState.userInfo;
         const wallets = appState.wallets;
@@ -1053,6 +1071,60 @@ export default function Onboard() {
         setAppState({ globalId });
         router.push("/");
     };
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const authorization = await uauth.authorization();
+
+                console.log({ authorization });
+
+                const account = uauth.getAuthorizationAccount(authorization);
+
+                console.log({ account });
+
+                if (authorization) {
+                    const uuidv5OfUserAddress = uuidv5(
+                        account.address,
+                        uuidv5.URL,
+                    );
+
+                    console.log({ uuidv5OfUserAddress });
+
+                    const userData =
+                        (await getUserDataByUuid(uuidv5OfUserAddress)) || null;
+
+                    if (!userData && account) {
+                        setAppState({
+                            userInfo: {
+                                uuid: uuidv5OfUserAddress,
+                                token: uuidv5OfUserAddress,
+                                wallets: [
+                                    {
+                                        uuid: uuidv5OfUserAddress,
+                                        chain_name: "N/A",
+                                        public_address: account.address,
+                                    },
+                                ],
+                                isUnstoppableAuth: true,
+                                domain: authorization.idToken.sub,
+                            },
+                        });
+                        router.push("/onboard");
+                    } else {
+                        setAppState({
+                            userData,
+                        });
+                        router.push("/");
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+    }, []);
+
+    console.log(appState, "appState");
 
     return (
         <>

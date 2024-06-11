@@ -7,28 +7,26 @@ type WalletQRCodeModalProps = {
     network: string;
     isOpen: boolean;
     setIsOpen: any;
-
 };
 
 export function WalletQRCodeModal({
     address,
-    network,
+    network = "",
     isOpen,
     setIsOpen,
-
 }: WalletQRCodeModalProps) {
     function closeModal() {
         setIsOpen(false);
     }
-    let explorerLink 
-    if (network.toUpperCase() == 'TRON') {
-        explorerLink = `https://tronscan.org/address/${address}`
-    } else if (network.toUpperCase() == 'ETH') {
-        explorerLink = `https://etherscan.io/address/${address}`
-    } else if (network.toUpperCase() == 'BNB') {
-        explorerLink = `https://bscscan.com/address/${address}`
-    } else if (network.toUpperCase() == 'MATIC') {
-        explorerLink = `hddettps://polygonscan.com/address/${address}`
+    let explorerLink;
+    if (network.toUpperCase() == "TRON") {
+        explorerLink = `https://tronscan.org/address/${address}`;
+    } else if (network.toUpperCase() == "ETH") {
+        explorerLink = `https://etherscan.io/address/${address}`;
+    } else if (network.toUpperCase() == "BNB") {
+        explorerLink = `https://bscscan.com/address/${address}`;
+    } else if (network.toUpperCase() == "MATIC") {
+        explorerLink = `hddettps://polygonscan.com/address/${address}`;
     }
     return (
         <>
@@ -66,11 +64,13 @@ export function WalletQRCodeModal({
                                     </Dialog.Title>
 
                                     <div className="mt-6 flex flex-col items-center justify-center">
-
                                         <QRCodeSVG value={address} size={256} />
 
                                         <p className="font-medium mt-4">
-                                            {network.toUpperCase() == '(ETH) EVM' ? 'EVM (ETH, AVAX...)' : network.toUpperCase()}
+                                            {network.toUpperCase() ==
+                                            "(ETH) EVM"
+                                                ? "EVM (ETH, AVAX...)"
+                                                : network.toUpperCase()}
                                         </p>
 
                                         <p className="text-xs font-light text-gray-700">
@@ -78,9 +78,18 @@ export function WalletQRCodeModal({
                                         </p>
 
                                         <p className="text-xs font-light italic text-gray-700 mb-3">
-                                            Send {network.toUpperCase() == 'TRON' ? 'TRC20 & other tokens/value on TRON network to this address.' : network.toUpperCase() == 'ETH' ? 'ERC20 & other tokens/value on Ethereum network to this address.' : network.toUpperCase() == 'AVAX' ? 'ERC20 tokens on AVAX network to this address.' : network.toUpperCase() == 'BNB' ? 'BRC20 & other tokens/value on BSC network to this address.' : ''}
+                                            Send{" "}
+                                            {network.toUpperCase() == "TRON"
+                                                ? "TRC20 & other tokens/value on TRON network to this address."
+                                                : network.toUpperCase() == "ETH"
+                                                ? "ERC20 & other tokens/value on Ethereum network to this address."
+                                                : network.toUpperCase() ==
+                                                  "AVAX"
+                                                ? "ERC20 tokens on AVAX network to this address."
+                                                : network.toUpperCase() == "BNB"
+                                                ? "BRC20 & other tokens/value on BSC network to this address."
+                                                : ""}
                                         </p>
-                                        
                                     </div>
 
                                     <div className="mt-6">

@@ -52,11 +52,8 @@ export function Banner({
 
                         <div className="hidden md:flex gap-3">
                             {socials && socials.length ? (
-                                socials.map((social) => (
-                                    <div
-                                        className="flex gap-2"
-                                        key={social.platform}
-                                    >
+                                socials.map((social, i) => (
+                                    <div className="flex gap-2" key={i}>
                                         <a
                                             href={
                                                 social.platform == "github"
@@ -107,8 +104,9 @@ export function Banner({
 
             <div className="md:hidden flex gap-1.5 justify-center items-center mt-3">
                 {socials && socials.length ? (
-                    socials.map((social) => (
+                    socials.map((social, i) => (
                         <a
+                            key={i}
                             href={
                                 social.platform == "github"
                                     ? `https://github.com/${social.name}/`

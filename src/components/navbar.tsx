@@ -18,10 +18,13 @@ import {
     useAccount,
     useConnectKit,
 } from "@particle-network/connect-react-ui";
-import { getUserData, getUserDataByUuid } from "../actions";
+import { addDomainToUser, getUserData, getUserDataByUuid } from "../actions";
 import { useRouter } from "next/navigation";
 import { useAppState } from "../hooks/useAppState";
 import { InitialAppState } from "../types/state/app-state.type";
+//@ts-ignore
+import Uauth from "@uauth/js";
+import { v5 as uuidv5 } from "uuid";
 
 const features = [
     {
@@ -59,6 +62,13 @@ function classNames(...classes: any) {
     return classes.filter(Boolean).join(" ");
 }
 
+export const uauth = new Uauth({
+    clientID: "61e04be9-ff48-4336-9704-a92b8d09bddc",
+    redirectUri:
+        process.env.NEXT_PUBLIC_REDIRECT_URL ?? "http://localhost:3000",
+    scope: "openid wallet messaging:notifications:optional",
+});
+
 export default function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [tronlinkAddress, setTronlinkAddress] = useState(false);
@@ -74,6 +84,8 @@ export default function Navbar() {
         setAppState(InitialAppState(false));
 
         connectKit.particle.auth.logout();
+
+        uauth.logout();
     }
 
     // useEffect(() => {
@@ -131,6 +143,66 @@ export default function Navbar() {
         }
     }, [connected, userInfo]);
 
+    useEffect(() => {
+        (async () => {
+            try {
+                const authorization = await uauth.authorization();
+
+                console.log({ authorization });
+
+                const account = uauth.getAuthorizationAccount(authorization);
+
+                // console.log({ account });
+
+                if (authorization) {
+                    const uuidv5OfUserAddress = uuidv5(
+                        account.address,
+                        uuidv5.URL,
+                    );
+
+                    // console.log({ uuidv5OfUserAddress });
+
+                    const userData =
+                        (await fetchUserDataByUuid(uuidv5OfUserAddress)) ||
+                        null;
+
+                    if (!userData && account) {
+                        setAppState({
+                            userInfo: {
+                                uuid: uuidv5OfUserAddress,
+                                token: uuidv5OfUserAddress,
+                                wallets: [
+                                    {
+                                        uuid: uuidv5OfUserAddress,
+                                        chain_name: "N/A",
+                                        public_address: account.address,
+                                    },
+                                ],
+                                isUnstoppableAuth: true,
+                            },
+                        });
+                        router.push("/onboard");
+                    } else {
+                        const currentUserDomain = authorization.idToken.sub;
+
+                        if (
+                            userData &&
+                            !userData?.domain.includes(currentUserDomain)
+                        ) {
+                            addDomainToUser(userData?.id, currentUserDomain);
+                        }
+
+                        setAppState({
+                            userData,
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+    }, []);
+
     return (
         <div className="sticky top-4 z-50 mb-4 w-full">
             <nav
@@ -176,26 +248,59 @@ export default function Navbar() {
                             </button>
                         </>
                     ) : (
-                        <ConnectButton.Custom>
-                            {({ openConnectModal }) => {
-                                const handleConnect = async () => {
-                                    openConnectModal!();
-                                    setConnected(true);
-                                };
-                                return (
-                                    <div>
-                                        <button
-                                            onClick={handleConnect}
-                                            className="flex h-full items-center justify-center rounded-md bg-white px-6 py-3 text-sm font-bold text-black transition hover:scale-105"
-                                            type="button"
-                                            id="connect-wallet"
-                                        >
-                                            Connect Wallet
-                                        </button>
-                                    </div>
-                                );
-                            }}
-                        </ConnectButton.Custom>
+                        <>
+                            <ConnectButton.Custom>
+                                {({ openConnectModal }) => {
+                                    const handleConnect = async () => {
+                                        openConnectModal!();
+                                        setConnected(true);
+                                    };
+                                    return (
+                                        <div>
+                                            <button
+                                                onClick={handleConnect}
+                                                className="flex h-full items-center justify-center rounded-md bg-white px-6 py-3 text-sm font-bold text-black transition hover:scale-105"
+                                                type="button"
+                                                id="connect-wallet"
+                                            >
+                                                Connect Wallet
+                                            </button>
+                                        </div>
+                                    );
+                                }}
+                            </ConnectButton.Custom>
+                            <button
+                                onClick={() => {
+                                    // uauth.login();
+                                    uauth
+                                        .loginWithPopup()
+                                        .then(async (data: any) => {
+                                            console.log(data, "data");
+                                            // router.push("/onboard");
+                                            const userWalletAddress =
+                                                data.idToken.wallet_address;
+
+                                            const userData =
+                                                (await getUserDataByUuid(
+                                                    userWalletAddress,
+                                                )) || null;
+
+                                            if (!userData) {
+                                                router.push("/onboard");
+                                            } else {
+                                                setAppState({
+                                                    userData,
+                                                });
+                                            }
+                                        })
+                                        .catch((e: unknown) =>
+                                            console.error(e),
+                                        );
+                                }}
+                            >
+                                Login with UD
+                            </button>
+                        </>
                     )}
                 </div>
             </nav>

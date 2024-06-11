@@ -1,24 +1,40 @@
 "use client";
 
 import { IconCopy, IconQrcode } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Toast from "../toast";
 import { WalletQRCodeModal } from "./WalletQRCodeModal";
-import Algorand from "../../../public/img/3p/algorand.png";
-import Eth from "../../../public/img/3p/eth.png";
-import Polygon from "../../../public/img/3p/polygonsvg.png";
-import Avax from "../../../public/img/3p/avaxpng.png";
-import Tron from "../../../public/img/3p/tron.png";
-import Matic from "../../../public/img/3p/matic.png"
+import Algorand from "../../../public/img/networks/algo.png";
+import Eth from "../../../public/img/networks/eth.png";
+import Avax from "../../../public/img/networks/avax.png";
+import Tron from "../../../public/img/networks/trx.png";
+import Bnb from "../../../public/img/networks/bnb.png";
+import Matic from "../../../public/img/networks/matic.png";
 // import styles from "Wallet.module.css"
 import "../../app/globals.css";
+import { useQuery } from "@tanstack/react-query";
+import { Select } from "../select";
 
 type WalletProps = {
     address: string;
-    preferrednetwork: any;
+    preferrednetwork: string | string[];
 };
 
-
+const getNetworkImage = (network: string) => {
+    return network === "eth"
+        ? Eth.src
+        : network === "tron"
+        ? Tron.src
+        : network === "avax"
+        ? Avax.src
+        : network === "algorand"
+        ? Algorand.src
+        : network === "polygon" || network == "matic"
+        ? Matic.src
+        : network === "bnb"
+        ? Bnb.src
+        : "";
+};
 
 export function Wallet({ address, preferrednetwork }: WalletProps) {
     const originalWalletAddress = address;
@@ -26,12 +42,33 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
         `${address.substring(0, 8)}.....${address.slice(-10)}`,
     );
 
-    const [selectedNetwork, setSelectedNetwork] = useState(0);
+    const [selectedNetwork, setSelectedNetwork] = useState("");
     const [showSelectedNetworks, setShowSelectedNetworks] = useState(false);
 
     const [copied, setCopied] = useState(false);
 
-    
+    const { data: resolvedDomain } = useQuery<string>({
+        queryKey: [
+            "/api/domains/resolve/multiple",
+            { address, preferrednetwork, selectedNetwork },
+        ],
+        queryFn: async () => {
+            const res = await fetch(
+                `/api/domains/resolve/multiple/${address}?chain=${
+                    isPrefferedNetworkArray ? selectedNetwork : preferrednetwork
+                }`,
+            );
+            const json = await res.json();
+
+            if (json?.data) {
+                return json?.data;
+            }
+
+            return null;
+        },
+        staleTime: Number.POSITIVE_INFINITY,
+    });
+
     function copyAddress() {
         if (!navigator.clipboard) {
             var textArea = document.createElement("textarea");
@@ -78,6 +115,8 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
         setIsQRCodeModalOpen(true);
     }
 
+    const isPrefferedNetworkArray = Array.isArray(preferrednetwork);
+
     return (
         <>
             <Toast
@@ -90,67 +129,53 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
             <WalletQRCodeModal
                 isOpen={isQRCodeModalOpen}
                 setIsOpen={setIsQRCodeModalOpen}
-                network={preferrednetwork}
+                network={selectedNetwork}
                 address={originalWalletAddress}
             />
 
             <div className="flex bg-white rounded-lg shadow-sm py-2 px-1">
                 <div className="flex items-center justify-center ml-2">
-                    <div className={"preferred-networks"}>
-                        {/* <div className={showSelectedNetworks ? "preferred-networks-dropdown" : "preferred-networks-dropdown-hide"}>
-                            {preferrednetworks.map((network, i) => {
-                                return (
-                                    <img
-                                        key={i}
-                                        onClick={() => {
-                                            const index = preferrednetworks.findIndex((e, i) => {
-                                                return e === network
-                                            })
-                                            setSelectedNetwork(index)
-                                            setShowSelectedNetworks(false)
-                                        }}
-                                        src={
-                                            preferrednetworks[i] === "eth"
-                                                ? Eth.src
-                                                : preferrednetworks[i] === "tron"
-                                                    ? Tron.src
-                                                    : preferrednetworks[i] === "avax"
-                                                        ? Avax.src
-                                                        : preferrednetworks[i] === "algorand"
-                                                            ? Algorand.src
-                                                            : null
-                                        }
-                                        className={`w-[28px] h-[auto] network-dropdown-item`}
-                                    />
-                                )
-                            })
-                            }
-                        </div> */}
-                        <img
-                            onClick={() => setShowSelectedNetworks(true)}
-                            src={
-                                preferrednetwork === "eth"
-                                    ? Eth.src
-                                    : preferrednetwork === "tron"
-                                    ? Tron.src
-                                    : preferrednetwork === "avax"
-                                    ? Avax.src
-                                    : preferrednetwork === "algorand"
-                                    ? Algorand.src
-                                    : preferrednetwork === "polygon"
-                                    ? Polygon.src
-                                    : preferrednetwork === "bnb"
-                                    ? "https://cryptologos.cc/logos/bnb-bnb-logo.png"
-                                    : preferrednetwork == "matic" ? Matic.src
-                                    : ""
-                            }
-                            className={`w-[28px] h-[auto] selected-network-item`}
-                        />
+                    <div className={"preferred-networks basis-20"}>
+                        {isPrefferedNetworkArray ? (
+                            <div className="flex items-center">
+                                <Select
+                                    options={preferrednetwork.map(
+                                        (network, i) => {
+                                            return {
+                                                value: network,
+                                                label: (
+                                                    <img
+                                                        key={i}
+                                                        src={getNetworkImage(
+                                                            network,
+                                                        )}
+                                                        className={`w-[28px] h-[auto]`}
+                                                    />
+                                                ),
+                                            };
+                                        },
+                                    )}
+                                    onChange={(s) => {
+                                        setSelectedNetwork(s.value);
+                                        setShowSelectedNetworks(true);
+                                    }}
+                                />
+                            </div>
+                        ) : (
+                            <img
+                                onClick={() => setShowSelectedNetworks(true)}
+                                src={getNetworkImage(preferrednetwork)}
+                                className={`w-[28px] h-[auto] selected-network-item`}
+                            />
+                        )}
                     </div>
                 </div>
                 <div className="ml-3 w-full flex flex-col flex-shrink-1">
                     <p className="text-sm font-bold overflow-ellipsis">
-                        {preferrednetwork.toUpperCase()}
+                        {resolvedDomain ||
+                            (Array.isArray(preferrednetwork)
+                                ? selectedNetwork.toUpperCase()
+                                : preferrednetwork?.toUpperCase())}
                     </p>
                     <span className="hidden xs:block text-xs font-light">
                         {originalWalletAddress}
