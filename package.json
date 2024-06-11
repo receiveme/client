@@ -18,8 +18,9 @@
         "@particle-network/connect-react-ui": "^1.2.1",
         "@particle-network/connectkit": "^1.3.5",
         "@perawallet/connect": "^1.3.4",
-        "@prisma/client": "^5.9.1",
+        "@prisma/client": "5.15.0",
         "@radix-ui/react-accordion": "^1.1.2",
+        "@radix-ui/react-dialog": "^1.0.5",
         "@radix-ui/react-slot": "^1.0.2",
         "@supabase/supabase-js": "^2.39.3",
         "@tabler/icons-react": "^2.44.0",
@@ -43,8 +44,8 @@
         "react-hot-toast": "^2.4.1",
         "readable-stream": "^4.5.2",
         "rxjs": "^7.8.1",
-        "uuid": "^9.0.1",
         "tw-merge": "^0.0.1-alpha.3",
+        "uuid": "^9.0.1",
         "web3": "^4.5.0"
     },
     "devDependencies": {
