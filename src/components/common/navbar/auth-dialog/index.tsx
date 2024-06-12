@@ -38,7 +38,7 @@ export const AuthDialog = ({ trigger, handle }: Props) => {
                                 <ConnectButton.Custom>
                                     {({ openConnectModal }) => {
                                         const handleConnect = async () => {
-                                            openConnectModal?.();
+                                            openConnectModal!();
                                             // setConnected(true);
                                         };
                                         return (

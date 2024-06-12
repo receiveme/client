@@ -5,12 +5,15 @@ import { NameSearch } from "./name-search";
 export const HeroSection = () => {
     return (
         <>
-            <div className="flex items-center justify-between gap-20">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-20">
                 <div className="basis-[55%]">
                     <Chip className="mb-2">Receive Me</Chip>
-                    <p className="text-5xl font-medium leading-snug tracking-tight">
+                    <p
+                        className="text-4xl sm:text-5xl font-medium tracking-tight"
+                        style={{ lineHeight: 1.345 }}
+                    >
                         We Provide Easy Solution To
-                        <br /> Link All Of Your{" "}
+                        <br className="hidden lg:block" /> Link All Of Your{" "}
                         <span className="relative whitespace-nowrap bg-primary/40 border-2 border-dashed px-3 border-primary">
                             <span className="dot1 bg-primary rounded-full h-2 w-2 absolute -top-1 -left-1"></span>
                             <span className="dot2 bg-primary rounded-full h-2 w-2 absolute -top-1 -right-1"></span>
@@ -28,7 +31,7 @@ export const HeroSection = () => {
                         & help you manage your payments in one place.
                     </div>
                 </div>
-                <div className="basis-[45%] relative">
+                <div className="basis-[45%] relative hidden lg:block">
                     <img
                         src="/img/home/svg/grid.svg"
                         alt=""

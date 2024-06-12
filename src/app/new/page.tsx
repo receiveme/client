@@ -1,4 +1,5 @@
 import { Navbar } from "@/src/components/common/navbar";
+import { AuthDialog } from "@/src/components/common/navbar/auth-dialog";
 import { FuturePlanCard } from "@/src/components/landing/future-plans/Card";
 import { HeroSection } from "@/src/components/landing/hero";
 import { SupportedWallets } from "@/src/components/landing/supported-wallet";
@@ -51,12 +52,15 @@ export default function Home() {
         <div className={figtree.className}>
             <Navbar />
             <main className="relative overflow-x-hidden">
-                <div className="max-w-screen-xl mx-auto pt-12">
+                <div
+                    id="home"
+                    className="max-w-screen-xl mx-auto px-4 pt-12 scroll-mt-12"
+                >
                     <HeroSection />
                 </div>
-                <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-24 top-[500px] -z-10 bg-blur-circle" />
-                <div className="max-w-screen-xl mx-auto flex justify-between items-center gap-32">
-                    <div className="basis-1/2 relative">
+                <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-[25%] lg:-left-24 top-[500px] -z-10 bg-blur-circle" />
+                <div className="max-w-screen-xl mx-auto flex flex-col-reverse px-4 pt-12 lg:flex-row justify-between lg:items-center gap-32">
+                    <div className="lg:basis-1/2 relative hidden lg:block">
                         <img
                             src="/img/home/socials/github.png"
                             className="w-20 left-40 top-12 absolute drop-shadow-lg"
@@ -76,7 +80,7 @@ export default function Home() {
                         <img
                             src="/img/home/phones.png"
                             alt=""
-                            className="w-[800px] h-auto object-contain"
+                            className="w-[400px] lg:w-[800px] h-auto object-contain"
                         />
                         <img
                             src="/img/home/socials/discord.png"
@@ -89,10 +93,12 @@ export default function Home() {
                             alt=""
                         />
                     </div>
-                    <div className="basis-1/2">
+                    <div className="lg:basis-1/2">
                         <div className="">
-                            <Chip className="mb-2">About Us</Chip>
-                            <p className="font-bold text-[40px]">
+                            <Chip id="about-us" className="mb-2 scroll-mt-12">
+                                About Us
+                            </Chip>
+                            <p className="font-bold text-[40px] leading-[1.2]">
                                 Welcome To{" "}
                                 <span className="text-primary">Recieve.me</span>
                             </p>
@@ -110,13 +116,16 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -right-24 top-[1000px] -z-10 bg-blur-circle" />
-                <div className="max-w-screen-xl mx-auto flex justify-between items-center mt-20">
-                    <div className="basis-1/2 end">
+                <div className="max-w-screen-xl mx-auto flex flex-col px-4 lg:flex-row justify-between lg:items-center mt-20">
+                    <div className="basis-1/2">
                         <div className="">
-                            <Chip className="mb-2">New Updates</Chip>
-                            <p className="font-bold text-[40px]">
-                                Great Experience With <br />
-                                <span className="block text-primary -mt-3">
+                            <Chip id="updates" className="mb-2 scroll-mt-12">
+                                New Updates
+                            </Chip>
+                            <p className="font-bold text-[40px] leading-[1.2] lg:leading-normal">
+                                Great Experience With{" "}
+                                <br className="hidden lg:block" />
+                                <span className="block text-primary lg:-mt-3">
                                     Recieve.me
                                 </span>
                             </p>
@@ -132,7 +141,7 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
-                    <div className="basis-1/2">
+                    <div className="basis-1/2 hidden lg:block">
                         <div className="h-[500px] overflow-hidden relative">
                             <div className="bg-gradient-to-b from-transparent absolute bottom-0 left-0 right-0 h-60 z-10 via-transparent to-white" />
                             <div className="relative rotating-wallets">
@@ -174,10 +183,13 @@ export default function Home() {
                 </div>
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-24 top-[1700px] -z-10 bg-blur-circle" />
                 <div className="max-w-screen-xl mx-auto pt-20">
-                    <p className="font-bold text-[40px] text-center">
+                    <p
+                        id="plans"
+                        className="scroll-mt-12 font-bold text-[40px] text-center"
+                    >
                         Our Future <span className="text-primary ">Plans</span>
                     </p>
-                    <div className="flex justify-center items-center gap-20 mt-32">
+                    <div className="flex flex-col lg:flex-row justify-center items-center gap-20 mt-32">
                         <div className="">
                             <FuturePlanCard
                                 description="Lorem ipsum dolor sit amet consectetur
@@ -190,8 +202,12 @@ export default function Home() {
                                 title="Pre-Approval"
                             />
                         </div>
-                        <div className=" grid place-items-center">
-                            <img src="/img/home/svg/arrow.svg" alt="" />
+                        <div className="pb-8 lg:pb-0 grid place-items-center">
+                            <img
+                                src="/img/home/svg/arrow.svg"
+                                alt=""
+                                className="rotate-[90deg] lg:rotate-0"
+                            />
                         </div>
                         <div className="">
                             <FuturePlanCard
@@ -211,13 +227,13 @@ export default function Home() {
                     <SupportedWallets />
                 </div> */}
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -right-24 top-[2400px] -z-10 bg-blur-circle" />
-                <div className="max-w-screen-xl mx-auto pt-20">
+                <div className="max-w-screen-xl mx-auto px-4 pt-20">
                     <p className="font-bold text-[40px] text-center">
                         Our Supported{" "}
                         <span className="text-primary">Network</span>
                     </p>
                     <div className="mt-20">
-                        <div className="flex justify-evenly items-center">
+                        <div className="flex justify-evenly items-center flex-wrap gap-4">
                             <img
                                 src="/img/home/networks/bitcoin.png"
                                 alt=""
@@ -248,22 +264,31 @@ export default function Home() {
                             backgroundImage: "url(/img/home/banner.png)",
                         }}
                     >
-                        <div className="max-w-screen-xl mx-auto grid grid-cols-4 place-items-center h-full">
+                        <div className="max-w-screen-xl mx-auto grid grid-cols-1 lg:grid-cols-4 place-items-center h-full">
                             <div className="bg-white/80 flex flex-col items-center gap-4 p-12 rounded-2xl">
                                 <p className="text-3xl font-bold whitespace-nowrap">
                                     You&apos;re still here?
                                 </p>
                                 <p>What are you waiting for</p>
                                 <div>
-                                    <Button size="lg">Connect wallet</Button>
+                                    <AuthDialog
+                                        trigger={
+                                            <Button size="lg">
+                                                Connect wallet
+                                            </Button>
+                                        }
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-24 top-[3400px] -z-10 bg-blur-circle" />
-                <div className="max-w-screen-xl mx-auto pt-20">
-                    <p className="font-bold text-[40px] text-center">
+                <div className="max-w-screen-xl mx-auto px-4 pt-20">
+                    <p
+                        id="faqs"
+                        className="scroll-mt-12 font-bold text-[40px] text-center"
+                    >
                         Frequently Asked{" "}
                         <span className="text-primary ">Questions</span>
                     </p>
@@ -287,15 +312,19 @@ export default function Home() {
             </main>
             <footer className="mt-28 bg-primary">
                 <div className="pt-6 pb-4">
-                    <div className="max-w-screen-xl mx-auto text-white flex justify-between items-center">
+                    <div className="max-w-screen-xl mx-auto px-4 w-full text-white flex flex-col gap-8 lg:flex-row justify-between items-center">
                         <div className="font-bold text-3xl ">receive.me</div>
-                        <div className="flex gap-8 font-medium">
-                            <Link href="#">Home</Link>
-                            <Link href="#">About Us</Link>
-                            <Link href="#">Updates</Link>
-                            <Link href="#">Plans</Link>
-                            <Link href="#">FAQs</Link>
-                            <Link href="#">Contact Us</Link>
+                        <div className="flex flex-col lg:flex-row gap-6 lg:justify-center lg:gap-8 font-medium w-full">
+                            <div className="flex flex-row gap-3 justify-center lg:gap-8 w-full lg:w-auto">
+                                <Link href="#home">Home</Link>
+                                <Link href="#about-us">About Us</Link>
+                                <Link href="#updates">Updates</Link>
+                            </div>
+                            <div className="flex flex-row gap-3 justify-center lg:gap-8 w-full lg:w-auto">
+                                <Link href="#plans">Plans</Link>
+                                <Link href="#faqs">FAQs</Link>
+                                <Link href="#">Contact Us</Link>
+                            </div>
                         </div>
                         <div className="flex items-center gap-4">
                             <a href="#" className="border p-1.5 rounded-lg">

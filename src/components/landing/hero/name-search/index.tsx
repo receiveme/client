@@ -49,26 +49,33 @@ export const NameSearch = () => {
 
     return (
         <>
-            <div className="bg-gray-200 w-full flex items- rounded-full">
-                <input
-                    type="text"
-                    placeholder="Claim your receive.me handle today..."
-                    className="bg-transparent w-full pl-6 pr-2 outline-none"
-                    disabled={isPending}
-                    value={value}
-                    onChange={(e) => {
-                        setValue(e.currentTarget.value);
-                        setSearchDisabled(false);
+            <div className="bg-gray-200 w-full rounded-full">
+                <form
+                    className="flex"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleClick();
                     }}
-                />
-                <Button
-                    className="py-3 h-full"
-                    size="lg"
-                    onClick={handleClick}
-                    disabled={isPending || searchDisabled}
                 >
-                    {isPending ? "Searching..." : "Search"}
-                </Button>
+                    <input
+                        type="text"
+                        placeholder="Claim your receive.me handle today..."
+                        className="bg-transparent w-full pl-6 pr-2 outline-none"
+                        disabled={isPending}
+                        value={value}
+                        onChange={(e) => {
+                            setValue(e.currentTarget.value);
+                            setSearchDisabled(false);
+                        }}
+                    />
+                    <Button
+                        className="py-3 h-full"
+                        size="lg"
+                        disabled={isPending || searchDisabled || !value}
+                    >
+                        {isPending ? "Searching..." : "Search"}
+                    </Button>
+                </form>
             </div>
             <div className="mt-4">
                 <p>
