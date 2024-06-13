@@ -581,8 +581,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                     </h3>
 
                     <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
-                        {appState.userInfo &&
-                        !appState.userInfo.isUnstoppableAuth ? (
+                        {appState.userInfo ? (
                             <>
                                 <button
                                     onClick={() => configWalletModal()}
@@ -757,11 +756,11 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                         )}
 
                         <button
-                            disabled={!appState?.userInfo?.isUnstoppableAuth}
+                            disabled={!!appState?.userInfo}
                             // onClick={() => handleLogin("twitter")}
                             type="button"
                             className={`transition-all flex w-full justify-between items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 disabled:opacity-60 ${
-                                appState?.userInfo?.isUnstoppableAuth
+                                appState?.unstoppableAuth?.token
                                     ? "row-start-1 border-2 border-green-500/50"
                                     : ""
                             }`}
@@ -775,8 +774,8 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
 
                                 <span className="text-sm font-semibold">
                                     Unstoppable Domains{" "}
-                                    {appState?.userInfo?.domain &&
-                                        `(${appState?.userInfo?.domain})`}
+                                    {appState?.unstoppableAuth?.domain &&
+                                        `(${appState?.unstoppableAuth?.domain})`}
                                 </span>
                             </div>
                             <div className="h-5 w-5 bg-green-500 grid place-items-center rounded-md">
@@ -1051,6 +1050,7 @@ export default function Onboard() {
         const userInfo = appState.userInfo;
         const wallets = appState.wallets;
         const socials = appState.socials;
+        const unstoppableAuth = appState.unstoppableAuth;
 
         const fetchSocialDetails = async () => {
             for (let i = 0; i < socials.length; i++) {
@@ -1083,6 +1083,7 @@ export default function Onboard() {
             userInfo,
             handle,
             profile,
+            unstoppableAuth,
         );
         setAppState({ globalId });
         router.push("/");
@@ -1112,20 +1113,29 @@ export default function Onboard() {
 
                     if (!userData && account) {
                         setAppState({
-                            userInfo: {
+                            unstoppableAuth: {
                                 uuid: uuidv5OfUserAddress,
                                 token: uuidv5OfUserAddress,
-                                wallets: [
-                                    {
-                                        uuid: uuidv5OfUserAddress,
-                                        chain_name: "N/A",
-                                        public_address: account.address,
-                                    },
-                                ],
-                                isUnstoppableAuth: true,
+                                walletAddress: account.address,
                                 domain: authorization.idToken.sub,
                             },
                         });
+                        // setAppState({
+                        //     userInfo: {
+                        //         uuid: uuidv5OfUserAddress,
+                        //         token: uuidv5OfUserAddress,
+                        //         wallets: [
+                        //             {
+                        //                 uuid: uuidv5OfUserAddress,
+                        //                 chain_name: "N/A",
+                        //                 public_address: account.address,
+                        //             },
+                        //         ],
+                        //         isUnstoppableAuth: true,
+                        //         domain: authorization.idToken.sub,
+                        //     },
+                        // });
+
                         router.push("/onboard");
                     } else {
                         setAppState({

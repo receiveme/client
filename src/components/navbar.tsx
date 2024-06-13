@@ -162,19 +162,27 @@ export default function Navbar() {
 
                     if (!userData && account) {
                         setAppState({
-                            userInfo: {
+                            unstoppableAuth: {
                                 uuid: uuidv5OfUserAddress,
                                 token: uuidv5OfUserAddress,
-                                wallets: [
-                                    {
-                                        uuid: uuidv5OfUserAddress,
-                                        chain_name: "N/A",
-                                        public_address: account.address,
-                                    },
-                                ],
-                                isUnstoppableAuth: true,
+                                walletAddress: account.address,
+                                domain: authorization.idToken.sub,
                             },
                         });
+                        // setAppState({
+                        //     userInfo: {
+                        //         uuid: uuidv5OfUserAddress,
+                        //         token: uuidv5OfUserAddress,
+                        //         wallets: [
+                        //             {
+                        //                 uuid: uuidv5OfUserAddress,
+                        //                 chain_name: "N/A",
+                        //                 public_address: account.address,
+                        //             },
+                        //         ],
+                        //         isUnstoppableAuth: true,
+                        //     },
+                        // });
                         router.push("/onboard");
                     } else {
                         const currentUserDomain = authorization.idToken.sub;

@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { AppState } from "./types/state/app-state.type";
 
 type supportedWallet = {
     key: string;
@@ -157,13 +158,15 @@ export async function createUserProfile(
     userInfo: any,
     handle: String,
     profile: any,
+    unstoppableAuth?: AppState["unstoppableAuth"],
 ) {
     // TODO; seperate socials & wallets
     const { theme, banner } = profile;
     console.log(userInfo);
-    const info_token = userInfo.token;
-    const uuid = userInfo.uuid;
-    const particleWalletAddress = userInfo.wallets[0].public_address;
+    const info_token = userInfo.token || unstoppableAuth?.token;
+    const uuid = userInfo.uuid || unstoppableAuth?.uuid;
+    const particleWalletAddress =
+        userInfo.wallets[0].public_address || unstoppableAuth?.walletAddress;
     try {
         const user = await prisma.user.create({
             data: {

@@ -8,7 +8,13 @@ export type AppState = {
     banner?: string | null; // For storing the banner preference
     logins: string[];
     server: boolean;
-    org: { staker: boolean, balance: number|string}
+    org: { staker: boolean; balance: number | string };
+    unstoppableAuth: {
+        uuid: string;
+        token: string;
+        walletAddress: string;
+        domain: string;
+    };
 };
 
 export const InitialAppState = (server = true) => ({
@@ -21,9 +27,8 @@ export const InitialAppState = (server = true) => ({
     banner: null,
     logins: [],
     server,
-    org: {staker: false, balance: 0}
+    org: { staker: false, balance: 0 },
 });
-
 
 // export type AppState = {
 //     userData: Record<string, any> | null; // For storing user data
@@ -48,4 +53,3 @@ export const InitialAppState = (server = true) => ({
 //     logins: [],
 //     server,
 // });
-
