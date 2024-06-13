@@ -53,7 +53,13 @@ function Handle({
         // console.log(debouncedHandleValue, "<=");
         (async () => {
             if (!debouncedHandleValue) return setAvailable(null);
+
+            if (debouncedHandleValue.includes(".")) {
+                return setAvailable(false);
+            }
+
             setLoading(true);
+
             const res = (
                 await axios.get(
                     `https://seal-app-8277b.ondigitalocean.app/users/handle/taken?q=${debouncedHandleValue}`,
@@ -134,6 +140,11 @@ function Handle({
                     <span className="text-sm">
                         Oh noooooo! @{handleInput} is not available.
                     </span>
+                    {handleInput.includes(".") && (
+                        <span className="text-sm">
+                            Note: Handle cannot have a . character
+                        </span>
+                    )}
                 </div>
             )}
 
