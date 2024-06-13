@@ -2,7 +2,6 @@ import { Navbar } from "@/src/components/common/navbar";
 import { AuthDialog } from "@/src/components/common/navbar/auth-dialog";
 import { FuturePlanCard } from "@/src/components/landing/future-plans/Card";
 import { HeroSection } from "@/src/components/landing/hero";
-import { SupportedWallets } from "@/src/components/landing/supported-wallet";
 import { TwoColumnSection } from "@/src/components/landing/two-column-section";
 import {
     Accordion,
@@ -11,17 +10,15 @@ import {
     AccordionTrigger,
 } from "@/src/components/ui/accordion";
 import { Button } from "@/src/components/ui/button";
-import { Chip } from "@/src/components/ui/chip";
 import {
     IconBrandFacebook,
-    IconBrandFacebookFilled,
     IconBrandInstagram,
     IconBrandPinterest,
     IconBrandTwitter,
-    IconBrandTwitterFilled,
 } from "@tabler/icons-react";
 import { Figtree } from "next/font/google";
 import Link from "next/link";
+import "@particle-network/connect-react-ui/dist/index.css";
 
 export const figtree = Figtree({ subsets: ["latin"] });
 
@@ -51,6 +48,7 @@ const FAQS = [
 export default function Home() {
     return (
         <div className={figtree.className}>
+            {/* <OldNavbar></OldNavbar> */}
             <Navbar />
             <main className="relative overflow-hidden">
                 <div

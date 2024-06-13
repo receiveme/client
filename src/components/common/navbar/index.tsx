@@ -56,7 +56,7 @@ export const Navbar = () => {
                         />
                     </div>
                     <button
-                        className="relative flex h-10 w-10 items-center justify-start rounded-lg px-0 lg:hidden"
+                        className="relative !flex h-10 w-10 items-center justify-start rounded-lg px-0 lg:!hidden"
                         onClick={() => setIsMenuOpen((p) => !p)}
                     >
                         <span

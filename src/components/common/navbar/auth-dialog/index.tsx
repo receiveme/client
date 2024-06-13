@@ -14,7 +14,7 @@ import { uauth } from "..";
 import { getUserDataByUuid } from "@/src/actions";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/hooks/useAppState";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 interface Props {
     trigger: ReactNode;
@@ -22,11 +22,12 @@ interface Props {
 }
 
 export const AuthDialog = ({ trigger, handle }: Props) => {
+    const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
     const [, setAppState] = useAppState();
     return (
         <>
-            <Dialog>
+            <Dialog open={isOpen} onOpenChange={(o) => setIsOpen(o)}>
                 <DialogTrigger asChild>{trigger}</DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
@@ -38,6 +39,7 @@ export const AuthDialog = ({ trigger, handle }: Props) => {
                                 <ConnectButton.Custom>
                                     {({ openConnectModal }) => {
                                         const handleConnect = async () => {
+                                            setIsOpen(false);
                                             openConnectModal!();
                                             // setConnected(true);
                                         };
@@ -62,6 +64,7 @@ export const AuthDialog = ({ trigger, handle }: Props) => {
                                 <Button
                                     variant="secondary"
                                     onClick={() => {
+                                        setIsOpen(false);
                                         uauth
                                             .loginWithPopup()
                                             .then(async (data: any) => {
