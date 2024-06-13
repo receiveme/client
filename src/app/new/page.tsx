@@ -3,6 +3,7 @@ import { AuthDialog } from "@/src/components/common/navbar/auth-dialog";
 import { FuturePlanCard } from "@/src/components/landing/future-plans/Card";
 import { HeroSection } from "@/src/components/landing/hero";
 import { SupportedWallets } from "@/src/components/landing/supported-wallet";
+import { TwoColumnSection } from "@/src/components/landing/two-column-section";
 import {
     Accordion,
     AccordionContent,
@@ -51,7 +52,7 @@ export default function Home() {
     return (
         <div className={figtree.className}>
             <Navbar />
-            <main className="relative overflow-x-hidden">
+            <main className="relative overflow-hidden">
                 <div
                     id="home"
                     className="max-w-screen-xl mx-auto px-4 pt-12 scroll-mt-12"
@@ -59,128 +60,153 @@ export default function Home() {
                     <HeroSection />
                 </div>
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-[25%] lg:-left-24 top-[500px] -z-10 bg-blur-circle" />
-                <div className="max-w-screen-xl mx-auto flex flex-col-reverse px-4 pt-12 lg:flex-row justify-between lg:items-center gap-32">
-                    <div className="lg:basis-1/2 relative hidden lg:block">
-                        <img
-                            src="/img/home/socials/github.png"
-                            className="w-20 left-40 top-12 absolute drop-shadow-lg"
-                            alt=""
-                        />
-                        <img
-                            src="/img/home/socials/twitch.png"
-                            className="w-24 left-24 top-40 -rotate-[15deg] absolute drop-shadow-lg"
-                            alt=""
-                        />
-                        <img
-                            src="/img/home/socials/linkedin.png"
-                            className="w-16 left-16 bottom-36 absolute drop-shadow-xl"
-                            alt=""
-                        />
-                        {/* main phones image  */}
-                        <img
-                            src="/img/home/phones.png"
-                            alt=""
-                            className="w-[400px] lg:w-[800px] h-auto object-contain"
-                        />
-                        <img
-                            src="/img/home/socials/discord.png"
-                            className="w-20 right-28 skew-x-[-20deg] skew-y-[20deg] top-8 absolute drop-shadow-xl"
-                            alt=""
-                        />
-                        <img
-                            src="/img/home/socials/x.png"
-                            className="w-14 right-20 bottom-32 rotate-[-15deg] absolute drop-shadow-xl"
-                            alt=""
-                        />
-                    </div>
-                    <div className="lg:basis-1/2">
-                        <div className="">
-                            <Chip id="about-us" className="mb-2 scroll-mt-12">
-                                About Us
-                            </Chip>
-                            <p className="font-bold text-[40px] leading-[1.2]">
-                                Welcome To{" "}
-                                <span className="text-primary">Recieve.me</span>
-                            </p>
-                            <p className="text-gray-600 mt-4 max-w-lg text-lg">
-                                Lorem ipsum dolor sit, amet consectetur
-                                adipisicing elit. Molestiae amet et laboriosam
-                                enim incidunt, aliquam vitae iusto soluta ipsa
-                                provident eius quibusdam tenetur doloremque
-                                earum deleniti quis? Explicabo amet et
-                            </p>
-                            <div className="mt-4">
-                                <Button size="lg">Discover</Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <TwoColumnSection
+                    chipText="About Us"
+                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae amet et laboriosam enim incidunt, aliquam vitae iusto soluta ipsa provident eius quibusdam tenetur doloremque earum deleniti quis? Explicabo amet et"
+                    imageSection={
+                        <>
+                            <img
+                                src="/img/home/socials/github.png"
+                                className="w-20 left-40 top-12 absolute drop-shadow-lg"
+                                alt=""
+                            />
+                            <img
+                                src="/img/home/socials/twitch.png"
+                                className="w-24 left-24 top-40 -rotate-[15deg] absolute drop-shadow-lg"
+                                alt=""
+                            />
+                            <img
+                                src="/img/home/socials/linkedin.png"
+                                className="w-16 left-16 bottom-36 absolute drop-shadow-xl"
+                                alt=""
+                            />
+                            {/* main phones image  */}
+                            <img
+                                src="/img/home/phones.png"
+                                alt=""
+                                className="w-[400px] lg:w-[800px] h-auto object-contain"
+                            />
+                            <img
+                                src="/img/home/socials/discord.png"
+                                className="w-20 right-28 skew-x-[-20deg] skew-y-[20deg] top-8 absolute drop-shadow-xl"
+                                alt=""
+                            />
+                            <img
+                                src="/img/home/socials/x.png"
+                                className="w-14 right-20 bottom-32 rotate-[-15deg] absolute drop-shadow-xl"
+                                alt=""
+                            />
+                        </>
+                    }
+                    title={
+                        <>
+                            Welcome To{" "}
+                            <span className="text-primary">Recieve.me</span>
+                        </>
+                    }
+                />
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -right-24 top-[1000px] -z-10 bg-blur-circle" />
-                <div className="max-w-screen-xl mx-auto flex flex-col px-4 lg:flex-row justify-between lg:items-center mt-20">
-                    <div className="basis-1/2">
-                        <div className="">
-                            <Chip id="updates" className="mb-2 scroll-mt-12">
-                                New Updates
-                            </Chip>
-                            <p className="font-bold text-[40px] leading-[1.2] lg:leading-normal">
-                                Great Experience With{" "}
-                                <br className="hidden lg:block" />
-                                <span className="block text-primary lg:-mt-3">
-                                    Recieve.me
-                                </span>
-                            </p>
-                            <p className="text-gray-600 mt-4 max-w-lg text-lg">
-                                Lorem ipsum dolor sit, amet consectetur
-                                adipisicing elit. Molestiae amet et laboriosam
-                                enim incidunt, aliquam vitae iusto soluta ipsa
-                                provident eius quibusdam tenetur doloremque
-                                earum deleniti quis? Explicabo amet et
-                            </p>
-                            <div className="mt-4">
-                                <Button size="lg">Discover</Button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="basis-1/2 hidden lg:block">
-                        <div className="h-[500px] overflow-hidden relative">
-                            <div className="bg-gradient-to-b from-transparent absolute bottom-0 left-0 right-0 h-60 z-10 via-transparent to-white" />
-                            <div className="relative rotating-wallets">
-                                <div className="">
-                                    <img
-                                        src="/img/home/wallet-screenshots/1.png"
-                                        alt=""
-                                        className="h-[250px] w-auto object-contain absolute rotate-0 top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
-                                    />
-                                    <img
-                                        src="/img/home/wallet-screenshots/3.png"
-                                        alt=""
-                                        className="h-[250px] w-auto object-contain absolute rotate-[60deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
-                                    />
-                                    <img
-                                        src="/img/home/wallet-screenshots/2.png"
-                                        alt=""
-                                        className="h-[250px] w-auto object-contain absolute rotate-[120deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
-                                    />
-                                    <img
-                                        src="/img/home/wallet-screenshots/4.png"
-                                        alt=""
-                                        className="h-[250px] w-auto object-contain absolute rotate-[180deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
-                                    />
-                                    <img
-                                        src="/img/home/wallet-screenshots/5.png"
-                                        alt=""
-                                        className="h-[250px] w-auto object-contain absolute rotate-[240deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
-                                    />
-                                    <img
-                                        src="/img/home/wallet-screenshots/6.png"
-                                        alt=""
-                                        className="h-[250px] w-auto object-contain absolute rotate-[300deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
-                                    />
+                <TwoColumnSection
+                    chipText="Organization Account"
+                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae amet et laboriosam enim incidunt, aliquam vitae iusto soluta ipsa provident eius quibusdam tenetur doloremque earum deleniti quis? Explicabo amet et"
+                    direction="reverse"
+                    imageSection={
+                        <>
+                            <img
+                                src="/img/home/socials/github.png"
+                                className="w-20 left-40 top-12 absolute drop-shadow-lg"
+                                alt=""
+                            />
+                            <img
+                                src="/img/home/socials/twitch.png"
+                                className="w-24 left-24 top-40 -rotate-[15deg] absolute drop-shadow-lg"
+                                alt=""
+                            />
+                            <img
+                                src="/img/home/socials/linkedin.png"
+                                className="w-16 left-16 bottom-36 absolute drop-shadow-xl"
+                                alt=""
+                            />
+                            {/* main phones image  */}
+                            <img
+                                src="/img/home/phones.png"
+                                alt=""
+                                className="w-[400px] lg:w-[800px] h-auto object-contain"
+                            />
+                            <img
+                                src="/img/home/socials/discord.png"
+                                className="w-20 right-28 skew-x-[-20deg] skew-y-[20deg] top-8 absolute drop-shadow-xl"
+                                alt=""
+                            />
+                            <img
+                                src="/img/home/socials/x.png"
+                                className="w-14 right-20 bottom-32 rotate-[-15deg] absolute drop-shadow-xl"
+                                alt=""
+                            />
+                        </>
+                    }
+                    title={
+                        <>
+                            Get organization account for{" "}
+                            <span className="text-primary">your company</span>
+                        </>
+                    }
+                />
+                {/* <TwoColumnSection
+                    chipText="New Updates"
+                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae amet et laboriosam enim incidunt, aliquam vitae iusto soluta ipsa provident eius quibusdam tenetur doloremque earum deleniti quis? Explicabo amet et"
+                    direction="reverse"
+                    imageSection={
+                        <>
+                            <div className="h-[500px] overflow-hidden relative">
+                                <div className="bg-gradient-to-b from-transparent absolute bottom-0 left-0 right-0 h-60 z-10 via-transparent to-white" />
+                                <div className="relative rotating-wallets">
+                                    <div className="">
+                                        <img
+                                            src="/img/home/wallet-screenshots/1.png"
+                                            alt=""
+                                            className="h-[250px] w-auto object-contain absolute rotate-0 top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                        />
+                                        <img
+                                            src="/img/home/wallet-screenshots/3.png"
+                                            alt=""
+                                            className="h-[250px] w-auto object-contain absolute rotate-[60deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                        />
+                                        <img
+                                            src="/img/home/wallet-screenshots/2.png"
+                                            alt=""
+                                            className="h-[250px] w-auto object-contain absolute rotate-[120deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                        />
+                                        <img
+                                            src="/img/home/wallet-screenshots/4.png"
+                                            alt=""
+                                            className="h-[250px] w-auto object-contain absolute rotate-[180deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                        />
+                                        <img
+                                            src="/img/home/wallet-screenshots/5.png"
+                                            alt=""
+                                            className="h-[250px] w-auto object-contain absolute rotate-[240deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                        />
+                                        <img
+                                            src="/img/home/wallet-screenshots/6.png"
+                                            alt=""
+                                            className="h-[250px] w-auto object-contain absolute rotate-[300deg] top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 origin-[center_400px]"
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </>
+                    }
+                    title={
+                        <>
+                            Great Experience With{" "}
+                            <br className="hidden lg:block" />
+                            <span className="block text-primary">
+                                Recieve.me
+                            </span>
+                        </>
+                    }
+                /> */}
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-24 top-[1700px] -z-10 bg-blur-circle" />
                 <div className="max-w-screen-xl mx-auto pt-20">
                     <p
@@ -284,7 +310,7 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-24 top-[3400px] -z-10 bg-blur-circle" />
-                <div className="max-w-screen-xl mx-auto px-4 pt-20">
+                <div className="max-w-screen-xl mx-auto px-4 pt-20 pb-28">
                     <p
                         id="faqs"
                         className="scroll-mt-12 font-bold text-[40px] text-center"
@@ -310,7 +336,7 @@ export default function Home() {
                     </div>
                 </div>
             </main>
-            <footer className="mt-28 bg-primary">
+            <footer className="bg-primary">
                 <div className="pt-6 pb-4">
                     <div className="max-w-screen-xl mx-auto px-4 w-full text-white flex flex-col gap-8 lg:flex-row justify-between items-center">
                         <div className="font-bold text-3xl ">receive.me</div>
