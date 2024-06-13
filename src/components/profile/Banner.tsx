@@ -1,11 +1,14 @@
 "use client";
 
+import { UnstoppableDomainHolderAwardDialog } from "../handle/awards/UnstoppableDomainHolder";
+
 type BannerProps = {
     handle: string;
     banner: string;
     className?: string;
     socials?: Record<string, any>[];
     balance?: number;
+    hasDomains?: boolean;
 };
 
 export function Banner({
@@ -14,6 +17,7 @@ export function Banner({
     className = "",
     socials,
     balance = 0,
+    hasDomains,
 }: BannerProps) {
     const bannerType = banner?.split("/")[0];
     const color = banner?.split("/")[1];
@@ -50,7 +54,13 @@ export function Banner({
                             {handle}
                         </span>
 
-                        <div className="hidden md:flex gap-3">
+                        <div>
+                            {hasDomains && (
+                                <UnstoppableDomainHolderAwardDialog />
+                            )}
+                        </div>
+
+                        {/* <div className="hidden md:flex gap-3">
                             {socials && socials.length ? (
                                 socials.map((social, i) => (
                                     <div className="flex gap-2" key={i}>
@@ -92,7 +102,7 @@ export function Banner({
                             ) : (
                                 <></>
                             )}
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <img
@@ -102,7 +112,7 @@ export function Banner({
                 />
             </div>
 
-            <div className="md:hidden flex gap-1.5 justify-center items-center mt-3">
+            {/* <div className="md:hidden flex gap-1.5 justify-center items-center mt-3">
                 {socials && socials.length ? (
                     socials.map((social, i) => (
                         <a
@@ -138,7 +148,7 @@ export function Banner({
                 ) : (
                     <></>
                 )}
-            </div>
+            </div> */}
         </div>
     );
 }

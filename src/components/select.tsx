@@ -4,15 +4,17 @@ import { IconCheck, IconChevronDown } from "@tabler/icons-react";
 
 export const Select = <
     T extends {
-        value: string;
+        value: string | Record<string, any>;
         label: string | ReactNode;
     },
 >({
     options,
     onChange,
+    selectedItemRenderer,
 }: {
     options: T[];
     onChange?: (selected: T) => void;
+    selectedItemRenderer?: (selected: T) => ReactNode;
 }) => {
     const [selected, setSelected] = useState(options[0]);
 
@@ -25,9 +27,11 @@ export const Select = <
             }}
         >
             <div className="relative">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-[#eee] py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                    <span className="block truncate w-[26px]">
-                        {selected.label}
+                <Listbox.Button className="relative w-full cursor-default rounded-lg pr-8 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                    <span className="block truncate">
+                        {selectedItemRenderer
+                            ? selectedItemRenderer(selected)
+                            : selected.label}
                     </span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                         <IconChevronDown
@@ -42,7 +46,7 @@ export const Select = <
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                    <Listbox.Options className="absolute z-20 mt-1 max-h-60 w-auto overflow-auto rounded-md bg-white py-1 text-base ring-1 ring-black/5 focus:outline-none sm:text-sm">
                         {options.map((option, i) => {
                             const isSelectedOption =
                                 option.value === selected.value;

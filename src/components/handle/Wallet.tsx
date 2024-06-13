@@ -1,7 +1,7 @@
 "use client";
 
 import { IconCopy, IconQrcode } from "@tabler/icons-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Toast from "../toast";
 import { WalletQRCodeModal } from "./WalletQRCodeModal";
 import Algorand from "../../../public/img/networks/algo.png";
@@ -16,8 +16,15 @@ import { useQuery } from "@tanstack/react-query";
 import { Select } from "../select";
 
 type WalletProps = {
-    address: string;
-    preferrednetwork: string | string[];
+    // address: string;
+    // preferrednetwork: string | string[];
+    wallet:
+        | {
+              address: string;
+              network: string | null;
+              preferrednetworks: string[];
+          }[]
+        | undefined;
 };
 
 const getNetworkImage = (network: string) => {
@@ -36,27 +43,52 @@ const getNetworkImage = (network: string) => {
         : "";
 };
 
-export function Wallet({ address, preferrednetwork }: WalletProps) {
-    const originalWalletAddress = address;
+const formatData = (data: WalletProps["wallet"]) => {
+    const formattedData: {
+        address: string;
+        network: string | null;
+        chain: string;
+    }[] = [];
+
+    data?.map((d) => {
+        d.preferrednetworks.map((pn) => {
+            formattedData.push({
+                address: d.address,
+                network: d.network,
+                chain: pn,
+            });
+        });
+    });
+
+    return formattedData;
+};
+
+const formatCryptoAddress = (address: string) => {
+    return `${address.substring(0, 8)}.....${address.slice(-10)}`;
+};
+
+export function Wallet({ wallet }: WalletProps) {
     const [walletAddress, setWalletAddress] = useState(
-        `${address.substring(0, 8)}.....${address.slice(-10)}`,
+        wallet?.[0]?.address || "",
     );
 
-    const [selectedNetwork, setSelectedNetwork] = useState("");
+    const [selectedNetwork, setSelectedNetwork] = useState(
+        wallet?.[0]?.network || "",
+    );
     const [showSelectedNetworks, setShowSelectedNetworks] = useState(false);
+
+    const formattedData = useMemo(() => formatData(wallet), []);
 
     const [copied, setCopied] = useState(false);
 
     const { data: resolvedDomain } = useQuery<string>({
         queryKey: [
             "/api/domains/resolve/multiple",
-            { address, preferrednetwork, selectedNetwork },
+            { address: walletAddress, selectedNetwork },
         ],
         queryFn: async () => {
             const res = await fetch(
-                `/api/domains/resolve/multiple/${address}?chain=${
-                    isPrefferedNetworkArray ? selectedNetwork : preferrednetwork
-                }`,
+                `/api/domains/resolve/multiple/${walletAddress}?chain=${selectedNetwork}`,
             );
             const json = await res.json();
 
@@ -72,7 +104,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
     function copyAddress() {
         if (!navigator.clipboard) {
             var textArea = document.createElement("textarea");
-            textArea.value = originalWalletAddress;
+            textArea.value = walletAddress;
 
             textArea.style.top = "0";
             textArea.style.left = "0";
@@ -97,7 +129,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
             return;
         }
 
-        navigator.clipboard.writeText(originalWalletAddress).then(
+        navigator.clipboard.writeText(walletAddress).then(
             function () {
                 console.log("Async: Copying to clipboard was successful!");
                 setCopied(true);
@@ -115,8 +147,6 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
         setIsQRCodeModalOpen(true);
     }
 
-    const isPrefferedNetworkArray = Array.isArray(preferrednetwork);
-
     return (
         <>
             <Toast
@@ -130,75 +160,79 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                 isOpen={isQRCodeModalOpen}
                 setIsOpen={setIsQRCodeModalOpen}
                 network={selectedNetwork}
-                address={originalWalletAddress}
+                address={walletAddress}
             />
 
-            <div className="flex bg-white rounded-lg shadow-sm py-2 px-1">
+            <div className="flex bg-white rounded-xl shadow-sm py-2 px-2">
                 <div className="flex items-center justify-center ml-2">
-                    <div className={"preferred-networks basis-20"}>
-                        {isPrefferedNetworkArray ? (
-                            <div className="flex items-center">
-                                <Select
-                                    options={preferrednetwork.map(
-                                        (network, i) => {
-                                            return {
-                                                value: network,
-                                                label: (
-                                                    <img
-                                                        key={i}
-                                                        src={getNetworkImage(
-                                                            network,
-                                                        )}
-                                                        className={`w-[28px] h-[auto]`}
-                                                    />
-                                                ),
-                                            };
-                                        },
-                                    )}
-                                    onChange={(s) => {
-                                        setSelectedNetwork(s.value);
-                                        setShowSelectedNetworks(true);
-                                    }}
-                                />
-                            </div>
-                        ) : (
-                            <img
-                                onClick={() => setShowSelectedNetworks(true)}
-                                src={getNetworkImage(preferrednetwork)}
-                                className={`w-[28px] h-[auto] selected-network-item`}
-                            />
-                        )}
+                    <div className={"basis-20"}>
+                        <img
+                            onClick={() => setShowSelectedNetworks(true)}
+                            src={getNetworkImage(selectedNetwork)}
+                            className={`w-[32px] h-[auto] selected-network-item`}
+                        />
                     </div>
                 </div>
                 <div className="ml-3 w-full flex flex-col flex-shrink-1">
-                    <p className="text-sm font-bold overflow-ellipsis">
-                        {resolvedDomain ||
-                            (Array.isArray(preferrednetwork)
-                                ? selectedNetwork.toUpperCase()
-                                : preferrednetwork?.toUpperCase())}
-                    </p>
-                    <span className="hidden xs:block text-xs font-light">
-                        {originalWalletAddress}
-                    </span>
-                    <span className="block xs:hidden text-xs font-light">
+                    <div className="flex items-center">
+                        <Select
+                            options={formattedData?.map((network, i) => {
+                                return {
+                                    value: network,
+                                    label: (
+                                        <p className="text-sm font-bold overflow-ellipsis">
+                                            {network.chain.toUpperCase()}
+                                        </p>
+                                    ),
+                                };
+                            })}
+                            onChange={(s) => {
+                                setSelectedNetwork(s.value.chain);
+                                setShowSelectedNetworks(true);
+                                setWalletAddress(s.value.address);
+                            }}
+                            selectedItemRenderer={(selected) => {
+                                return (
+                                    <p className="text-base font-bold overflow-ellipsis">
+                                        {resolvedDomain ||
+                                            selected.value.chain.toUpperCase()}
+                                    </p>
+                                );
+                            }}
+                        />
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="block text-sm">
+                            {formatCryptoAddress(walletAddress)}
+                        </span>
+                        <button
+                            onClick={copyAddress}
+                            className={`text-gray-500 rounded-md p-1 hover:scale-[1.05] transition h-full ${
+                                copied ? "bg-green-400 text-white" : ""
+                            }`}
+                        >
+                            <IconCopy className="w-4 h-4" />
+                        </button>
+                    </div>
+                    {/* <span className="block xs:hidden text-xs font-light">
                         {walletAddress}
-                    </span>
+                    </span> */}
                 </div>
                 <div className="ml-auto mr-1 flex gap-1.5">
-                    <button
+                    {/* <button
                         onClick={copyAddress}
                         className={`bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full ${
                             copied ? "bg-green-400 text-white" : ""
                         }`}
                     >
                         <IconCopy className="w-4 h-4" />
-                    </button>
+                    </button> */}
 
                     <button
                         onClick={showQRCode}
-                        className={`bg-[#eee] rounded-md px-3 py-2 hover:scale-[1.05] transition h-full`}
+                        className={`bg-[#eee] rounded-lg p-2 hover:scale-[1.05] transition h-full`}
                     >
-                        <IconQrcode className="h-4 w-4" />
+                        <IconQrcode className="h-8 w-8" />
                     </button>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import { IconEdit } from "@tabler/icons-react";
 import EditHandleButton from "@/src/components/handle/EditButton";
 import { useQuery } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
+import { Button } from "@/src/components/ui/button";
 
 async function getUserByHandle(handle: string) {
     try {
@@ -93,6 +94,8 @@ export default async function Profile({
           )} background-animate gradient-animation`
         : `from-${data?.profiles?.theme?.replace("/none", "")} `;
 
+    const hasDomains = data.domain?.length !== 0;
+
     // const { data: resolvedDomain } = useQuery<string>({
     //     queryKey: [
     //         "/api/domains/resolve/multiple",
@@ -125,12 +128,20 @@ export default async function Profile({
                             banner={data?.profiles?.background!}
                             socials={data.Social}
                             className="my-4"
+                            hasDomains={hasDomains}
                         />
 
                         <EditHandleButton handle={data.handle} />
 
-                        <div className="flex w-full max-w-[650px] flex-col gap-3">
-                            {data?.Wallet?.map((wallet: any, i: number) => {
+                        <div>
+                            <button className="bg-[#4C47F7] rounded-xl px-4 py-2 hover:bg-[#4C47F7]/80 text-white font-medium">
+                                View Collectibles
+                            </button>
+                        </div>
+
+                        <div className="mt-4 flex w-full max-w-[650px] flex-col gap-3">
+                            <Wallet wallet={data.Wallet} />
+                            {/* {data?.Wallet?.map((wallet: any, i: number) => {
                                 const preferrednetworks =
                                     wallet.preferrednetworks;
 
@@ -150,7 +161,7 @@ export default async function Profile({
                                                     : preferrednetworks
                                             }
                                         />
-                                        {/* {wallet.preferrednetworks.map(
+                                         {wallet.preferrednetworks.map(
                                             (__n: any, i: number) => {
                                                 console.log(
                                                     preferrednetworks,
@@ -167,15 +178,62 @@ export default async function Profile({
                                                     />
                                                 );
                                             },
-                                        )} */}
+                                        )} 
                                     </div>
                                 );
-                            })}
+                            })} */}
+                        </div>
+
+                        <div className="mt-6">
+                            <div className="hidden md:flex gap-3">
+                                {data.Social && data.Social.length ? (
+                                    data.Social.map((social, i) => (
+                                        <div className="flex gap-2" key={i}>
+                                            <a
+                                                href={
+                                                    social.platform == "github"
+                                                        ? `https://github.com/${social.name}/`
+                                                        : social.platform ==
+                                                          "twitter"
+                                                        ? `https://twitter.com/${social.name}`
+                                                        : social.platform ==
+                                                          "twitch"
+                                                        ? `https://twitch.com/${social.name}/`
+                                                        : social.platform ==
+                                                          "discord"
+                                                        ? `discord://-/users/${social.networkid}`
+                                                        : ""
+                                                }
+                                                target="_blank"
+                                                className={`transition duration-200 hover:scale-[1.1] hover:shadow-md border border-solid p-1 rounded-lg flex justify-center items-center bg-white`}
+                                            >
+                                                <img
+                                                    src={
+                                                        social.platform ==
+                                                        "github"
+                                                            ? "/img/3p/github.png"
+                                                            : social.platform ==
+                                                              "twitter"
+                                                            ? "/img/3p/twitter.png"
+                                                            : social.platform ==
+                                                              "twitch"
+                                                            ? "/img/3p/twitch.png"
+                                                            : "/img/3p/discord.png"
+                                                    }
+                                                    className={`w-[20px] h-auto`}
+                                                />
+                                            </a>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <></>
+                                )}
+                            </div>
                         </div>
 
                         <div className="mt-4 flex w-full items-center justify-center">
-                            <span className="text-sm font-bold text-gray-400">
-                                @receive.me
+                            <span className="text-sm font-bold text-gray-300">
+                                @Receive.me
                             </span>
                         </div>
                     </div>
