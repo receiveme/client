@@ -25,9 +25,17 @@ export const GET = async (
         if (json?.data?.length > 0) {
             const domains = json?.data;
 
-            const domainOnRequestedChain = domains.find(
+            let domainOnRequestedChain = domains.find(
                 (d: any) => d.meta.blockchain.toLowerCase() === requestedChain,
             );
+
+            if (requestedChain === "matic") {
+                domainOnRequestedChain = domains.find(
+                    (d: any) =>
+                        d.meta.blockchain.toLowerCase() === requestedChain &&
+                        d.meta.domain.endsWith(".polygon"),
+                );
+            }
 
             return NextResponse.json({
                 success: true,
