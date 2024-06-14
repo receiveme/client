@@ -140,13 +140,10 @@ export default async function Profile({
                         </div>
 
                         <div className="mt-4 flex w-full max-w-[650px] flex-col gap-3">
-                            <Wallet wallet={data.Wallet} />
-                            {/* {data?.Wallet?.map((wallet: any, i: number) => {
+                            {/* <Wallet wallet={data.Wallet} /> */}
+                            {data?.Wallet?.map((wallet: any, i: number) => {
                                 const preferrednetworks =
                                     wallet.preferrednetworks;
-
-                                if (preferrednetworks.includes("matic")) {
-                                }
 
                                 return (
                                     <div
@@ -161,7 +158,7 @@ export default async function Profile({
                                                     : preferrednetworks
                                             }
                                         />
-                                         {wallet.preferrednetworks.map(
+                                        {/* {wallet.preferrednetworks.map(
                                             (__n: any, i: number) => {
                                                 console.log(
                                                     preferrednetworks,
@@ -178,10 +175,10 @@ export default async function Profile({
                                                     />
                                                 );
                                             },
-                                        )} 
+                                        )}  */}
                                     </div>
                                 );
-                            })} */}
+                            })}
                         </div>
 
                         <div className="mt-6">

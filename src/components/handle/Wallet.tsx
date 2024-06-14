@@ -16,15 +16,15 @@ import { useQuery } from "@tanstack/react-query";
 import { Select } from "../select";
 
 type WalletProps = {
-    // address: string;
-    // preferrednetwork: string | string[];
-    wallet:
-        | {
-              address: string;
-              network: string | null;
-              preferrednetworks: string[];
-          }[]
-        | undefined;
+    address: string;
+    preferrednetwork: string | string[];
+    // wallet:
+    //     | {
+    //           address: string;
+    //           network: string | null;
+    //           preferrednetworks: string[];
+    //       }[]
+    //     | undefined;
 };
 
 const getNetworkImage = (network: string) => {
@@ -43,41 +43,43 @@ const getNetworkImage = (network: string) => {
         : "";
 };
 
-const formatData = (data: WalletProps["wallet"]) => {
-    const formattedData: {
-        address: string;
-        network: string | null;
-        chain: string;
-    }[] = [];
+// const formatData = (data: WalletProps["wallet"]) => {
+//     const formattedData: {
+//         address: string;
+//         network: string | null;
+//         chain: string;
+//     }[] = [];
 
-    data?.map((d) => {
-        d.preferrednetworks.map((pn) => {
-            formattedData.push({
-                address: d.address,
-                network: d.network,
-                chain: pn,
-            });
-        });
-    });
+//     data?.map((d) => {
+//         d.preferrednetworks.map((pn) => {
+//             formattedData.push({
+//                 address: d.address,
+//                 network: d.network,
+//                 chain: pn,
+//             });
+//         });
+//     });
 
-    return formattedData;
-};
+//     return formattedData;
+// };
 
 const formatCryptoAddress = (address: string) => {
     return `${address.substring(0, 8)}.....${address.slice(-10)}`;
 };
 
-export function Wallet({ wallet }: WalletProps) {
-    const [walletAddress, setWalletAddress] = useState(
-        wallet?.[0]?.address || "",
-    );
+export function Wallet({ address, preferrednetwork }: WalletProps) {
+    const [walletAddress, setWalletAddress] = useState(address);
 
     const [selectedNetwork, setSelectedNetwork] = useState(
-        wallet?.[0]?.network || "",
+        Array.isArray(preferrednetwork)
+            ? preferrednetwork[0]
+            : preferrednetwork,
     );
-    const [showSelectedNetworks, setShowSelectedNetworks] = useState(false);
+    // const [showSelectedNetworks, setShowSelectedNetworks] = useState(false);
 
-    const formattedData = useMemo(() => formatData(wallet), []);
+    // const [selectedNetwork, setSelectedNetwork] = useState("")
+
+    // const formattedData = useMemo(() => formatData(wallet), []);
 
     const [copied, setCopied] = useState(false);
 
@@ -147,6 +149,8 @@ export function Wallet({ wallet }: WalletProps) {
         setIsQRCodeModalOpen(true);
     }
 
+    const isPrefferedNetworkArray = Array.isArray(preferrednetwork);
+
     return (
         <>
             <Toast
@@ -167,7 +171,7 @@ export function Wallet({ wallet }: WalletProps) {
                 <div className="flex items-center justify-center ml-2">
                     <div className={"basis-20"}>
                         <img
-                            onClick={() => setShowSelectedNetworks(true)}
+                            // onClick={() => setShowSelectedNetworks(true)}
                             src={getNetworkImage(selectedNetwork)}
                             className={`w-[32px] h-[auto] selected-network-item`}
                         />
@@ -175,31 +179,38 @@ export function Wallet({ wallet }: WalletProps) {
                 </div>
                 <div className="ml-3 w-full flex flex-col flex-shrink-1">
                     <div className="flex items-center">
-                        <Select
-                            options={formattedData?.map((network, i) => {
-                                return {
-                                    value: network,
-                                    label: (
-                                        <p className="text-sm font-bold overflow-ellipsis">
-                                            {network.chain.toUpperCase()}
+                        {isPrefferedNetworkArray ? (
+                            <Select
+                                options={preferrednetwork?.map((network, i) => {
+                                    return {
+                                        value: network,
+                                        label: (
+                                            <p className="text-sm font-bold overflow-ellipsis">
+                                                {network.toUpperCase()}
+                                            </p>
+                                        ),
+                                    };
+                                })}
+                                onChange={(s) => {
+                                    setSelectedNetwork(s.value);
+                                    // setShowSelectedNetworks(true);
+                                    // setWalletAddress(s.value.address);
+                                }}
+                                selectedItemRenderer={(selected) => {
+                                    return (
+                                        <p className="text-base font-bold overflow-ellipsis">
+                                            {resolvedDomain ||
+                                                selected.value.toUpperCase()}
                                         </p>
-                                    ),
-                                };
-                            })}
-                            onChange={(s) => {
-                                setSelectedNetwork(s.value.chain);
-                                setShowSelectedNetworks(true);
-                                setWalletAddress(s.value.address);
-                            }}
-                            selectedItemRenderer={(selected) => {
-                                return (
-                                    <p className="text-base font-bold overflow-ellipsis">
-                                        {resolvedDomain ||
-                                            selected.value.chain.toUpperCase()}
-                                    </p>
-                                );
-                            }}
-                        />
+                                    );
+                                }}
+                            />
+                        ) : (
+                            <p className="text-base font-bold overflow-ellipsis">
+                                {resolvedDomain ||
+                                    selectedNetwork.toUpperCase()}
+                            </p>
+                        )}
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="block text-sm">
