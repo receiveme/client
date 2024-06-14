@@ -139,6 +139,9 @@ export const Navbar = () => {
                                 </div>
                                 <div className="border-t border-gray-200 pt-4 w-full grid place-items-center">
                                     <AuthDialog
+                                        onButtonsClick={() => {
+                                            setIsMenuOpen(false);
+                                        }}
                                         trigger={
                                             <Button size="lg">
                                                 Connect Wallet

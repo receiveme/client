@@ -19,9 +19,10 @@ import { ReactNode, useState } from "react";
 interface Props {
     trigger: ReactNode;
     handle?: string;
+    onButtonsClick?: () => void;
 }
 
-export const AuthDialog = ({ trigger, handle }: Props) => {
+export const AuthDialog = ({ trigger, handle, onButtonsClick }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
     const [, setAppState] = useAppState();
@@ -41,6 +42,7 @@ export const AuthDialog = ({ trigger, handle }: Props) => {
                                         const handleConnect = async () => {
                                             setIsOpen(false);
                                             openConnectModal!();
+                                            onButtonsClick?.();
                                             // setConnected(true);
                                         };
                                         return (
@@ -65,6 +67,8 @@ export const AuthDialog = ({ trigger, handle }: Props) => {
                                     variant="secondary"
                                     onClick={() => {
                                         setIsOpen(false);
+                                        onButtonsClick?.();
+
                                         uauth
                                             .loginWithPopup()
                                             .then(async (data: any) => {
