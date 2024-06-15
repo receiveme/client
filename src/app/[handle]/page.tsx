@@ -50,7 +50,16 @@ async function getUserByHandle(handle: string) {
             },
         });
 
-        return { ...user, profiles: user?.Profile[0] };
+        const wallet = user?.Wallet.sort((a, b) => {
+            if (a.preferrednetworks.includes("eth")) {
+                return -1;
+            }
+            return 1;
+        });
+
+        console.log(user?.Wallet, "walllet");
+
+        return { ...user, Wallet: wallet, profiles: user?.Profile[0] };
     } catch (error) {
         // Errrors can happen because /[handle] can be any 404 url
         // e.g. robots.txt, sitemap.xml
