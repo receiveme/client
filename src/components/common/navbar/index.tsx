@@ -5,15 +5,14 @@ import { Button } from "../../ui/button";
 //@ts-ignore
 import Uauth from "@uauth/js";
 import { AuthDialog } from "./auth-dialog";
-import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "../../ui/sheet";
-import { useState } from "react";
+import { Sheet, SheetContent } from "../../ui/sheet";
+import { useEffect, useState } from "react";
+import { useAppState } from "@/src/hooks/useAppState";
+import { InitialAppState } from "@/src/types/state/app-state.type";
+import { useAccount, useConnectKit } from "@particle-network/connect-react-ui";
+import { addDomainToUser, getUserDataByUuid } from "@/src/actions";
+import { useRouter } from "next/navigation";
+import { v5 as uuidv5 } from "uuid";
 
 export const uauth = new Uauth({
     clientID: "61e04be9-ff48-4336-9704-a92b8d09bddc",
@@ -24,6 +23,121 @@ export const uauth = new Uauth({
 
 export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [connected, setConnected] = useState(false);
+
+    const router = useRouter();
+
+    const [appState, setAppState] = useAppState();
+    const connectKit = useConnectKit();
+    const userInfo = connectKit?.particle?.auth.getUserInfo();
+    const account = useAccount() || null;
+
+    const signOut = async () => {
+        setAppState(InitialAppState(false));
+
+        connectKit.particle.auth.logout();
+
+        uauth.logout();
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!appState.userData) {
+                // Assuming userInfo has a uuid property
+                // const uuid = JSON.parse(localStorage.getItem("globalId"))
+                //     ? JSON.parse(localStorage.getItem("globalId"))
+                //     : "n/a";
+                const userData = userInfo
+                    ? await getUserDataByUuid(userInfo.uuid)
+                    : null;
+
+                if (!userData && userInfo && account) {
+                    setAppState({
+                        userInfo,
+                    });
+                    router.push("/onboard");
+                } else {
+                    setAppState({
+                        userData,
+                    });
+                }
+            }
+        };
+
+        if (connected) {
+            fetchData();
+        }
+    }, [connected, userInfo]);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const authorization = await uauth.authorization();
+
+                console.log({ authorization });
+
+                const account = uauth.getAuthorizationAccount(authorization);
+
+                // console.log({ account });
+
+                if (authorization) {
+                    const uuidv5OfUserAddress = uuidv5(
+                        account.address,
+                        uuidv5.URL,
+                    );
+
+                    // console.log({ uuidv5OfUserAddress });
+
+                    const userData =
+                        (await getUserDataByUuid(uuidv5OfUserAddress)) || null;
+
+                    if (!userData && account) {
+                        setAppState({
+                            unstoppableAuth: {
+                                uuid: uuidv5OfUserAddress,
+                                token: uuidv5OfUserAddress,
+                                walletAddress: account.address,
+                                domain: authorization.idToken.sub,
+                            },
+                        });
+                        // setAppState({
+                        //     userInfo: {
+                        //         uuid: uuidv5OfUserAddress,
+                        //         token: uuidv5OfUserAddress,
+                        //         wallets: [
+                        //             {
+                        //                 uuid: uuidv5OfUserAddress,
+                        //                 chain_name: "N/A",
+                        //                 public_address: account.address,
+                        //             },
+                        //         ],
+                        //         isUnstoppableAuth: true,
+                        //     },
+                        // });
+                        router.push("/onboard");
+                    } else {
+                        const currentUserDomain = authorization.idToken.sub;
+
+                        if (
+                            userData &&
+                            !userData?.domain.includes(currentUserDomain)
+                        ) {
+                            addDomainToUser(userData?.id, currentUserDomain);
+                        }
+
+                        setAppState({
+                            userData,
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+    }, []);
+
+    console.log(appState, "appState");
+
     return (
         <>
             <header>
@@ -51,9 +165,34 @@ export const Navbar = () => {
                         <Link href="#">Contact Us</Link>
                     </div>
                     <div className="hidden lg:block">
-                        <AuthDialog
-                            trigger={<Button size="lg">Connect Wallet</Button>}
-                        />
+                        {appState?.userData?.handle ? (
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    onClick={() =>
+                                        window.open(
+                                            `/${appState.userData?.handle}`,
+                                            "_blank",
+                                        )
+                                    }
+                                >
+                                    <span className="font-normal text-gray-200 mr-2">
+                                        @
+                                    </span>
+                                    <span>{appState.userData?.handle}</span>
+                                </Button>
+
+                                <Button variant="ghost" onClick={signOut}>
+                                    Sign Out
+                                </Button>
+                            </div>
+                        ) : (
+                            <AuthDialog
+                                setConnected={setConnected}
+                                trigger={
+                                    <Button size="lg">Connect Wallet</Button>
+                                }
+                            />
+                        )}
                     </div>
                     <button
                         className="relative !flex h-10 w-10 items-center justify-start rounded-lg px-0 lg:!hidden"
@@ -139,6 +278,7 @@ export const Navbar = () => {
                                 </div>
                                 <div className="border-t border-gray-200 pt-4 w-full grid place-items-center">
                                     <AuthDialog
+                                        setConnected={setConnected}
                                         onButtonsClick={() => {
                                             setIsMenuOpen(false);
                                         }}

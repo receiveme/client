@@ -14,18 +14,27 @@ import { uauth } from "..";
 import { getUserDataByUuid } from "@/src/actions";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/hooks/useAppState";
-import { ReactNode, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 interface Props {
     trigger: ReactNode;
     handle?: string;
     onButtonsClick?: () => void;
+    setConnected?: Dispatch<SetStateAction<boolean>>;
 }
 
-export const AuthDialog = ({ trigger, handle, onButtonsClick }: Props) => {
+export const AuthDialog = ({
+    trigger,
+    handle,
+    onButtonsClick,
+    setConnected,
+}: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
-    const [, setAppState] = useAppState();
+    const [appState, setAppState] = useAppState();
+
+    if (appState?.userData?.handle) return null;
+
     return (
         <>
             <Dialog open={isOpen} onOpenChange={(o) => setIsOpen(o)}>
@@ -43,7 +52,7 @@ export const AuthDialog = ({ trigger, handle, onButtonsClick }: Props) => {
                                             setIsOpen(false);
                                             openConnectModal!();
                                             onButtonsClick?.();
-                                            // setConnected(true);
+                                            setConnected?.(true);
                                         };
                                         return (
                                             <div>
