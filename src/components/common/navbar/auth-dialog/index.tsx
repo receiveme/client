@@ -17,10 +17,12 @@ import { useAppState } from "@/src/hooks/useAppState";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 interface Props {
-    trigger: ReactNode;
+    trigger?: ReactNode;
     handle?: string;
     onButtonsClick?: () => void;
     setConnected?: Dispatch<SetStateAction<boolean>>;
+    isOpen?: boolean;
+    setIsOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AuthDialog = ({
@@ -28,6 +30,8 @@ export const AuthDialog = ({
     handle,
     onButtonsClick,
     setConnected,
+    isOpen: isDialogOpen,
+    setIsOpen: setIsDialogOpen,
 }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
@@ -37,11 +41,19 @@ export const AuthDialog = ({
 
     return (
         <>
-            <Dialog open={isOpen} onOpenChange={(o) => setIsOpen(o)}>
-                <DialogTrigger asChild>{trigger}</DialogTrigger>
+            <Dialog
+                open={
+                    typeof isDialogOpen !== "undefined" ? isDialogOpen : isOpen
+                }
+                onOpenChange={(o) => {
+                    setIsDialogOpen?.(o);
+                    setIsOpen(o);
+                }}
+            >
+                {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle className="text-center">
+                        <DialogTitle className="text-center whitespace-nowrap">
                             Continue to Receive.me with
                         </DialogTitle>
                         <DialogDescription>

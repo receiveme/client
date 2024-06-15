@@ -23,6 +23,7 @@ export const uauth = new Uauth({
 
 export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
     const [connected, setConnected] = useState(false);
 
     const router = useRouter();
@@ -136,11 +137,20 @@ export const Navbar = () => {
         })();
     }, []);
 
-    console.log(appState, "appState");
+    // console.log(appState, "appState");
 
     return (
         <>
             <header>
+                <AuthDialog
+                    isOpen={isAuthDialogOpen}
+                    setIsOpen={setIsAuthDialogOpen}
+                    setConnected={setConnected}
+                    onButtonsClick={() => {
+                        setIsMenuOpen(false);
+                        setIsAuthDialogOpen(false);
+                    }}
+                />
                 <div className="bg-primary">
                     <div className="text-white text-sm py-3 text-center max-w-screen-xl mx-auto">
                         Integrated Particle Network{" "}
@@ -186,12 +196,15 @@ export const Navbar = () => {
                                 </Button>
                             </div>
                         ) : (
-                            <AuthDialog
-                                setConnected={setConnected}
-                                trigger={
-                                    <Button size="lg">Connect Wallet</Button>
-                                }
-                            />
+                            <Button
+                                size="lg"
+                                onClick={() => {
+                                    setIsAuthDialogOpen((p) => !p);
+                                    // setIsMenuOpen(false);
+                                }}
+                            >
+                                Connect Wallet
+                            </Button>
                         )}
                     </div>
                     <button
@@ -277,17 +290,15 @@ export const Navbar = () => {
                                     </Link>
                                 </div>
                                 <div className="border-t border-gray-200 pt-4 w-full grid place-items-center">
-                                    <AuthDialog
-                                        setConnected={setConnected}
-                                        onButtonsClick={() => {
+                                    <Button
+                                        size="lg"
+                                        onClick={() => {
+                                            setIsAuthDialogOpen((p) => !p);
                                             setIsMenuOpen(false);
                                         }}
-                                        trigger={
-                                            <Button size="lg">
-                                                Connect Wallet
-                                            </Button>
-                                        }
-                                    />
+                                    >
+                                        Connect Wallet
+                                    </Button>
                                 </div>
                             </div>
                         </SheetContent>
