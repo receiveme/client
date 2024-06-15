@@ -8,6 +8,7 @@ import EditHandleButton from "@/src/components/handle/EditButton";
 import { useQuery } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 import { Button } from "@/src/components/ui/button";
+import { CollectablesDialog } from "@/src/components/handle/collectables";
 
 async function getUserByHandle(handle: string) {
     try {
@@ -57,8 +58,6 @@ async function getUserByHandle(handle: string) {
             return 1;
         });
 
-        console.log(user?.Wallet, "walllet");
-
         return { ...user, Wallet: wallet, profiles: user?.Profile[0] };
     } catch (error) {
         // Errrors can happen because /[handle] can be any 404 url
@@ -89,8 +88,6 @@ export default async function Profile({
     //     // total_balance += covalent["usd_balance"];
     // }
 
-    console.log(data, "data from get user");
-
     if (!data || !data.profiles) {
         // Render 404
         return <>could not find</>;
@@ -104,26 +101,6 @@ export default async function Profile({
         : `from-${data?.profiles?.theme?.replace("/none", "")} `;
 
     const hasDomains = data.domain?.length !== 0;
-
-    // const { data: resolvedDomain } = useQuery<string>({
-    //     queryKey: [
-    //         "/api/domains/resolve/multiple",
-    //         { address, preferrednetwork },
-    //     ],
-    //     queryFn: async () => {
-    //         const res = await fetch(
-    //             `/api/domains/resolve/multiple/${address}?chain=${preferrednetwork}`,
-    //         );
-    //         const json = await res.json();
-
-    //         if (json?.data) {
-    //             return json?.data;
-    //         }
-
-    //         return null;
-    //     },
-    //     staleTime: Number.POSITIVE_INFINITY,
-    // });
 
     return (
         <>
@@ -143,9 +120,9 @@ export default async function Profile({
                         <EditHandleButton handle={data.handle} />
 
                         <div>
-                            <button className="bg-[#4C47F7] rounded-xl px-4 py-2 hover:bg-[#4C47F7]/80 text-white font-medium">
-                                View Collectibles
-                            </button>
+                            <CollectablesDialog
+                                address={data?.Wallet?.[0]?.address}
+                            />
                         </div>
 
                         <div className="mt-4 flex w-full max-w-[650px] flex-col gap-3">
