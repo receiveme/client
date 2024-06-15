@@ -11,32 +11,14 @@ import { IconUser } from "@tabler/icons-react";
 import { useMemo } from "react";
 
 interface Props {
-    address?: string;
-}
-
-export const CollectablesDialog = ({ address }: Props) => {
-    const { data, isLoading } = useQuery<{
+    data?: {
         ensDomains: Array<{ domain: string; type: string; blockchain: string }>;
         unsDomains: Array<{ domain: string; type: string; blockchain: string }>;
-    }>({
-        queryKey: ["/api/domains/resolve/multiple", { address }],
-        queryFn: async () => {
-            const res = await fetch(
-                `/api/domains/resolve/multiple/${address}?all=true`,
-            );
-            const json = await res.json();
+    };
+}
 
-            return {
-                ensDomains: json.data.filter(
-                    (d: any) => d.type.toLowerCase() === "ens",
-                ),
-                unsDomains: json.data.filter(
-                    (d: any) => d.type.toLowerCase() === "uns",
-                ),
-            };
-        },
-        staleTime: Number.POSITIVE_INFINITY,
-    });
+export const CollectablesDialog = ({ data }: Props) => {
+    const isLoading = !data;
 
     console.log({ data });
 
@@ -45,7 +27,7 @@ export const CollectablesDialog = ({ address }: Props) => {
             <Dialog>
                 <DialogTrigger asChild>
                     <button className="bg-[#4C47F7] rounded-xl px-4 py-2 hover:bg-[#4C47F7]/80 text-white font-medium">
-                        View Collectibles
+                        View Collectables
                     </button>
                 </DialogTrigger>
                 <DialogContent className="text-center w-full sm:max-w-sm lg:max-w-sm">

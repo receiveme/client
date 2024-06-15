@@ -69,6 +69,44 @@ async function getUserByHandle(handle: string) {
     }
 }
 
+async function getUserDomains(address: string): Promise<{
+    ensDomains: Array<{ domain: string; type: string; blockchain: string }>;
+    unsDomains: Array<{ domain: string; type: string; blockchain: string }>;
+}> {
+    try {
+        const res = await fetch(
+            `https://api.unstoppabledomains.com/resolve/owners/${address}/domains`,
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.UNSTOPPABLE_DOMAINS_API_KEY}`,
+                },
+            },
+        );
+        const json = await res.json();
+
+        const domains =
+            json?.data?.map((d: any) => ({
+                domain: d.meta.domain,
+                type: d.meta.type,
+                blockchain: d.meta.blockchain,
+            })) || [];
+
+        return {
+            ensDomains: domains.filter(
+                (d: any) => d.type.toLowerCase() === "ens",
+            ),
+            unsDomains: domains.filter(
+                (d: any) => d.type.toLowerCase() === "uns",
+            ),
+        };
+    } catch (error) {
+        return {
+            ensDomains: [],
+            unsDomains: [],
+        };
+    }
+}
+
 export default async function Profile({
     params,
 }: {
@@ -77,6 +115,15 @@ export default async function Profile({
     const handle = params.handle;
 
     const data = await getUserByHandle(handle);
+
+    const domainData = data?.Wallet?.[0]?.address
+        ? await getUserDomains(data?.Wallet?.[0]?.address)
+        : {
+              ensDomains: [],
+              unsDomains: [],
+          };
+
+    // console.log({ domainData });
 
     // let data_each_wallet: any = {};
     // let total_balance: number = 0;
@@ -114,15 +161,13 @@ export default async function Profile({
                             banner={data?.profiles?.background!}
                             socials={data.Social}
                             className="my-4"
-                            hasDomains={hasDomains}
+                            domainData={domainData}
                         />
 
                         <EditHandleButton handle={data.handle} />
 
                         <div>
-                            <CollectablesDialog
-                                address={data?.Wallet?.[0]?.address}
-                            />
+                            <CollectablesDialog data={domainData} />
                         </div>
 
                         <div className="mt-4 flex w-full max-w-[650px] flex-col gap-3">
