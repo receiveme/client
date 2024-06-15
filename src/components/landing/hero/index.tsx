@@ -31,14 +31,14 @@ export const HeroSection = () => {
                         & help you manage your payments in one place.
                     </div>
                 </div>
-                <div className="basis-[45%] relative w-[70%] ml-full lg:ml-0 lg:w-auto">
+                <div className="basis-[45%] relative w-[70%] max-w-96 ml-full lg:ml-0 lg:w-auto">
                     <img
                         src="/img/home/svg/grid.svg"
                         alt=""
                         className="-z-10 absolute top-0 left-0 w-[50%] lg:w-auto"
                     />
-                    <div className="z-10 absolute -top-4 lg:top-0 right-8 lg:h-44 lg:w-44 w-36 h-36 bg-white/40 backdrop-blur-sm rounded-full shadow-black/10 shadow-inner drop-shadow-xl" />
-                    <div className="z-10 absolute bottom-0 right-20 lg:h-32 lg:w-32 h-28 w-28 bg-white/40 backdrop-blur-sm rounded-full shadow-black/10 shadow-inner drop-shadow-xl" />
+                    <div className="z-10 absolute -top-4 lg:top-0 right-8 lg:h-44 lg:w-44 w-[40%] h-[40%] max-w-36 max-h-36 bg-white/40 backdrop-blur-sm rounded-full shadow-black/10 shadow-inner drop-shadow-xl" />
+                    <div className="z-10 absolute bottom-0 right-20 lg:h-32 lg:w-32 h-[25%] w-[25%] max-w-28 max-h-28 bg-white/40 backdrop-blur-sm rounded-full shadow-black/10 shadow-inner drop-shadow-xl" />
                     <div className="hero-svg-mask">
                         <img src="/img/home/nick2.png" alt="" />
                     </div>
