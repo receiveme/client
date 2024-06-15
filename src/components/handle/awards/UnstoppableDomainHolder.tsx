@@ -10,7 +10,7 @@ export const UnstoppableDomainHolderAwardDialog = () => {
     return (
         <>
             <Dialog>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                     <button className="bg-white rounded-lg p-1">
                         <img
                             src="/img/handle/ud.png"
