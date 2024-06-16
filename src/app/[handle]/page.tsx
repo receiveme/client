@@ -123,7 +123,7 @@ export default async function Profile({
               unsDomains: [],
           };
 
-    // console.log({ domainData });
+    // consovle.log({ domainData });
 
     // let data_each_wallet: any = {};
     // let total_balance: number = 0;
@@ -146,8 +146,6 @@ export default async function Profile({
               "",
           )} background-animate gradient-animation`
         : `from-${data?.profiles?.theme?.replace("/none", "")} `;
-
-    const hasDomains = data.domain?.length !== 0;
 
     return (
         <>

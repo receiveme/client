@@ -30,7 +30,7 @@ export const CollectablesDialog = ({ data }: Props) => {
                         View Collectables
                     </button>
                 </DialogTrigger>
-                <DialogContent className="text-center w-full sm:max-w-sm lg:max-w-sm">
+                <DialogContent className="text-center w-full sm:max-w-md lg:max-w-md">
                     <div className="overflow-hidden">
                         <div>
                             <img
