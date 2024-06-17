@@ -185,7 +185,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                                     return {
                                         value: network,
                                         label: (
-                                            <p className="text-sm mt-1 font-bold overflow-ellipsis">
+                                            <p className="text-sm font-bold overflow-ellipsis">
                                                 {network.toUpperCase()}
                                             </p>
                                         ),
