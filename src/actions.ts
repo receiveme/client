@@ -210,7 +210,9 @@ export async function createUserProfile(
             data: {
                 handle: handle.toLowerCase(),
                 authuuid: uuid,
-                domain: userInfo?.domain ? [userInfo?.domain] : [],
+                domain: unstoppableAuth?.domain
+                    ? [unstoppableAuth?.domain]
+                    : [],
             },
         });
 
@@ -257,9 +259,11 @@ export async function createUserProfile(
                             address: wallets[i].walletAddress,
                             preferrednetworks:
                                 wallets[i].walletProvider == "metamask"
-                                    ? ["eth", "avax", "bnb"]
+                                    ? // ? ["eth", "avax", "bnb"]
+                                      ["matic", "eth"]
                                     : wallets[i].walletProvider == "particle"
-                                    ? ["eth", "avax", "bnb"]
+                                    ? // ? ["eth", "avax", "bnb"]
+                                      ["matic", "eth"]
                                     : wallets[i].walletProvider == "tron"
                                     ? ["tron"]
                                     : ["algo"],
@@ -282,7 +286,7 @@ export async function createUserProfile(
                         address: unstoppableWalletAddress
                             ? String(unstoppableWalletAddress)
                             : String(particleWalletAddress),
-                        preferrednetworks: ["eth", "avax", "bnb"],
+                        preferrednetworks: ["matic", "eth"], // ["eth", "avax", "bnb"],
                     },
                 });
                 unstoppableWalletAddress

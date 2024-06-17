@@ -233,7 +233,11 @@ export const useUnstoppableDomainAuth = () => {
     };
 
     const signOut = async () => {
-        return await uauth.logout();
+        try {
+            return await uauth.logout();
+        } catch {
+            return null;
+        }
     };
 
     return {

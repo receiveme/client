@@ -5,13 +5,11 @@ import { QRCodeSVG } from "qrcode.react";
 type WalletConfigModalProps = {
     isOpen: boolean;
     setIsOpen: any;
-
 };
 
 export function WalletConfigModal({
     isOpen,
     setIsOpen,
-
 }: WalletConfigModalProps) {
     function closeModal() {
         setIsOpen(false);
@@ -56,21 +54,37 @@ export function WalletConfigModal({
                                         {/* <QRCodeSVG value={address} size={256} /> */}
 
                                         <p className="font-medium mt-4">
-                                            For EVM based-agnostic chains, what supported networks do you want to show on your profile?
+                                            For EVM based-agnostic chains, what
+                                            supported networks do you want to
+                                            show on your profile?
                                         </p>
 
                                         <div>
-                                            <input type="checkbox" id="ETH" name="ETH" checked />
+                                            <input
+                                                type="checkbox"
+                                                id="ETH"
+                                                name="ETH"
+                                                checked
+                                            />
                                             <label htmlFor="ETH">ETH</label>
                                         </div>
 
                                         <div>
-                                            <input type="checkbox" id="avax" name="avax" checked />
-                                            <label htmlFor="avax">AVAX</label>
+                                            <input
+                                                type="checkbox"
+                                                id="matic"
+                                                name="matic"
+                                                checked
+                                            />
+                                            <label htmlFor="matic">MATIC</label>
                                         </div>
                                         <div>
-                                            <input type="checkbox" id="matic" name="matic" />
-                                            <label htmlFor="matic">MATIC</label>
+                                            <input
+                                                type="checkbox"
+                                                id="avax"
+                                                name="avax"
+                                            />
+                                            <label htmlFor="avax">AVAX</label>
                                         </div>
                                     </div>
 

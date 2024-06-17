@@ -598,7 +598,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                     </span>
 
                                     <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                        Networks: ETH, AVAX... (EVM)
+                                        Networks: ETH, MATIC... (EVM)
                                     </span>
                                     <div className=" flex-end px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
                                         <img
@@ -653,7 +653,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                     </span>
 
                                     <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                        Networks: ETH, AVAX... (EVM)
+                                        Networks: ETH, MATIC... (EVM)
                                     </span>
                                     <div className="px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
                                         <img
