@@ -77,7 +77,7 @@ export async function getUserData(userId: string) {
                 Wallet: true,
             },
         });
-        console.log(userData);
+        // console.log(userData, "getUserData");
         await prisma.$disconnect();
 
         return userData;
@@ -369,17 +369,33 @@ export async function createSocials(userId: string, data: any[]) {
     }
 }
 
-export async function createWallets(userId: string, walletsData: any[]) {
+export async function createWallets(
+    userId: string,
+    walletsData: {
+        address: string;
+        network: string;
+        preferredNetwork?: string;
+    }[],
+) {
     try {
         // Map over the walletsData to add the userId to each wallet object
         const dataToInsert = walletsData.map((wallet) => ({
             userid: userId,
             address: wallet.address,
             network: wallet.network,
+            preferrednetworks: wallet.preferredNetwork
+                ? [wallet.preferredNetwork]
+                : [],
         }));
 
         dataToInsert.forEach(async (wallet) => {
-            const already = await prisma.wallet.findFirst({ where: wallet });
+            const already = await prisma.wallet.findFirst({
+                where: {
+                    userid: wallet.userid,
+                    address: wallet.address,
+                    network: wallet.network,
+                },
+            });
 
             if (!already) {
                 await prisma.wallet.create({
@@ -392,5 +408,32 @@ export async function createWallets(userId: string, walletsData: any[]) {
     } catch (error) {
         console.error("Failed to create wallets:", error);
         throw error; // Rethrow the error to handle it or log it outside this function
+    }
+}
+
+export async function getUserDomains(
+    address: string,
+): Promise<Array<{ domain: string; type: string; blockchain: string }>> {
+    try {
+        const res = await fetch(
+            `https://api.unstoppabledomains.com/resolve/owners/${address}/domains`,
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.UNSTOPPABLE_DOMAINS_API_KEY}`,
+                },
+            },
+        );
+        const json = await res.json();
+
+        const domains =
+            json?.data?.map((d: any) => ({
+                domain: d.meta.domain,
+                type: d.meta.type,
+                blockchain: d.meta.blockchain,
+            })) || [];
+
+        return domains;
+    } catch (error) {
+        return [];
     }
 }

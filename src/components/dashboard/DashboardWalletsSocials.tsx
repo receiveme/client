@@ -5,7 +5,13 @@ import React, { useState } from "react";
 import { useAppState } from "@/src/hooks/useAppState";
 
 import particle from "../../lib/particle";
-import { createSocials, createWallets, getUserData } from "@/src/actions";
+import {
+    addDomainToUser,
+    createSocials,
+    createWallets,
+    getUserData,
+    getUserDomains,
+} from "@/src/actions";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { IconLoader2, IconSettings } from "@tabler/icons-react";
 import {
@@ -49,10 +55,18 @@ const WALLETS = [
 
 export default function DashboardWalletsSocials() {
     const [appState, setAppState] = useAppState();
-    const [newWallets, setNewWallets] = useState([]);
+    const [newWallets, setNewWallets] = useState<
+        Array<{
+            network: string;
+            address: string;
+        }>
+    >([]);
     const [newSocials, setNewSocials] = useState([]);
+    const [newDomains, setNewDomains] = useState<Array<string>>([]);
 
     const { userData } = appState;
+
+    // console.log({ userData });
 
     const [metamaskAddress, setMetamaskAddress] = useState<string | null>();
     const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
@@ -69,7 +83,7 @@ export default function DashboardWalletsSocials() {
     ] = useState(false);
     const [currentWallet, setCurrentWallet] = useState(null);
 
-    const { auth } = useUnstoppableDomainAuth();
+    const { auth, signIn, signOut } = useUnstoppableDomainAuth();
 
     const openWalletModal = async (wallet: any) => {
         setCurrentWallet(wallet);
@@ -287,6 +301,34 @@ export default function DashboardWalletsSocials() {
         setAlgorandAddress(null);
     }
 
+    async function linkUnstoppableDomain() {
+        const userId = userData?.id;
+        if (!userId) return;
+        const user = await signIn();
+
+        if (!user.isNew) return;
+
+        const userDomain = await getUserDomains(user.walletAddress);
+
+        if (userDomain.length > 0) {
+            setNewDomains(
+                userDomain.map((d) => {
+                    return d.domain;
+                }),
+            );
+
+            const walletData = {
+                network: "unstoppabledomains",
+                address: user.walletAddress,
+                preferredNetwork: user.preferredNetwork,
+            };
+
+            setNewWallets((prevWallets) => [...prevWallets, walletData]);
+        }
+
+        await signOut();
+    }
+
     // Function to connect wallets
     const connectWallet = async (wallet: any) => {
         console.log(wallet);
@@ -299,6 +341,8 @@ export default function DashboardWalletsSocials() {
             await connectTronlink();
         } else if (wallet.id === "algorand") {
             await connectAlgorandWallet();
+        } else if (wallet.id === "unstoppabledomains") {
+            await linkUnstoppableDomain();
         }
     };
 
@@ -312,6 +356,12 @@ export default function DashboardWalletsSocials() {
             await createSocials(userId, newSocials);
         }
 
+        if (newDomains.length > 0) {
+            newDomains.map(async (d) => {
+                return await addDomainToUser(userId, d);
+            });
+        }
+
         const updatedUserData = await getUserData(userId);
         appState.userData = updatedUserData;
         setAppState(appState);
@@ -319,6 +369,8 @@ export default function DashboardWalletsSocials() {
         setSaved(true);
         setTimeout(() => setSaved(false), 2500);
     }
+
+    // console.log("first", userData?.Wallet);
 
     return (
         <>

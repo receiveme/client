@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 import { Button } from "@/src/components/ui/button";
 import { CollectablesDialog } from "@/src/components/handle/collectables";
+import { getUserDomains as getDomains } from "@/src/actions";
 
 async function getUserByHandle(handle: string) {
     try {
@@ -74,22 +75,7 @@ async function getUserDomains(address: string): Promise<{
     unsDomains: Array<{ domain: string; type: string; blockchain: string }>;
 }> {
     try {
-        const res = await fetch(
-            `https://api.unstoppabledomains.com/resolve/owners/${address}/domains`,
-            {
-                headers: {
-                    Authorization: `Bearer ${process.env.UNSTOPPABLE_DOMAINS_API_KEY}`,
-                },
-            },
-        );
-        const json = await res.json();
-
-        const domains =
-            json?.data?.map((d: any) => ({
-                domain: d.meta.domain,
-                type: d.meta.type,
-                blockchain: d.meta.blockchain,
-            })) || [];
+        const domains = await getDomains(address);
 
         return {
             ensDomains: domains.filter(

@@ -200,7 +200,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                                     return (
                                         <p className="text-base font-bold overflow-ellipsis">
                                             {resolvedDomain ||
-                                                selected.value.toUpperCase()}
+                                                selected?.value?.toUpperCase()}
                                         </p>
                                     );
                                 }}

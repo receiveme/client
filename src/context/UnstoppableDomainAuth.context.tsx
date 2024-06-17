@@ -153,40 +153,52 @@ export const useUnstoppableDomainAuth = () => {
     const signIn = (): Promise<{
         isNew: boolean;
         data: any;
+        walletAddress: string;
+        preferredNetwork: string;
     }> => {
         return new Promise((res, rej) => {
             uauth
                 .loginWithPopup()
-                .then(async (data: { idToken: { wallet_address: string } }) => {
-                    // console.log(data, "data");
-                    const userWalletAddress = data.idToken.wallet_address;
+                .then(
+                    async (data: {
+                        idToken: {
+                            wallet_address: string;
+                            verified_addresses: Array<{ symbol: string }>;
+                        };
+                    }) => {
+                        console.log(data, "data");
+                        const userWalletAddress = data.idToken.wallet_address;
 
-                    // console.log({ userWalletAddress });
+                        // console.log({ userWalletAddress });
 
-                    const uuidv5OfUserAddress = uuidv5(
-                        userWalletAddress,
-                        uuidv5.URL,
-                    );
+                        const uuidv5OfUserAddress = uuidv5(
+                            userWalletAddress,
+                            uuidv5.URL,
+                        );
 
-                    // console.log({ uuidv5OfUserAddress });
+                        // console.log({ uuidv5OfUserAddress });
 
-                    const userDataFromWalletAddress =
-                        await getUserDataByWalletAddress(userWalletAddress);
-                    // console.log({ userDataFromWalletAddress });
+                        const userDataFromWalletAddress =
+                            await getUserDataByWalletAddress(userWalletAddress);
+                        // console.log({ userDataFromWalletAddress });
 
-                    const userData =
-                        (await getUserDataByUuid(
-                            userDataFromWalletAddress?.user.authuuid ||
-                                uuidv5OfUserAddress,
-                        )) || null;
+                        const userData =
+                            (await getUserDataByUuid(
+                                userDataFromWalletAddress?.user.authuuid ||
+                                    uuidv5OfUserAddress,
+                            )) || null;
 
-                    // console.log({ userData });
+                        // console.log({ userData });
 
-                    res({
-                        isNew: !userDataFromWalletAddress,
-                        data: userData,
-                    });
-                })
+                        res({
+                            isNew: !userDataFromWalletAddress,
+                            data: userData,
+                            walletAddress: userWalletAddress,
+                            preferredNetwork:
+                                data.idToken.verified_addresses[0]?.symbol.toLowerCase(),
+                        });
+                    },
+                )
                 .catch((e: unknown) => rej(e));
         });
     };

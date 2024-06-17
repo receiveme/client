@@ -125,7 +125,7 @@ function Handle({
                     onInput={(e) => changeHandle(e.currentTarget.value)}
                     required
                     placeholder="myhandle"
-                    className="block w-full pl-8 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-3 py-2"
+                    className="block w-full pl-8 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:!ring-2 focus:!ring-inset focus:!ring-indigo-600 sm:text-sm sm:leading-6 p-3 py-2"
                 />
                 {isLoading && (
                     <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center pl-3">

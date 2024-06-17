@@ -72,9 +72,12 @@ export default function Navbar() {
     const connectKit = useConnectKit();
     const userInfo = connectKit?.particle?.auth.getUserInfo();
     const router = useRouter();
-    const [connected, setConnected] = useState(false);
+    // const [connected, setConnected] = useState(false);
+
+    console.log({ userInfo, account });
 
     const [appState, setAppState] = useAppState();
+    console.log({ appState });
 
     const { auth, signIn, signOut: UDSignOut } = useUnstoppableDomainAuth();
 
@@ -124,6 +127,8 @@ export default function Navbar() {
                     ? await fetchUserDataByUuid(userInfo.uuid)
                     : null;
 
+                console.log({ appState, userData });
+
                 if (!userData && userInfo && account) {
                     setAppState({
                         userInfo,
@@ -137,12 +142,12 @@ export default function Navbar() {
             }
         };
 
-        if (connected) {
-            fetchData();
-        }
-    }, [connected, userInfo]);
+        // if (connected) {
+        fetchData();
+        // }
+    }, [userInfo]);
 
-    console.log({ auth });
+    // console.log({ auth });
 
     return (
         <div className="sticky top-4 z-50 mb-4 w-full">
@@ -194,7 +199,7 @@ export default function Navbar() {
                                 {({ openConnectModal }) => {
                                     const handleConnect = async () => {
                                         openConnectModal!();
-                                        setConnected(true);
+                                        // setConnected(true);
                                     };
                                     return (
                                         <div>
