@@ -778,9 +778,14 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                         `(${appState?.unstoppableAuth?.domain})`}
                                 </span>
                             </div>
-                            <div className="h-5 w-5 bg-green-500 grid place-items-center rounded-md">
-                                <IconCheck className="text-white" size={16} />
-                            </div>
+                            {appState?.unstoppableAuth?.domain && (
+                                <div className="h-5 w-5 bg-green-500 grid place-items-center rounded-md">
+                                    <IconCheck
+                                        className="text-white"
+                                        size={16}
+                                    />
+                                </div>
+                            )}
                         </button>
                     </div>
                 </div>
