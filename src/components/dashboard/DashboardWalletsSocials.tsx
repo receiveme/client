@@ -347,6 +347,7 @@ export default function DashboardWalletsSocials() {
     };
 
     async function save() {
+        setIsLoading(true);
         const userId = userData?.Profile[0].userid;
         if (newWallets.length > 0) {
             await createWallets(userId, newWallets);
@@ -368,9 +369,8 @@ export default function DashboardWalletsSocials() {
 
         setSaved(true);
         setTimeout(() => setSaved(false), 2500);
+        setIsLoading(false);
     }
-
-    // console.log("first", userData?.Wallet);
 
     return (
         <>
@@ -403,11 +403,10 @@ export default function DashboardWalletsSocials() {
                     </h3>
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-2">
                         {SOCIALS.map((social) => {
-                            let socialIndexUserData = userData.Social.findIndex(
-                                (linkedSocial) => {
+                            let socialIndexUserData =
+                                userData?.Social.findIndex((linkedSocial) => {
                                     return linkedSocial.platform === social.id;
-                                },
-                            );
+                                });
 
                             let socialIndexNewSocials = newSocials.findIndex(
                                 (linkedSocial) => {
@@ -508,7 +507,6 @@ export default function DashboardWalletsSocials() {
                                                     : ""}
                                             </span>
                                         </div>
-
                                         {auth?.domain &&
                                             wallet.id ===
                                                 "unstoppabledomains" && (

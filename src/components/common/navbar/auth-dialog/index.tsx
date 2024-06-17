@@ -20,6 +20,7 @@ interface Props {
     handle?: string;
     onButtonsClick?: () => void;
     setConnected?: Dispatch<SetStateAction<boolean>>;
+    setIsLoading?: Dispatch<SetStateAction<boolean>>;
     isOpen?: boolean;
     setIsOpen?: Dispatch<SetStateAction<boolean>>;
 }
@@ -29,6 +30,7 @@ export const AuthDialog = ({
     handle,
     onButtonsClick,
     setConnected,
+    setIsLoading,
     isOpen: isDialogOpen,
     setIsOpen: setIsDialogOpen,
 }: Props) => {
@@ -57,62 +59,68 @@ export const AuthDialog = ({
                         <DialogTitle className="text-center whitespace-nowrap">
                             Continue to Receive.me with
                         </DialogTitle>
-                        <DialogDescription>
-                            <div className="mt-6 flex flex-col items-center justify-center gap-2">
-                                <ConnectButton.Custom>
-                                    {({ openConnectModal }) => {
-                                        const handleConnect = async () => {
-                                            setIsOpen(false);
-                                            openConnectModal!();
-                                            onButtonsClick?.();
-                                            setConnected?.(true);
-                                        };
-                                        return (
-                                            <div>
-                                                <Button
-                                                    onClick={handleConnect}
-                                                    type="button"
-                                                    id="connect-wallet"
-                                                >
-                                                    Wallet Or Social Login
-                                                </Button>
-                                            </div>
-                                        );
-                                    }}
-                                </ConnectButton.Custom>
-                                <div className="flex justify-center w-full items-center gap-2">
-                                    <span className="bg-gray-200 h-[1px] w-full block" />
-                                    <span>OR</span>
-                                    <span className="bg-gray-200 h-[1px] w-full block" />
-                                </div>
-                                <Button
-                                    variant="secondary"
-                                    onClick={async () => {
-                                        setIsOpen(false);
-                                        onButtonsClick?.();
-
-                                        const user = await signIn();
-
-                                        if (user.isNew) {
-                                            router.push(
-                                                `/onboard${
-                                                    handle
-                                                        ? `?handle=${handle}`
-                                                        : ""
-                                                }`,
-                                            );
-                                        } else {
-                                            setAppState({
-                                                userData: user.data,
-                                            });
-                                        }
-                                    }}
-                                >
-                                    Web3 Domains (Unstoppable Domain Auth)
-                                </Button>
-                            </div>
-                        </DialogDescription>
                     </DialogHeader>
+
+                    <div className="flex flex-col items-center justify-center gap-2">
+                        <ConnectButton.Custom>
+                            {({ openConnectModal }) => {
+                                const handleConnect = async () => {
+                                    setIsOpen(false);
+                                    openConnectModal!();
+                                    onButtonsClick?.();
+                                    setConnected?.(true);
+                                };
+                                return (
+                                    <div>
+                                        <Button
+                                            onClick={handleConnect}
+                                            type="button"
+                                            id="connect-wallet"
+                                        >
+                                            Wallet Or Social Login
+                                        </Button>
+                                    </div>
+                                );
+                            }}
+                        </ConnectButton.Custom>
+                        <div className="flex justify-center w-full items-center gap-2">
+                            <span className="bg-gray-200 h-[1px] w-full block" />
+                            <span>OR</span>
+                            <span className="bg-gray-200 h-[1px] w-full block" />
+                        </div>
+                        <Button
+                            variant="secondary"
+                            onClick={async () => {
+                                try {
+                                    setIsLoading?.(true);
+                                    setIsOpen(false);
+                                    onButtonsClick?.();
+
+                                    const user = await signIn();
+
+                                    if (user.isNew) {
+                                        router.push(
+                                            `/onboard${
+                                                handle
+                                                    ? `?handle=${handle}`
+                                                    : ""
+                                            }`,
+                                        );
+                                    } else {
+                                        setAppState({
+                                            userData: user.data,
+                                        });
+                                    }
+                                    setIsLoading?.(false);
+                                } catch (e) {
+                                    console.error(e);
+                                    setIsLoading?.(false);
+                                }
+                            }}
+                        >
+                            Web3 Domains (Unstoppable Domain Auth)
+                        </Button>
+                    </div>
                 </DialogContent>
             </Dialog>
         </>

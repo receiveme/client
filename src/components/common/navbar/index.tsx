@@ -20,6 +20,7 @@ export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
     const [connected, setConnected] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const router = useRouter();
 
@@ -75,6 +76,7 @@ export const Navbar = () => {
                 <AuthDialog
                     isOpen={isAuthDialogOpen}
                     setIsOpen={setIsAuthDialogOpen}
+                    setIsLoading={setIsLoading}
                     setConnected={setConnected}
                     onButtonsClick={() => {
                         setIsMenuOpen(false);
@@ -99,10 +101,10 @@ export const Navbar = () => {
                     <div className="gap-6 font-medium hidden lg:flex">
                         <Link href="#home">Home</Link>
                         <Link href="#about-us">About Us</Link>
-                        <Link href="#updates">Updates</Link>
+                        {/* <Link href="#updates">Updates</Link> */}
                         <Link href="#plans">Plans</Link>
                         <Link href="#faqs">FAQs</Link>
-                        <Link href="#">Contact Us</Link>
+                        <Link href="mailto:support@receive.me">Contact Us</Link>
                     </div>
                     <div className="hidden lg:block">
                         {appState?.userData?.handle ? (
@@ -130,8 +132,9 @@ export const Navbar = () => {
                                     setIsAuthDialogOpen((p) => !p);
                                     // setIsMenuOpen(false);
                                 }}
+                                disabled={isLoading}
                             >
-                                Connect Wallet
+                                {isLoading ? "Connecting..." : "Connect Wallet"}
                             </Button>
                         )}
                     </div>
@@ -184,14 +187,14 @@ export const Navbar = () => {
                                     >
                                         About Us
                                     </Link>
-                                    <Link
+                                    {/* <Link
                                         onClick={() => {
                                             setIsMenuOpen(false);
                                         }}
                                         href="#updates"
                                     >
                                         Updates
-                                    </Link>
+                                    </Link> */}
                                     <Link
                                         onClick={() => {
                                             setIsMenuOpen(false);
@@ -212,7 +215,7 @@ export const Navbar = () => {
                                         onClick={() => {
                                             setIsMenuOpen(false);
                                         }}
-                                        href="#"
+                                        href="mailto:support@receive.me"
                                     >
                                         Contact Us
                                     </Link>
@@ -250,8 +253,11 @@ export const Navbar = () => {
                                                 setIsAuthDialogOpen((p) => !p);
                                                 setIsMenuOpen(false);
                                             }}
+                                            disabled={isLoading}
                                         >
-                                            Connect Wallet
+                                            {isLoading
+                                                ? "Connecting..."
+                                                : "Connect Wallet"}
                                         </Button>
                                     )}
                                 </div>

@@ -150,3 +150,8 @@
         transform: rotate(180deg);
     }
 }
+
+html,
+body {
+    scroll-behavior: smooth;
+}

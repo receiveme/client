@@ -38,7 +38,7 @@ export const TwoColumnSection = ({
                 <div className="">
                     <Chip
                         id={chipText.toLowerCase().split(" ").join("-")}
-                        className="mb-2 scroll-mt-12"
+                        className="mb-2 scroll-mt-20"
                     >
                         {chipText}
                     </Chip>
