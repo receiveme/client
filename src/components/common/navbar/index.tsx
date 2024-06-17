@@ -85,10 +85,11 @@ export const Navbar = () => {
                 />
                 <div className="bg-primary">
                     <div className="text-white text-sm py-3 text-center max-w-screen-xl mx-auto">
-                        Integrated Particle Network{" "}
+                        Integrated UNS Resolution & partner API
                         <a
-                            href="#"
-                            className="underline decoration-white underline-offset-2"
+                            href="https://devpost.com/software/receive-me-uns-ens-ux-integration?ref_content=user-portfolio&ref_feature=in_progress"
+                            target="_blank"
+                            className="underline decoration-white underline-offset-2 ml-2"
                         >
                             Learn More
                         </a>
