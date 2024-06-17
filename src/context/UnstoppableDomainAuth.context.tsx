@@ -14,6 +14,7 @@ import {
     addDomainToUser,
     getUserDataByUuid,
     getUserDataByWalletAddress,
+    getUserDomains,
 } from "../actions";
 import { useAppState } from "../hooks/useAppState";
 import { useRouter } from "next/navigation";
@@ -114,8 +115,19 @@ export const UnstoppableDomainAuthContext = ({
                         // });
                         router.push("/onboard");
                     } else {
-                        if (userData && !userData?.domain.includes(domain)) {
-                            addDomainToUser(userData?.id, domain);
+                        // get all ens & uns domain owned by this account
+                        const userDomains = await getUserDomains(walletAddress);
+
+                        // keep only those domains that arent already present in the user's profile
+                        const uniqueDomains = userDomains.filter((d) => {
+                            return !userData?.domain.includes(d.domain);
+                        });
+
+                        // save the unique domains to user profile
+                        if (userData && uniqueDomains.length > 0) {
+                            uniqueDomains.map(async (d) => {
+                                await addDomainToUser(userData?.id, d.domain);
+                            });
                         }
 
                         setAppState({
@@ -166,7 +178,7 @@ export const useUnstoppableDomainAuth = () => {
                             verified_addresses: Array<{ symbol: string }>;
                         };
                     }) => {
-                        console.log(data, "data");
+                        // console.log(data, "data");
                         const userWalletAddress = data.idToken.wallet_address;
 
                         // console.log({ userWalletAddress });
@@ -187,6 +199,23 @@ export const useUnstoppableDomainAuth = () => {
                                 userDataFromWalletAddress?.user.authuuid ||
                                     uuidv5OfUserAddress,
                             )) || null;
+
+                        // get all ens & uns domain owned by this account
+                        const userDomains = await getUserDomains(
+                            userWalletAddress,
+                        );
+
+                        // keep only those domains that arent already present in the user's profile
+                        const uniqueDomains = userDomains.filter((d) => {
+                            return !userData?.domain.includes(d.domain);
+                        });
+
+                        // save the unique domains to user profile
+                        if (userData && uniqueDomains.length > 0) {
+                            uniqueDomains.map(async (d) => {
+                                await addDomainToUser(userData?.id, d.domain);
+                            });
+                        }
 
                         // console.log({ userData });
 
