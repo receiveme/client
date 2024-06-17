@@ -10,11 +10,10 @@ import {
     DialogTrigger,
 } from "@/src/components/ui/dialog";
 import { ConnectButton } from "@particle-network/connect-react-ui";
-import { uauth } from "..";
-import { getUserDataByUuid } from "@/src/actions";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/hooks/useAppState";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 
 interface Props {
     trigger?: ReactNode;
@@ -36,6 +35,8 @@ export const AuthDialog = ({
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
     const [appState, setAppState] = useAppState();
+
+    const { signIn } = useUnstoppableDomainAuth();
 
     if (appState?.userData?.handle) return null;
 
@@ -86,39 +87,25 @@ export const AuthDialog = ({
                                 </div>
                                 <Button
                                     variant="secondary"
-                                    onClick={() => {
+                                    onClick={async () => {
                                         setIsOpen(false);
                                         onButtonsClick?.();
 
-                                        uauth
-                                            .loginWithPopup()
-                                            .then(async (data: any) => {
-                                                // router.push("/onboard");
-                                                const userWalletAddress =
-                                                    data.idToken.wallet_address;
+                                        const user = await signIn();
 
-                                                const userData =
-                                                    (await getUserDataByUuid(
-                                                        userWalletAddress,
-                                                    )) || null;
-
-                                                if (!userData) {
-                                                    router.push(
-                                                        `/onboard${
-                                                            handle
-                                                                ? `?handle=${handle}`
-                                                                : ""
-                                                        }`,
-                                                    );
-                                                } else {
-                                                    setAppState({
-                                                        userData,
-                                                    });
-                                                }
-                                            })
-                                            .catch((e: unknown) =>
-                                                console.error(e),
+                                        if (user.isNew) {
+                                            router.push(
+                                                `/onboard${
+                                                    handle
+                                                        ? `?handle=${handle}`
+                                                        : ""
+                                                }`,
                                             );
+                                        } else {
+                                            setAppState({
+                                                userData: user.data,
+                                            });
+                                        }
                                     }}
                                 >
                                     Web3 Domains (Unstoppable Domain Auth)

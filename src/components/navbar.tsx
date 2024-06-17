@@ -18,14 +18,16 @@ import {
     useAccount,
     useConnectKit,
 } from "@particle-network/connect-react-ui";
-import { addDomainToUser, getUserData, getUserDataByUuid } from "../actions";
+import {
+    addDomainToUser,
+    getUserData,
+    getUserDataByUuid,
+    getUserDataByWalletAddress,
+} from "../actions";
 import { useRouter } from "next/navigation";
 import { useAppState } from "../hooks/useAppState";
 import { InitialAppState } from "../types/state/app-state.type";
-//@ts-ignore
-import Uauth from "@uauth/js";
-import { v5 as uuidv5 } from "uuid";
-import { uauth } from "./common/navbar";
+import { useUnstoppableDomainAuth } from "../context/UnstoppableDomainAuth.context";
 
 const features = [
     {
@@ -74,12 +76,15 @@ export default function Navbar() {
 
     const [appState, setAppState] = useAppState();
 
+    const { auth, signIn, signOut: UDSignOut } = useUnstoppableDomainAuth();
+
     async function signOut() {
         setAppState(InitialAppState(false));
 
         connectKit.particle.auth.logout();
 
-        uauth.logout();
+        UDSignOut();
+        // uauth.logout();
     }
 
     // useEffect(() => {
@@ -137,73 +142,7 @@ export default function Navbar() {
         }
     }, [connected, userInfo]);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const authorization = await uauth.authorization();
-
-                console.log({ authorization });
-
-                const account = uauth.getAuthorizationAccount(authorization);
-
-                // console.log({ account });
-
-                if (authorization) {
-                    const uuidv5OfUserAddress = uuidv5(
-                        account.address,
-                        uuidv5.URL,
-                    );
-
-                    // console.log({ uuidv5OfUserAddress });
-
-                    const userData =
-                        (await fetchUserDataByUuid(uuidv5OfUserAddress)) ||
-                        null;
-
-                    if (!userData && account) {
-                        setAppState({
-                            unstoppableAuth: {
-                                uuid: uuidv5OfUserAddress,
-                                token: uuidv5OfUserAddress,
-                                walletAddress: account.address,
-                                domain: authorization.idToken.sub,
-                            },
-                        });
-                        // setAppState({
-                        //     userInfo: {
-                        //         uuid: uuidv5OfUserAddress,
-                        //         token: uuidv5OfUserAddress,
-                        //         wallets: [
-                        //             {
-                        //                 uuid: uuidv5OfUserAddress,
-                        //                 chain_name: "N/A",
-                        //                 public_address: account.address,
-                        //             },
-                        //         ],
-                        //         isUnstoppableAuth: true,
-                        //     },
-                        // });
-                        router.push("/onboard");
-                    } else {
-                        const currentUserDomain = authorization.idToken.sub;
-
-                        if (
-                            userData &&
-                            !userData?.domain.includes(currentUserDomain)
-                        ) {
-                            addDomainToUser(userData?.id, currentUserDomain);
-                        }
-
-                        setAppState({
-                            userData,
-                        });
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        })();
-    }, []);
+    console.log({ auth });
 
     return (
         <div className="sticky top-4 z-50 mb-4 w-full">
@@ -272,32 +211,47 @@ export default function Navbar() {
                                 }}
                             </ConnectButton.Custom>
                             <button
-                                onClick={() => {
+                                onClick={async () => {
+                                    const data = await signIn();
+
+                                    if (data.isNew) {
+                                        router.push("/onboard");
+                                    } else {
+                                        setAppState({
+                                            userData: data.data,
+                                        });
+                                    }
                                     // uauth.login();
-                                    uauth
-                                        .loginWithPopup()
-                                        .then(async (data: any) => {
-                                            console.log(data, "data");
-                                            // router.push("/onboard");
-                                            const userWalletAddress =
-                                                data.idToken.wallet_address;
-
-                                            const userData =
-                                                (await getUserDataByUuid(
-                                                    userWalletAddress,
-                                                )) || null;
-
-                                            if (!userData) {
-                                                router.push("/onboard");
-                                            } else {
-                                                setAppState({
-                                                    userData,
-                                                });
-                                            }
-                                        })
-                                        .catch((e: unknown) =>
-                                            console.error(e),
-                                        );
+                                    // uauth
+                                    //     .loginWithPopup()
+                                    //     .then(async (data: any) => {
+                                    //         console.log(data, "data");
+                                    //         // router.push("/onboard");
+                                    //         const userWalletAddress =
+                                    //             data.idToken.wallet_address;
+                                    //         const uuidv5OfUserAddress = uuidv5(
+                                    //             userWalletAddress,
+                                    //             uuidv5.URL,
+                                    //         );
+                                    //         const userDataFromWalletAddress =
+                                    //             await getUserDataByWalletAddress(
+                                    //                 userWalletAddress,
+                                    //             );
+                                    //         const userData =
+                                    //             (await getUserDataByUuid(
+                                    //                 uuidv5OfUserAddress,
+                                    //             )) || null;
+                                    //         if (!userData) {
+                                    //             router.push("/onboard");
+                                    //         } else {
+                                    //             setAppState({
+                                    //                 userData,
+                                    //             });
+                                    //         }
+                                    //     })
+                                    //     .catch((e: unknown) =>
+                                    //         console.error(e),
+                                    //     );
                                 }}
                             >
                                 Login with UD

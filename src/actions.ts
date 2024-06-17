@@ -100,7 +100,31 @@ export async function getUserDataByUuid(userId: string) {
                 Wallet: true,
             },
         });
-        console.log(userData);
+        // console.log(userData, "getUserDataByUuid");
+        await prisma.$disconnect();
+
+        return userData;
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        await prisma.$disconnect();
+        throw error;
+    }
+}
+
+export async function getUserDataByWalletAddress(address: string) {
+    try {
+        const userData = await prisma.wallet.findFirst({
+            where: {
+                address: {
+                    equals: address,
+                    mode: "insensitive",
+                },
+            },
+            include: {
+                user: true,
+            },
+        });
+        // console.log(userData, "getUserDataByWalletAddress");
         await prisma.$disconnect();
 
         return userData;
@@ -163,10 +187,11 @@ export async function createUserProfile(
     // TODO; seperate socials & wallets
     const { theme, banner } = profile;
     console.log(userInfo);
-    const info_token = userInfo.token || unstoppableAuth?.token;
-    const uuid = userInfo.uuid || unstoppableAuth?.uuid;
+    const info_token = userInfo?.token || unstoppableAuth?.token;
+    const uuid = userInfo?.uuid || unstoppableAuth?.uuid;
     const particleWalletAddress =
-        userInfo.wallets[0].public_address || unstoppableAuth?.walletAddress;
+        userInfo?.wallets?.[0]?.public_address ||
+        unstoppableAuth?.walletAddress;
     try {
         const user = await prisma.user.create({
             data: {

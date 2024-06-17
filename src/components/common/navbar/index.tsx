@@ -2,24 +2,19 @@
 
 import Link from "next/link";
 import { Button } from "../../ui/button";
-//@ts-ignore
-import Uauth from "@uauth/js";
 import { AuthDialog } from "./auth-dialog";
 import { Sheet, SheetContent } from "../../ui/sheet";
 import { useEffect, useState } from "react";
 import { useAppState } from "@/src/hooks/useAppState";
 import { InitialAppState } from "@/src/types/state/app-state.type";
 import { useAccount, useConnectKit } from "@particle-network/connect-react-ui";
-import { addDomainToUser, getUserDataByUuid } from "@/src/actions";
+import {
+    addDomainToUser,
+    getUserDataByUuid,
+    getUserDataByWalletAddress,
+} from "@/src/actions";
 import { useRouter } from "next/navigation";
-import { v5 as uuidv5 } from "uuid";
-
-export const uauth = new Uauth({
-    clientID: "61e04be9-ff48-4336-9704-a92b8d09bddc",
-    redirectUri:
-        process.env.NEXT_PUBLIC_REDIRECT_URL ?? "http://localhost:3000",
-    scope: "openid wallet messaging:notifications:optional",
-});
+import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 
 export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,12 +28,14 @@ export const Navbar = () => {
     const userInfo = connectKit?.particle?.auth.getUserInfo();
     const account = useAccount() || null;
 
+    const { signOut: UDSignOut } = useUnstoppableDomainAuth();
+
     const signOut = async () => {
         setAppState(InitialAppState(false));
 
         connectKit.particle.auth.logout();
 
-        uauth.logout();
+        UDSignOut();
     };
 
     useEffect(() => {
@@ -69,73 +66,6 @@ export const Navbar = () => {
             fetchData();
         }
     }, [connected, userInfo]);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const authorization = await uauth.authorization();
-
-                console.log({ authorization });
-
-                const account = uauth.getAuthorizationAccount(authorization);
-
-                // console.log({ account });
-
-                if (authorization) {
-                    const uuidv5OfUserAddress = uuidv5(
-                        account.address,
-                        uuidv5.URL,
-                    );
-
-                    // console.log({ uuidv5OfUserAddress });
-
-                    const userData =
-                        (await getUserDataByUuid(uuidv5OfUserAddress)) || null;
-
-                    if (!userData && account) {
-                        setAppState({
-                            unstoppableAuth: {
-                                uuid: uuidv5OfUserAddress,
-                                token: uuidv5OfUserAddress,
-                                walletAddress: account.address,
-                                domain: authorization.idToken.sub,
-                            },
-                        });
-                        // setAppState({
-                        //     userInfo: {
-                        //         uuid: uuidv5OfUserAddress,
-                        //         token: uuidv5OfUserAddress,
-                        //         wallets: [
-                        //             {
-                        //                 uuid: uuidv5OfUserAddress,
-                        //                 chain_name: "N/A",
-                        //                 public_address: account.address,
-                        //             },
-                        //         ],
-                        //         isUnstoppableAuth: true,
-                        //     },
-                        // });
-                        router.push("/onboard");
-                    } else {
-                        const currentUserDomain = authorization.idToken.sub;
-
-                        if (
-                            userData &&
-                            !userData?.domain.includes(currentUserDomain)
-                        ) {
-                            addDomainToUser(userData?.id, currentUserDomain);
-                        }
-
-                        setAppState({
-                            userData,
-                        });
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        })();
-    }, []);
 
     // console.log(appState, "appState");
 
@@ -290,15 +220,42 @@ export const Navbar = () => {
                                     </Link>
                                 </div>
                                 <div className="border-t border-gray-200 pt-4 w-full grid place-items-center">
-                                    <Button
-                                        size="lg"
-                                        onClick={() => {
-                                            setIsAuthDialogOpen((p) => !p);
-                                            setIsMenuOpen(false);
-                                        }}
-                                    >
-                                        Connect Wallet
-                                    </Button>
+                                    {appState?.userData?.handle ? (
+                                        <div className="flex items-center gap-3">
+                                            <Button
+                                                onClick={() =>
+                                                    window.open(
+                                                        `/${appState.userData?.handle}`,
+                                                        "_blank",
+                                                    )
+                                                }
+                                            >
+                                                <span className="font-normal text-gray-200 mr-2">
+                                                    @
+                                                </span>
+                                                <span>
+                                                    {appState.userData?.handle}
+                                                </span>
+                                            </Button>
+
+                                            <Button
+                                                variant="ghost"
+                                                onClick={signOut}
+                                            >
+                                                Sign Out
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <Button
+                                            size="lg"
+                                            onClick={() => {
+                                                setIsAuthDialogOpen((p) => !p);
+                                                setIsMenuOpen(false);
+                                            }}
+                                        >
+                                            Connect Wallet
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
                         </SheetContent>

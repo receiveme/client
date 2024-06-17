@@ -15,7 +15,7 @@ import { PeraWalletConnect } from "@perawallet/connect";
 import { useDebounce } from "@/src/hooks/useDebounce";
 import axios from "axios";
 import { v5 as uuidv5 } from "uuid";
-import { uauth } from "@/src/components/common/navbar";
+import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -1034,6 +1034,8 @@ export default function Onboard() {
 
     const [stage, setStage] = useState<Stage>("handle");
 
+    const { auth } = useUnstoppableDomainAuth();
+
     const nextStage = () => {
         if (stage === "handle") setStage("link");
         else if (stage === "link") setStage("profile");
@@ -1089,66 +1091,82 @@ export default function Onboard() {
         router.push("/");
     };
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const authorization = await uauth.authorization();
+    console.log({ appState });
 
-                console.log({ authorization });
+    //     useEffect(() => {
+    // if(auth.status === "loading") return;
 
-                const account = uauth.getAuthorizationAccount(authorization);
+    // if(auth.walletAddress){
+    //     const uuidv5OfUserAddress = uuidv5(
+    //         auth.walletAddress,
+    //         uuidv5.URL,
+    //     );
 
-                console.log({ account });
+    //     console.log({ uuidv5OfUserAddress });
 
-                if (authorization) {
-                    const uuidv5OfUserAddress = uuidv5(
-                        account.address,
-                        uuidv5.URL,
-                    );
+    // }
+    //     }, [auth])
 
-                    console.log({ uuidv5OfUserAddress });
+    // useEffect(() => {
+    //     (async () => {
+    //         try {
+    //             const authorization = await uauth.authorization();
 
-                    const userData =
-                        (await getUserDataByUuid(uuidv5OfUserAddress)) || null;
+    //             console.log({ authorization });
 
-                    if (!userData && account) {
-                        setAppState({
-                            unstoppableAuth: {
-                                uuid: uuidv5OfUserAddress,
-                                token: uuidv5OfUserAddress,
-                                walletAddress: account.address,
-                                domain: authorization.idToken.sub,
-                            },
-                        });
-                        // setAppState({
-                        //     userInfo: {
-                        //         uuid: uuidv5OfUserAddress,
-                        //         token: uuidv5OfUserAddress,
-                        //         wallets: [
-                        //             {
-                        //                 uuid: uuidv5OfUserAddress,
-                        //                 chain_name: "N/A",
-                        //                 public_address: account.address,
-                        //             },
-                        //         ],
-                        //         isUnstoppableAuth: true,
-                        //         domain: authorization.idToken.sub,
-                        //     },
-                        // });
+    //             const account = uauth.getAuthorizationAccount(authorization);
 
-                        router.push("/onboard");
-                    } else {
-                        setAppState({
-                            userData,
-                        });
-                        router.push("/");
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        })();
-    }, []);
+    //             console.log({ account });
+
+    //             if (authorization) {
+    //                 const uuidv5OfUserAddress = uuidv5(
+    //                     account.address,
+    //                     uuidv5.URL,
+    //                 );
+
+    //                 console.log({ uuidv5OfUserAddress });
+
+    //                 const userData =
+    //                     (await getUserDataByUuid(uuidv5OfUserAddress)) || null;
+
+    //                 if (!userData && account) {
+    //                     setAppState({
+    //                         unstoppableAuth: {
+    //                             uuid: uuidv5OfUserAddress,
+    //                             token: uuidv5OfUserAddress,
+    //                             walletAddress: account.address,
+    //                             domain: authorization.idToken.sub,
+    //                         },
+    //                     });
+    //                     // setAppState({
+    //                     //     userInfo: {
+    //                     //         uuid: uuidv5OfUserAddress,
+    //                     //         token: uuidv5OfUserAddress,
+    //                     //         wallets: [
+    //                     //             {
+    //                     //                 uuid: uuidv5OfUserAddress,
+    //                     //                 chain_name: "N/A",
+    //                     //                 public_address: account.address,
+    //                     //             },
+    //                     //         ],
+    //                     //         isUnstoppableAuth: true,
+    //                     //         domain: authorization.idToken.sub,
+    //                     //     },
+    //                     // });
+
+    //                     router.push("/onboard");
+    //                 } else {
+    //                     setAppState({
+    //                         userData,
+    //                     });
+    //                     router.push("/");
+    //                 }
+    //             }
+    //         } catch (e) {
+    //             console.error(e);
+    //         }
+    //     })();
+    // }, []);
 
     return (
         <>
