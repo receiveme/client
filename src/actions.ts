@@ -137,6 +137,19 @@ export async function getUserDataByWalletAddress(address: string) {
 
 export async function addDomainToUser(userId: string, domain: string) {
     try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            select: {
+                domain: true,
+            },
+        });
+
+        if (user?.domain.includes(domain)) {
+            return user;
+        }
+
         const userData = await prisma.user.update({
             where: {
                 id: userId,
@@ -189,9 +202,9 @@ export async function createUserProfile(
     console.log(userInfo);
     const info_token = userInfo?.token || unstoppableAuth?.token;
     const uuid = userInfo?.uuid || unstoppableAuth?.uuid;
-    const particleWalletAddress =
-        userInfo?.wallets?.[0]?.public_address ||
-        unstoppableAuth?.walletAddress;
+    const particleWalletAddress = userInfo?.wallets?.[0]?.public_address;
+    const unstoppableWalletAddress = unstoppableAuth?.walletAddress;
+
     try {
         const user = await prisma.user.create({
             data: {
@@ -258,17 +271,25 @@ export async function createUserProfile(
                 }
             }
         }
-        if (particleWalletAddress) {
+        if (particleWalletAddress || unstoppableWalletAddress) {
             try {
                 await prisma.wallet.create({
                     data: {
                         userid: user.id,
-                        network: "particle",
-                        address: String(particleWalletAddress),
+                        network: unstoppableWalletAddress
+                            ? "unstoppabledomains"
+                            : "particle",
+                        address: unstoppableWalletAddress
+                            ? String(unstoppableWalletAddress)
+                            : String(particleWalletAddress),
                         preferrednetworks: ["eth", "avax", "bnb"],
                     },
                 });
-                console.log("successuflly inserted particle wallet");
+                unstoppableWalletAddress
+                    ? console.log(
+                          "successuflly inserted unstoppable domains wallet",
+                      )
+                    : console.log("successuflly inserted particle wallet");
             } catch (error) {
                 console.error("Wallet insertion err:", error);
             }
