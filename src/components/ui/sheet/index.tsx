@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/src/lib/utils/cn";
 import { IconX } from "@tabler/icons-react";
-import { figtree } from "@/src/app/new/page";
+import { figtree } from "@/src/app/(general)/page";
 
 const Sheet = SheetPrimitive.Root;
 

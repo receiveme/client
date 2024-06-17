@@ -115,9 +115,7 @@ export const Navbar = () => {
                                         )
                                     }
                                 >
-                                    <span className="font-normal text-gray-200 mr-2">
-                                        @
-                                    </span>
+                                    <span className="font-normal mr-1">@</span>
                                     <span>{appState.userData?.handle}</span>
                                 </Button>
 
