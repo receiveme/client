@@ -13,6 +13,7 @@ import {
     WalletSettingsModalNonEVM,
 } from "./WalletSettingsModal";
 import Toast from "../toast";
+import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 
 const SOCIALS = [
     { id: "discord", name: "Discord", image: "discord.png" },
@@ -43,7 +44,6 @@ const WALLETS = [
         id: "unstoppabledomains",
         name: "Unstoppable Domains",
         image: "unstoppabledomains.png",
-        disabled: true,
     },
 ];
 
@@ -68,6 +68,8 @@ export default function DashboardWalletsSocials() {
         setIsNonEVMWalletSettingsModalOpen,
     ] = useState(false);
     const [currentWallet, setCurrentWallet] = useState(null);
+
+    const { auth } = useUnstoppableDomainAuth();
 
     const openWalletModal = async (wallet: any) => {
         setCurrentWallet(wallet);
@@ -403,11 +405,10 @@ export default function DashboardWalletsSocials() {
                     <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
                         {WALLETS.map((wallet) => {
                             // Changed to findIndex because we need to match wallets[].walletProvider
-                            let walletIndexUserData = userData.Wallet.findIndex(
-                                (linkedWallet) => {
+                            let walletIndexUserData =
+                                userData?.Wallet.findIndex((linkedWallet) => {
                                     return linkedWallet.network === wallet.id;
-                                },
-                            );
+                                });
                             let walletIndexNewWallets = newWallets.findIndex(
                                 (linkedWallet) => {
                                     return linkedWallet.network === wallet.id;
@@ -423,7 +424,7 @@ export default function DashboardWalletsSocials() {
                                     : walletIndexNewWallets;
 
                             let linkedWallet = linked
-                                ? userData.Wallet[walletIndex]
+                                ? userData?.Wallet[walletIndex]
                                 : false; // we should do something with this data ...
 
                             return (
@@ -432,57 +433,72 @@ export default function DashboardWalletsSocials() {
                                         onClick={() =>
                                             !linked ? connectWallet(wallet) : {}
                                         }
-                                        className={`cursor-pointer transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
+                                        className={`cursor-pointer transition-all hover:bg-gray-200 flex w-full items-center justify-between rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
                                             linked
-                                                ? "border border-green-500/50"
+                                                ? "border-2 border-green-500/50"
                                                 : ""
                                         } ${
                                             wallet.disabled ? "opacity-60" : ""
                                         }`}
                                     >
-                                        <img
-                                            src={`/img/3p/${wallet.image}`}
-                                            alt={`Link ${wallet.name}`}
-                                            className="mr-2 h-5 w-5"
-                                        />
-                                        <span className="text-sm font-semibold">
-                                            {linked
-                                                ? `Linked ${wallet.name}`
-                                                : `Link ${wallet.name}`}
-                                            {wallet.disabled
-                                                ? " (Coming Soon)"
-                                                : ""}
-                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <img
+                                                src={`/img/3p/${wallet.image}`}
+                                                alt={`Link ${wallet.name}`}
+                                                className="mr-2 h-5 w-5"
+                                            />
+                                            <span className="text-sm font-semibold">
+                                                {linked
+                                                    ? `Linked ${wallet.name}`
+                                                    : `Link ${wallet.name}`}
+                                                {wallet.disabled
+                                                    ? " (Coming Soon)"
+                                                    : ""}
+                                            </span>
+                                        </div>
 
-                                        {linked && (
-                                            <div
-                                                onClick={
-                                                    wallet.name == "Metamask" ||
-                                                    wallet.id == "particle"
-                                                        ? (e) =>
-                                                              openWalletModal({
-                                                                  ...wallet,
-                                                                  ...(linkedWallet as Record<
-                                                                      string,
-                                                                      any
-                                                                  >),
-                                                              })
-                                                        : (e) =>
-                                                              openNonEVMWalletModal(
-                                                                  {
-                                                                      ...wallet,
-                                                                      ...(linkedWallet as Record<
-                                                                          string,
-                                                                          any
-                                                                      >),
-                                                                  },
-                                                              )
-                                                }
-                                                className="ml-auto p-1.5 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer"
-                                            >
-                                                <IconSettings size="16" />
-                                            </div>
-                                        )}
+                                        {auth?.domain &&
+                                            wallet.id ===
+                                                "unstoppabledomains" && (
+                                                <span className="text-sm font-semibold">
+                                                    ({auth?.domain})
+                                                </span>
+                                            )}
+
+                                        {linked &&
+                                            wallet.id !==
+                                                "unstoppabledomains" && (
+                                                <div
+                                                    onClick={
+                                                        wallet.name ==
+                                                            "Metamask" ||
+                                                        wallet.id == "particle"
+                                                            ? (e) =>
+                                                                  openWalletModal(
+                                                                      {
+                                                                          ...wallet,
+                                                                          ...(linkedWallet as Record<
+                                                                              string,
+                                                                              any
+                                                                          >),
+                                                                      },
+                                                                  )
+                                                            : (e) =>
+                                                                  openNonEVMWalletModal(
+                                                                      {
+                                                                          ...wallet,
+                                                                          ...(linkedWallet as Record<
+                                                                              string,
+                                                                              any
+                                                                          >),
+                                                                      },
+                                                                  )
+                                                    }
+                                                    className="ml-auto p-1.5 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                                                >
+                                                    <IconSettings size="16" />
+                                                </div>
+                                            )}
                                     </div>
                                 </div>
                             );
