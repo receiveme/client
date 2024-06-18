@@ -213,22 +213,22 @@ export default function Home() {
                 <div className="max-w-screen-xl mx-auto px-4 pt-20">
                     <p className="font-bold text-[40px] text-center">
                         Our Supported{" "}
-                        <span className="text-primary">Network</span>
+                        <span className="text-primary">Networks</span>
                     </p>
                     <div className="mt-20">
                         <div className="flex justify-evenly items-center flex-wrap gap-4">
-                            <img
-                                src="/img/home/networks/bitcoin.png"
-                                alt=""
-                                className="w-[200px]"
-                            />
                             <img
                                 src="/img/home/networks/ethereum.png"
                                 alt=""
                                 className="w-[200px]"
                             />
                             <img
-                                src="/img/home/networks/solana.png"
+                                src="/img/home/networks/polygon.png"
+                                alt=""
+                                className="w-[200px]"
+                            />
+                            <img
+                                src="/img/handle/ud-logo-text.svg"
                                 alt=""
                                 className="w-[200px]"
                             />
