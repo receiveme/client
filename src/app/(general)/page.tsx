@@ -62,7 +62,7 @@ export default function Home() {
                     chipText="About Us"
                     description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae amet et laboriosam enim incidunt, aliquam vitae iusto soluta ipsa provident eius quibusdam tenetur doloremque earum deleniti quis? Explicabo amet et"
                     imageSection={
-                        <>
+                        <div className="hidden lg:block">
                             <img
                                 src="/img/home/socials/github.png"
                                 className="w-20 left-40 top-12 absolute drop-shadow-lg"
@@ -94,7 +94,7 @@ export default function Home() {
                                 className="w-14 right-20 bottom-32 rotate-[-15deg] absolute drop-shadow-xl"
                                 alt=""
                             />
-                        </>
+                        </div>
                     }
                     title={
                         <>
@@ -110,7 +110,7 @@ export default function Home() {
                     direction="reverse"
                     imageSection={
                         <>
-                            <img
+                            {/* <img
                                 src="/img/home/socials/github.png"
                                 className="w-20 left-40 top-12 absolute drop-shadow-lg"
                                 alt=""
@@ -124,14 +124,14 @@ export default function Home() {
                                 src="/img/home/socials/linkedin.png"
                                 className="w-16 left-16 bottom-36 absolute drop-shadow-xl"
                                 alt=""
-                            />
+                            /> */}
                             {/* main phones image  */}
                             <img
-                                src="/img/home/phones.png"
+                                src="/img/home/org-profile.png"
                                 alt=""
-                                className="w-[400px] lg:w-[800px] h-auto object-contain"
+                                className="h-[400px] lg:h-[500px] w-auto object-contain"
                             />
-                            <img
+                            {/* <img
                                 src="/img/home/socials/discord.png"
                                 className="w-20 right-28 skew-x-[-20deg] skew-y-[20deg] top-8 absolute drop-shadow-xl"
                                 alt=""
@@ -140,7 +140,7 @@ export default function Home() {
                                 src="/img/home/socials/x.png"
                                 className="w-14 right-20 bottom-32 rotate-[-15deg] absolute drop-shadow-xl"
                                 alt=""
-                            />
+                            /> */}
                         </>
                     }
                     title={
