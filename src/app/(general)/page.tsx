@@ -25,11 +25,11 @@ export const figtree = Figtree({ subsets: ["latin"] });
 const FAQS = [
     {
         q: "What is receive.me?",
-        a: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est dolor laudantium hic iure facilis corrupti nobis itaque. Dolores accusantium reiciendis impedit! Et perspiciatis quae error nesciunt veritatis assumenda explicabo.",
+        a: "Receive.me reduces user information fragmentation through the curation of a comprehensive Web3 profile, thereby simplifying transacting on-chain.",
     },
     {
         q: "What networks do you support?",
-        a: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est dolor laudantium hic iure facilis corrupti nobis itaque. Dolores accusantium reiciendis impedit! Et perspiciatis quae error nesciunt veritatis assumenda explicabo.",
+        a: "Currently, we support Ethereum, Avalanche, Polygon, BNB, and other EVM chains. We will also support several L2s, (Base, Arbitrum, & Scroll)",
     },
     {
         q: "Is it free?",
@@ -37,11 +37,11 @@ const FAQS = [
     },
     {
         q: "Can we login with ENS?",
-        a: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est dolor laudantium hic iure facilis corrupti nobis itaque. Dolores accusantium reiciendis impedit! Et perspiciatis quae error nesciunt veritatis assumenda explicabo.",
+        a: "receive.me is currently free! However, this will not be the case forever so claim a profile while you can!",
     },
     {
         q: "Can we connect social networks?",
-        a: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est dolor laudantium hic iure facilis corrupti nobis itaque. Dolores accusantium reiciendis impedit! Et perspiciatis quae error nesciunt veritatis assumenda explicabo.",
+        a: "Yes, receive.me supports ENS!",
     },
 ];
 
@@ -60,7 +60,7 @@ export default function Home() {
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-[25%] lg:-left-24 top-[500px] -z-10 bg-blur-circle" />
                 <TwoColumnSection
                     chipText="About Us"
-                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae amet et laboriosam enim incidunt, aliquam vitae iusto soluta ipsa provident eius quibusdam tenetur doloremque earum deleniti quis? Explicabo amet et"
+                    description="We make transacting with cryptocurrencies simple! All of your wallets, addresses, and social accounts easily accessible in one spot."
                     imageSection={
                         <div className="hidden lg:block">
                             <img
@@ -105,8 +105,8 @@ export default function Home() {
                 />
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -right-24 top-[1000px] -z-10 bg-blur-circle" />
                 <TwoColumnSection
-                    chipText="Organization Account"
-                    description="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae amet et laboriosam enim incidunt, aliquam vitae iusto soluta ipsa provident eius quibusdam tenetur doloremque earum deleniti quis? Explicabo amet et"
+                    chipText="Organization profiles"
+                    description="Organization profiles enable projects building with cryptocurrencies to connect with their communities in a seamless manner! Display links to your Discord community, Telegram, X, Galxe, Websites, and more!"
                     direction="reverse"
                     imageSection={
                         <>
@@ -145,7 +145,7 @@ export default function Home() {
                     }
                     title={
                         <>
-                            Get organization account for{" "}
+                            Organization profiles for{" "}
                             <span className="text-primary">your company</span>
                         </>
                     }
@@ -206,47 +206,6 @@ export default function Home() {
                     }
                 /> */}
                 <div className="absolute h-[450px] w-[450px] rounded-full blur-[140px] -left-24 top-[1700px] -z-10 bg-blur-circle" />
-                <div className="max-w-screen-xl mx-auto pt-20">
-                    <p
-                        id="plans"
-                        className="scroll-mt-12 font-bold text-[40px] text-center"
-                    >
-                        Our Future <span className="text-primary ">Plans</span>
-                    </p>
-                    <div className="flex flex-col lg:flex-row justify-center items-center gap-20 mt-32">
-                        <div className="">
-                            <FuturePlanCard
-                                description="Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Voluptatem dolorum
-                                eaque fugiat eos sunt sint delectus
-                                asperiores nostrum iste, voluptate odio
-                                debitis minus et molestias pariatur nisi
-                                quos minima amet."
-                                number="01"
-                                title="Pre-Approval"
-                            />
-                        </div>
-                        <div className="pb-8 lg:pb-0 grid place-items-center">
-                            <img
-                                src="/img/home/svg/arrow.svg"
-                                alt=""
-                                className="rotate-[90deg] lg:rotate-0"
-                            />
-                        </div>
-                        <div className="">
-                            <FuturePlanCard
-                                description="Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Voluptatem dolorum
-                                eaque fugiat eos sunt sint delectus
-                                asperiores nostrum iste, voluptate odio
-                                debitis minus et molestias pariatur nisi
-                                quos minima amet."
-                                number="02"
-                                title="Schedule"
-                            />
-                        </div>
-                    </div>
-                </div>
                 {/* <div className="max-w-screen-xl mx-auto pt-20">
                     <SupportedWallets />
                 </div> */}
