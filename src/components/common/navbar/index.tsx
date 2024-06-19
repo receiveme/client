@@ -2,37 +2,94 @@
 
 import Link from "next/link";
 import { Button } from "../../ui/button";
-//@ts-ignore
-import Uauth from "@uauth/js";
 import { AuthDialog } from "./auth-dialog";
+import { Sheet, SheetContent } from "../../ui/sheet";
+import { useEffect, useState } from "react";
+import { useAppState } from "@/src/hooks/useAppState";
+import { InitialAppState } from "@/src/types/state/app-state.type";
+import { useAccount, useConnectKit } from "@particle-network/connect-react-ui";
 import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "../../ui/sheet";
-import { useState } from "react";
-
-export const uauth = new Uauth({
-    clientID: "61e04be9-ff48-4336-9704-a92b8d09bddc",
-    redirectUri:
-        process.env.NEXT_PUBLIC_REDIRECT_URL ?? "http://localhost:3000",
-    scope: "openid wallet messaging:notifications:optional",
-});
+    addDomainToUser,
+    getUserDataByUuid,
+    getUserDataByWalletAddress,
+} from "@/src/actions";
+import { useRouter } from "next/navigation";
+import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 
 export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+    const [connected, setConnected] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const router = useRouter();
+
+    const [appState, setAppState] = useAppState();
+    const connectKit = useConnectKit();
+    const userInfo = connectKit?.particle?.auth.getUserInfo();
+    const account = useAccount() || null;
+
+    const { signOut: UDSignOut } = useUnstoppableDomainAuth();
+
+    const signOut = async () => {
+        setAppState(InitialAppState(false));
+
+        connectKit.particle.auth.logout();
+
+        UDSignOut();
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!appState.userData) {
+                // Assuming userInfo has a uuid property
+                // const uuid = JSON.parse(localStorage.getItem("globalId"))
+                //     ? JSON.parse(localStorage.getItem("globalId"))
+                //     : "n/a";
+                const userData = userInfo
+                    ? await getUserDataByUuid(userInfo.uuid)
+                    : null;
+
+                if (!userData && userInfo && account) {
+                    setAppState({
+                        userInfo,
+                    });
+                    router.push("/onboard");
+                } else {
+                    setAppState({
+                        userData,
+                    });
+                }
+            }
+        };
+
+        if (connected) {
+            fetchData();
+        }
+    }, [connected, userInfo]);
+
+    // console.log(appState, "appState");
+
     return (
         <>
             <header>
+                <AuthDialog
+                    isOpen={isAuthDialogOpen}
+                    setIsOpen={setIsAuthDialogOpen}
+                    setIsLoading={setIsLoading}
+                    setConnected={setConnected}
+                    onButtonsClick={() => {
+                        setIsMenuOpen(false);
+                        setIsAuthDialogOpen(false);
+                    }}
+                />
                 <div className="bg-primary">
                     <div className="text-white text-sm py-3 text-center max-w-screen-xl mx-auto">
-                        Integrated Particle Network{" "}
+                        Integrated UNS Resolution & partner API
                         <a
-                            href="#"
-                            className="underline decoration-white underline-offset-2"
+                            href="https://devpost.com/software/receive-me-uns-ens-ux-integration?ref_content=user-portfolio&ref_feature=in_progress"
+                            target="_blank"
+                            className="underline decoration-white underline-offset-2 ml-2"
                         >
                             Learn More
                         </a>
@@ -45,15 +102,42 @@ export const Navbar = () => {
                     <div className="gap-6 font-medium hidden lg:flex">
                         <Link href="#home">Home</Link>
                         <Link href="#about-us">About Us</Link>
-                        <Link href="#updates">Updates</Link>
+                        {/* <Link href="#updates">Updates</Link> */}
                         <Link href="#plans">Plans</Link>
                         <Link href="#faqs">FAQs</Link>
-                        <Link href="#">Contact Us</Link>
+                        <Link href="mailto:support@receive.me">Contact Us</Link>
                     </div>
                     <div className="hidden lg:block">
-                        <AuthDialog
-                            trigger={<Button size="lg">Connect Wallet</Button>}
-                        />
+                        {appState?.userData?.handle ? (
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    onClick={() =>
+                                        window.open(
+                                            `/${appState.userData?.handle}`,
+                                            "_blank",
+                                        )
+                                    }
+                                >
+                                    <span className="font-normal mr-1">@</span>
+                                    <span>{appState.userData?.handle}</span>
+                                </Button>
+
+                                <Button variant="ghost" onClick={signOut}>
+                                    Sign Out
+                                </Button>
+                            </div>
+                        ) : (
+                            <Button
+                                size="lg"
+                                onClick={() => {
+                                    setIsAuthDialogOpen((p) => !p);
+                                    // setIsMenuOpen(false);
+                                }}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? "Connecting..." : "Connect Wallet"}
+                            </Button>
+                        )}
                     </div>
                     <button
                         className="relative !flex h-10 w-10 items-center justify-start rounded-lg px-0 lg:!hidden"
@@ -104,14 +188,14 @@ export const Navbar = () => {
                                     >
                                         About Us
                                     </Link>
-                                    <Link
+                                    {/* <Link
                                         onClick={() => {
                                             setIsMenuOpen(false);
                                         }}
                                         href="#updates"
                                     >
                                         Updates
-                                    </Link>
+                                    </Link> */}
                                     <Link
                                         onClick={() => {
                                             setIsMenuOpen(false);
@@ -132,22 +216,51 @@ export const Navbar = () => {
                                         onClick={() => {
                                             setIsMenuOpen(false);
                                         }}
-                                        href="#"
+                                        href="mailto:support@receive.me"
                                     >
                                         Contact Us
                                     </Link>
                                 </div>
                                 <div className="border-t border-gray-200 pt-4 w-full grid place-items-center">
-                                    <AuthDialog
-                                        onButtonsClick={() => {
-                                            setIsMenuOpen(false);
-                                        }}
-                                        trigger={
-                                            <Button size="lg">
-                                                Connect Wallet
+                                    {appState?.userData?.handle ? (
+                                        <div className="flex items-center gap-3">
+                                            <Button
+                                                onClick={() =>
+                                                    window.open(
+                                                        `/${appState.userData?.handle}`,
+                                                        "_blank",
+                                                    )
+                                                }
+                                            >
+                                                <span className="font-normal text-gray-200 mr-2">
+                                                    @
+                                                </span>
+                                                <span>
+                                                    {appState.userData?.handle}
+                                                </span>
                                             </Button>
-                                        }
-                                    />
+
+                                            <Button
+                                                variant="ghost"
+                                                onClick={signOut}
+                                            >
+                                                Sign Out
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <Button
+                                            size="lg"
+                                            onClick={() => {
+                                                setIsAuthDialogOpen((p) => !p);
+                                                setIsMenuOpen(false);
+                                            }}
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading
+                                                ? "Connecting..."
+                                                : "Connect Wallet"}
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
                         </SheetContent>

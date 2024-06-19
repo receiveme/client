@@ -8,6 +8,8 @@ import EditHandleButton from "@/src/components/handle/EditButton";
 import { useQuery } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 import { Button } from "@/src/components/ui/button";
+import { CollectablesDialog } from "@/src/components/handle/collectables";
+import { getUserDomains as getDomains } from "@/src/actions";
 
 async function getUserByHandle(handle: string) {
     try {
@@ -50,7 +52,14 @@ async function getUserByHandle(handle: string) {
             },
         });
 
-        return { ...user, profiles: user?.Profile[0] };
+        const wallet = user?.Wallet.sort((a, b) => {
+            if (a.preferrednetworks.includes("eth")) {
+                return -1;
+            }
+            return 1;
+        });
+
+        return { ...user, Wallet: wallet, profiles: user?.Profile[0] };
     } catch (error) {
         // Errrors can happen because /[handle] can be any 404 url
         // e.g. robots.txt, sitemap.xml
@@ -58,6 +67,29 @@ async function getUserByHandle(handle: string) {
         return null;
     } finally {
         await prisma.$disconnect();
+    }
+}
+
+async function getUserDomains(address: string): Promise<{
+    ensDomains: Array<{ domain: string; type: string; blockchain: string }>;
+    unsDomains: Array<{ domain: string; type: string; blockchain: string }>;
+}> {
+    try {
+        const domains = await getDomains(address);
+
+        return {
+            ensDomains: domains.filter(
+                (d: any) => d.type.toLowerCase() === "ens",
+            ),
+            unsDomains: domains.filter(
+                (d: any) => d.type.toLowerCase() === "uns",
+            ),
+        };
+    } catch (error) {
+        return {
+            ensDomains: [],
+            unsDomains: [],
+        };
     }
 }
 
@@ -70,6 +102,15 @@ export default async function Profile({
 
     const data = await getUserByHandle(handle);
 
+    const domainData = data?.Wallet?.[0]?.address
+        ? await getUserDomains(data?.Wallet?.[0]?.address)
+        : {
+              ensDomains: [],
+              unsDomains: [],
+          };
+
+    // consovle.log({ domainData });
+
     // let data_each_wallet: any = {};
     // let total_balance: number = 0;
 
@@ -79,8 +120,6 @@ export default async function Profile({
     //     // data_each_wallet[wallet.network] = covalent;
     //     // total_balance += covalent["usd_balance"];
     // }
-
-    console.log(data, "data from get user");
 
     if (!data || !data.profiles) {
         // Render 404
@@ -94,28 +133,6 @@ export default async function Profile({
           )} background-animate gradient-animation`
         : `from-${data?.profiles?.theme?.replace("/none", "")} `;
 
-    const hasDomains = data.domain?.length !== 0;
-
-    // const { data: resolvedDomain } = useQuery<string>({
-    //     queryKey: [
-    //         "/api/domains/resolve/multiple",
-    //         { address, preferrednetwork },
-    //     ],
-    //     queryFn: async () => {
-    //         const res = await fetch(
-    //             `/api/domains/resolve/multiple/${address}?chain=${preferrednetwork}`,
-    //         );
-    //         const json = await res.json();
-
-    //         if (json?.data) {
-    //             return json?.data;
-    //         }
-
-    //         return null;
-    //     },
-    //     staleTime: Number.POSITIVE_INFINITY,
-    // });
-
     return (
         <>
             <main className="">
@@ -128,15 +145,13 @@ export default async function Profile({
                             banner={data?.profiles?.background!}
                             socials={data.Social}
                             className="my-4"
-                            hasDomains={hasDomains}
+                            domainData={domainData}
                         />
 
                         <EditHandleButton handle={data.handle} />
 
                         <div>
-                            <button className="bg-[#4C47F7] rounded-xl px-4 py-2 hover:bg-[#4C47F7]/80 text-white font-medium">
-                                View Collectibles
-                            </button>
+                            <CollectablesDialog data={domainData} />
                         </div>
 
                         <div className="mt-4 flex w-full max-w-[650px] flex-col gap-3">

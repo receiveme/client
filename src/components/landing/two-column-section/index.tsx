@@ -27,18 +27,18 @@ export const TwoColumnSection = ({
     return (
         <div
             className={cn(
-                "max-w-screen-xl mx-auto flex px-4 pt-12 flex-col-reverse lg:flex-row justify-between lg:items-center gap-32",
+                "max-w-screen-xl mx-auto flex px-4 pt-12 flex-col-reverse lg:flex-row justify-between lg:items-center lg:gap-32 gap-6",
                 direction === "reverse" && "lg:flex-row-reverse",
             )}
         >
-            <div className="lg:basis-1/2 relative hidden lg:block">
+            <div className="lg:basis-1/2 relative self-end lg:flex lg:justify-end">
                 {imageSection}
             </div>
             <div className="lg:basis-1/2">
                 <div className="">
                     <Chip
                         id={chipText.toLowerCase().split(" ").join("-")}
-                        className="mb-2 scroll-mt-12"
+                        className="mb-2 scroll-mt-20"
                     >
                         {chipText}
                     </Chip>

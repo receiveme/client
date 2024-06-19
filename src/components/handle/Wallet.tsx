@@ -167,7 +167,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                 address={walletAddress}
             />
 
-            <div className="flex bg-white rounded-xl shadow-sm py-2 px-2">
+            <div className="flex bg-white rounded-xl shadow-sm h-16 py-2 px-2">
                 <div className="flex items-center justify-center ml-2">
                     <div className={"basis-20"}>
                         <img
@@ -177,8 +177,8 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                         />
                     </div>
                 </div>
-                <div className="ml-3 w-full flex flex-col flex-shrink-1">
-                    <div className="flex items-center">
+                <div className="ml-3 w-full flex flex-col justify-center flex-shrink-1">
+                    <div className="flex items-center h-4">
                         {isPrefferedNetworkArray ? (
                             <Select
                                 options={preferrednetwork?.map((network, i) => {
@@ -200,7 +200,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
                                     return (
                                         <p className="text-base font-bold overflow-ellipsis">
                                             {resolvedDomain ||
-                                                selected.value.toUpperCase()}
+                                                selected?.value?.toUpperCase()}
                                         </p>
                                     );
                                 }}

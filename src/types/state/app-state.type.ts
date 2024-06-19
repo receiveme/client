@@ -17,7 +17,7 @@ export type AppState = {
     };
 };
 
-export const InitialAppState = (server = true) => ({
+export const InitialAppState = (server = true): AppState => ({
     userData: null,
     userInfo: null,
     wallets: [],
@@ -28,6 +28,12 @@ export const InitialAppState = (server = true) => ({
     logins: [],
     server,
     org: { staker: false, balance: 0 },
+    unstoppableAuth: {
+        domain: "",
+        token: "",
+        uuid: "",
+        walletAddress: "",
+    },
 });
 
 // export type AppState = {

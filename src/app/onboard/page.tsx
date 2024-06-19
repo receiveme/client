@@ -15,7 +15,7 @@ import { PeraWalletConnect } from "@perawallet/connect";
 import { useDebounce } from "@/src/hooks/useDebounce";
 import axios from "axios";
 import { v5 as uuidv5 } from "uuid";
-import { uauth } from "@/src/components/common/navbar";
+import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -125,7 +125,7 @@ function Handle({
                     onInput={(e) => changeHandle(e.currentTarget.value)}
                     required
                     placeholder="myhandle"
-                    className="block w-full pl-8 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-3 py-2"
+                    className="block w-full pl-8 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:!ring-2 focus:!ring-inset focus:!ring-indigo-600 sm:text-sm sm:leading-6 p-3 py-2"
                 />
                 {isLoading && (
                     <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center pl-3">
@@ -598,7 +598,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                     </span>
 
                                     <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                        Networks: ETH, AVAX... (EVM)
+                                        Networks: ETH, MATIC... (EVM)
                                     </span>
                                     <div className=" flex-end px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
                                         <img
@@ -653,7 +653,7 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                     </span>
 
                                     <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                        Networks: ETH, AVAX... (EVM)
+                                        Networks: ETH, MATIC... (EVM)
                                     </span>
                                     <div className="px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
                                         <img
@@ -778,9 +778,14 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                                         `(${appState?.unstoppableAuth?.domain})`}
                                 </span>
                             </div>
-                            <div className="h-5 w-5 bg-green-500 grid place-items-center rounded-md">
-                                <IconCheck className="text-white" size={16} />
-                            </div>
+                            {appState?.unstoppableAuth?.domain && (
+                                <div className="h-5 w-5 bg-green-500 grid place-items-center rounded-md">
+                                    <IconCheck
+                                        className="text-white"
+                                        size={16}
+                                    />
+                                </div>
+                            )}
                         </button>
                     </div>
                 </div>
@@ -1034,6 +1039,8 @@ export default function Onboard() {
 
     const [stage, setStage] = useState<Stage>("handle");
 
+    const { auth } = useUnstoppableDomainAuth();
+
     const nextStage = () => {
         if (stage === "handle") setStage("link");
         else if (stage === "link") setStage("profile");
@@ -1089,66 +1096,82 @@ export default function Onboard() {
         router.push("/");
     };
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const authorization = await uauth.authorization();
+    console.log({ appState });
 
-                console.log({ authorization });
+    //     useEffect(() => {
+    // if(auth.status === "loading") return;
 
-                const account = uauth.getAuthorizationAccount(authorization);
+    // if(auth.walletAddress){
+    //     const uuidv5OfUserAddress = uuidv5(
+    //         auth.walletAddress,
+    //         uuidv5.URL,
+    //     );
 
-                console.log({ account });
+    //     console.log({ uuidv5OfUserAddress });
 
-                if (authorization) {
-                    const uuidv5OfUserAddress = uuidv5(
-                        account.address,
-                        uuidv5.URL,
-                    );
+    // }
+    //     }, [auth])
 
-                    console.log({ uuidv5OfUserAddress });
+    // useEffect(() => {
+    //     (async () => {
+    //         try {
+    //             const authorization = await uauth.authorization();
 
-                    const userData =
-                        (await getUserDataByUuid(uuidv5OfUserAddress)) || null;
+    //             console.log({ authorization });
 
-                    if (!userData && account) {
-                        setAppState({
-                            unstoppableAuth: {
-                                uuid: uuidv5OfUserAddress,
-                                token: uuidv5OfUserAddress,
-                                walletAddress: account.address,
-                                domain: authorization.idToken.sub,
-                            },
-                        });
-                        // setAppState({
-                        //     userInfo: {
-                        //         uuid: uuidv5OfUserAddress,
-                        //         token: uuidv5OfUserAddress,
-                        //         wallets: [
-                        //             {
-                        //                 uuid: uuidv5OfUserAddress,
-                        //                 chain_name: "N/A",
-                        //                 public_address: account.address,
-                        //             },
-                        //         ],
-                        //         isUnstoppableAuth: true,
-                        //         domain: authorization.idToken.sub,
-                        //     },
-                        // });
+    //             const account = uauth.getAuthorizationAccount(authorization);
 
-                        router.push("/onboard");
-                    } else {
-                        setAppState({
-                            userData,
-                        });
-                        router.push("/");
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        })();
-    }, []);
+    //             console.log({ account });
+
+    //             if (authorization) {
+    //                 const uuidv5OfUserAddress = uuidv5(
+    //                     account.address,
+    //                     uuidv5.URL,
+    //                 );
+
+    //                 console.log({ uuidv5OfUserAddress });
+
+    //                 const userData =
+    //                     (await getUserDataByUuid(uuidv5OfUserAddress)) || null;
+
+    //                 if (!userData && account) {
+    //                     setAppState({
+    //                         unstoppableAuth: {
+    //                             uuid: uuidv5OfUserAddress,
+    //                             token: uuidv5OfUserAddress,
+    //                             walletAddress: account.address,
+    //                             domain: authorization.idToken.sub,
+    //                         },
+    //                     });
+    //                     // setAppState({
+    //                     //     userInfo: {
+    //                     //         uuid: uuidv5OfUserAddress,
+    //                     //         token: uuidv5OfUserAddress,
+    //                     //         wallets: [
+    //                     //             {
+    //                     //                 uuid: uuidv5OfUserAddress,
+    //                     //                 chain_name: "N/A",
+    //                     //                 public_address: account.address,
+    //                     //             },
+    //                     //         ],
+    //                     //         isUnstoppableAuth: true,
+    //                     //         domain: authorization.idToken.sub,
+    //                     //     },
+    //                     // });
+
+    //                     router.push("/onboard");
+    //                 } else {
+    //                     setAppState({
+    //                         userData,
+    //                     });
+    //                     router.push("/");
+    //                 }
+    //             }
+    //         } catch (e) {
+    //             console.error(e);
+    //         }
+    //     })();
+    // }, []);
 
     return (
         <>

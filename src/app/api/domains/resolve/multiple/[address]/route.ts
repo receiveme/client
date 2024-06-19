@@ -7,6 +7,7 @@ export const GET = async (
     // console.log(params, "params");
     const address = params.address;
     const requestedChain = req.nextUrl.searchParams.get("chain");
+    const all = req.nextUrl.searchParams.get("all") === "true";
 
     try {
         // console.log(params.address, "requested address");
@@ -22,34 +23,44 @@ export const GET = async (
 
         // console.log({ json });
 
-        if (json?.data?.length > 0) {
-            const domains = json?.data;
+        const domains = json?.data;
 
-            let domainOnRequestedChain = domains.find(
-                (d: any) => d.meta.blockchain.toLowerCase() === requestedChain,
-            );
-
-            if (requestedChain === "matic") {
-                domainOnRequestedChain = domains.find(
-                    (d: any) =>
-                        d.meta.blockchain.toLowerCase() === requestedChain &&
-                        d.meta.domain.endsWith(".polygon"),
-                );
-            }
-
+        if (all) {
             return NextResponse.json({
                 success: true,
                 data:
-                    domainOnRequestedChain?.meta?.domain ||
-                    domains[0]?.meta?.domain,
-                // json,
+                    domains?.map((d: any) => ({
+                        domain: d.meta.domain,
+                        type: d.meta.type,
+                        blockchain: d.meta.blockchain,
+                    })) || [],
             });
         }
+
+        let domainOnRequestedChain = domains?.find(
+            (d: any) => d.meta.blockchain.toLowerCase() === requestedChain,
+        );
+
+        if (requestedChain === "matic") {
+            domainOnRequestedChain = domains?.find(
+                (d: any) =>
+                    d.meta.blockchain.toLowerCase() === requestedChain &&
+                    d.meta.domain.endsWith(".polygon"),
+            );
+        }
+
+        return NextResponse.json({
+            success: true,
+            data:
+                domainOnRequestedChain?.meta?.domain ||
+                domains[0]?.meta?.domain,
+            // json,
+        });
     } catch (error) {
         console.log("error ", error);
+        return NextResponse.json({
+            success: false,
+            message: "Error occured, please try again later!",
+        });
     }
-    return NextResponse.json({
-        success: false,
-        message: "Error occured, please try again later!",
-    });
 };

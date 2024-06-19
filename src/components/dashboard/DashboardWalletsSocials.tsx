@@ -5,7 +5,13 @@ import React, { useState } from "react";
 import { useAppState } from "@/src/hooks/useAppState";
 
 import particle from "../../lib/particle";
-import { createSocials, createWallets, getUserData } from "@/src/actions";
+import {
+    addDomainToUser,
+    createSocials,
+    createWallets,
+    getUserData,
+    getUserDomains,
+} from "@/src/actions";
 import { PeraWalletConnect } from "@perawallet/connect";
 import { IconLoader2, IconSettings } from "@tabler/icons-react";
 import {
@@ -13,6 +19,7 @@ import {
     WalletSettingsModalNonEVM,
 } from "./WalletSettingsModal";
 import Toast from "../toast";
+import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 
 const SOCIALS = [
     { id: "discord", name: "Discord", image: "discord.png" },
@@ -43,16 +50,23 @@ const WALLETS = [
         id: "unstoppabledomains",
         name: "Unstoppable Domains",
         image: "unstoppabledomains.png",
-        disabled: true,
     },
 ];
 
 export default function DashboardWalletsSocials() {
     const [appState, setAppState] = useAppState();
-    const [newWallets, setNewWallets] = useState([]);
+    const [newWallets, setNewWallets] = useState<
+        Array<{
+            network: string;
+            address: string;
+        }>
+    >([]);
     const [newSocials, setNewSocials] = useState([]);
+    const [newDomains, setNewDomains] = useState<Array<string>>([]);
 
     const { userData } = appState;
+
+    // console.log({ userData });
 
     const [metamaskAddress, setMetamaskAddress] = useState<string | null>();
     const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
@@ -68,6 +82,8 @@ export default function DashboardWalletsSocials() {
         setIsNonEVMWalletSettingsModalOpen,
     ] = useState(false);
     const [currentWallet, setCurrentWallet] = useState(null);
+
+    const { auth, signIn, signOut } = useUnstoppableDomainAuth();
 
     const openWalletModal = async (wallet: any) => {
         setCurrentWallet(wallet);
@@ -285,6 +301,34 @@ export default function DashboardWalletsSocials() {
         setAlgorandAddress(null);
     }
 
+    async function linkUnstoppableDomain() {
+        const userId = userData?.id;
+        if (!userId) return;
+        const user = await signIn();
+
+        if (!user.isNew) return;
+
+        const userDomain = await getUserDomains(user.walletAddress);
+
+        if (userDomain.length > 0) {
+            setNewDomains(
+                userDomain.map((d) => {
+                    return d.domain;
+                }),
+            );
+
+            const walletData = {
+                network: "unstoppabledomains",
+                address: user.walletAddress,
+                preferredNetwork: user.preferredNetwork,
+            };
+
+            setNewWallets((prevWallets) => [...prevWallets, walletData]);
+        }
+
+        await signOut();
+    }
+
     // Function to connect wallets
     const connectWallet = async (wallet: any) => {
         console.log(wallet);
@@ -297,10 +341,13 @@ export default function DashboardWalletsSocials() {
             await connectTronlink();
         } else if (wallet.id === "algorand") {
             await connectAlgorandWallet();
+        } else if (wallet.id === "unstoppabledomains") {
+            await linkUnstoppableDomain();
         }
     };
 
     async function save() {
+        setIsLoading(true);
         const userId = userData?.Profile[0].userid;
         if (newWallets.length > 0) {
             await createWallets(userId, newWallets);
@@ -310,12 +357,19 @@ export default function DashboardWalletsSocials() {
             await createSocials(userId, newSocials);
         }
 
+        if (newDomains.length > 0) {
+            newDomains.map(async (d) => {
+                return await addDomainToUser(userId, d);
+            });
+        }
+
         const updatedUserData = await getUserData(userId);
         appState.userData = updatedUserData;
         setAppState(appState);
 
         setSaved(true);
         setTimeout(() => setSaved(false), 2500);
+        setIsLoading(false);
     }
 
     return (
@@ -349,11 +403,10 @@ export default function DashboardWalletsSocials() {
                     </h3>
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-2">
                         {SOCIALS.map((social) => {
-                            let socialIndexUserData = userData.Social.findIndex(
-                                (linkedSocial) => {
+                            let socialIndexUserData =
+                                userData?.Social.findIndex((linkedSocial) => {
                                     return linkedSocial.platform === social.id;
-                                },
-                            );
+                                });
 
                             let socialIndexNewSocials = newSocials.findIndex(
                                 (linkedSocial) => {
@@ -403,11 +456,10 @@ export default function DashboardWalletsSocials() {
                     <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-2">
                         {WALLETS.map((wallet) => {
                             // Changed to findIndex because we need to match wallets[].walletProvider
-                            let walletIndexUserData = userData.Wallet.findIndex(
-                                (linkedWallet) => {
+                            let walletIndexUserData =
+                                userData?.Wallet.findIndex((linkedWallet) => {
                                     return linkedWallet.network === wallet.id;
-                                },
-                            );
+                                });
                             let walletIndexNewWallets = newWallets.findIndex(
                                 (linkedWallet) => {
                                     return linkedWallet.network === wallet.id;
@@ -423,7 +475,7 @@ export default function DashboardWalletsSocials() {
                                     : walletIndexNewWallets;
 
                             let linkedWallet = linked
-                                ? userData.Wallet[walletIndex]
+                                ? userData?.Wallet[walletIndex]
                                 : false; // we should do something with this data ...
 
                             return (
@@ -432,57 +484,71 @@ export default function DashboardWalletsSocials() {
                                         onClick={() =>
                                             !linked ? connectWallet(wallet) : {}
                                         }
-                                        className={`cursor-pointer transition-all hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
+                                        className={`cursor-pointer transition-all hover:bg-gray-200 flex w-full items-center justify-between rounded-md bg-gray-100 shadow-sm px-3 py-3 ${
                                             linked
-                                                ? "border border-green-500/50"
+                                                ? "border-2 border-green-500/50"
                                                 : ""
                                         } ${
                                             wallet.disabled ? "opacity-60" : ""
                                         }`}
                                     >
-                                        <img
-                                            src={`/img/3p/${wallet.image}`}
-                                            alt={`Link ${wallet.name}`}
-                                            className="mr-2 h-5 w-5"
-                                        />
-                                        <span className="text-sm font-semibold">
-                                            {linked
-                                                ? `Linked ${wallet.name}`
-                                                : `Link ${wallet.name}`}
-                                            {wallet.disabled
-                                                ? " (Coming Soon)"
-                                                : ""}
-                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <img
+                                                src={`/img/3p/${wallet.image}`}
+                                                alt={`Link ${wallet.name}`}
+                                                className="mr-2 h-5 w-5"
+                                            />
+                                            <span className="text-sm font-semibold">
+                                                {linked
+                                                    ? `Linked ${wallet.name}`
+                                                    : `Link ${wallet.name}`}
+                                                {wallet.disabled
+                                                    ? " (Coming Soon)"
+                                                    : ""}
+                                            </span>
+                                        </div>
+                                        {auth?.domain &&
+                                            wallet.id ===
+                                                "unstoppabledomains" && (
+                                                <span className="text-sm font-semibold">
+                                                    ({auth?.domain})
+                                                </span>
+                                            )}
 
-                                        {linked && (
-                                            <div
-                                                onClick={
-                                                    wallet.name == "Metamask" ||
-                                                    wallet.id == "particle"
-                                                        ? (e) =>
-                                                              openWalletModal({
-                                                                  ...wallet,
-                                                                  ...(linkedWallet as Record<
-                                                                      string,
-                                                                      any
-                                                                  >),
-                                                              })
-                                                        : (e) =>
-                                                              openNonEVMWalletModal(
-                                                                  {
-                                                                      ...wallet,
-                                                                      ...(linkedWallet as Record<
-                                                                          string,
-                                                                          any
-                                                                      >),
-                                                                  },
-                                                              )
-                                                }
-                                                className="ml-auto p-1.5 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer"
-                                            >
-                                                <IconSettings size="16" />
-                                            </div>
-                                        )}
+                                        {linked &&
+                                            wallet.id !==
+                                                "unstoppabledomains" && (
+                                                <div
+                                                    onClick={
+                                                        wallet.name ==
+                                                            "Metamask" ||
+                                                        wallet.id == "particle"
+                                                            ? (e) =>
+                                                                  openWalletModal(
+                                                                      {
+                                                                          ...wallet,
+                                                                          ...(linkedWallet as Record<
+                                                                              string,
+                                                                              any
+                                                                          >),
+                                                                      },
+                                                                  )
+                                                            : (e) =>
+                                                                  openNonEVMWalletModal(
+                                                                      {
+                                                                          ...wallet,
+                                                                          ...(linkedWallet as Record<
+                                                                              string,
+                                                                              any
+                                                                          >),
+                                                                      },
+                                                                  )
+                                                    }
+                                                    className="ml-auto p-1.5 rounded-md bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                                                >
+                                                    <IconSettings size="16" />
+                                                </div>
+                                            )}
                                     </div>
                                 </div>
                             );

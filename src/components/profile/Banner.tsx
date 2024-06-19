@@ -1,5 +1,6 @@
 "use client";
 
+import { EnsDomainHolderAwardDialog } from "../handle/awards/EnsDomainHolder";
 import { UnstoppableDomainHolderAwardDialog } from "../handle/awards/UnstoppableDomainHolder";
 
 type BannerProps = {
@@ -8,7 +9,10 @@ type BannerProps = {
     className?: string;
     socials?: Record<string, any>[];
     balance?: number;
-    hasDomains?: boolean;
+    domainData?: {
+        ensDomains: Array<{ domain: string; type: string; blockchain: string }>;
+        unsDomains: Array<{ domain: string; type: string; blockchain: string }>;
+    };
 };
 
 export function Banner({
@@ -17,7 +21,7 @@ export function Banner({
     className = "",
     socials,
     balance = 0,
-    hasDomains,
+    domainData,
 }: BannerProps) {
     const bannerType = banner?.split("/")[0];
     const color = banner?.split("/")[1];
@@ -54,10 +58,15 @@ export function Banner({
                             {handle}
                         </span>
 
-                        <div>
-                            {hasDomains && (
-                                <UnstoppableDomainHolderAwardDialog />
-                            )}
+                        <div className="flex gap-3">
+                            {domainData?.unsDomains &&
+                                domainData?.unsDomains.length > 0 && (
+                                    <UnstoppableDomainHolderAwardDialog />
+                                )}
+                            {domainData?.ensDomains &&
+                                domainData?.ensDomains.length > 0 && (
+                                    <EnsDomainHolderAwardDialog />
+                                )}
                         </div>
 
                         {/* <div className="hidden md:flex gap-3">

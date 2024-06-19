@@ -10,101 +10,117 @@ import {
     DialogTrigger,
 } from "@/src/components/ui/dialog";
 import { ConnectButton } from "@particle-network/connect-react-ui";
-import { uauth } from "..";
-import { getUserDataByUuid } from "@/src/actions";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/hooks/useAppState";
-import { ReactNode, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 
 interface Props {
-    trigger: ReactNode;
+    trigger?: ReactNode;
     handle?: string;
     onButtonsClick?: () => void;
+    setConnected?: Dispatch<SetStateAction<boolean>>;
+    setIsLoading?: Dispatch<SetStateAction<boolean>>;
+    isOpen?: boolean;
+    setIsOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
-export const AuthDialog = ({ trigger, handle, onButtonsClick }: Props) => {
+export const AuthDialog = ({
+    trigger,
+    handle,
+    onButtonsClick,
+    setConnected,
+    setIsLoading,
+    isOpen: isDialogOpen,
+    setIsOpen: setIsDialogOpen,
+}: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
-    const [, setAppState] = useAppState();
+    const [appState, setAppState] = useAppState();
+
+    const { signIn } = useUnstoppableDomainAuth();
+
+    if (appState?.userData?.handle) return null;
+
     return (
         <>
-            <Dialog open={isOpen} onOpenChange={(o) => setIsOpen(o)}>
-                <DialogTrigger asChild>{trigger}</DialogTrigger>
+            <Dialog
+                open={
+                    typeof isDialogOpen !== "undefined" ? isDialogOpen : isOpen
+                }
+                onOpenChange={(o) => {
+                    setIsDialogOpen?.(o);
+                    setIsOpen(o);
+                }}
+            >
+                {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle className="text-center">
+                        <DialogTitle className="text-center whitespace-nowrap">
                             Continue to Receive.me with
                         </DialogTitle>
-                        <DialogDescription>
-                            <div className="mt-6 flex flex-col items-center justify-center gap-2">
-                                <ConnectButton.Custom>
-                                    {({ openConnectModal }) => {
-                                        const handleConnect = async () => {
-                                            setIsOpen(false);
-                                            openConnectModal!();
-                                            onButtonsClick?.();
-                                            // setConnected(true);
-                                        };
-                                        return (
-                                            <div>
-                                                <Button
-                                                    onClick={handleConnect}
-                                                    type="button"
-                                                    id="connect-wallet"
-                                                >
-                                                    Wallet Or Social Login
-                                                </Button>
-                                            </div>
-                                        );
-                                    }}
-                                </ConnectButton.Custom>
-                                <div className="flex justify-center w-full items-center gap-2">
-                                    <span className="bg-gray-200 h-[1px] w-full block" />
-                                    <span>OR</span>
-                                    <span className="bg-gray-200 h-[1px] w-full block" />
-                                </div>
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => {
-                                        setIsOpen(false);
-                                        onButtonsClick?.();
-
-                                        uauth
-                                            .loginWithPopup()
-                                            .then(async (data: any) => {
-                                                // router.push("/onboard");
-                                                const userWalletAddress =
-                                                    data.idToken.wallet_address;
-
-                                                const userData =
-                                                    (await getUserDataByUuid(
-                                                        userWalletAddress,
-                                                    )) || null;
-
-                                                if (!userData) {
-                                                    router.push(
-                                                        `/onboard${
-                                                            handle
-                                                                ? `?handle=${handle}`
-                                                                : ""
-                                                        }`,
-                                                    );
-                                                } else {
-                                                    setAppState({
-                                                        userData,
-                                                    });
-                                                }
-                                            })
-                                            .catch((e: unknown) =>
-                                                console.error(e),
-                                            );
-                                    }}
-                                >
-                                    Web3 Domains (Unstoppable Domain Auth)
-                                </Button>
-                            </div>
-                        </DialogDescription>
                     </DialogHeader>
+
+                    <div className="flex flex-col items-center justify-center gap-2">
+                        <ConnectButton.Custom>
+                            {({ openConnectModal }) => {
+                                const handleConnect = async () => {
+                                    setIsOpen(false);
+                                    openConnectModal!();
+                                    onButtonsClick?.();
+                                    setConnected?.(true);
+                                };
+                                return (
+                                    <div>
+                                        <Button
+                                            onClick={handleConnect}
+                                            type="button"
+                                            id="connect-wallet"
+                                        >
+                                            Wallet Or Social Login
+                                        </Button>
+                                    </div>
+                                );
+                            }}
+                        </ConnectButton.Custom>
+                        <div className="flex justify-center w-full items-center gap-2">
+                            <span className="bg-gray-200 h-[1px] w-full block" />
+                            <span>OR</span>
+                            <span className="bg-gray-200 h-[1px] w-full block" />
+                        </div>
+                        <Button
+                            variant="secondary"
+                            onClick={async () => {
+                                try {
+                                    setIsLoading?.(true);
+                                    setIsOpen(false);
+                                    onButtonsClick?.();
+
+                                    const user = await signIn();
+
+                                    if (user.isNew) {
+                                        router.push(
+                                            `/onboard${
+                                                handle
+                                                    ? `?handle=${handle}`
+                                                    : ""
+                                            }`,
+                                        );
+                                    } else {
+                                        setAppState({
+                                            userData: user.data,
+                                        });
+                                    }
+                                    setIsLoading?.(false);
+                                } catch (e) {
+                                    console.error(e);
+                                    setIsLoading?.(false);
+                                }
+                            }}
+                        >
+                            Web3 Domains (Unstoppable Domain Auth)
+                        </Button>
+                    </div>
                 </DialogContent>
             </Dialog>
         </>
