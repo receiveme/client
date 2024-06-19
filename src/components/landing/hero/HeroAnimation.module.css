@@ -1,0 +1,80 @@
+.mousePositionTracker {
+    position: absolute;
+    width: calc(100% / 3);
+    height: calc(100% / 3);
+    z-index: 2;
+}
+
+/* 1st, 4th, 7th */
+.mousePositionTracker:nth-child(3n - 2) {
+    left: 0;
+}
+/* 2nd, 5th, 8th */
+.mousePositionTracker:nth-child(3n - 1) {
+    left: calc(100% / 3);
+}
+
+/* 2nd, 5th, 8th */
+.mousePositionTracker:nth-child(3n) {
+    right: 0;
+}
+
+/* 4 to 6 */
+.mousePositionTracker:nth-child(n + 4):nth-child(-n + 6) {
+    top: calc(100% / 3);
+}
+/* 7 to 9 */
+.mousePositionTracker:nth-child(n + 7):nth-child(-n + 9) {
+    bottom: 0;
+}
+
+.tiltingCardWrapper {
+    position: relative;
+}
+
+.tiltingCardBody {
+    --perspective: 500px;
+    --rotationX: 0;
+    --rotationY: 0;
+    --rotationZ: 0;
+    --angle: 8deg;
+    transform: perspective(var(--perspective)) rotateX(var(--rotationX))
+        rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
+    transition: transform 500ms ease;
+}
+
+.mousePositionTracker:nth-child(1):hover ~ .tiltingCardBody {
+    --rotationX: var(--angle);
+    --rotationY: calc(var(--angle) * -1);
+}
+
+.mousePositionTracker:nth-child(2):hover ~ .tiltingCardBody {
+    --rotationX: var(--angle);
+}
+
+.mousePositionTracker:nth-child(3):hover ~ .tiltingCardBody {
+    --rotationX: var(--angle);
+    --rotationY: var(--angle);
+}
+
+.mousePositionTracker:nth-child(4):hover ~ .tiltingCardBody {
+    --rotationY: calc(var(--angle) * -1);
+}
+
+.mousePositionTracker:nth-child(6):hover ~ .tiltingCardBody {
+    --rotationY: var(--angle);
+}
+
+.mousePositionTracker:nth-child(7):hover ~ .tiltingCardBody {
+    --rotationY: calc(var(--angle) * -1);
+    --rotationX: calc(var(--angle) * -1);
+}
+
+.mousePositionTracker:nth-child(8):hover ~ .tiltingCardBody {
+    --rotationX: calc(var(--angle) * -1);
+}
+
+.mousePositionTracker:nth-child(9):hover ~ .tiltingCardBody {
+    --rotationY: var(--angle);
+    --rotationX: calc(var(--angle) * -1);
+}
