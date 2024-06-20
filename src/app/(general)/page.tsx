@@ -53,7 +53,7 @@ export default function Home() {
             <main className="relative overflow-hidden">
                 <div
                     id="home"
-                    className="max-w-screen-xl mx-auto px-4 pt-12 scroll-mt-12"
+                    className="max-w-screen-xl mx-auto px-4 pt-12 lg:pt-0 scroll-mt-12"
                 >
                     <HeroSection />
                 </div>

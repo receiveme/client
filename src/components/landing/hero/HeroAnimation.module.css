@@ -41,6 +41,9 @@
     transform: perspective(var(--perspective)) rotateX(var(--rotationX))
         rotateY(var(--rotationY)) rotateZ(var(--rotationZ));
     transition: transform 500ms ease;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
 }
 
 .mousePositionTracker:nth-child(1):hover ~ .tiltingCardBody {
