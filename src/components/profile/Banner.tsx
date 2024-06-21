@@ -1,9 +1,10 @@
 "use client";
 
+import axios from "axios";
 import { EnsDomainHolderAwardDialog } from "../handle/awards/EnsDomainHolder";
 import { UnstoppableDomainHolderAwardDialog } from "../handle/awards/UnstoppableDomainHolder";
 
-type BannerProps = {
+type Props = {
     handle: string;
     banner: string;
     className?: string;
@@ -13,18 +14,35 @@ type BannerProps = {
         ensDomains: Array<{ domain: string; type: string; blockchain: string }>;
         unsDomains: Array<{ domain: string; type: string; blockchain: string }>;
     };
+    walletAddress?: string;
 };
 
-export function Banner({
+async function getUserPoaps(address: string) {
+    const req = await axios.get(
+        `https://api.poap.tech/actions/scan/${address}`,
+        {
+            headers: {
+                Accept: "application/json",
+                "x-api-key": process.env.POAP_API_KEY,
+            },
+        },
+    );
+    return req.data;
+}
+
+export async function Banner({
     handle,
     banner,
     className = "",
     socials,
     balance = 0,
     domainData,
-}: BannerProps) {
+    walletAddress,
+}: Props) {
     const bannerType = banner?.split("/")[0];
     const color = banner?.split("/")[1];
+
+    const poaps = walletAddress ? await getUserPoaps(walletAddress) : {};
 
     let src;
     let bg;
@@ -67,6 +85,21 @@ export function Banner({
                                 domainData?.ensDomains.length > 0 && (
                                     <EnsDomainHolderAwardDialog />
                                 )}
+                            {poaps?.map(
+                                (ev: { event: { image_url: string } }) => {
+                                    return (
+                                        <>
+                                            <img
+                                                src={
+                                                    ev.event.image_url +
+                                                    "?size=small"
+                                                }
+                                                alt=""
+                                            />
+                                        </>
+                                    );
+                                },
+                            )}
                         </div>
 
                         {/* <div className="hidden md:flex gap-3">

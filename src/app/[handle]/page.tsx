@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import { Button } from "@/src/components/ui/button";
 import { CollectablesDialog } from "@/src/components/handle/collectables";
 import { getUserDomains as getDomains } from "@/src/actions";
+import axios from "axios";
 
 async function getUserByHandle(handle: string) {
     try {
@@ -102,14 +103,14 @@ export default async function Profile({
 
     const data = await getUserByHandle(handle);
 
+    console.log(JSON.stringify(data));
+
     const domainData = data?.Wallet?.[0]?.address
         ? await getUserDomains(data?.Wallet?.[0]?.address)
         : {
               ensDomains: [],
               unsDomains: [],
           };
-
-    // consovle.log({ domainData });
 
     // let data_each_wallet: any = {};
     // let total_balance: number = 0;
@@ -146,6 +147,7 @@ export default async function Profile({
                             socials={data.Social}
                             className="my-4"
                             domainData={domainData}
+                            walletAddress={data?.Wallet?.[0]?.address}
                         />
 
                         <EditHandleButton handle={data.handle} />
