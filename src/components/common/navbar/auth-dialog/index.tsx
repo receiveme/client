@@ -14,7 +14,11 @@ import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/hooks/useAppState";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
+import { Window as KeplrWindow } from '@keplr-wallet/types'
 
+declare global {
+    interface Window extends KeplrWindow {}
+}
 interface Props {
     trigger?: ReactNode;
     handle?: string;
@@ -38,7 +42,25 @@ export const AuthDialog = ({
     const router = useRouter();
     const [appState, setAppState] = useAppState();
 
-    const { signIn } = useUnstoppableDomainAuth();
+    async function signInKeplr() { // @ts-ignore
+        const keplr = window.keplr;
+        if (keplr) {
+          try {
+            const chainId = "archway-1";
+
+            await keplr.enable(chainId);
+
+          } catch (e) {
+            if (e instanceof Error) {
+              console.log(e.message);
+            }
+          }
+        }
+    }
+
+
+    //@ts-ignore
+    const { signInUNS } = useUnstoppableDomainAuth();
 
     if (appState?.userData?.handle) return null;
 
@@ -96,7 +118,7 @@ export const AuthDialog = ({
                                     setIsOpen(false);
                                     onButtonsClick?.();
 
-                                    const user = await signIn();
+                                    const user = await signInUNS();
 
                                     if (user.isNew) {
                                         router.push(
@@ -119,6 +141,43 @@ export const AuthDialog = ({
                             }}
                         >
                             Web3 Domains (Unstoppable Domain Auth)
+                        </Button>
+                        <div className="flex justify-center w-full items-center gap-2">
+                            <span className="bg-gray-200 h-[1px] w-full block" />
+                            <span>OR</span>
+                            <span className="bg-gray-200 h-[1px] w-full block" />
+                        </div>
+                        <Button
+                            variant="secondary"
+                            onClick={async () => {
+                                try {
+                                    setIsLoading?.(true);
+                                    setIsOpen(false);
+                                    onButtonsClick?.();
+
+                                    const user = await signInKeplr();
+
+                                    // if (user.isNew) {
+                                    //     router.push(
+                                    //         `/onboard${
+                                    //             handle
+                                    //                 ? `?handle=${handle}`
+                                    //                 : ""
+                                    //         }`,
+                                    //     );
+                                    // } else {
+                                    //     setAppState({
+                                    //         userData: user.data,
+                                    //     });
+                                    // }
+                                    setIsLoading?.(false);
+                                } catch (e) {
+                                    console.error(e);
+                                    setIsLoading?.(false);
+                                }
+                            }}
+                        >
+                           Keplr Wallet
                         </Button>
                     </div>
                 </DialogContent>
