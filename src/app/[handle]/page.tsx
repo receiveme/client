@@ -109,8 +109,6 @@ export default async function Profile({
               unsDomains: [],
           };
 
-    // consovle.log({ domainData });
-
     // let data_each_wallet: any = {};
     // let total_balance: number = 0;
 
@@ -146,6 +144,7 @@ export default async function Profile({
                             socials={data.Social}
                             className="my-4"
                             domainData={domainData}
+                            walletAddress={data?.Wallet?.[0]?.address}
                         />
 
                         <EditHandleButton handle={data.handle} />
