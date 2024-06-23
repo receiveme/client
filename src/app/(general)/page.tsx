@@ -33,15 +33,15 @@ const FAQS = [
     },
     {
         q: "Is it free?",
-        a: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est dolor laudantium hic iure facilis corrupti nobis itaque. Dolores accusantium reiciendis impedit! Et perspiciatis quae error nesciunt veritatis assumenda explicabo.",
+        a: "Receive.me is currently free! However, this will not be the case forever so claim a profile while you can!",
     },
     {
         q: "Can we login with ENS?",
-        a: "receive.me is currently free! However, this will not be the case forever so claim a profile while you can!",
+        a: "Yes, receive.me supports ENS!",
     },
     {
         q: "Can we connect social networks?",
-        a: "Yes, receive.me supports ENS!",
+        a: "Yes, on receive.me you can connect various social networks instagram, twitter, discord etc",
     },
 ];
 

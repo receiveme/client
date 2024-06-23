@@ -1,9 +1,15 @@
-"use client";
-
+import axios from "axios";
 import { EnsDomainHolderAwardDialog } from "../handle/awards/EnsDomainHolder";
 import { UnstoppableDomainHolderAwardDialog } from "../handle/awards/UnstoppableDomainHolder";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTrigger,
+} from "../ui/dialog";
 
-type BannerProps = {
+type Props = {
     handle: string;
     banner: string;
     className?: string;
@@ -13,18 +19,35 @@ type BannerProps = {
         ensDomains: Array<{ domain: string; type: string; blockchain: string }>;
         unsDomains: Array<{ domain: string; type: string; blockchain: string }>;
     };
+    walletAddress?: string;
 };
 
-export function Banner({
+async function getUserPoaps(address: string) {
+    const req = await axios.get(
+        `https://api.poap.tech/actions/scan/${address}`,
+        {
+            headers: {
+                Accept: "application/json",
+                "x-api-key": process.env.POAP_API_KEY,
+            },
+        },
+    );
+    return req.data;
+}
+
+export async function Banner({
     handle,
     banner,
     className = "",
     socials,
     balance = 0,
     domainData,
-}: BannerProps) {
+    walletAddress,
+}: Props) {
     const bannerType = banner?.split("/")[0];
     const color = banner?.split("/")[1];
+
+    const poaps = walletAddress ? await getUserPoaps(walletAddress) : [];
 
     let src;
     let bg;
@@ -67,6 +90,67 @@ export function Banner({
                                 domainData?.ensDomains.length > 0 && (
                                     <EnsDomainHolderAwardDialog />
                                 )}
+                            {poaps?.map(
+                                (
+                                    ev: {
+                                        event: {
+                                            image_url: string;
+                                            name: string;
+                                            description: string;
+                                        };
+                                    },
+                                    i: number,
+                                ) => {
+                                    return (
+                                        <Dialog key={i}>
+                                            <DialogTrigger asChild>
+                                                <button className="bg-white rounded-lg p-1">
+                                                    <img
+                                                        src={
+                                                            ev.event.image_url +
+                                                            "?size=small"
+                                                        }
+                                                        className="w-[28px] h-[28px] rounded-md mx-auto"
+                                                        alt=""
+                                                    />
+                                                </button>
+                                            </DialogTrigger>
+                                            <DialogContent className="text-center w-full sm:max-w-sm lg:max-w-sm">
+                                                <DialogHeader className="xs:text-xl font-semibold sm:text-center">
+                                                    {ev.event.name}
+                                                </DialogHeader>
+                                                <div className="bg-[#D0369C39] w-min mx-auto whitespace-nowrap text-[#BE0044] py-1 px-2 text-xs rounded-full font-semibold uppercase">
+                                                    POAP
+                                                </div>
+                                                <DialogDescription className="space-y-1 font-medium text-gray-600">
+                                                    {ev.event.description
+                                                        .split("\n\n")
+                                                        .map((t, i) => {
+                                                            return (
+                                                                <p
+                                                                    key={i}
+                                                                    className="mt-2"
+                                                                >
+                                                                    {t}
+                                                                </p>
+                                                            );
+                                                        })}
+                                                </DialogDescription>
+                                                <div className="mt-8">
+                                                    <img
+                                                        src={
+                                                            ev.event.image_url +
+                                                            "?size=medium"
+                                                        }
+                                                        className="max-w-[200px] rounded-full mx-auto"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                            </DialogContent>
+                                        </Dialog>
+                                    );
+                                },
+                            )}
                         </div>
 
                         {/* <div className="hidden md:flex gap-3">
