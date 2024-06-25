@@ -14,6 +14,9 @@ import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/hooks/useAppState";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
+import { ChainInfo } from "@keplr-wallet/types";
+import { Coin, SigningStargateClient, StargateClient } from "@cosmjs/stargate";
+import { AccountData, OfflineSigner } from "@cosmjs/proto-signing";
 
 interface Props {
     trigger?: ReactNode;
@@ -24,6 +27,73 @@ interface Props {
     isOpen?: boolean;
     setIsOpen?: Dispatch<SetStateAction<boolean>>;
 }
+
+const getTestnetChainInfo = (): ChainInfo => ({
+    chainId: "theta-testnet-001",
+    chainName: "theta-testnet-001",
+    rpc: "https://rpc.sentry-01.theta-testnet.polypore.xyz/",
+    rest: "https://rest.sentry-01.theta-testnet.polypore.xyz/",
+    bip44: {
+        coinType: 118,
+    },
+    bech32Config: {
+        bech32PrefixAccAddr: "cosmos",
+        bech32PrefixAccPub: "cosmos" + "pub",
+        bech32PrefixValAddr: "cosmos" + "valoper",
+        bech32PrefixValPub: "cosmos" + "valoperpub",
+        bech32PrefixConsAddr: "cosmos" + "valcons",
+        bech32PrefixConsPub: "cosmos" + "valconspub",
+    },
+    currencies: [
+        {
+            coinDenom: "ATOM",
+            coinMinimalDenom: "uatom",
+            coinDecimals: 6,
+            coinGeckoId: "cosmos",
+        },
+        {
+            coinDenom: "THETA",
+            coinMinimalDenom: "theta",
+            coinDecimals: 0,
+        },
+        {
+            coinDenom: "LAMBDA",
+            coinMinimalDenom: "lambda",
+            coinDecimals: 0,
+        },
+        {
+            coinDenom: "RHO",
+            coinMinimalDenom: "rho",
+            coinDecimals: 0,
+        },
+        {
+            coinDenom: "EPSILON",
+            coinMinimalDenom: "epsilon",
+            coinDecimals: 0,
+        },
+    ],
+    feeCurrencies: [
+        {
+            coinDenom: "ATOM",
+            coinMinimalDenom: "uatom",
+            coinDecimals: 6,
+            coinGeckoId: "cosmos",
+            gasPriceStep: {
+                low: 1,
+                average: 1,
+                high: 1,
+            },
+        },
+    ],
+    stakeCurrency: {
+        coinDenom: "ATOM",
+        coinMinimalDenom: "uatom",
+        coinDecimals: 6,
+        coinGeckoId: "cosmos",
+    },
+    // coinType: 118,
+    features: ["stargate", "ibc-transfer", "no-legacy-stdTx"],
+});
 
 export const AuthDialog = ({
     trigger,
@@ -121,6 +191,44 @@ export const AuthDialog = ({
                             Web3 Domains (Unstoppable Domain Auth)
                         </Button>
                     </div>
+                    <button
+                        onClick={async () => {
+                            const { keplr } = window;
+                            if (!keplr) {
+                                alert("You need to install or unlock Keplr");
+                                return;
+                            }
+                            const testNetInfodata = getTestnetChainInfo();
+                            // await keplr.experimentalSuggestChain(
+                            //     testNetInfodata,
+                            // );
+
+                            await StargateClient.connect(testNetInfodata.rpc);
+
+                            const offlineSigner =
+                                window.getOfflineSigner!("theta-testnet-001");
+                            const signingClient =
+                                await SigningStargateClient.connectWithSigner(
+                                    testNetInfodata.rpc,
+                                    offlineSigner,
+                                );
+                            // Get the address and balance of your user
+                            const account: AccountData = (
+                                await offlineSigner.getAccounts()
+                            )[0];
+                            console.log({
+                                myAddress: account.address,
+                                myBalance: (
+                                    await signingClient.getBalance(
+                                        account.address,
+                                        "uatom",
+                                    )
+                                ).amount,
+                            });
+                        }}
+                    >
+                        Connect Keplr
+                    </button>
                 </DialogContent>
             </Dialog>
         </>
