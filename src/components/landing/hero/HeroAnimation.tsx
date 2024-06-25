@@ -1,33 +1,54 @@
 "use client";
 
-import React, { useState } from "react";
-import Lottie, { Options } from "react-lottie";
-import animationData1 from "../../../../public/JSONs/Gif 1 to Gif 2.json";
-import animationData2 from "../../../../public/JSONs/Gif 2 to Gif 1.json";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./HeroAnimation.module.css";
-
-const animations = [animationData1, animationData2];
+const videos = ["/JSONs/Gif 1 to Gif 2.mp4", "/JSONs/Gif 2 to Gif 1.mp4"];
 
 function App() {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [shouldPlay, setShouldPlay] = useState(true);
+    const videoRefs: any = useRef([]);
 
-    const defaultOptions: Options = {
-        loop: false,
-        autoplay: true,
-        animationData: animations[currentIndex % 2],
-        rendererSettings: {
-            context: "canvas",
-        },
-    };
+    useEffect(() => {
+        const currentVideo = videoRefs.current[currentIndex];
 
-    const handleAnimationComplete = () => {
-        setTimeout(
-            () => {
-                setCurrentIndex(currentIndex < 12 ? currentIndex + 1 : 1);
-            },
-            currentIndex > 5 ? 100 : 2000,
-        );
-    };
+        const handleVideoEnd = () => {
+            setShouldPlay(false);
+            const newIndex = (currentIndex + 1) % videos.length;
+            videoRefs.current[newIndex].currentTime = 0;
+
+            setTimeout(() => {
+                setShouldPlay(true);
+                setCurrentIndex(newIndex);
+            }, 3000);
+        };
+
+        if (currentVideo) {
+            currentVideo.addEventListener("ended", handleVideoEnd);
+        }
+
+        return () => {
+            if (currentVideo) {
+                currentVideo.removeEventListener("ended", handleVideoEnd);
+            }
+        };
+    }, [currentIndex, videos.length]);
+
+    useEffect(() => {
+        const currentVideo = videoRefs.current[currentIndex];
+        if (currentVideo && shouldPlay) {
+            const handleCanPlay = () => {
+                currentVideo.play();
+                currentVideo.removeEventListener("canplay", handleCanPlay);
+            };
+
+            if (currentVideo.readyState >= 3) {
+                currentVideo.play();
+            } else {
+                currentVideo.addEventListener("canplay", handleCanPlay);
+            }
+        }
+    }, [currentIndex, shouldPlay]);
 
     return (
         <div className={styles.tiltingCardWrapper}>
@@ -41,16 +62,22 @@ function App() {
             <div className={styles.mousePositionTracker}></div>
             <div className={styles.mousePositionTracker}></div>
             <div className={styles.tiltingCardBody}>
-                <Lottie
-                    options={defaultOptions}
-                    eventListeners={[
-                        {
-                            eventName: "complete",
-                            callback: handleAnimationComplete,
-                        },
-                    ]}
-                    speed={2}
-                />
+                {videos.map((video, index) => {
+                    return (
+                        <video
+                            key={index}
+                            ref={(el) => (videoRefs.current[index] = el)}
+                            src={video}
+                            muted
+                            style={{
+                                display:
+                                    currentIndex === index ? "block" : "none",
+                                transition: "opacity 1s",
+                                opacity: currentIndex === index ? 1 : 0,
+                            }}
+                        />
+                    );
+                })}
             </div>
         </div>
     );

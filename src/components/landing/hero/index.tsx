@@ -6,7 +6,7 @@ import { NameSearch } from "./name-search";
 export const HeroSection = () => {
     return (
         <>
-            <div className="flex flex-col lg:flex-row items-end lg:items-center justify-between gap-20">
+            <div className="flex flex-col lg:flex-row items-end lg:items-center justify-between gap-0 lg:gap-16">
                 <div className="basis-[55%]">
                     <Chip className="mb-2">Receive Me</Chip>
                     <p
@@ -32,7 +32,7 @@ export const HeroSection = () => {
                         & help you manage your payments in one place.
                     </div>
                 </div>
-                <div className="basis-[45%] relative w-[70%] ml-full lg:ml-0 lg:w-auto">
+                <div className="basis-[55%] relative w-full lg:w-auto">
                     <HeroAnimation />
                 </div>
             </div>
