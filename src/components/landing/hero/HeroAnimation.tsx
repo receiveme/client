@@ -1,52 +1,54 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import "@lottiefiles/lottie-player";
-import animationData1 from "../../../../public/JSONs/Gif 1 to Gif 2.json";
-import animationData2 from "../../../../public/JSONs/Gif 2 to Gif 1.json";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./HeroAnimation.module.css";
-
-const animations = [animationData1, animationData2];
+const videos = ["/JSONs/Gif 1 to Gif 2.mp4", "/JSONs/Gif 2 to Gif 1.mp4"];
 
 function App() {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const lottieRef: any = React.useRef(null);
-
-    const handleAnimationComplete = () => {
-        setTimeout(
-            () => {
-                const newIndex = currentIndex < 12 ? currentIndex + 1 : 1;
-                lottieRef.current?.load(
-                    JSON.stringify(animations[newIndex % 2]),
-                );
-                setCurrentIndex(newIndex);
-            },
-            currentIndex > 5 ? 500 : 2000,
-        );
-    };
+    const [shouldPlay, setShouldPlay] = useState(true);
+    const videoRefs: any = useRef([]);
 
     useEffect(() => {
-        if (lottieRef.current) {
-            console.log("lottieRef.current");
-            lottieRef.current.addEventListener("rendered", () => {
-                lottieRef.current?.load(animations[0]);
-            });
-            lottieRef.current.addEventListener(
-                "complete",
-                handleAnimationComplete,
-            );
+        const currentVideo = videoRefs.current[currentIndex];
 
-            return () => {
-                lottieRef.current.removeEventListener(
-                    "complete",
-                    handleAnimationComplete,
-                );
-                lottieRef.current.removeEventListener("rendered", () => {
-                    lottieRef.current?.load(animations[0]);
-                });
-            };
+        const handleVideoEnd = () => {
+            setShouldPlay(false);
+            const newIndex = (currentIndex + 1) % videos.length;
+            videoRefs.current[newIndex].currentTime = 0;
+
+            setTimeout(() => {
+                setShouldPlay(true);
+                setCurrentIndex(newIndex);
+            }, 3000);
+        };
+
+        if (currentVideo) {
+            currentVideo.addEventListener("ended", handleVideoEnd);
         }
-    });
+
+        return () => {
+            if (currentVideo) {
+                currentVideo.removeEventListener("ended", handleVideoEnd);
+            }
+        };
+    }, [currentIndex, videos.length]);
+
+    useEffect(() => {
+        const currentVideo = videoRefs.current[currentIndex];
+        if (currentVideo && shouldPlay) {
+            const handleCanPlay = () => {
+                currentVideo.play();
+                currentVideo.removeEventListener("canplay", handleCanPlay);
+            };
+
+            if (currentVideo.readyState >= 3) {
+                currentVideo.play();
+            } else {
+                currentVideo.addEventListener("canplay", handleCanPlay);
+            }
+        }
+    }, [currentIndex, shouldPlay]);
 
     return (
         <div className={styles.tiltingCardWrapper}>
@@ -60,12 +62,22 @@ function App() {
             <div className={styles.mousePositionTracker}></div>
             <div className={styles.mousePositionTracker}></div>
             <div className={styles.tiltingCardBody}>
-                <lottie-player
-                    autoplay
-                    ref={lottieRef}
-                    mode="normal"
-                    style={{ width: "100%", height: "100%" }}
-                ></lottie-player>
+                {videos.map((video, index) => {
+                    return (
+                        <video
+                            key={index}
+                            ref={(el) => (videoRefs.current[index] = el)}
+                            src={video}
+                            muted
+                            style={{
+                                display:
+                                    currentIndex === index ? "block" : "none",
+                                transition: "opacity 1s",
+                                opacity: currentIndex === index ? 1 : 0,
+                            }}
+                        />
+                    );
+                })}
             </div>
         </div>
     );
