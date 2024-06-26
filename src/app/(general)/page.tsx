@@ -33,7 +33,7 @@ const FAQS = [
     },
     {
         q: "Is it free?",
-        a: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Est dolor laudantium hic iure facilis corrupti nobis itaque. Dolores accusantium reiciendis impedit! Et perspiciatis quae error nesciunt veritatis assumenda explicabo.",
+        a: "Yes, both organization & user profiles are free currently. This may not be forever, so get your profile(s) while you can!",
     },
     {
         q: "Can we login with ENS?",
