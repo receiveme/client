@@ -1,3 +1,5 @@
+"use client";
+
 import axios from "axios";
 import { EnsDomainHolderAwardDialog } from "../handle/awards/EnsDomainHolder";
 import { UnstoppableDomainHolderAwardDialog } from "../handle/awards/UnstoppableDomainHolder";
@@ -8,6 +10,7 @@ import {
     DialogHeader,
     DialogTrigger,
 } from "../ui/dialog";
+import { useQuery } from "@tanstack/react-query";
 
 type Props = {
     handle: string;
@@ -22,20 +25,20 @@ type Props = {
     walletAddress?: string;
 };
 
-async function getUserPoaps(address: string) {
-    const req = await axios.get(
-        `https://api.poap.tech/actions/scan/${address}`,
-        {
-            headers: {
-                Accept: "application/json",
-                "x-api-key": process.env.POAP_API_KEY,
-            },
-        },
-    );
-    return req.data;
-}
+// async function getUserPoaps(address: string) {
+//     const req = await axios.get(
+//         `https://api.poap.tech/actions/scan/${address}`,
+//         {
+//             headers: {
+//                 Accept: "application/json",
+//                 "x-api-key": process.env.POAP_API_KEY,
+//             },
+//         },
+//     );
+//     return req.data;
+// }
 
-export async function Banner({
+export function Banner({
     handle,
     banner,
     className = "",
@@ -47,7 +50,16 @@ export async function Banner({
     const bannerType = banner?.split("/")[0];
     const color = banner?.split("/")[1];
 
-    const poaps = walletAddress ? await getUserPoaps(walletAddress) : [];
+    // const poaps = walletAddress ? await getUserPoaps(walletAddress) : [];
+
+    const { data: poaps } = useQuery({
+        queryKey: ["/api/poap/", walletAddress],
+        queryFn: async () =>
+            await (
+                await axios.get(`/api/poap/${walletAddress}`)
+            ).data,
+        enabled: !!walletAddress,
+    });
 
     let src;
     let bg;
