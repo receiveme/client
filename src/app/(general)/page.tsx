@@ -29,7 +29,7 @@ const FAQS = [
     },
     {
         q: "What networks do you support?",
-        a: "Currently, we support Ethereum, Avalanche, Polygon, BNB, and other EVM chains. We will also support several L2s, (Base, Arbitrum, & Scroll)",
+        a: "Currently, we support Ethereum, Avalanche, Polygon, BNB, and other EVM chains. We will also support several L2s, (Base, Arbitrum, Tron, & Scroll)",
     },
     {
         q: "Is it free?",

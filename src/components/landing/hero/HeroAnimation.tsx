@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./HeroAnimation.module.css";
-const videos = ["/JSONs/Gif 1 to Gif 2.mp4", "/JSONs/Gif 2 to Gif 1.mp4"];
+const videos = ["/JSONs/gif_1_to_gif_2.mp4", "/JSONs/gif_2_to_gif_1.mp4"];
 
 function App() {
     const [currentIndex, setCurrentIndex] = useState(0);
