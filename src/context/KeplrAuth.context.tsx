@@ -17,6 +17,7 @@ import {
     StargateClient,
     QueryClient,
 } from "@cosmjs/stargate";
+import toast from "react-hot-toast";
 
 interface IKeplrAuthContext {
     walletAddress: string | null;
@@ -109,7 +110,7 @@ export const KeplrAuthContext = ({ children }: PropsWithChildren) => {
             try {
                 const { keplr } = window;
                 if (!keplr) {
-                    alert("You need to install Keplr");
+                    // alert("You need to install Keplr");
                     return;
                 }
                 const testNetInfodata = getTestnetChainInfo();
@@ -207,6 +208,7 @@ export const useKeplrAuth = () => {
 
     const signIn = async () => {
         try {
+            if (!window.keplr) return toast.error("You need to install keplr.");
             await window.keplr?.enable(testNetInfodata.chainId);
 
             window.location.reload();
