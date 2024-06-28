@@ -15,6 +15,10 @@ export type AppState = {
         walletAddress: string;
         domain: string;
     };
+    keplrAuth: {
+        uuid: string;
+        walletAddress: string;
+    };
 };
 
 export const InitialAppState = (server = true): AppState => ({
@@ -31,6 +35,10 @@ export const InitialAppState = (server = true): AppState => ({
     unstoppableAuth: {
         domain: "",
         token: "",
+        uuid: "",
+        walletAddress: "",
+    },
+    keplrAuth: {
         uuid: "",
         walletAddress: "",
     },

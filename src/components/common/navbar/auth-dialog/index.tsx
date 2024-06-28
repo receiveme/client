@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/hooks/useAppState";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
+import { useKeplrAuth } from "@/src/context/KeplrAuth.context";
+import toast from "react-hot-toast";
 
 interface Props {
     trigger?: ReactNode;
@@ -39,6 +41,7 @@ export const AuthDialog = ({
     const [appState, setAppState] = useAppState();
 
     const { signIn } = useUnstoppableDomainAuth();
+    // const { signIn: keplrSignIn } = useKeplrAuth();
 
     if (appState?.userData?.handle) return null;
 
@@ -121,6 +124,20 @@ export const AuthDialog = ({
                             Web3 Domains (Unstoppable Domain Auth)
                         </Button>
                     </div>
+                    {/* <button
+                        onClick={async () => {
+                            try {
+                                await keplrSignIn();
+                            } catch (e) {
+                                console.error(e);
+                                toast.error(
+                                    "User rejected wallet authorization",
+                                );
+                            }
+                        }}
+                    >
+                        Connect Keplr
+                    </button> */}
                 </DialogContent>
             </Dialog>
         </>

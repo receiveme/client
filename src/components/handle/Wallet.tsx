@@ -10,6 +10,7 @@ import Avax from "../../../public/img/networks/avax.png";
 import Tron from "../../../public/img/networks/trx.png";
 import Bnb from "../../../public/img/networks/bnb.png";
 import Matic from "../../../public/img/networks/matic.png";
+import Cosmos from "../../../public/img/networks/cosmos-outline-light.png";
 // import styles from "Wallet.module.css"
 import "../../app/globals.css";
 import { useQuery } from "@tanstack/react-query";
@@ -40,6 +41,8 @@ const getNetworkImage = (network: string) => {
         ? Matic.src
         : network === "bnb"
         ? Bnb.src
+        : network === "cosmos"
+        ? Cosmos.src
         : "";
 };
 
