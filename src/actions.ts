@@ -196,14 +196,18 @@ export async function createUserProfile(
     handle: String,
     profile: any,
     unstoppableAuth?: AppState["unstoppableAuth"],
+    keplrAuth?: AppState["keplrAuth"],
 ) {
     // TODO; seperate socials & wallets
     const { theme, banner } = profile;
     console.log(userInfo);
-    const info_token = userInfo?.token || unstoppableAuth?.token;
-    const uuid = userInfo?.uuid || unstoppableAuth?.uuid;
+    const info_token =
+        userInfo?.token || unstoppableAuth?.token || keplrAuth?.uuid;
+    const uuid = userInfo?.uuid || unstoppableAuth?.uuid || keplrAuth?.uuid;
     const particleWalletAddress = userInfo?.wallets?.[0]?.public_address;
     const unstoppableWalletAddress = unstoppableAuth?.walletAddress;
+
+    const keplrWalletAddress = keplrAuth?.walletAddress;
 
     try {
         const user = await prisma.user.create({
@@ -294,6 +298,22 @@ export async function createUserProfile(
                           "successuflly inserted unstoppable domains wallet",
                       )
                     : console.log("successuflly inserted particle wallet");
+            } catch (error) {
+                console.error("Wallet insertion err:", error);
+            }
+        }
+
+        if (keplrWalletAddress) {
+            try {
+                await prisma.wallet.create({
+                    data: {
+                        userid: user.id,
+                        network: "cosmos",
+                        address: keplrWalletAddress,
+                        preferrednetworks: ["cosmos"],
+                    },
+                });
+                console.log("successuflly inserted cosmos wallet");
             } catch (error) {
                 console.error("Wallet insertion err:", error);
             }

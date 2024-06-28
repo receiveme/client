@@ -1058,6 +1058,7 @@ export default function Onboard() {
         const wallets = appState.wallets;
         const socials = appState.socials;
         const unstoppableAuth = appState.unstoppableAuth;
+        const keplrAuth = appState.keplrAuth;
 
         const fetchSocialDetails = async () => {
             for (let i = 0; i < socials.length; i++) {
@@ -1091,6 +1092,7 @@ export default function Onboard() {
             handle,
             profile,
             unstoppableAuth,
+            keplrAuth,
         );
         setAppState({ globalId });
         router.push("/");
