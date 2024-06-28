@@ -41,7 +41,7 @@ export const AuthDialog = ({
     const [appState, setAppState] = useAppState();
 
     const { signIn } = useUnstoppableDomainAuth();
-    const { signIn: keplrSignIn } = useKeplrAuth();
+    // const { signIn: keplrSignIn } = useKeplrAuth();
 
     if (appState?.userData?.handle) return null;
 
@@ -124,7 +124,7 @@ export const AuthDialog = ({
                             Web3 Domains (Unstoppable Domain Auth)
                         </Button>
                     </div>
-                    <button
+                    {/* <button
                         onClick={async () => {
                             try {
                                 await keplrSignIn();
@@ -137,7 +137,7 @@ export const AuthDialog = ({
                         }}
                     >
                         Connect Keplr
-                    </button>
+                    </button> */}
                 </DialogContent>
             </Dialog>
         </>
