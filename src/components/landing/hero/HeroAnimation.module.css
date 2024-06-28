@@ -44,6 +44,7 @@
     transform-style: preserve-3d;
     backface-visibility: hidden;
     will-change: transform;
+    mix-blend-mode: darken;
 }
 
 .mousePositionTracker:nth-child(1):hover ~ .tiltingCardBody {
