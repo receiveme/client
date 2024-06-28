@@ -33,6 +33,7 @@
         "@walletconnect/universal-provider": "^2.11.1",
         "algosdk": "^2.7.0",
         "axios": "^1.6.7",
+        "canvas": "^2.11.2",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
         "cosmjs-types": "0.4.1",
