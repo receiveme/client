@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import { Button } from "@/src/components/ui/button";
 import { CollectablesDialog } from "@/src/components/handle/collectables";
 import { getUserDomains as getDomains } from "@/src/actions";
+import { Metadata } from "next";
 
 async function getUserByHandle(handle: string) {
     try {
@@ -92,7 +93,6 @@ async function getUserDomains(address: string): Promise<{
         };
     }
 }
-
 export default async function Profile({
     params,
 }: {
