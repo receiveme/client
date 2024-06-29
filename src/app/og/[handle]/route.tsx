@@ -54,17 +54,29 @@ export async function GET(
     { params: { handle } }: { params: { handle: string } },
 ) {
     try {
-        // const fontData = promises
-        //     .readFile(
-        //         path.join(
-        //             fileURLToPath(import.meta.url),
-        //             "../../../../../public/fonts/Figtree-Black.ttf",
-        //         ),
-        //     )
-        //     .then((value) => value.buffer);
-        // await fetch(
-        //     new URL("./Figtree-Black.ttf", import.meta.url),
-        // ).then((res) => res.arrayBuffer());
+        const fontData =
+            // promises
+            //     .readFile(
+            //         path.join(
+            //             fileURLToPath(import.meta.url),
+            //             "../../../../../public/fonts/Figtree-Black.ttf",
+            //         ),
+            //     )
+            //     .then((value) => value.buffer);
+
+            // console.log(
+            //     new URL(
+            //         "../../../../public/fonts/Figtree-Black.ttf",
+            //         import.meta.url,
+            //     ),
+            // );
+            await fetch(
+                new URL(
+                    // "../../../../public/fonts/Figtree-Black.ttf",
+                    // import.meta.url,
+                    process.env.BASE_URL + "/fonts/Figtree-Black.ttf",
+                ),
+            ).then((res) => res.arrayBuffer());
 
         const text =
             handle.length > 20
@@ -98,7 +110,7 @@ export async function GET(
                 >
                     <div
                         style={{
-                            backgroundImage: `url(https://receive.me/${imageUrl})`,
+                            backgroundImage: `url(${process.env.BASE_URL}/${imageUrl})`,
                             display: "flex",
                             width: "90%",
                             height: "60%",
@@ -118,7 +130,8 @@ export async function GET(
                                 alignItems: "center",
                                 gap: "1",
                                 padding: "20px",
-                                // fontFamily: "figtree-black",
+                                fontWeight: "bold",
+                                fontFamily: "figtree-black",
                             }}
                         >
                             <div
@@ -144,13 +157,13 @@ export async function GET(
             {
                 width: 1200,
                 height: 630,
-                // fonts: [
-                //     {
-                //         name: "figtree-black",
-                //         data: await fontData,
-                //         style: "normal",
-                //     },
-                // ],
+                fonts: [
+                    {
+                        name: "figtree-black",
+                        data: fontData,
+                        style: "normal",
+                    },
+                ],
             },
         );
     } catch (e) {
