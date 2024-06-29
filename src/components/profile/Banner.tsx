@@ -11,6 +11,7 @@ import {
     DialogTrigger,
 } from "../ui/dialog";
 import { useQuery } from "@tanstack/react-query";
+import { PoapBadge } from "../handle/awards/PoapBadge";
 
 type Props = {
     handle: string;
@@ -114,52 +115,14 @@ export function Banner({
                                     i: number,
                                 ) => {
                                     return (
-                                        <Dialog key={i}>
-                                            <DialogTrigger asChild>
-                                                <button className="bg-white rounded-lg p-1">
-                                                    <img
-                                                        src={
-                                                            ev.event.image_url +
-                                                            "?size=small"
-                                                        }
-                                                        className="w-[28px] h-[28px] rounded-md mx-auto"
-                                                        alt=""
-                                                    />
-                                                </button>
-                                            </DialogTrigger>
-                                            <DialogContent className="text-center w-full sm:max-w-sm lg:max-w-sm">
-                                                <DialogHeader className="xs:text-xl font-semibold sm:text-center">
-                                                    {ev.event.name}
-                                                </DialogHeader>
-                                                <div className="bg-[#D0369C39] w-min mx-auto whitespace-nowrap text-[#BE0044] py-1 px-2 text-xs rounded-full font-semibold uppercase">
-                                                    POAP
-                                                </div>
-                                                <DialogDescription className="space-y-1 font-medium text-gray-600">
-                                                    {ev.event.description
-                                                        .split("\n\n")
-                                                        .map((t, i) => {
-                                                            return (
-                                                                <p
-                                                                    key={i}
-                                                                    className="mt-2"
-                                                                >
-                                                                    {t}
-                                                                </p>
-                                                            );
-                                                        })}
-                                                </DialogDescription>
-                                                <div className="mt-8">
-                                                    <img
-                                                        src={
-                                                            ev.event.image_url +
-                                                            "?size=medium"
-                                                        }
-                                                        className="max-w-[200px] rounded-full mx-auto"
-                                                        alt=""
-                                                    />
-                                                </div>
-                                            </DialogContent>
-                                        </Dialog>
+                                        <PoapBadge
+                                            key={i}
+                                            eventDescription={
+                                                ev.event.description
+                                            }
+                                            eventName={ev.event.name}
+                                            image={ev.event.image_url}
+                                        />
                                     );
                                 },
                             )}

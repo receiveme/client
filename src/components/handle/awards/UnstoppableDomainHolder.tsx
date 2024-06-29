@@ -1,3 +1,4 @@
+import { cn } from "@/src/lib/utils/cn";
 import {
     Dialog,
     DialogContent,
@@ -5,16 +6,25 @@ import {
     DialogHeader,
     DialogTrigger,
 } from "../../ui/dialog";
+import { useCoinflipAnimation } from "@/src/hooks/useCoinflipAnimation";
 
 export const UnstoppableDomainHolderAwardDialog = () => {
+    const { className, onMouseEnter } = useCoinflipAnimation();
+
     return (
         <>
             <Dialog>
                 <DialogTrigger asChild>
-                    <button className="bg-white rounded-lg p-1">
+                    <button
+                        className={cn("bg-white rounded-lg p-1")}
+                        onMouseEnter={onMouseEnter}
+                    >
                         <img
                             src="/img/handle/ud.png"
-                            className="w-[28px] h-[28px] rounded-md mx-auto"
+                            className={cn(
+                                "w-[28px] h-[28px] rounded-full mx-auto",
+                                className,
+                            )}
                             alt=""
                         />
                     </button>

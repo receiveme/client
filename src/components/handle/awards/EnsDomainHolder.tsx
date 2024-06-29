@@ -1,3 +1,4 @@
+import { useCoinflipAnimation } from "@/src/hooks/useCoinflipAnimation";
 import {
     Dialog,
     DialogContent,
@@ -5,16 +6,24 @@ import {
     DialogHeader,
     DialogTrigger,
 } from "../../ui/dialog";
+import { cn } from "@/src/lib/utils/cn";
 
 export const EnsDomainHolderAwardDialog = () => {
+    const { className, onMouseEnter } = useCoinflipAnimation();
     return (
         <>
             <Dialog>
                 <DialogTrigger asChild>
-                    <button className="bg-white rounded-lg p-1">
+                    <button
+                        className="bg-white rounded-lg p-1"
+                        onMouseEnter={onMouseEnter}
+                    >
                         <img
                             src="/img/handle/ens.png"
-                            className="w-[28px] h-[28px] rounded-md mx-auto"
+                            className={cn(
+                                "w-[28px] h-[28px] rounded-md mx-auto",
+                                className,
+                            )}
                             alt=""
                         />
                     </button>
