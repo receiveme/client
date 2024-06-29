@@ -2,15 +2,10 @@ import { Wallet } from "@/src/components/handle/Wallet";
 import prisma from "@/lib/prisma";
 import "../globals.css";
 import { Banner } from "@/src/components/profile/Banner";
-import { getUser } from "@/src/actions/getUser";
-import { IconEdit } from "@tabler/icons-react";
 import EditHandleButton from "@/src/components/handle/EditButton";
-import { useQuery } from "@tanstack/react-query";
-import { notFound } from "next/navigation";
-import { Button } from "@/src/components/ui/button";
 import { CollectablesDialog } from "@/src/components/handle/collectables";
 import { getUserDomains as getDomains } from "@/src/actions";
-import { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 
 async function getUserByHandle(handle: string) {
     try {
@@ -93,6 +88,38 @@ async function getUserDomains(address: string): Promise<{
         };
     }
 }
+
+type Props = {
+    params: { handle: string };
+    searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+    { params, searchParams }: Props,
+    parent: ResolvingMetadata,
+): Promise<Metadata> {
+    const handle = params.handle;
+
+    return {
+        title: `${handle} on receive.me`,
+        description: `receive.me provides web3 profiles - linktree but for crypto. UNS & ENS integration for profiles`,
+        openGraph: {
+            type: "website",
+            images: `https://receive.me/og/${handle}`,
+            title: `${handle} on receive.me`,
+            description: `Checkout ${handle} on receive.me , claim your receive.me handle today!`,
+            url: `https://receive.me/${handle}`,
+        },
+        twitter: {
+            site: `https://receive.me/${handle}`,
+            card: "summary_large_image",
+            images: `https://receive.me/og/${handle}`,
+            description: `Checkout ${handle} on receive.me , claim your receive.me handle today!`,
+            title: `${handle} on receive.me`,
+        },
+    };
+}
+
 export default async function Profile({
     params,
 }: {
