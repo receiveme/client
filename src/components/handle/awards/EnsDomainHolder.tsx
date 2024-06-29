@@ -13,7 +13,7 @@ export const EnsDomainHolderAwardDialog = () => {
                 <DialogTrigger asChild>
                     <button className="bg-white rounded-lg p-1">
                         <img
-                            src="/img/handle/ens.svg"
+                            src="/img/handle/ens.png"
                             className="w-[28px] h-[28px] rounded-md mx-auto"
                             alt=""
                         />
