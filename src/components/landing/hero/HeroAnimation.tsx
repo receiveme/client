@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./HeroAnimation.module.css";
-const videos = ["/video/gif_1_to_gif_2.mov", "/video/gif_2_to_gif_1.mov"];
+const videos = ["/video/gif_1_to_gif_2.mp4", "/video/gif_2_to_gif_1.mp4"];
 
 function App() {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -73,13 +73,41 @@ function App() {
                             }}
                             src={video}
                             muted
+                            className="pointer-events-none"
                             style={{
                                 display:
                                     currentIndex === index ? "block" : "none",
                                 transition: "opacity 1s",
                                 opacity: currentIndex === index ? 1 : 0,
                             }}
-                        />
+                            playsInline
+                            controlsList="nodownload"
+                            controls={false}
+                            // preload="metadata"
+                            // tabIndex={-1}
+                            // webkitPlaysInline="true"
+                            // x-webkit-airplay="allow"
+                            autoPlay
+                        ></video>
+                        // <video
+                        //     controls={false}
+                        //     muted
+                        //     ref={(el) => {
+                        //         if (el) {
+                        //             videoRefs.current[index] = el;
+                        //         }
+                        //     }}
+                        //     style={{
+                        //         display:
+                        //             currentIndex === index ? "block" : "none",
+                        //         transition: "opacity 1s",
+                        //         opacity: currentIndex === index ? 1 : 0,
+                        //     }}
+                        // >
+                        //     <source src={video} type="video/quicktime" />
+                        //     {/* <source src="video.mp4" type="video/mp4"/> */}
+                        //     Your browser does not support the video tag.
+                        // </video>
                     );
                 })}
             </div>
