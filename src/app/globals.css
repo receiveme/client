@@ -149,6 +149,19 @@
     .AccordionTrigger[data-state="open"] > span {
         transform: rotate(180deg);
     }
+
+    .coinflip-animation {
+        animation: coinflipAnimation 2s ease-in-out 0s 1 forwards;
+    }
+
+    @keyframes coinflipAnimation {
+        from {
+            transform: rotateY(0deg);
+        }
+        to {
+            transform: rotateY(720deg);
+        }
+    }
 }
 
 html,
