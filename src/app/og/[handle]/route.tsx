@@ -54,14 +54,14 @@ export async function GET(
     { params: { handle } }: { params: { handle: string } },
 ) {
     try {
-        const fontData = promises
-            .readFile(
-                path.join(
-                    fileURLToPath(import.meta.url),
-                    "../../../../../public/fonts/Figtree-Black.ttf",
-                ),
-            )
-            .then((value) => value.buffer);
+        // const fontData = promises
+        //     .readFile(
+        //         path.join(
+        //             fileURLToPath(import.meta.url),
+        //             "../../../../../public/fonts/Figtree-Black.ttf",
+        //         ),
+        //     )
+        //     .then((value) => value.buffer);
         // await fetch(
         //     new URL("./Figtree-Black.ttf", import.meta.url),
         // ).then((res) => res.arrayBuffer());
@@ -118,7 +118,7 @@ export async function GET(
                                 alignItems: "center",
                                 gap: "1",
                                 padding: "20px",
-                                fontFamily: "figtree-black",
+                                // fontFamily: "figtree-black",
                             }}
                         >
                             <div
@@ -144,13 +144,13 @@ export async function GET(
             {
                 width: 1200,
                 height: 630,
-                fonts: [
-                    {
-                        name: "figtree-black",
-                        data: await fontData,
-                        style: "normal",
-                    },
-                ],
+                // fonts: [
+                //     {
+                //         name: "figtree-black",
+                //         data: await fontData,
+                //         style: "normal",
+                //     },
+                // ],
             },
         );
     } catch (e) {
