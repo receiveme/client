@@ -48,7 +48,6 @@
         "react-hot-toast": "^2.4.1",
         "readable-stream": "^4.5.2",
         "rxjs": "^7.8.1",
-        "sharp": "^0.33.4",
         "tw-merge": "^0.0.1-alpha.3",
         "uuid": "^9.0.1",
         "web3": "^4.5.0"
