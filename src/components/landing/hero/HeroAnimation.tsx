@@ -2,12 +2,12 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./HeroAnimation.module.css";
-const videos = ["/JSONs/gif_1_to_gif_2.mp4", "/JSONs/gif_2_to_gif_1.mp4"];
+const videos = ["/video/gif_1_to_gif_2.mp4", "/video/gif_2_to_gif_1.mp4"];
 
 function App() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [shouldPlay, setShouldPlay] = useState(true);
-    const videoRefs: any = useRef([]);
+    const videoRefs = useRef<Array<HTMLVideoElement>>([] as any);
 
     useEffect(() => {
         const currentVideo = videoRefs.current[currentIndex];
@@ -66,7 +66,11 @@ function App() {
                     return (
                         <video
                             key={index}
-                            ref={(el) => (videoRefs.current[index] = el)}
+                            ref={(el) => {
+                                if (el) {
+                                    videoRefs.current[index] = el;
+                                }
+                            }}
                             src={video}
                             muted
                             style={{
