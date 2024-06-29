@@ -1,6 +1,9 @@
 import axios from "axios";
+import { promises } from "fs";
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const ClassnameToHexcode: Record<string, string> = {
     "yellow-300": "#fde047",
@@ -51,6 +54,18 @@ export async function GET(
     { params: { handle } }: { params: { handle: string } },
 ) {
     try {
+        const fontData = promises
+            .readFile(
+                path.join(
+                    fileURLToPath(import.meta.url),
+                    "../../../../../public/fonts/Figtree-Black.ttf",
+                ),
+            )
+            .then((value) => value.buffer);
+        // await fetch(
+        //     new URL("./Figtree-Black.ttf", import.meta.url),
+        // ).then((res) => res.arrayBuffer());
+
         const text =
             handle.length > 20
                 ? `${handle.slice(0, 6)}...${handle.slice(-6)}`
@@ -103,7 +118,7 @@ export async function GET(
                                 alignItems: "center",
                                 gap: "1",
                                 padding: "20px",
-                                fontWeight: "bold",
+                                fontFamily: "figtree-black",
                             }}
                         >
                             <div
@@ -129,6 +144,13 @@ export async function GET(
             {
                 width: 1200,
                 height: 630,
+                fonts: [
+                    {
+                        name: "figtree-black",
+                        data: await fontData,
+                        style: "normal",
+                    },
+                ],
             },
         );
     } catch (e) {
@@ -148,7 +170,7 @@ export async function GET(
                         alignItems: "center",
                     }}
                 >
-                    👋 Hello
+                    👋 receive.me
                 </div>
             ),
             {
