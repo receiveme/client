@@ -105,95 +105,95 @@ export const KeplrAuthContext = ({ children }: PropsWithChildren) => {
 
     const router = useRouter();
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const { keplr } = window;
-                if (!keplr) {
-                    // alert("You need to install Keplr");
-                    return;
-                }
-                const testNetInfodata = getTestnetChainInfo();
+    // useEffect(() => {
+    //     (async () => {
+    //         try {
+    //             const { keplr } = window;
+    //             if (!keplr) {
+    //                 // alert("You need to install Keplr");
+    //                 return;
+    //             }
+    //             const testNetInfodata = getTestnetChainInfo();
 
-                // console.log({ res });
-                await keplr.experimentalSuggestChain(testNetInfodata);
+    //             // console.log({ res });
+    //             await keplr.experimentalSuggestChain(testNetInfodata);
 
-                // console.log({ testNetInfodata });
+    //             // console.log({ testNetInfodata });
 
-                // StargateClient.
-                const data = await StargateClient.connect(testNetInfodata.rpc);
+    //             // StargateClient.
+    //             const data = await StargateClient.connect(testNetInfodata.rpc);
 
-                // console.log(data, "StargateClient connect response");
+    //             // console.log(data, "StargateClient connect response");
 
-                const offlineSigner =
-                    window.getOfflineSigner!("theta-testnet-001");
+    //             const offlineSigner =
+    //                 window.getOfflineSigner!("theta-testnet-001");
 
-                // console.log({ offlineSigner });
+    //             // console.log({ offlineSigner });
 
-                // const signingClient =
-                await SigningStargateClient.connectWithSigner(
-                    testNetInfodata.rpc,
-                    offlineSigner,
-                );
+    //             // const signingClient =
+    //             await SigningStargateClient.connectWithSigner(
+    //                 testNetInfodata.rpc,
+    //                 offlineSigner,
+    //             );
 
-                // Get the address and balance of your user
-                const account: AccountData = (
-                    await offlineSigner.getAccounts()
-                )[0];
+    //             // Get the address and balance of your user
+    //             const account: AccountData = (
+    //                 await offlineSigner.getAccounts()
+    //             )[0];
 
-                // console.log({ account });
+    //             // console.log({ account });
 
-                const walletAddress = account.address;
+    //             const walletAddress = account.address;
 
-                if (account.address) {
-                    const uuidv5OfUserAddress = uuidv5(
-                        account.address,
-                        uuidv5.URL,
-                    );
+    //             if (account.address) {
+    //                 const uuidv5OfUserAddress = uuidv5(
+    //                     account.address,
+    //                     uuidv5.URL,
+    //                 );
 
-                    const userDataByWallet = await getUserDataByWalletAddress(
-                        account.address,
-                    );
+    //                 const userDataByWallet = await getUserDataByWalletAddress(
+    //                     account.address,
+    //                 );
 
-                    const userData =
-                        (await getUserDataByUuid(
-                            userDataByWallet?.user.authuuid ||
-                                uuidv5OfUserAddress,
-                        )) || null;
+    //                 const userData =
+    //                     (await getUserDataByUuid(
+    //                         userDataByWallet?.user.authuuid ||
+    //                             uuidv5OfUserAddress,
+    //                     )) || null;
 
-                    if (!userData && account) {
-                        setAppState({
-                            keplrAuth: {
-                                uuid: uuidv5OfUserAddress,
-                                walletAddress,
-                            },
-                        });
+    //                 if (!userData && account) {
+    //                     setAppState({
+    //                         keplrAuth: {
+    //                             uuid: uuidv5OfUserAddress,
+    //                             walletAddress,
+    //                         },
+    //                     });
 
-                        setData({
-                            status: "authenticated",
-                            walletAddress,
-                        });
-                        router.push("/onboard");
-                    } else {
-                        setAppState({
-                            userData,
-                        });
+    //                     setData({
+    //                         status: "authenticated",
+    //                         walletAddress,
+    //                     });
+    //                     router.push("/onboard");
+    //                 } else {
+    //                     setAppState({
+    //                         userData,
+    //                     });
 
-                        setData({
-                            status: "authenticated",
-                            walletAddress,
-                        });
-                    }
-                }
-            } catch (e) {
-                console.log("=>", e);
-                setData({
-                    status: "unauthenticated",
-                    walletAddress: null,
-                });
-            }
-        })();
-    }, []);
+    //                     setData({
+    //                         status: "authenticated",
+    //                         walletAddress,
+    //                     });
+    //                 }
+    //             }
+    //         } catch (e) {
+    //             console.log("=>", e);
+    //             setData({
+    //                 status: "unauthenticated",
+    //                 walletAddress: null,
+    //             });
+    //         }
+    //     })();
+    // }, []);
 
     return (
         <keplrAuthContext.Provider value={data}>
