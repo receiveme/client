@@ -47,7 +47,7 @@ export const EnsDomainHolderAwardDialog = () => {
                     </DialogDescription>
                     <div className="mt-8 h-[200px]">
                         <img
-                            src="/img/handle/ens-logo-text.png"
+                            src="/img/handle/ens.png"
                             className="max-w-[250px] max-h-[250px] object-contain h-full w-full rounded-full mx-auto"
                             alt=""
                         />
