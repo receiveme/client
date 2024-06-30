@@ -54,6 +54,8 @@ export async function getUserSocials(userId: string) {
             select: {
                 Social: true, // Selects all fields from Social
             },
+            cacheStrategy: { ttl: 60 },
+
         });
 
         await prisma.$disconnect();
@@ -76,6 +78,8 @@ export async function getUserData(userId: string) {
                 Social: true,
                 Wallet: true,
             },
+            cacheStrategy: { ttl: 60 },
+
         });
         // console.log(userData, "getUserData");
         await prisma.$disconnect();
@@ -144,6 +148,7 @@ export async function addDomainToUser(userId: string, domain: string) {
             select: {
                 domain: true,
             },
+            cacheStrategy: { ttl: 60 },
         });
 
         if (user?.domain.includes(domain)) {
@@ -179,6 +184,8 @@ export async function getUserWallets(userId: string) {
             select: {
                 Wallet: true, // Selects all fields from Wallet
             },
+            cacheStrategy: { ttl: 60 },
+
         });
         await prisma.$disconnect();
         return userWallets?.Wallet; // Return only the Wallet array
@@ -356,6 +363,8 @@ export async function getUserByHandle(handle: string) {
                     },
                 },
             },
+            cacheStrategy: { ttl: 60 },
+
         });
 
         //@ts-ignore
