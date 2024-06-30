@@ -216,7 +216,8 @@ export async function createUserProfile(
                 authuuid: uuid,
                 domain: unstoppableAuth?.domain
                     ? [unstoppableAuth?.domain]
-                    : [],
+                    : // add user handle as domain so that the unique constraint of empty [] on db doesnt throw error
+                      [handle.toLowerCase()],
             },
         });
 
