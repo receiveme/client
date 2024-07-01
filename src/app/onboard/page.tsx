@@ -1073,6 +1073,12 @@ export default function Onboard() {
             if (userInfo?.twitter_id) {
                 logins.push("twitter");
             }
+            if (userInfo?.google_id) {
+                logins.push("google");
+            }
+            if (userInfo?.github_id) {
+                logins.push("github");
+            }
             setAppState({
                 userInfo,
                 logins,

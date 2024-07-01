@@ -35,18 +35,19 @@ interface Props {
 }
 
 const SOCIALS = [
+    { id: "google", name: "Google", image: "google.png" },
     { id: "discord", name: "Discord", image: "discord.png" },
     { id: "github", name: "GitHub", image: "github.png" },
     { id: "twitter", name: "Twitter", image: "twitter.png" },
     { id: "twitch", name: "Twitch", image: "twitch.png" },
     { id: "linkedin", name: "LinkedIn", image: "linkedin.png" },
-    { id: "paypal", name: "Paypal", image: "paypal.png", disabled: true },
-    {
-        id: "instagram",
-        name: "Instagram",
-        image: "instagram.png",
-        disabled: true,
-    },
+    // { id: "paypal", name: "Paypal", image: "paypal.png", disabled: true },
+    // {
+    //     id: "instagram",
+    //     name: "Instagram",
+    //     image: "instagram.png",
+    //     disabled: true,
+    // },
 ];
 
 export const AuthDialog = ({
@@ -151,7 +152,10 @@ export const AuthDialog = ({
                         <div className="flex gap-2 flex-wrap items-center justify-center">
                             {SOCIALS.map((social) => {
                                 return (
-                                    <TooltipProvider delayDuration={100}>
+                                    <TooltipProvider
+                                        delayDuration={100}
+                                        key={social.id}
+                                    >
                                         <Tooltip>
                                             <TooltipTrigger>
                                                 <Button
@@ -161,9 +165,8 @@ export const AuthDialog = ({
                                                             social,
                                                         );
                                                     }}
-                                                    key={social.id}
                                                     wrapperClassname="rounded-full h-12 w-12"
-                                                    disabled={social.disabled}
+                                                    // disabled={social.disabled}
                                                 >
                                                     <img
                                                         src={`/img/3p/${social.image}`}
