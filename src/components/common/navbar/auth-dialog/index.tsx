@@ -17,6 +17,12 @@ import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.co
 import { useKeplrAuth } from "@/src/context/KeplrAuth.context";
 import toast from "react-hot-toast";
 import particle from "@/src/lib/particle";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/src/components/ui/tooltip";
 
 interface Props {
     trigger?: ReactNode;
@@ -142,24 +148,35 @@ export const AuthDialog = ({
                     </DialogHeader>
 
                     <div className="flex flex-col items-center justify-center gap-2 mt-3">
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-wrap items-center justify-center">
                             {SOCIALS.map((social) => {
                                 return (
-                                    <Button
-                                        variant="secondary"
-                                        onClick={() => {
-                                            handleSocialLogin(social);
-                                        }}
-                                        key={social.id}
-                                        wrapperClassname="rounded-full h-12 w-12"
-                                        disabled={social.disabled}
-                                    >
-                                        <img
-                                            src={`/img/3p/${social.image}`}
-                                            alt=""
-                                            className="object-contain"
-                                        />
-                                    </Button>
+                                    <TooltipProvider delayDuration={100}>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={() => {
+                                                        handleSocialLogin(
+                                                            social,
+                                                        );
+                                                    }}
+                                                    key={social.id}
+                                                    wrapperClassname="rounded-full h-12 w-12"
+                                                    disabled={social.disabled}
+                                                >
+                                                    <img
+                                                        src={`/img/3p/${social.image}`}
+                                                        alt=""
+                                                        className="object-contain"
+                                                    />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                {social.name}
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 );
                             })}
                         </div>
