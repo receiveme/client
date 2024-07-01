@@ -27,9 +27,14 @@ export const Navbar = () => {
     const [appState, setAppState] = useAppState();
     const connectKit = useConnectKit();
     const userInfo = connectKit?.particle?.auth.getUserInfo();
+
+    // console.log({ userInfo });
     const account = useAccount() || null;
+    // console.log(account);
 
     const { signOut: UDSignOut } = useUnstoppableDomainAuth();
+
+    // connectKit.particle.auth.logout();
 
     const signOut = async () => {
         setAppState(InitialAppState(false));
@@ -50,7 +55,9 @@ export const Navbar = () => {
                     ? await getUserDataByUuid(userInfo.uuid)
                     : null;
 
-                if (!userData && userInfo && account) {
+                // console.log({ userData });
+
+                if (!userData && userInfo) {
                     setAppState({
                         userInfo,
                     });
@@ -63,9 +70,9 @@ export const Navbar = () => {
             }
         };
 
-        if (connected) {
-            fetchData();
-        }
+        // if (connected) {
+        fetchData();
+        // }
     }, [connected, userInfo]);
 
     // console.log(appState, "appState");
@@ -135,7 +142,7 @@ export const Navbar = () => {
                                 }}
                                 disabled={isLoading}
                             >
-                                {isLoading ? "Connecting..." : "Connect Wallet"}
+                                {isLoading ? "Connecting..." : "Get Started"}
                             </Button>
                         )}
                     </div>
@@ -258,7 +265,7 @@ export const Navbar = () => {
                                         >
                                             {isLoading
                                                 ? "Connecting..."
-                                                : "Connect Wallet"}
+                                                : "Get Started"}
                                         </Button>
                                     )}
                                 </div>

@@ -19,6 +19,11 @@ export type AppState = {
         uuid: string;
         walletAddress: string;
     };
+    walletAuth: {
+        uuid: string;
+        walletAddress: string;
+        type: "metamask" | "tronlink" | null;
+    };
 };
 
 export const InitialAppState = (server = true): AppState => ({
@@ -39,6 +44,11 @@ export const InitialAppState = (server = true): AppState => ({
         walletAddress: "",
     },
     keplrAuth: {
+        uuid: "",
+        walletAddress: "",
+    },
+    walletAuth: {
+        type: null,
         uuid: "",
         walletAddress: "",
     },

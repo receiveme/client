@@ -16,6 +16,7 @@ import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 import { useKeplrAuth } from "@/src/context/KeplrAuth.context";
 import toast from "react-hot-toast";
+import particle from "@/src/lib/particle";
 
 interface Props {
     trigger?: ReactNode;
@@ -26,6 +27,21 @@ interface Props {
     isOpen?: boolean;
     setIsOpen?: Dispatch<SetStateAction<boolean>>;
 }
+
+const SOCIALS = [
+    { id: "discord", name: "Discord", image: "discord.png" },
+    { id: "github", name: "GitHub", image: "github.png" },
+    { id: "twitter", name: "Twitter", image: "twitter.png" },
+    { id: "twitch", name: "Twitch", image: "twitch.png" },
+    { id: "linkedin", name: "LinkedIn", image: "linkedin.png" },
+    { id: "paypal", name: "Paypal", image: "paypal.png", disabled: true },
+    {
+        id: "instagram",
+        name: "Instagram",
+        image: "instagram.png",
+        disabled: true,
+    },
+];
 
 export const AuthDialog = ({
     trigger,
@@ -42,6 +58,67 @@ export const AuthDialog = ({
 
     const { signIn } = useUnstoppableDomainAuth();
     // const { signIn: keplrSignIn } = useKeplrAuth();
+
+    const handleSocialLogin = async (social: (typeof SOCIALS)[number]) => {
+        console.log(`Login for ${social.name} initiated`);
+
+        const user = await particle.auth.login({
+            preferredAuthType: social.id as any,
+        });
+
+        window.location.reload();
+
+        // console.log(user, "user", social);
+
+        // const userId = userData?.Profile[0].userid;
+
+        // setAppState({ wallets: [], userInfo: user });
+
+        // const newSocial: Record<string, any> = {
+        //     authType: social.id,
+        //     socialUuid: user.uuid,
+        //     socialUsername: user.thirdparty_user_info?.user_info.name,
+        //     socialInfo: user,
+        //     socialImg: user.avatar,
+        //     socialId: String(user.thirdparty_user_info?.user_info.id),
+        // };
+
+        // const fetchSocialDetails = async () => {
+        //     if (newSocial.authType == "github") {
+        //         if (!newSocial.name && newSocial.socialId) {
+        //             let id = newSocial.socialId;
+        //             let res = await fetch(`https://api.github.com/user/${id}`);
+        //             if (!res.ok) throw new Error("bad");
+
+        //             const json = await res.json();
+
+        //             newSocial.socialUsername = json.login;
+        //             newSocial.socialImg = json.avatar_url;
+        //         }
+        //     } else if (newSocial.authType == "twitch") {
+        //         //TODO
+        //     } else if (newSocial.authType == "twitter") {
+        //         //TODO
+        //     }
+        // };
+
+        // await fetchSocialDetails();
+
+        // const socialsData = {
+        //     userid: userId,
+        //     networkid:
+        //         newSocial.authType === "github" ? newSocial.socialId : null,
+        //     imageUrl: newSocial.socialImg ? newSocial.socialImg : null,
+        //     name: newSocial.socialUsername ? newSocial.socialUsername : null,
+        //     particle_token: newSocial.socialInfo.token
+        //         ? newSocial.socialInfo.token
+        //         : null,
+        //     particle_uuid: newSocial.socialUuid ? newSocial.socialUuid : null,
+        //     platform: newSocial.authType ? newSocial.authType : null,
+        // };
+
+        // setNewSocials((prevSocials) => [...prevSocials, socialsData]);
+    };
 
     if (appState?.userData?.handle) return null;
 
@@ -64,10 +141,32 @@ export const AuthDialog = ({
                         </DialogTitle>
                     </DialogHeader>
 
-                    <div className="flex flex-col items-center justify-center gap-2">
-                        <ConnectButton.Custom>
+                    <div className="flex flex-col items-center justify-center gap-2 mt-3">
+                        <div className="flex gap-2">
+                            {SOCIALS.map((social) => {
+                                return (
+                                    <Button
+                                        variant="secondary"
+                                        onClick={() => {
+                                            handleSocialLogin(social);
+                                        }}
+                                        key={social.id}
+                                        wrapperClassname="rounded-full h-12 w-12"
+                                        disabled={social.disabled}
+                                    >
+                                        <img
+                                            src={`/img/3p/${social.image}`}
+                                            alt=""
+                                            className="object-contain"
+                                        />
+                                    </Button>
+                                );
+                            })}
+                        </div>
+                        {/* <ConnectButton.Custom>
                             {({ openConnectModal }) => {
                                 const handleConnect = async () => {
+                                    alert("clicked");
                                     setIsOpen(false);
                                     openConnectModal!();
                                     onButtonsClick?.();
@@ -76,7 +175,7 @@ export const AuthDialog = ({
                                 return (
                                     <div>
                                         <Button
-                                            onClick={handleConnect}
+                                            onClick={() => handleConnect()}
                                             type="button"
                                             id="connect-wallet"
                                         >
@@ -85,7 +184,7 @@ export const AuthDialog = ({
                                     </div>
                                 );
                             }}
-                        </ConnectButton.Custom>
+                        </ConnectButton.Custom> */}
                         <div className="flex justify-center w-full items-center gap-2">
                             <span className="bg-gray-200 h-[1px] w-full block" />
                             <span>OR</span>
@@ -137,6 +236,49 @@ export const AuthDialog = ({
                         }}
                     >
                         Connect Keplr
+                    </button> */}
+                    {/* <button
+                        onClick={() => {
+                            return new Promise((resolve, reject) => {
+                                window["ethereum"]
+                                    ?.request({ method: "eth_chainId" })
+                                    .then((chainId: any) => {
+                                        return window["ethereum"]?.request({
+                                            method: "eth_requestAccounts",
+                                        });
+                                    })
+                                    .then((accounts: any[]) => {
+                                        console.log({ accounts });
+                                        // if (accounts && accounts.length > 0) {
+                                        //     const accountAddress = accounts[0];
+
+                                        //     const walletData = {
+                                        //         network: "metamask",
+                                        //         address: accountAddress,
+                                        //     };
+
+                                        //     resolve(walletData);
+                                        // } else {
+                                        //     reject(
+                                        //         new Error(
+                                        //             "No accounts returned from Metamask.",
+                                        //         ),
+                                        //     );
+                                        // }
+                                    })
+                                    .catch((error: Error) => {
+                                        console.error("METAMASK ERR:", error);
+                                        reject(
+                                            new Error(
+                                                "Metamask connection failed: " +
+                                                    error.message,
+                                            ),
+                                        );
+                                    });
+                            });
+                        }}
+                    >
+                        Connect metamask
                     </button> */}
                 </DialogContent>
             </Dialog>

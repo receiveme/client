@@ -200,7 +200,7 @@ export async function createUserProfile(
 ) {
     // TODO; seperate socials & wallets
     const { theme, banner } = profile;
-    console.log(userInfo);
+    // console.log(userInfo, "createUserProfile");
     const info_token =
         userInfo?.token || unstoppableAuth?.token || keplrAuth?.uuid;
     const uuid = userInfo?.uuid || unstoppableAuth?.uuid || keplrAuth?.uuid;

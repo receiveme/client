@@ -16,6 +16,7 @@ import { useDebounce } from "@/src/hooks/useDebounce";
 import axios from "axios";
 import { v5 as uuidv5 } from "uuid";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
+import { useConnectKit } from "@particle-network/connect-react-ui";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -326,6 +327,8 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
     function configWalletModal(): void {
         // throw new Error("Function not implemented.");
     }
+
+    console.log({ appState });
 
     return (
         <>
@@ -1037,11 +1040,46 @@ export default function Onboard() {
 
     const [appState, setAppState] = useAppState();
 
+    const connectKit = useConnectKit();
+
+    const userInfo = connectKit?.particle?.auth.getUserInfo();
+
+    // useEffect(() => {
+    //     if (userInfo)
+    //         setAppState({
+    //             userInfo,
+    //         });
+    // }, [userInfo]);
+
+    console.log(appState);
+
     const [stage, setStage] = useState<Stage>("handle");
 
     const { auth } = useUnstoppableDomainAuth();
 
     const nextStage = () => {
+        if (stage === "handle") {
+            const logins: string[] = [];
+
+            if (userInfo?.discord_id) {
+                logins.push("discord");
+            }
+            if (userInfo?.linkedin_id) {
+                logins.push("discord");
+            }
+            if (userInfo?.discord_id) {
+                logins.push("discord");
+            }
+            if (userInfo?.discord_id) {
+                logins.push("discord");
+            }
+            if (userInfo?.discord_id) {
+                logins.push("discord");
+            }
+            setAppState({
+                userInfo,
+            });
+        }
         if (stage === "handle") setStage("link");
         else if (stage === "link") setStage("profile");
         else setStage("preview");
@@ -1098,7 +1136,7 @@ export default function Onboard() {
         router.push("/");
     };
 
-    console.log({ appState });
+    // console.log({ appState });
 
     //     useEffect(() => {
     // if(auth.status === "loading") return;
