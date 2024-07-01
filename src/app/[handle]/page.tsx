@@ -46,6 +46,8 @@ async function getUserByHandle(handle: string) {
                     },
                 },
             },
+            cacheStrategy: { ttl: 60 },
+
         });
 
         const wallet = user?.Wallet.sort((a, b) => {
