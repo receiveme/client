@@ -17,6 +17,7 @@ import axios from "axios";
 import { v5 as uuidv5 } from "uuid";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 import { useConnectKit } from "@particle-network/connect-react-ui";
+import { useMetamaskAuth } from "@/src/context/MetamaskAuth.context";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -171,10 +172,6 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
     const [algorandAddress, setAlgorandAddress] = useState<string | null>();
     const peraWallet = new PeraWalletConnect();
 
-    if (!show) {
-        return <></>;
-    }
-
     const handleLogin = async (
         preferredAuthType:
             | "google"
@@ -328,7 +325,20 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
         // throw new Error("Function not implemented.");
     }
 
-    console.log({ appState });
+    // console.count("<Link />:");
+    useEffect(() => {
+        // console.log("ran", appState.walletAuth.type);
+        if (appState.walletAuth.type === "metamask") {
+            // console.log("came inside");
+            connectMetamask();
+        }
+    }, [appState.walletAuth.type]);
+
+    if (!show) {
+        return <></>;
+    }
+
+    // console.log({ appState });
 
     return (
         <>
@@ -636,34 +646,41 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
                             </>
                         ) : (
                             <>
-                                <button className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center rounded-md bg-gray-100 shadow-sm px-3 py-3">
-                                    <img
-                                        src="/img/3p/metamask.png"
-                                        alt="Link Metamask"
-                                        className="mr-2 h-5 w-5"
-                                    />
-
-                                    <span
-                                        onClick={connectMetamask}
-                                        className="text-sm font-semibold"
-                                    >
-                                        Link Metamask
-                                    </span>
-
-                                    <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                        {metamaskAddress.substring(0, 5)}...
-                                        {metamaskAddress.substring(35, 42)}
-                                    </span>
-
-                                    <span className="ml-1.5 text-xs text-gray-600 truncate ">
-                                        Networks: ETH, MATIC... (EVM)
-                                    </span>
-                                    <div className="px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
+                                <button className="transition-all border border-green-500/50 hover:bg-gray-200 flex w-full items-center justify-between rounded-md bg-gray-100 shadow-sm px-3 py-3">
+                                    <span className="flex items-center ">
                                         <img
-                                            src="/icons/settings.png"
-                                            className="w-5"
+                                            src="/img/3p/metamask.png"
+                                            alt="Link Metamask"
+                                            className="mr-2 h-5 w-5"
                                         />
-                                    </div>
+
+                                        <span className="flex flex-col justify-start">
+                                            <span
+                                                onClick={connectMetamask}
+                                                className="text-sm font-semibold text-left"
+                                            >
+                                                Link Metamask
+                                            </span>
+
+                                            <span className="text-xs text-gray-600 truncate ">
+                                                Networks: ETH, MATIC... (EVM)
+                                            </span>
+                                        </span>
+                                    </span>
+
+                                    <span className="flex items-center gap-1">
+                                        <span className="ml-1.5 text-xs text-gray-600 truncate ">
+                                            {metamaskAddress?.slice(0, 5)}
+                                            ...
+                                            {metamaskAddress?.slice(-7)}
+                                        </span>
+                                        {/* <div className="px-1.5 py-1.5 bg-gray-200 hover:scale-[1.10] transition">
+                                            <img
+                                                src="/icons/settings.png"
+                                                className="w-5"
+                                            />
+                                        </div> */}
+                                    </span>
                                 </button>
                             </>
                         )}
@@ -1044,6 +1061,8 @@ export default function Onboard() {
 
     const userInfo = connectKit?.particle?.auth.getUserInfo();
 
+    const { signIn: metamaskSignIn } = useMetamaskAuth();
+
     // useEffect(() => {
     //     if (userInfo)
     //         setAppState({
@@ -1051,7 +1070,8 @@ export default function Onboard() {
     //         });
     // }, [userInfo]);
 
-    console.log(appState);
+    // console.log(appState);
+    // console.count("<Onboard />:");
 
     const [stage, setStage] = useState<Stage>("handle");
 
@@ -1101,6 +1121,7 @@ export default function Onboard() {
         const socials = appState.socials;
         const unstoppableAuth = appState.unstoppableAuth;
         const keplrAuth = appState.keplrAuth;
+        const walletAuth = appState.walletAuth;
 
         const fetchSocialDetails = async () => {
             for (let i = 0; i < socials.length; i++) {
@@ -1135,7 +1156,14 @@ export default function Onboard() {
             profile,
             unstoppableAuth,
             keplrAuth,
+            walletAuth,
         );
+        //
+
+        if (appState.walletAuth.type === "metamask") {
+            // do metamask signini and stuff here
+            await metamaskSignIn();
+        }
         setAppState({ globalId });
         router.push("/");
     };

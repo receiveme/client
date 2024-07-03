@@ -15,6 +15,7 @@ import {
 } from "@/src/actions";
 import { useRouter } from "next/navigation";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
+import { useMetamaskAuth } from "@/src/context/MetamaskAuth.context";
 
 export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,6 +37,8 @@ export const Navbar = () => {
 
     const { signOut: UDSignOut } = useUnstoppableDomainAuth();
 
+    const { signOut: metamaskSignOut } = useMetamaskAuth();
+
     // connectKit.particle.auth.logout();
 
     const signOut = async () => {
@@ -44,17 +47,19 @@ export const Navbar = () => {
         connectKit.particle.auth.logout();
 
         UDSignOut();
+
+        metamaskSignOut();
     };
 
-    console.log({ userInfo }, "on navbar");
+    // console.log({ userInfo }, "on navbar");
 
     useEffect(() => {
-        console.log("runnning fetch data");
+        // console.log("runnning fetch data");
         if (!userInfo) return;
         if (ranOnce.current) return;
         ranOnce.current = true;
         const fetchData = async () => {
-            console.log(appState.userData, "appState.userData");
+            // console.log(appState.userData, "appState.userData");
             if (!appState.userData) {
                 // Assuming userInfo has a uuid property
                 // const uuid = JSON.parse(localStorage.getItem("globalId"))
@@ -64,7 +69,7 @@ export const Navbar = () => {
                     ? await getUserDataByUuid(userInfo.uuid)
                     : null;
 
-                console.log({ userData });
+                // console.log({ userData });
 
                 if (!userData && userInfo) {
                     setAppState({

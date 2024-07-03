@@ -55,7 +55,6 @@ export async function getUserSocials(userId: string) {
                 Social: true, // Selects all fields from Social
             },
             cacheStrategy: { ttl: 60 },
-
         });
 
         await prisma.$disconnect();
@@ -79,7 +78,6 @@ export async function getUserData(userId: string) {
                 Wallet: true,
             },
             cacheStrategy: { ttl: 60 },
-
         });
         // console.log(userData, "getUserData");
         await prisma.$disconnect();
@@ -120,7 +118,7 @@ export async function getUserDataByWalletAddress(address: string) {
         const userData = await prisma.wallet.findFirst({
             where: {
                 address: {
-                    equals: address,
+                    contains: address,
                     mode: "insensitive",
                 },
             },
@@ -185,7 +183,6 @@ export async function getUserWallets(userId: string) {
                 Wallet: true, // Selects all fields from Wallet
             },
             cacheStrategy: { ttl: 60 },
-
         });
         await prisma.$disconnect();
         return userWallets?.Wallet; // Return only the Wallet array
@@ -200,21 +197,38 @@ export async function createUserProfile(
     socials: any,
     wallets: any,
     userInfo: any,
-    handle: String,
+    handle: string,
     profile: any,
     unstoppableAuth?: AppState["unstoppableAuth"],
     keplrAuth?: AppState["keplrAuth"],
+    walletAuth?: AppState["walletAuth"],
 ) {
+    // console.log({
+    //     socials,
+    //     wallets,
+    //     userInfo,
+    //     handle,
+    //     profile,
+    //     unstoppableAuth,
+    //     keplrAuth,
+    //     walletAuth,
+    // });
     // TODO; seperate socials & wallets
     const { theme, banner } = profile;
     // console.log(userInfo, "createUserProfile");
     const info_token =
         userInfo?.token || unstoppableAuth?.token || keplrAuth?.uuid;
-    const uuid = userInfo?.uuid || unstoppableAuth?.uuid || keplrAuth?.uuid;
+    const uuid =
+        userInfo?.uuid ||
+        unstoppableAuth?.uuid ||
+        keplrAuth?.uuid ||
+        walletAuth?.uuid;
     const particleWalletAddress = userInfo?.wallets?.[0]?.public_address;
     const unstoppableWalletAddress = unstoppableAuth?.walletAddress;
 
     const keplrWalletAddress = keplrAuth?.walletAddress;
+
+    const walletAddress = walletAuth?.walletAddress;
 
     try {
         const user = await prisma.user.create({
@@ -227,6 +241,8 @@ export async function createUserProfile(
                       [handle.toLowerCase()],
             },
         });
+
+        // console.log(user);
 
         await prisma.profile.create({
             data: {
@@ -364,7 +380,6 @@ export async function getUserByHandle(handle: string) {
                 },
             },
             cacheStrategy: { ttl: 60 },
-
         });
 
         //@ts-ignore

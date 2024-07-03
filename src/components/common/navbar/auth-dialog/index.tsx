@@ -23,6 +23,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/src/components/ui/tooltip";
+import { useMetamaskAuth } from "@/src/context/MetamaskAuth.context";
 
 interface Props {
     trigger?: ReactNode;
@@ -65,6 +66,7 @@ export const AuthDialog = ({
 
     const { signIn } = useUnstoppableDomainAuth();
     // const { signIn: keplrSignIn } = useKeplrAuth();
+    const { signIn: metamaskSignIn } = useMetamaskAuth();
 
     const handleSocialLogin = async (social: (typeof SOCIALS)[number]) => {
         console.log(`Login for ${social.name} initiated`);
@@ -157,7 +159,7 @@ export const AuthDialog = ({
                                         key={social.id}
                                     >
                                         <Tooltip>
-                                            <TooltipTrigger>
+                                            <TooltipTrigger asChild>
                                                 <Button
                                                     variant="secondary"
                                                     onClick={() => {
@@ -182,6 +184,27 @@ export const AuthDialog = ({
                                     </TooltipProvider>
                                 );
                             })}
+                            <TooltipProvider delayDuration={100}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => {
+                                                metamaskSignIn();
+                                            }}
+                                            wrapperClassname="rounded-full h-12 w-12"
+                                            // disabled={social.disabled}
+                                        >
+                                            <img
+                                                src={`/img/3p/metamask.png`}
+                                                alt=""
+                                                className="object-contain"
+                                            />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Metamask</TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                         </div>
                         {/* <ConnectButton.Custom>
                             {({ openConnectModal }) => {
