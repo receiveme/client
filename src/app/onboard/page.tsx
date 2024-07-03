@@ -1065,19 +1065,23 @@ export default function Onboard() {
                 logins.push("discord");
             }
             if (userInfo?.linkedin_id) {
-                logins.push("discord");
+                logins.push("linkedin");
             }
-            if (userInfo?.discord_id) {
-                logins.push("discord");
+            if (userInfo?.twitch_id) {
+                logins.push("twitch");
             }
-            if (userInfo?.discord_id) {
-                logins.push("discord");
+            if (userInfo?.twitter_id) {
+                logins.push("twitter");
             }
-            if (userInfo?.discord_id) {
-                logins.push("discord");
+            if (userInfo?.google_id) {
+                logins.push("google");
+            }
+            if (userInfo?.github_id) {
+                logins.push("github");
             }
             setAppState({
                 userInfo,
+                logins,
             });
         }
         if (stage === "handle") setStage("link");

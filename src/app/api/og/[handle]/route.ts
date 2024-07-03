@@ -27,6 +27,8 @@ export const GET = async (
                     },
                 },
             },
+            cacheStrategy: { ttl: 60 },
+
         });
 
         // console.log(user?.Profile[0]);

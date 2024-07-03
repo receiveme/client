@@ -112,40 +112,40 @@ export default function Navbar() {
         return await getUserDataByUuid(uuid);
     };
 
-    useEffect(() => {
-        // const fetchUserData = async (uuid) => {
-        //     return await getUserData(uuid); // Assuming getUserData is defined elsewhere
-        // };
+    // useEffect(() => {
+    //     // const fetchUserData = async (uuid) => {
+    //     //     return await getUserData(uuid); // Assuming getUserData is defined elsewhere
+    //     // };
 
-        const fetchData = async () => {
-            if (!appState.userData) {
-                // Assuming userInfo has a uuid property
-                // const uuid = JSON.parse(localStorage.getItem("globalId"))
-                //     ? JSON.parse(localStorage.getItem("globalId"))
-                //     : "n/a";
-                const userData = userInfo
-                    ? await fetchUserDataByUuid(userInfo.uuid)
-                    : null;
+    //     const fetchData = async () => {
+    //         if (!appState.userData) {
+    //             // Assuming userInfo has a uuid property
+    //             // const uuid = JSON.parse(localStorage.getItem("globalId"))
+    //             //     ? JSON.parse(localStorage.getItem("globalId"))
+    //             //     : "n/a";
+    //             const userData = userInfo
+    //                 ? await fetchUserDataByUuid(userInfo.uuid)
+    //                 : null;
 
-                console.log({ appState, userData });
+    //             console.log({ appState, userData });
 
-                if (!userData && userInfo && account) {
-                    setAppState({
-                        userInfo,
-                    });
-                    router.push("/onboard");
-                } else {
-                    setAppState({
-                        userData,
-                    });
-                }
-            }
-        };
+    //             if (!userData && userInfo && account) {
+    //                 setAppState({
+    //                     userInfo,
+    //                 });
+    //                 router.push("/onboard");
+    //             } else {
+    //                 setAppState({
+    //                     userData,
+    //                 });
+    //             }
+    //         }
+    //     };
 
-        // if (connected) {
-        fetchData();
-        // }
-    }, [userInfo]);
+    //     // if (connected) {
+    //     fetchData();
+    //     // }
+    // }, [userInfo]);
 
     // console.log({ auth });
 

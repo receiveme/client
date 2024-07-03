@@ -48,6 +48,8 @@ export const AppStateProvider = ({
         localStorage.setItem("app-state", JSON.stringify(currentAppState));
     }, [appState, setAppState]);
 
+    console.log("running");
+
     return (
         <AuthCoreContextProvider
             options={{

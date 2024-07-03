@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "../../ui/button";
 import { AuthDialog } from "./auth-dialog";
 import { Sheet, SheetContent } from "../../ui/sheet";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppState } from "@/src/hooks/useAppState";
 import { InitialAppState } from "@/src/types/state/app-state.type";
 import { useAccount, useConnectKit } from "@particle-network/connect-react-ui";
@@ -28,6 +28,8 @@ export const Navbar = () => {
     const connectKit = useConnectKit();
     const userInfo = connectKit?.particle?.auth.getUserInfo();
 
+    const ranOnce = useRef(false);
+
     // console.log({ userInfo });
     const account = useAccount() || null;
     // console.log(account);
@@ -44,8 +46,15 @@ export const Navbar = () => {
         UDSignOut();
     };
 
+    console.log({ userInfo }, "on navbar");
+
     useEffect(() => {
+        console.log("runnning fetch data");
+        if (!userInfo) return;
+        if (ranOnce.current) return;
+        ranOnce.current = true;
         const fetchData = async () => {
+            console.log(appState.userData, "appState.userData");
             if (!appState.userData) {
                 // Assuming userInfo has a uuid property
                 // const uuid = JSON.parse(localStorage.getItem("globalId"))
@@ -55,7 +64,7 @@ export const Navbar = () => {
                     ? await getUserDataByUuid(userInfo.uuid)
                     : null;
 
-                // console.log({ userData });
+                console.log({ userData });
 
                 if (!userData && userInfo) {
                     setAppState({
@@ -73,7 +82,7 @@ export const Navbar = () => {
         // if (connected) {
         fetchData();
         // }
-    }, [connected, userInfo]);
+    }, [ranOnce, userInfo]);
 
     // console.log(appState, "appState");
 
