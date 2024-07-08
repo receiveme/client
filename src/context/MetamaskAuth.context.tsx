@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import { useAuthToken } from "../state/auth-token.atom";
 import axios from "axios";
 import { getSiweMessage } from "../lib/utils/siwe";
+import { useConnectKit } from "@particle-network/connect-react-ui";
 
 interface IMetamaskAuthContext {
     walletAddress: string | null;
@@ -52,6 +53,10 @@ export const MetamaskAuthContext = ({ children }: PropsWithChildren) => {
 
     const { authToken, removeAuthToken } = useAuthToken();
 
+    const connectKit = useConnectKit();
+
+    const isParticleLoggedIn = connectKit.particle?.auth.isLogin();
+
     const router = useRouter();
 
     const pathname = usePathname();
@@ -60,6 +65,7 @@ export const MetamaskAuthContext = ({ children }: PropsWithChildren) => {
 
     useEffect(() => {
         if (authToken === undefined) return;
+        if (isParticleLoggedIn) return;
 
         (async () => {
             try {

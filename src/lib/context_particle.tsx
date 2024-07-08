@@ -28,12 +28,12 @@ export const AppStateProvider = ({
 }) => {
     const [appState, setAppState] = useState<AppState>(InitialAppState());
 
-    useEffect(() => {
-        const appStateLS = localStorage.getItem("app-state");
-        setAppState(
-            appStateLS ? JSON.parse(appStateLS) : InitialAppState(false),
-        );
-    }, []);
+    // useEffect(() => {
+    //     const appStateLS = localStorage.getItem("app-state");
+    //     setAppState(
+    //         appStateLS ? JSON.parse(appStateLS) : InitialAppState(false),
+    //     );
+    // }, []);
 
     // Save the app state to local storage every time it is updated
     useEffect(() => {
@@ -45,7 +45,7 @@ export const AppStateProvider = ({
             currentAppState.userInfo = particle.auth.getUserInfo();
         }
 
-        localStorage.setItem("app-state", JSON.stringify(currentAppState));
+        // localStorage.setItem("app-state", JSON.stringify(currentAppState));
     }, [appState, setAppState]);
 
     console.log("running");

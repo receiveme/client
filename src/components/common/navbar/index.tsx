@@ -16,6 +16,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 import { useMetamaskAuth } from "@/src/context/MetamaskAuth.context";
+import { useAuthToken } from "@/src/state/auth-token.atom";
 
 export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,11 +34,15 @@ export const Navbar = () => {
 
     // console.log({ userInfo });
     const account = useAccount() || null;
-    // console.log(account);
+    // console.log({ account });
+
+    // console.log();
 
     const { signOut: UDSignOut } = useUnstoppableDomainAuth();
 
     const { signOut: metamaskSignOut } = useMetamaskAuth();
+
+    const { authToken } = useAuthToken();
 
     // connectKit.particle.auth.logout();
 
@@ -56,6 +61,7 @@ export const Navbar = () => {
     useEffect(() => {
         // console.log("runnning fetch data");
         if (!userInfo) return;
+        if (authToken) return;
         if (ranOnce.current) return;
         ranOnce.current = true;
         const fetchData = async () => {
