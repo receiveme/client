@@ -32,9 +32,9 @@ export const Navbar = () => {
 
     const ranOnce = useRef(false);
 
-    // console.log({ userInfo });
+    console.log({ userInfo });
     const account = useAccount() || null;
-    // console.log({ account });
+    console.log({ account });
 
     // console.log();
 
@@ -65,7 +65,7 @@ export const Navbar = () => {
         if (ranOnce.current) return;
         ranOnce.current = true;
         const fetchData = async () => {
-            // console.log(appState.userData, "appState.userData");
+            console.log(appState.userData, "appState.userData");
             if (!appState.userData) {
                 // Assuming userInfo has a uuid property
                 // const uuid = JSON.parse(localStorage.getItem("globalId"))
@@ -75,7 +75,7 @@ export const Navbar = () => {
                     ? await getUserDataByUuid(userInfo.uuid)
                     : null;
 
-                // console.log({ userData });
+                console.log({ userData });
 
                 if (!userData && userInfo) {
                     setAppState({
