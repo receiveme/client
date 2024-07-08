@@ -5,7 +5,7 @@ import { Archivo } from "next/font/google";
 import Providers from "../providers";
 
 import "../globals.css";
-import Navbar from "@/src/components/navbar";
+import Navbar from "@/src/components/oldnavbar";
 import Toast from "@/src/components/toast";
 
 const archivo = Archivo({ subsets: ["latin"] });
@@ -30,12 +30,7 @@ export default function RootLayout({
                     sizes="180x180"
                     href="/icons/apple-touch-icon.png"
                 />
-                <link
-                    rel="icon"
-                    
-
-                    href="/favicon.ico"
-                />
+                <link rel="icon" href="/favicon.ico" />
                 <title>receive.me</title>
                 <link rel="manifest" href="/icons/site.webmanifest" />
                 <link rel="shortcut icon" href="/icons/favicon.ico" />
