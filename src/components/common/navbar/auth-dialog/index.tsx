@@ -184,27 +184,6 @@ export const AuthDialog = ({
                                     </TooltipProvider>
                                 );
                             })}
-                            <TooltipProvider delayDuration={100}>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            variant="secondary"
-                                            onClick={() => {
-                                                metamaskSignIn();
-                                            }}
-                                            wrapperClassname="rounded-full h-12 w-12"
-                                            // disabled={social.disabled}
-                                        >
-                                            <img
-                                                src={`/img/3p/metamask.png`}
-                                                alt=""
-                                                className="object-contain"
-                                            />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>Metamask</TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
                         </div>
                         {/* <ConnectButton.Custom>
                             {({ openConnectModal }) => {
@@ -230,41 +209,143 @@ export const AuthDialog = ({
                         </ConnectButton.Custom> */}
                         <div className="flex justify-center w-full items-center gap-2">
                             <span className="bg-gray-200 h-[1px] w-full block" />
-                            <span>OR</span>
+                            <span className="font-semibold text-gray-600">
+                                OR
+                            </span>
                             <span className="bg-gray-200 h-[1px] w-full block" />
                         </div>
-                        <Button
-                            variant="secondary"
-                            onClick={async () => {
-                                try {
-                                    setIsLoading?.(true);
-                                    setIsOpen(false);
-                                    onButtonsClick?.();
+                        <div className="flex gap-3">
+                            {/* <Button
+                                variant="secondary"
+                                className="h-12 flex gap-2 items-center"
+                                onClick={async () => {
+                                    try {
+                                        setIsLoading?.(true);
+                                        setIsOpen(false);
+                                        onButtonsClick?.();
 
-                                    const user = await signIn();
+                                        const user = await signIn();
 
-                                    if (user.isNew) {
-                                        router.push(
-                                            `/onboard${
-                                                handle
-                                                    ? `?handle=${handle}`
-                                                    : ""
-                                            }`,
-                                        );
-                                    } else {
-                                        setAppState({
-                                            userData: user.data,
-                                        });
+                                        if (user.isNew) {
+                                            router.push(
+                                                `/onboard${
+                                                    handle
+                                                        ? `?handle=${handle}`
+                                                        : ""
+                                                }`,
+                                            );
+                                        } else {
+                                            setAppState({
+                                                userData: user.data,
+                                            });
+                                        }
+                                        setIsLoading?.(false);
+                                    } catch (e) {
+                                        console.error(e);
+                                        setIsLoading?.(false);
                                     }
-                                    setIsLoading?.(false);
-                                } catch (e) {
-                                    console.error(e);
-                                    setIsLoading?.(false);
-                                }
-                            }}
-                        >
-                            Web3 Domains (Unstoppable Domain Auth)
-                        </Button>
+                                }}
+                            >
+                                <img
+                                    src="/img/handle/ud.png"
+                                    height={24}
+                                    width={24}
+                                    alt=""
+                                    className="rounded-full"
+                                />
+                                <span className="font-semibold">
+                                    Unstoppable Domains
+                                </span>
+                            </Button> */}
+                            <TooltipProvider delayDuration={100}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="secondary"
+                                            onClick={async () => {
+                                                try {
+                                                    setIsLoading?.(true);
+                                                    setIsOpen(false);
+                                                    onButtonsClick?.();
+
+                                                    const user = await signIn();
+
+                                                    if (user.isNew) {
+                                                        router.push(
+                                                            `/onboard${
+                                                                handle
+                                                                    ? `?handle=${handle}`
+                                                                    : ""
+                                                            }`,
+                                                        );
+                                                    } else {
+                                                        setAppState({
+                                                            userData: user.data,
+                                                        });
+                                                    }
+                                                    setIsLoading?.(false);
+                                                } catch (e) {
+                                                    console.error(e);
+                                                    setIsLoading?.(false);
+                                                }
+                                            }}
+                                            wrapperClassname="rounded-full h-12 w-12"
+                                            // disabled={social.disabled}
+                                        >
+                                            <img
+                                                src={`/img/handle/ud.png`}
+                                                alt=""
+                                                className="object-contain rounded-full"
+                                            />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        Unstoppable Domains
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider delayDuration={100}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => {
+                                                metamaskSignIn();
+                                            }}
+                                            wrapperClassname="rounded-full h-12 w-12"
+                                            // disabled={social.disabled}
+                                        >
+                                            <img
+                                                src={`/img/3p/metamask.png`}
+                                                alt=""
+                                                className="object-contain"
+                                            />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Metamask</TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider delayDuration={100}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => {}}
+                                            wrapperClassname="rounded-full h-12 w-12 opacity-80 cursor-not-allowed"
+                                        >
+                                            <img
+                                                src={`/img/handle/keplr.png`}
+                                                alt=""
+                                                className="object-contain rounded-full"
+                                            />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        Keplr Wallet (Coming soon)
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        </div>
                     </div>
                     {/* <button
                         onClick={async () => {
