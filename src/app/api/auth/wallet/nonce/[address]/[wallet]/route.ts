@@ -5,10 +5,25 @@ import { randomUUID } from "crypto";
 import { sign } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 import { JWT_OPTIONS } from "../../../../_constants";
+import TronWeb from "tronweb";
+import { getSiwtMessage } from "@/src/lib/utils/siwt";
+
+const verifyMetamaskSignature = (nonce: string, signature: string) => {
+    return recoverPersonalSignature({
+        data: getSiweMessage(nonce),
+        signature: signature,
+    });
+};
+
+const verifyTronlinkSignature = async (nonce: string, signature: string) => {
+    return await TronWeb.Trx.verifyMessageV2(getSiwtMessage(nonce), signature);
+};
 
 export const POST = async (
     req: NextRequest,
-    { params: { address } }: { params: { address: string } },
+    {
+        params: { address, wallet },
+    }: { params: { address: string; wallet: string } },
 ) => {
     try {
         const body = await req.json();
@@ -33,10 +48,27 @@ export const POST = async (
             throw new Error("User not found");
         }
 
-        const recoveredAddress = recoverPersonalSignature({
-            data: getSiweMessage(user?.user.nonce),
-            signature: body.signature,
-        });
+        let recoveredAddress = "";
+
+        if (wallet === "metamask") {
+            recoveredAddress = verifyMetamaskSignature(
+                user?.user.nonce,
+                body.signature,
+            );
+        } else if (wallet === "tronlink") {
+            console.log("on tronlink");
+            recoveredAddress = await verifyTronlinkSignature(
+                user?.user.nonce,
+                body.signature,
+            );
+        }
+
+        console.log(recoveredAddress);
+
+        // recoverPersonalSignature({
+        //     data: getSiweMessage(user?.user.nonce),
+        //     signature: body.signature,
+        // });
 
         if (recoveredAddress !== address) {
             return NextResponse.json({
@@ -74,6 +106,7 @@ export const POST = async (
             });
         }
     } catch (error: any) {
+        console.log(error, "error occured");
         return NextResponse.json({
             success: false,
             data: null,

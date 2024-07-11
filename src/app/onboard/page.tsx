@@ -18,6 +18,7 @@ import { v5 as uuidv5 } from "uuid";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 import { useConnectKit } from "@particle-network/connect-react-ui";
 import { useMetamaskAuth } from "@/src/context/MetamaskAuth.context";
+import { useTronlinkAuth } from "@/src/context/TronlinkAuth.context";
 
 type Stage = "handle" | "link" | "profile" | "preview" | "completed";
 
@@ -327,10 +328,11 @@ function Link({ handle, show, next, appState, setAppState }: StageProps) {
 
     // console.count("<Link />:");
     useEffect(() => {
-        // console.log("ran", appState.walletAuth.type);
         if (appState.walletAuth.type === "metamask") {
-            // console.log("came inside");
             connectMetamask();
+        }
+        if (appState.walletAuth.type === "tronlink") {
+            connectTronlink();
         }
     }, [appState.walletAuth.type]);
 
@@ -1063,6 +1065,8 @@ export default function Onboard() {
 
     const { signIn: metamaskSignIn } = useMetamaskAuth();
 
+    const { signIn: tronlinkSignIn } = useTronlinkAuth();
+
     // useEffect(() => {
     //     if (userInfo)
     //         setAppState({
@@ -1164,8 +1168,11 @@ export default function Onboard() {
             // do metamask signini and stuff here
             await metamaskSignIn();
         }
+        if (appState.walletAuth.type === "tronlink") {
+            await tronlinkSignIn();
+        }
         setAppState({ globalId });
-        router.push("/");
+        router.push("/dashboard");
     };
 
     // console.log({ appState });

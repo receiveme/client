@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UnstoppableDomainAuthContext } from "../context/UnstoppableDomainAuth.context";
 import { KeplrAuthContext } from "../context/KeplrAuth.context";
 import { MetamaskAuthContext } from "../context/MetamaskAuth.context";
+import { TronlinkAuthContext } from "../context/TronlinkAuth.context";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -17,13 +19,16 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
                 <UnstoppableDomainAuthContext>
                     <KeplrAuthContext>
                         <MetamaskAuthContext>
-                            {children}
-                            <ProgressBar
-                                height="4px"
-                                color="#4f46e5"
-                                options={{ showSpinner: false }}
-                                shallowRouting
-                            />
+                            <TronlinkAuthContext>
+                                {children}
+                                <ProgressBar
+                                    height="4px"
+                                    color="#4f46e5"
+                                    options={{ showSpinner: false }}
+                                    shallowRouting
+                                />
+                                <Toaster position="top-right" />
+                            </TronlinkAuthContext>
                         </MetamaskAuthContext>
                     </KeplrAuthContext>
                 </UnstoppableDomainAuthContext>

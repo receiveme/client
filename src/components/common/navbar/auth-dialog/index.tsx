@@ -12,7 +12,13 @@ import {
 import { ConnectButton } from "@particle-network/connect-react-ui";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/hooks/useAppState";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import {
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useEffect,
+    useState,
+} from "react";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 import { useKeplrAuth } from "@/src/context/KeplrAuth.context";
 import toast from "react-hot-toast";
@@ -24,6 +30,7 @@ import {
     TooltipTrigger,
 } from "@/src/components/ui/tooltip";
 import { useMetamaskAuth } from "@/src/context/MetamaskAuth.context";
+import { useTronlinkAuth } from "@/src/context/TronlinkAuth.context";
 
 interface Props {
     trigger?: ReactNode;
@@ -67,6 +74,8 @@ export const AuthDialog = ({
     const { signIn } = useUnstoppableDomainAuth();
     // const { signIn: keplrSignIn } = useKeplrAuth();
     const { signIn: metamaskSignIn } = useMetamaskAuth();
+
+    const { signIn: tronlinkSignIn } = useTronlinkAuth();
 
     const handleSocialLogin = async (social: (typeof SOCIALS)[number]) => {
         console.log(`Login for ${social.name} initiated`);
@@ -323,6 +332,26 @@ export const AuthDialog = ({
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent>Metamask</TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider delayDuration={100}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => {
+                                                tronlinkSignIn();
+                                            }}
+                                            wrapperClassname="rounded-full h-12 w-12"
+                                        >
+                                            <img
+                                                src={`/img/3p/tron.png`}
+                                                alt=""
+                                                className="object-contain"
+                                            />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Tronlink</TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>
                             <TooltipProvider delayDuration={100}>
