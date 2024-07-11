@@ -12,7 +12,7 @@ import {
     IconUserBolt,
 } from "@tabler/icons-react";
 
-import "@particle-network/connect-react-ui/dist/index.css";
+// import "@particle-network/connect-react-ui/dist/index.css";
 import { ConnectButton } from "@particle-network/connect-react-ui";
 import DashboardHandleDisplay from "@/src/components/dashboard/DashboardHandleDisplay";
 import DashboardSidebarNavigation from "@/src/components/dashboard/DashboardSidebarNavigation";
@@ -235,7 +235,7 @@ export default function Dashboard() {
                                     </div>
                                 </div>
 
-                                <ConnectButton />
+                                {/* <ConnectButton /> */}
                             </div>
                         </div>
                     </div>

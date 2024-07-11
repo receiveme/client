@@ -17,6 +17,8 @@ import {
 import { evmWallets } from "@particle-network/connect";
 import UserInfoSetter from "./UserInfoSetter";
 import particle from "./particle";
+import { useAuthToken } from "../state/auth-token.atom";
+import { getUserDataByUuid } from "../actions";
 // import {} from ""
 
 export const AppContext = createContext<AppState | any>({});
@@ -42,13 +44,12 @@ export const AppStateProvider = ({
         if (currentAppState.server) return;
 
         if (!currentAppState.userInfo && currentAppState.userData) {
+            // console.log("inside");
             currentAppState.userInfo = particle.auth.getUserInfo();
         }
 
         // localStorage.setItem("app-state", JSON.stringify(currentAppState));
     }, [appState, setAppState]);
-
-    console.log("running");
 
     return (
         <AuthCoreContextProvider
