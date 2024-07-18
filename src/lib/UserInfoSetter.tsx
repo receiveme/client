@@ -1,5 +1,5 @@
 import { useConnectKit } from "@particle-network/connect-react-ui";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { AppContext } from "../lib/context_particle";
 import { useAppState } from "../hooks/useAppState";
 import { useAuthToken } from "../state/auth-token.atom";
@@ -7,6 +7,7 @@ import { getUserDataByUuid } from "../actions";
 import { useRouter } from "next/navigation";
 
 const UserInfoSetter = () => {
+    const ranOnce = useRef(false);
     const [appState, setAppState] = useAppState();
 
     const connectKit = useConnectKit();
@@ -20,8 +21,8 @@ const UserInfoSetter = () => {
         console.log("runnning fetch data");
         if (!userInfo) return;
         if (authToken) return;
-        // if (ranOnce.current) return;
-        // ranOnce.current = true;
+        if (ranOnce.current) return;
+        ranOnce.current = true;
         const fetchData = async () => {
             console.log(appState.userData, "appState.userData");
             if (!appState.userData) {
