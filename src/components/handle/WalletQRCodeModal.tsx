@@ -15,9 +15,12 @@ export function WalletQRCodeModal({
     isOpen,
     setIsOpen,
 }: WalletQRCodeModalProps) {
+    console.log({ network });
+
     function closeModal() {
         setIsOpen(false);
     }
+
     let explorerLink;
     if (network.toUpperCase() == "TRON") {
         explorerLink = `https://tronscan.org/address/${address}`;
@@ -26,8 +29,9 @@ export function WalletQRCodeModal({
     } else if (network.toUpperCase() == "BNB") {
         explorerLink = `https://bscscan.com/address/${address}`;
     } else if (network.toUpperCase() == "MATIC") {
-        explorerLink = `hddettps://polygonscan.com/address/${address}`;
+        explorerLink = `https://polygonscan.com/address/${address}`;
     }
+
     return (
         <>
             <Transition appear show={isOpen} as={Fragment}>
@@ -73,11 +77,11 @@ export function WalletQRCodeModal({
                                                 : network.toUpperCase()}
                                         </p>
 
-                                        <p className="text-xs font-light text-gray-700">
+                                        <p className="text-xs text-gray-500">
                                             {address}
                                         </p>
 
-                                        <p className="text-xs font-light italic text-gray-700 mb-3">
+                                        <p className="text-xs italic text-gray-500 mb-3">
                                             Send{" "}
                                             {network.toUpperCase() == "TRON"
                                                 ? "TRC20 & other tokens/value on TRON network to this address."
@@ -88,6 +92,9 @@ export function WalletQRCodeModal({
                                                 ? "ERC20 tokens on AVAX network to this address."
                                                 : network.toUpperCase() == "BNB"
                                                 ? "BRC20 & other tokens/value on BSC network to this address."
+                                                : network.toUpperCase() ==
+                                                  "MATIC"
+                                                ? "ERC20 tokens/value on Matic network to this address."
                                                 : ""}
                                         </p>
                                     </div>
