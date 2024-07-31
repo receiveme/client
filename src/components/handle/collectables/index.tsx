@@ -20,7 +20,10 @@ interface Props {
 export const CollectablesDialog = ({ data }: Props) => {
     const isLoading = !data;
 
-    console.log({ data });
+    // console.log({ data });
+    if (data?.ensDomains.length === 0 && data?.unsDomains.length === 0) {
+        return null;
+    }
 
     return (
         <>
