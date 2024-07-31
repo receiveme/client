@@ -36,7 +36,9 @@ const tronlinkAuthContext = createContext<ITronlinkAuthContext>(DEFAULT_DATA);
 
 const getTronlinkAddress = async (forceGetAddress = false) => {
     if (!window.tronLink) {
-        toast.error("You need to install tronlink wallet.");
+        if (forceGetAddress) {
+            toast.error("You need to install tronlink wallet.");
+        }
         return null;
     }
 
