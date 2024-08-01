@@ -48,6 +48,7 @@ export const GET = async (
             message: "Nonce fetched successfully",
         });
     } catch (error) {
+        console.log(error, "error")
         return NextResponse.json({
             success: false,
             data: null,

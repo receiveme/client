@@ -183,6 +183,13 @@ export const useMetamaskAuth = () => {
                 return router.push("/onboard");
             }
 
+            if (!data.success) {
+                return toast.error(
+                    data?.message ||
+                        "Something went wrong, please try again later",
+                );
+            }
+
             const siweMessage = getSiweMessage(data.data);
 
             const msg = `0x${Buffer.from(siweMessage, "utf8").toString("hex")}`;
@@ -201,9 +208,13 @@ export const useMetamaskAuth = () => {
                 )
             ).data;
 
+            console.log(loggedinData);
+
             setAuthToken(loggedinData.data);
 
-            window.location.reload();
+            setTimeout(() => {
+                window.location.reload();
+            });
         } catch (e) {
             throw e;
         }

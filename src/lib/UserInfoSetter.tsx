@@ -34,7 +34,7 @@ const UserInfoSetter = () => {
                     ? await getUserDataByUuid(userInfo.uuid)
                     : null;
 
-                console.log({ userData });
+                console.log({ userData, userInfo });
 
                 if (!userData && userInfo) {
                     setAppState({
