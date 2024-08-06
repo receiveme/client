@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import prisma from "@/lib/prisma";
 import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
@@ -48,7 +50,7 @@ export const GET = async (
             message: "Nonce fetched successfully",
         });
     } catch (error) {
-        console.log(error, "error")
+        console.log(error, "error");
         return NextResponse.json({
             success: false,
             data: null,
