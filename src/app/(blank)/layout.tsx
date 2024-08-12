@@ -14,10 +14,10 @@ export const metadata: Metadata = {
         default: "receive.me",
     },
     openGraph: {
-        images: ["/img/home/receive.me-banner.jpeg"],
+        images: ["/img/home/receivemebanner.jpg"],
     },
     twitter: {
-        images: ["/img/home/receive.me-banner.jpeg"],
+        images: ["/img/home/receivemebanner.jpg"],
     },
 };
 
