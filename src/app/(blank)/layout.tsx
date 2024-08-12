@@ -15,10 +15,10 @@ export const metadata: Metadata = {
     },
     description: 'Receive.me is a platform for linking your wallets easily & help you manage your payments in one place.',
     openGraph: {
-        images: ["/img/home/receivemebanner.jpg"],
+        images: ["/img/home/receivemebannerwhite.jpg"],
     },
     twitter: {
-        images: ["/img/home/receivemebanner.jpg"],
+        images: ["/img/home/receivemebannerwhite.jpg"],
     },
 };
 
