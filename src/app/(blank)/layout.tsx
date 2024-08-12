@@ -13,6 +13,12 @@ export const metadata: Metadata = {
         template: "%s :: receive.me",
         default: "receive.me",
     },
+    openGraph: {
+        images: ["/img/home/receive.me-banner.jpeg"],
+    },
+    twitter: {
+        images: ["/img/home/receive.me-banner.jpeg"],
+    },
 };
 
 export default function RootLayout({
@@ -28,18 +34,10 @@ export default function RootLayout({
                     sizes="180x180"
                     href="/icons/apple-touch-icon.png"
                 />
-q
-
-                <link
-                    rel="icon"
-
-
-                    href="/favicon.ico"
-                />
+                q
+                <link rel="icon" href="/favicon.ico" />
                 <link rel="manifest" href="/icons/site.webmanifest" />
-
                 <meta name="msapplication-TileColor" content="#da532c" />
-
                 <title>receive.me</title>
                 <meta name="theme-color" content="#ffffff" />
             </Head>
