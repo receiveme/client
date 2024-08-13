@@ -13,12 +13,13 @@ export const metadata: Metadata = {
         template: "%s :: receive.me",
         default: "receive.me",
     },
-    description: 'Receive.me is a platform for linking your wallets easily & help you manage your payments in one place.',
+    description:
+        "Receive.me is a platform for linking your wallets easily & help you manage your payments in one place.",
     openGraph: {
-        images: ["/img/home/receivemebannerwhite.jpg"],
+        images: ["https://receive.me/img/home/receivemebannerwhite.jpg"],
     },
     twitter: {
-        images: ["/img/home/receivemebannerwhite.jpg"],
+        images: ["https://receive.me/img/home/receivemebannerwhite.jpg"],
     },
 };
 
