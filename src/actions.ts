@@ -469,10 +469,13 @@ export async function getUserDomains(
             {
                 headers: {
                     Authorization: `Bearer ${process.env.UNSTOPPABLE_DOMAINS_API_KEY}`,
+                    "Content-Type": "application/json",
                 },
             },
         );
         const json = await res.json();
+
+        // console.log(json?.data, "json");
 
         const domains =
             json?.data?.map((d: any) => ({

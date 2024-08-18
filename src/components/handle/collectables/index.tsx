@@ -63,7 +63,7 @@ export const CollectablesDialog = ({ data }: Props) => {
                                     return (
                                         <div
                                             key={d.domain}
-                                            className="h-52 basis-1/2 relative p-4 flex flex-col bg-[#0E66FC] items-start rounded-xl justify-end"
+                                            className="h-52 basis-1/2 shrink-0 relative p-4 flex flex-col bg-[#0E66FC] items-start rounded-xl justify-end"
                                         >
                                             <img
                                                 src="/img/handle/ud-logo-white.svg"
@@ -113,7 +113,7 @@ export const CollectablesDialog = ({ data }: Props) => {
                                     return (
                                         <div
                                             key={d.domain}
-                                            className="h-52 basis-1/2 relative p-4 flex flex-col bg-gradient-to-br from-[#6E8EF5] to-[#46B7F0] items-start rounded-xl justify-end"
+                                            className="h-52 basis-1/2 shrink-0 relative p-4 flex flex-col bg-gradient-to-br from-[#6E8EF5] to-[#46B7F0] items-start rounded-xl justify-end"
                                         >
                                             <img
                                                 src="/img/handle/ens-logo-white.svg"
