@@ -33,7 +33,7 @@ const DEFAULT_DATA: IMetamaskAuthContext = {
 
 const metamaskAuthContext = createContext<IMetamaskAuthContext>(DEFAULT_DATA);
 
-const getMetamaskAddress = async () => {
+export const getMetamaskAddress = async () => {
     if (!window.ethereum.isMetaMask)
         return toast.error("You need to install metamask.");
 
@@ -63,101 +63,101 @@ export const MetamaskAuthContext = ({ children }: PropsWithChildren) => {
 
     console.log(authToken);
 
-    useEffect(() => {
-        if (authToken === undefined) return;
-        if (isParticleLoggedIn) return;
+    // useEffect(() => {
+    //     // if (authToken === undefined) return;
+    //     // if (isParticleLoggedIn) return;
 
-        (async () => {
-            try {
-                const metamaskAddress = await getMetamaskAddress();
+    //     (async () => {
+    //         try {
+    //             const metamaskAddress = await getMetamaskAddress();
 
-                console.log(authToken);
+    //             console.log(authToken);
 
-                if (authToken) {
-                    const data = (
-                        await axios.post("/api/auth/verify", {
-                            token: authToken,
-                        })
-                    ).data;
+    //             if (authToken) {
+    //                 const data = (
+    //                     await axios.post("/api/auth/verify", {
+    //                         token: authToken,
+    //                     })
+    //                 ).data;
 
-                    if (data.success) {
-                        const userData = await getUserData(data.data.id);
+    //                 if (data.success) {
+    //                     const userData = await getUserData(data.data.id);
 
-                        console.log({ userData });
+    //                     console.log({ userData });
 
-                        setAppState({
-                            userData,
-                        });
-                        setData({
-                            status: "authenticated",
-                            walletAddress: data.data.address,
-                        });
-                    } else {
-                        setData({
-                            status: "unauthenticated",
-                            walletAddress: null,
-                        });
-                        removeAuthToken();
-                    }
-                    if (pathname === "/onboard") router.push("/");
-                } else if (metamaskAddress) {
-                    const uuidv5OfUserAddress = uuidv5(
-                        metamaskAddress,
-                        uuidv5.URL,
-                    );
+    //                     setAppState({
+    //                         userData,
+    //                     });
+    //                     setData({
+    //                         status: "authenticated",
+    //                         walletAddress: data.data.address,
+    //                     });
+    //                 } else {
+    //                     setData({
+    //                         status: "unauthenticated",
+    //                         walletAddress: null,
+    //                     });
+    //                     removeAuthToken();
+    //                 }
+    //                 if (pathname === "/onboard") router.push("/");
+    //             } else if (metamaskAddress) {
+    //                 const uuidv5OfUserAddress = uuidv5(
+    //                     metamaskAddress,
+    //                     uuidv5.URL,
+    //                 );
 
-                    console.log(metamaskAddress);
+    //                 console.log(metamaskAddress);
 
-                    const doesUserExist = await getUserDataByWalletAddress(
-                        metamaskAddress,
-                    );
+    //                 const doesUserExist = await getUserDataByWalletAddress(
+    //                     metamaskAddress,
+    //                 );
 
-                    console.log({ doesUserExist, uuidv5OfUserAddress });
+    //                 console.log({ doesUserExist, uuidv5OfUserAddress });
 
-                    if (!doesUserExist) {
-                        console.log("inside");
-                        setAppState({
-                            walletAuth: {
-                                uuid: uuidv5OfUserAddress,
-                                walletAddress: metamaskAddress,
-                                type: "metamask",
-                            },
-                        });
+    //                 if (!doesUserExist) {
+    //                     console.log("inside");
+    //                     setAppState({
+    //                         walletAuth: {
+    //                             uuid: uuidv5OfUserAddress,
+    //                             walletAddress: metamaskAddress,
+    //                             type: "metamask",
+    //                         },
+    //                     });
 
-                        setData({
-                            status: "authenticated",
-                            walletAddress: metamaskAddress,
-                        });
-                        router.push("/onboard");
-                    } else {
-                        console.log(
-                            "address but no auth token means was logged out",
-                        );
-                        // user is valid lets sign him in
-                        // we may have a token instead to check signin status
-                        // the above condition is for checking only should go to onboarding or not thing
-                    }
-                    // else {
-                    //     setAppState({
-                    //         userData,
-                    //     });
-                    //     setData({
-                    //         status: "authenticated",
-                    //         walletAddress: metamaskAddress,
-                    //     });
-                    // }
-                } else {
-                    if (pathname === "/onboard") router.push("/");
-                }
-            } catch (e) {
-                console.log("=>", e);
-                setData({
-                    status: "unauthenticated",
-                    walletAddress: null,
-                });
-            }
-        })();
-    }, [authToken]);
+    //                     setData({
+    //                         status: "authenticated",
+    //                         walletAddress: metamaskAddress,
+    //                     });
+    //                     router.push("/onboard");
+    //                 } else {
+    //                     console.log(
+    //                         "address but no auth token means was logged out",
+    //                     );
+    //                     // user is valid lets sign him in
+    //                     // we may have a token instead to check signIn status
+    //                     // the above condition is for checking only should go to onboarding or not thing
+    //                 }
+    //                 // else {
+    //                 //     setAppState({
+    //                 //         userData,
+    //                 //     });
+    //                 //     setData({
+    //                 //         status: "authenticated",
+    //                 //         walletAddress: metamaskAddress,
+    //                 //     });
+    //                 // }
+    //             } else {
+    //                 if (pathname === "/onboard") router.push("/");
+    //             }
+    //         } catch (e) {
+    //             console.log("=>", e);
+    //             setData({
+    //                 status: "unauthenticated",
+    //                 walletAddress: null,
+    //             });
+    //         }
+    //     })();
+    // }, [authToken]);
 
     return (
         <metamaskAuthContext.Provider value={data}>
@@ -170,6 +170,7 @@ export const useMetamaskAuth = () => {
     const router = useRouter();
     const data = useContext(metamaskAuthContext);
     const { setAuthToken, removeAuthToken } = useAuthToken();
+    const [appState, setAppState] = useAppState();
 
     const signIn = async () => {
         try {
@@ -178,6 +179,13 @@ export const useMetamaskAuth = () => {
             const data = (
                 await axios.get(`/api/auth/wallet/nonce/${metamaskAddress}`)
             ).data;
+
+            setAppState({
+                walletAuth: {
+                    ...appState.walletAuth,
+                    type: "metamask",
+                },
+            });
 
             if (data.message === "NEW_USER") {
                 return router.push("/onboard");
@@ -199,7 +207,7 @@ export const useMetamaskAuth = () => {
                 params: [msg, metamaskAddress],
             });
 
-            const loggedinData = (
+            const loggedInData = (
                 await axios.post(
                     `/api/auth/wallet/nonce/${metamaskAddress}/metamask`,
                     {
@@ -208,13 +216,15 @@ export const useMetamaskAuth = () => {
                 )
             ).data;
 
-            console.log(loggedinData);
+            console.log(loggedInData);
 
-            setAuthToken(loggedinData.data);
+            setAuthToken(loggedInData.data);
+            console.log("setAuthToken");
 
-            setTimeout(() => {
-                window.location.reload();
-            });
+            router.push("/dashboard");
+            // setTimeout(() => {
+            //     window.location.reload();
+            // });
         } catch (e) {
             throw e;
         }

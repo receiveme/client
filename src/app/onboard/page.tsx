@@ -1163,16 +1163,17 @@ export default function Onboard() {
             walletAuth,
         );
         //
+        console.log(appState, "appState here");
 
         if (appState.walletAuth.type === "metamask") {
-            // do metamask signini and stuff here
+            // do metamask signin and stuff here
             await metamaskSignIn();
-        }
-        if (appState.walletAuth.type === "tronlink") {
+        } else if (appState.walletAuth.type === "tronlink") {
             await tronlinkSignIn();
+        } else {
+            router.push("/dashboard");
         }
         setAppState({ globalId });
-        router.push("/dashboard");
     };
 
     // console.log({ appState });

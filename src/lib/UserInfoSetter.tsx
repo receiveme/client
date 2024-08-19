@@ -18,7 +18,7 @@ const UserInfoSetter = () => {
     const router = useRouter();
 
     useEffect(() => {
-        console.log("runnning fetch data");
+        console.log("running fetch data");
         if (!userInfo) return;
         if (authToken) return;
         if (ranOnce.current) return;

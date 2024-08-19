@@ -7,7 +7,6 @@ import { ModalProvider } from "@particle-network/connect-react-ui";
 import { WalletEntryPosition } from "@particle-network/auth";
 import {
     Ethereum,
-    // EthereumGoerli,
     Avalanche,
     AvalancheTestnet,
     ArbitrumNova,
@@ -17,9 +16,7 @@ import {
 import { evmWallets } from "@particle-network/connect";
 import UserInfoSetter from "./UserInfoSetter";
 import particle from "./particle";
-import { useAuthToken } from "../state/auth-token.atom";
-import { getUserDataByUuid } from "../actions";
-// import {} from ""
+import { WalletAuthRedirectHandler } from "../context/WalletAuthRedirectHandler";
 
 export const AppContext = createContext<AppState | any>({});
 
@@ -114,6 +111,7 @@ export const AppStateProvider = ({
                 <AppContext.Provider value={{ appState, setAppState }}>
                     {children}
                     <UserInfoSetter />
+                    <WalletAuthRedirectHandler />
                 </AppContext.Provider>
             </ModalProvider>
         </AuthCoreContextProvider>

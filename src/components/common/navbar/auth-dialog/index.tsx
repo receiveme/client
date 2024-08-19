@@ -87,6 +87,7 @@ export const AuthDialog = ({
         } finally {
             setIsAuthLoading(false);
             setAuthLoadingMessage("");
+            setIsOpen(false);
         }
 
         // console.log(user, "user", social);
@@ -271,6 +272,7 @@ export const AuthDialog = ({
                                                             setAuthLoadingMessage(
                                                                 "",
                                                             );
+                                                            setIsOpen(false);
                                                         }
                                                     }}
                                                     wrapperClassname="rounded-full h-12 w-12"
@@ -310,6 +312,7 @@ export const AuthDialog = ({
                                                             setAuthLoadingMessage(
                                                                 "",
                                                             );
+                                                            setIsOpen(false);
                                                         }
                                                     }}
                                                     wrapperClassname="rounded-full h-12 w-12"
@@ -355,6 +358,7 @@ export const AuthDialog = ({
                                                             setAuthLoadingMessage(
                                                                 "",
                                                             );
+                                                            setIsOpen(false);
                                                         }
                                                     }}
                                                     wrapperClassname="rounded-full h-12 w-12"
