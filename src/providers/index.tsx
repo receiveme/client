@@ -12,7 +12,7 @@ import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
-const Providers = ({ children }: { children: React.ReactNode }) => {
+export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     return (
         <QueryClientProvider client={queryClient}>
             <AppStateProvider>
@@ -36,5 +36,3 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
         </QueryClientProvider>
     );
 };
-
-export default Providers;
