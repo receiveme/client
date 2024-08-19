@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
 import { useMetamaskAuth } from "@/src/context/MetamaskAuth.context";
 import { useAuthToken } from "@/src/state/auth-token.atom";
+import { useTronlinkAuth } from "@/src/context/TronlinkAuth.context";
 
 export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,6 +43,8 @@ export const Navbar = () => {
 
     const { signOut: metamaskSignOut } = useMetamaskAuth();
 
+    const { signOut: tronlinkSignOut } = useTronlinkAuth();
+
     const { authToken } = useAuthToken();
 
     // connectKit.particle.auth.logout();
@@ -54,6 +57,8 @@ export const Navbar = () => {
         UDSignOut();
 
         metamaskSignOut();
+
+        tronlinkSignOut();
     };
 
     // console.log({ userInfo }, "on navbar");
