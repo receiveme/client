@@ -82,7 +82,7 @@ export const AuthDialog = ({
                 preferredAuthType: social.id as any,
             });
 
-            window.location.reload();
+            window.location.href = "/dashboard";
         } catch (e) {
         } finally {
             setIsAuthLoading(false);
@@ -256,6 +256,15 @@ export const AuthDialog = ({
                                                                     userData:
                                                                         user.data,
                                                                 });
+                                                                // router.push(
+                                                                //     "/dashboard",
+                                                                // );
+                                                                setTimeout(
+                                                                    () => {
+                                                                        window.location.href =
+                                                                            "/dashboard";
+                                                                    },
+                                                                );
                                                             }
                                                             setIsLoading?.(
                                                                 false,
@@ -304,6 +313,7 @@ export const AuthDialog = ({
                                                                 "Please allow and sign message when requested to login...",
                                                             );
                                                             await metamaskSignIn();
+                                                            
                                                         } catch (e) {
                                                         } finally {
                                                             setIsAuthLoading(
@@ -344,6 +354,7 @@ export const AuthDialog = ({
                                                                 "Please allow and sign message when requested to login...",
                                                             );
                                                             await tronlinkSignIn();
+                                                            
                                                             setIsAuthLoading(
                                                                 false,
                                                             );

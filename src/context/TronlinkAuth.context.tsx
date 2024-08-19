@@ -244,7 +244,10 @@ export const useTronlinkAuth = () => {
 
             setAuthToken(loggedinData.data);
 
-            router.push("/dashboard");
+            setTimeout(() => {
+                // router.push("/dashboard");
+                window.location.href = "/dashboard";
+            });
         } catch (e) {
             throw e;
         }

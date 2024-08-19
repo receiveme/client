@@ -46,21 +46,30 @@ export const WalletAuthRedirectHandler = () => {
     //     tronlinkAuthData,
     // });
 
-    console.log({
-        authToken,
-    });
+    console.log(
+        {
+            authToken,
+        },
+        "this",
+    );
 
     useEffect(() => {
-        if (authToken === undefined) return;
+        console.log("ran useEffect authtoken");
+        if (authToken === undefined) {
+            return;
+        }
+
+        if (authToken === null) {
+            if (pathname === "/onboard" || pathname === "/dashboard")
+                router.push("/");
+
+            return;
+        }
+
         if (isParticleLoggedIn) return;
-        // if (metamaskAuthData.status === "loading") return;
-        // if (tronlinkAuthData.status === "loading") return;
 
         (async () => {
             try {
-                // const metamaskAddress = metamaskAuthData.walletAddress;
-                // const tronlinkAddress = tronlinkAuthData.walletAddress;
-
                 const metamaskAddress = await getMetamaskAddress();
                 const tronlinkAddress = await getTronlinkAddress();
 

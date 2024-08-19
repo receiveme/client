@@ -221,10 +221,10 @@ export const useMetamaskAuth = () => {
             setAuthToken(loggedInData.data);
             console.log("setAuthToken");
 
-            router.push("/dashboard");
-            // setTimeout(() => {
-            //     window.location.reload();
-            // });
+            // router.push("/dashboard");
+            setTimeout(() => {
+                window.location.href = "/dashboard";
+            });
         } catch (e) {
             throw e;
         }

@@ -9,6 +9,7 @@ import { KeplrAuthContext } from "../context/KeplrAuth.context";
 import { MetamaskAuthContext } from "../context/MetamaskAuth.context";
 import { TronlinkAuthContext } from "../context/TronlinkAuth.context";
 import { Toaster } from "react-hot-toast";
+import { WalletAuthRedirectHandler } from "../context/WalletAuthRedirectHandler";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                                     shallowRouting
                                 />
                                 <Toaster position="top-right" />
+                                <WalletAuthRedirectHandler />
                             </TronlinkAuthContext>
                         </MetamaskAuthContext>
                     </KeplrAuthContext>

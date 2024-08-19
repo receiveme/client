@@ -111,7 +111,6 @@ export const AppStateProvider = ({
                 <AppContext.Provider value={{ appState, setAppState }}>
                     {children}
                     <UserInfoSetter />
-                    <WalletAuthRedirectHandler />
                 </AppContext.Provider>
             </ModalProvider>
         </AuthCoreContextProvider>
