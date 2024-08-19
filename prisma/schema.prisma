@@ -17,6 +17,7 @@ model User {
   handle      String    @unique
   authuuid    String?
   domain      String[]  @unique
+  nonce       String?    @default(uuid())
   Profile     profile[]
   Social      social[]
   Wallet      wallet[]

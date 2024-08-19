@@ -7,7 +7,6 @@ import { ModalProvider } from "@particle-network/connect-react-ui";
 import { WalletEntryPosition } from "@particle-network/auth";
 import {
     Ethereum,
-    // EthereumGoerli,
     Avalanche,
     AvalancheTestnet,
     ArbitrumNova,
@@ -17,7 +16,7 @@ import {
 import { evmWallets } from "@particle-network/connect";
 import UserInfoSetter from "./UserInfoSetter";
 import particle from "./particle";
-// import {} from ""
+import { WalletAuthRedirectHandler } from "../context/WalletAuthRedirectHandler";
 
 export const AppContext = createContext<AppState | any>({});
 
@@ -28,12 +27,12 @@ export const AppStateProvider = ({
 }) => {
     const [appState, setAppState] = useState<AppState>(InitialAppState());
 
-    useEffect(() => {
-        const appStateLS = localStorage.getItem("app-state");
-        setAppState(
-            appStateLS ? JSON.parse(appStateLS) : InitialAppState(false),
-        );
-    }, []);
+    // useEffect(() => {
+    //     const appStateLS = localStorage.getItem("app-state");
+    //     setAppState(
+    //         appStateLS ? JSON.parse(appStateLS) : InitialAppState(false),
+    //     );
+    // }, []);
 
     // Save the app state to local storage every time it is updated
     useEffect(() => {
@@ -42,13 +41,12 @@ export const AppStateProvider = ({
         if (currentAppState.server) return;
 
         if (!currentAppState.userInfo && currentAppState.userData) {
+            // console.log("inside");
             currentAppState.userInfo = particle.auth.getUserInfo();
         }
 
-        localStorage.setItem("app-state", JSON.stringify(currentAppState));
+        // localStorage.setItem("app-state", JSON.stringify(currentAppState));
     }, [appState, setAppState]);
-
-    console.log("running");
 
     return (
         <AuthCoreContextProvider

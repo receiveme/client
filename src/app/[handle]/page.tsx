@@ -7,8 +7,34 @@ import { CollectablesDialog } from "@/src/components/handle/collectables";
 import { getUserDomains as getDomains } from "@/src/actions";
 import type { Metadata, ResolvingMetadata } from "next";
 
+const getAddressFromHandle = async (domain: string) => {
+    try {
+        const res = await fetch(
+            `https://api.unstoppabledomains.com/resolve/domains/${domain}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.UNSTOPPABLE_DOMAINS_API_KEY}`,
+                },
+            },
+        );
+        const json = await res.json();
+
+        const resolvedAddress = json?.meta?.owner;
+
+        // console.log(json);
+
+        return resolvedAddress || "";
+    } catch (error) {
+        return "";
+    }
+};
+
 async function getUserByHandle(handle: string) {
     try {
+        const resolvedAddress = await getAddressFromHandle(handle);
+
+        // console.log(resolvedAddress);
+
         const user = await prisma.user.findFirst({
             where: {
                 // domain: handle,
@@ -17,10 +43,19 @@ async function getUserByHandle(handle: string) {
                         handle,
                     },
                     {
-                        domain: {
-                            has: handle,
+                        Wallet: {
+                            some: {
+                                address: {
+                                    equals: resolvedAddress,
+                                },
+                            },
                         },
                     },
+                    // {
+                    //     domain: {
+                    //         has: handle,
+                    //     },
+                    // },
                 ],
             },
             include: {
@@ -47,7 +82,6 @@ async function getUserByHandle(handle: string) {
                 },
             },
             cacheStrategy: { ttl: 60 },
-
         });
 
         const wallet = user?.Wallet.sort((a, b) => {

@@ -15,6 +15,9 @@ import {
 } from "@/src/actions";
 import { useRouter } from "next/navigation";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
+import { useMetamaskAuth } from "@/src/context/MetamaskAuth.context";
+import { useAuthToken } from "@/src/state/auth-token.atom";
+import { useTronlinkAuth } from "@/src/context/TronlinkAuth.context";
 
 export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,11 +33,19 @@ export const Navbar = () => {
 
     const ranOnce = useRef(false);
 
-    // console.log({ userInfo });
+    console.log({ userInfo });
     const account = useAccount() || null;
-    // console.log(account);
+    console.log({ account });
+
+    // console.log();
 
     const { signOut: UDSignOut } = useUnstoppableDomainAuth();
+
+    const { signOut: metamaskSignOut } = useMetamaskAuth();
+
+    const { signOut: tronlinkSignOut } = useTronlinkAuth();
+
+    const { authToken } = useAuthToken();
 
     // connectKit.particle.auth.logout();
 
@@ -44,45 +55,50 @@ export const Navbar = () => {
         connectKit.particle.auth.logout();
 
         UDSignOut();
+
+        metamaskSignOut();
+
+        tronlinkSignOut();
     };
 
-    console.log({ userInfo }, "on navbar");
+    // console.log({ userInfo }, "on navbar");
 
-    useEffect(() => {
-        console.log("runnning fetch data");
-        if (!userInfo) return;
-        if (ranOnce.current) return;
-        ranOnce.current = true;
-        const fetchData = async () => {
-            console.log(appState.userData, "appState.userData");
-            if (!appState.userData) {
-                // Assuming userInfo has a uuid property
-                // const uuid = JSON.parse(localStorage.getItem("globalId"))
-                //     ? JSON.parse(localStorage.getItem("globalId"))
-                //     : "n/a";
-                const userData = userInfo
-                    ? await getUserDataByUuid(userInfo.uuid)
-                    : null;
+    // useEffect(() => {
+    //     // console.log("runnning fetch data");
+    //     if (!userInfo) return;
+    //     if (authToken) return;
+    //     if (ranOnce.current) return;
+    //     ranOnce.current = true;
+    //     const fetchData = async () => {
+    //         console.log(appState.userData, "appState.userData");
+    //         if (!appState.userData) {
+    //             // Assuming userInfo has a uuid property
+    //             // const uuid = JSON.parse(localStorage.getItem("globalId"))
+    //             //     ? JSON.parse(localStorage.getItem("globalId"))
+    //             //     : "n/a";
+    //             const userData = userInfo
+    //                 ? await getUserDataByUuid(userInfo.uuid)
+    //                 : null;
 
-                console.log({ userData });
+    //             console.log({ userData });
 
-                if (!userData && userInfo) {
-                    setAppState({
-                        userInfo,
-                    });
-                    router.push("/onboard");
-                } else {
-                    setAppState({
-                        userData,
-                    });
-                }
-            }
-        };
+    //             if (!userData && userInfo) {
+    //                 setAppState({
+    //                     userInfo,
+    //                 });
+    //                 router.push("/onboard");
+    //             } else {
+    //                 setAppState({
+    //                     userData,
+    //                 });
+    //             }
+    //         }
+    //     };
 
-        // if (connected) {
-        fetchData();
-        // }
-    }, [ranOnce, userInfo]);
+    //     // if (connected) {
+    //     fetchData();
+    //     // }
+    // }, [ranOnce, userInfo]);
 
     // console.log(appState, "appState");
 

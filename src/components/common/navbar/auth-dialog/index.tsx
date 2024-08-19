@@ -4,12 +4,10 @@ import { Button } from "@/src/components/ui/button";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/src/components/ui/dialog";
-import { ConnectButton } from "@particle-network/connect-react-ui";
 import { useRouter } from "next/navigation";
 import { useAppState } from "@/src/hooks/useAppState";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
@@ -23,6 +21,9 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/src/components/ui/tooltip";
+import { useMetamaskAuth } from "@/src/context/MetamaskAuth.context";
+import { useTronlinkAuth } from "@/src/context/TronlinkAuth.context";
+import Image from "next/image";
 
 interface Props {
     trigger?: ReactNode;
@@ -60,20 +61,34 @@ export const AuthDialog = ({
     setIsOpen: setIsDialogOpen,
 }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isAuthLoading, setIsAuthLoading] = useState(false);
+    const [authLoadingMessage, setAuthLoadingMessage] = useState("");
     const router = useRouter();
     const [appState, setAppState] = useAppState();
 
     const { signIn } = useUnstoppableDomainAuth();
     // const { signIn: keplrSignIn } = useKeplrAuth();
+    const { signIn: metamaskSignIn } = useMetamaskAuth();
+
+    const { signIn: tronlinkSignIn } = useTronlinkAuth();
 
     const handleSocialLogin = async (social: (typeof SOCIALS)[number]) => {
-        console.log(`Login for ${social.name} initiated`);
+        try {
+            console.log(`Login for ${social.name} initiated`);
 
-        const user = await particle.auth.login({
-            preferredAuthType: social.id as any,
-        });
+            setIsAuthLoading(true);
+            setAuthLoadingMessage("Please wait...");
+            const user = await particle.auth.login({
+                preferredAuthType: social.id as any,
+            });
 
-        window.location.reload();
+            window.location.href = "/dashboard";
+        } catch (e) {
+        } finally {
+            setIsAuthLoading(false);
+            setAuthLoadingMessage("");
+            setIsOpen(false);
+        }
 
         // console.log(user, "user", social);
 
@@ -148,158 +163,253 @@ export const AuthDialog = ({
                         </DialogTitle>
                     </DialogHeader>
 
-                    <div className="flex flex-col items-center justify-center gap-2 mt-3">
-                        <div className="flex gap-2 flex-wrap items-center justify-center">
-                            {SOCIALS.map((social) => {
-                                return (
-                                    <TooltipProvider
-                                        delayDuration={100}
-                                        key={social.id}
-                                    >
+                    <div className="flex flex-col relative items-center justify-center gap-2 mt-3">
+                        {isAuthLoading ? (
+                            <div className="flex flex-col items-center h-32 w-80 gap-3">
+                                <Image
+                                    src="/img/loading.svg"
+                                    alt=""
+                                    width={64}
+                                    height={64}
+                                />
+                                {authLoadingMessage && (
+                                    <p className="text-gray-500 text-center texts-sm font-medium">
+                                        {authLoadingMessage}
+                                    </p>
+                                )}
+                                {/* Loading please wait... */}
+                            </div>
+                        ) : (
+                            <>
+                                <div className="flex gap-2 flex-wrap items-center justify-center">
+                                    {SOCIALS.map((social) => {
+                                        return (
+                                            <TooltipProvider
+                                                delayDuration={100}
+                                                key={social.id}
+                                            >
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button
+                                                            variant="secondary"
+                                                            onClick={() => {
+                                                                handleSocialLogin(
+                                                                    social,
+                                                                );
+                                                            }}
+                                                            wrapperClassname="rounded-full h-12 w-12"
+                                                            // disabled={social.disabled}
+                                                        >
+                                                            <img
+                                                                src={`/img/3p/${social.image}`}
+                                                                alt=""
+                                                                className="object-contain"
+                                                            />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        {social.name}
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        );
+                                    })}
+                                </div>
+                                <div className="flex justify-center w-full items-center gap-2">
+                                    <span className="bg-gray-200 h-[1px] w-full block" />
+                                    <span className="font-semibold text-gray-600">
+                                        OR
+                                    </span>
+                                    <span className="bg-gray-200 h-[1px] w-full block" />
+                                </div>
+                                <div className="flex gap-3">
+                                    <TooltipProvider delayDuration={100}>
                                         <Tooltip>
-                                            <TooltipTrigger>
+                                            <TooltipTrigger asChild>
                                                 <Button
                                                     variant="secondary"
-                                                    onClick={() => {
-                                                        handleSocialLogin(
-                                                            social,
-                                                        );
+                                                    onClick={async () => {
+                                                        try {
+                                                            setIsLoading?.(
+                                                                true,
+                                                            );
+                                                            setIsAuthLoading(
+                                                                true,
+                                                            );
+                                                            setAuthLoadingMessage(
+                                                                "Please wait...",
+                                                            );
+                                                            setIsOpen(false);
+                                                            onButtonsClick?.();
+                                                            const user =
+                                                                await signIn();
+                                                            if (user.isNew) {
+                                                                router.push(
+                                                                    `/onboard${
+                                                                        handle
+                                                                            ? `?handle=${handle}`
+                                                                            : ""
+                                                                    }`,
+                                                                );
+                                                            } else {
+                                                                setAppState({
+                                                                    userData:
+                                                                        user.data,
+                                                                });
+                                                                // router.push(
+                                                                //     "/dashboard",
+                                                                // );
+                                                                setTimeout(
+                                                                    () => {
+                                                                        window.location.href =
+                                                                            "/dashboard";
+                                                                    },
+                                                                );
+                                                            }
+                                                            setIsLoading?.(
+                                                                false,
+                                                            );
+                                                        } catch (e) {
+                                                            console.error(e);
+                                                            setIsLoading?.(
+                                                                false,
+                                                            );
+                                                        } finally {
+                                                            setIsAuthLoading(
+                                                                false,
+                                                            );
+                                                            setAuthLoadingMessage(
+                                                                "",
+                                                            );
+                                                            setIsOpen(false);
+                                                        }
                                                     }}
                                                     wrapperClassname="rounded-full h-12 w-12"
                                                     // disabled={social.disabled}
                                                 >
                                                     <img
-                                                        src={`/img/3p/${social.image}`}
+                                                        src={`/img/handle/ud.png`}
+                                                        alt=""
+                                                        className="object-contain rounded-full"
+                                                    />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                Unstoppable Domains
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                    <TooltipProvider delayDuration={100}>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={async () => {
+                                                        try {
+                                                            setIsAuthLoading(
+                                                                true,
+                                                            );
+                                                            setAuthLoadingMessage(
+                                                                "Please allow and sign message when requested to login...",
+                                                            );
+                                                            await metamaskSignIn();
+                                                            
+                                                        } catch (e) {
+                                                        } finally {
+                                                            setIsAuthLoading(
+                                                                false,
+                                                            );
+                                                            setAuthLoadingMessage(
+                                                                "",
+                                                            );
+                                                            setIsOpen(false);
+                                                        }
+                                                    }}
+                                                    wrapperClassname="rounded-full h-12 w-12"
+                                                    // disabled={social.disabled}
+                                                >
+                                                    <img
+                                                        src={`/img/3p/metamask.png`}
                                                         alt=""
                                                         className="object-contain"
                                                     />
                                                 </Button>
                                             </TooltipTrigger>
                                             <TooltipContent>
-                                                {social.name}
+                                                Metamask
                                             </TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
-                                );
-                            })}
-                        </div>
-                        {/* <ConnectButton.Custom>
-                            {({ openConnectModal }) => {
-                                const handleConnect = async () => {
-                                    alert("clicked");
-                                    setIsOpen(false);
-                                    openConnectModal!();
-                                    onButtonsClick?.();
-                                    setConnected?.(true);
-                                };
-                                return (
-                                    <div>
-                                        <Button
-                                            onClick={() => handleConnect()}
-                                            type="button"
-                                            id="connect-wallet"
-                                        >
-                                            Wallet Or Social Login
-                                        </Button>
-                                    </div>
-                                );
-                            }}
-                        </ConnectButton.Custom> */}
-                        <div className="flex justify-center w-full items-center gap-2">
-                            <span className="bg-gray-200 h-[1px] w-full block" />
-                            <span>OR</span>
-                            <span className="bg-gray-200 h-[1px] w-full block" />
-                        </div>
-                        <Button
-                            variant="secondary"
-                            onClick={async () => {
-                                try {
-                                    setIsLoading?.(true);
-                                    setIsOpen(false);
-                                    onButtonsClick?.();
-
-                                    const user = await signIn();
-
-                                    if (user.isNew) {
-                                        router.push(
-                                            `/onboard${
-                                                handle
-                                                    ? `?handle=${handle}`
-                                                    : ""
-                                            }`,
-                                        );
-                                    } else {
-                                        setAppState({
-                                            userData: user.data,
-                                        });
-                                    }
-                                    setIsLoading?.(false);
-                                } catch (e) {
-                                    console.error(e);
-                                    setIsLoading?.(false);
-                                }
-                            }}
-                        >
-                            Web3 Domains (Unstoppable Domain Auth)
-                        </Button>
+                                    <TooltipProvider delayDuration={100}>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={async () => {
+                                                        try {
+                                                            setIsAuthLoading(
+                                                                true,
+                                                            );
+                                                            setAuthLoadingMessage(
+                                                                "Please allow and sign message when requested to login...",
+                                                            );
+                                                            await tronlinkSignIn();
+                                                            
+                                                            setIsAuthLoading(
+                                                                false,
+                                                            );
+                                                            setAuthLoadingMessage(
+                                                                "",
+                                                            );
+                                                        } catch (e) {
+                                                        } finally {
+                                                            setIsAuthLoading(
+                                                                false,
+                                                            );
+                                                            setAuthLoadingMessage(
+                                                                "",
+                                                            );
+                                                            setIsOpen(false);
+                                                        }
+                                                    }}
+                                                    wrapperClassname="rounded-full h-12 w-12"
+                                                >
+                                                    <img
+                                                        src={`/img/3p/tron.png`}
+                                                        alt=""
+                                                        className="object-contain"
+                                                    />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                Tronlink
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                    <TooltipProvider delayDuration={100}>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={() => {}}
+                                                    wrapperClassname="rounded-full h-12 w-12 opacity-80 cursor-not-allowed"
+                                                >
+                                                    <img
+                                                        src={`/img/handle/keplr.png`}
+                                                        alt=""
+                                                        className="object-contain rounded-full"
+                                                    />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                Keplr Wallet (Coming soon)
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                </div>
+                            </>
+                        )}
                     </div>
-                    {/* <button
-                        onClick={async () => {
-                            try {
-                                await keplrSignIn();
-                            } catch (e) {
-                                console.error(e);
-                                toast.error(
-                                    "User rejected wallet authorization",
-                                );
-                            }
-                        }}
-                    >
-                        Connect Keplr
-                    </button> */}
-                    {/* <button
-                        onClick={() => {
-                            return new Promise((resolve, reject) => {
-                                window["ethereum"]
-                                    ?.request({ method: "eth_chainId" })
-                                    .then((chainId: any) => {
-                                        return window["ethereum"]?.request({
-                                            method: "eth_requestAccounts",
-                                        });
-                                    })
-                                    .then((accounts: any[]) => {
-                                        console.log({ accounts });
-                                        // if (accounts && accounts.length > 0) {
-                                        //     const accountAddress = accounts[0];
-
-                                        //     const walletData = {
-                                        //         network: "metamask",
-                                        //         address: accountAddress,
-                                        //     };
-
-                                        //     resolve(walletData);
-                                        // } else {
-                                        //     reject(
-                                        //         new Error(
-                                        //             "No accounts returned from Metamask.",
-                                        //         ),
-                                        //     );
-                                        // }
-                                    })
-                                    .catch((error: Error) => {
-                                        console.error("METAMASK ERR:", error);
-                                        reject(
-                                            new Error(
-                                                "Metamask connection failed: " +
-                                                    error.message,
-                                            ),
-                                        );
-                                    });
-                            });
-                        }}
-                    >
-                        Connect metamask
-                    </button> */}
                 </DialogContent>
             </Dialog>
         </>

@@ -12,11 +12,21 @@ import {
     IconUserBolt,
 } from "@tabler/icons-react";
 
-import "@particle-network/connect-react-ui/dist/index.css";
-import { ConnectButton } from "@particle-network/connect-react-ui";
+// import "@particle-network/connect-react-ui/dist/index.css";
+import {
+    ConnectButton,
+    useConnectKit,
+} from "@particle-network/connect-react-ui";
 import DashboardHandleDisplay from "@/src/components/dashboard/DashboardHandleDisplay";
 import DashboardSidebarNavigation from "@/src/components/dashboard/DashboardSidebarNavigation";
 import DashboardWalletsSocials from "@/src/components/dashboard/DashboardWalletsSocials";
+import { Button } from "@/src/components/ui/button";
+import { InitialAppState } from "@/src/types/state/app-state.type";
+import { useMetamaskAuth } from "@/src/context/MetamaskAuth.context";
+import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
+import { useRouter } from "next/navigation";
+import { useAppState } from "@/src/hooks/useAppState";
+import { useTronlinkAuth } from "@/src/context/TronlinkAuth.context";
 
 const navigation = [
     { name: "Appearance", href: "#", icon: IconPalette },
@@ -43,6 +53,34 @@ export default function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const [current, setCurrent] = useState("Appearance");
+
+    const router = useRouter();
+
+    const [, setAppState] = useAppState();
+    const connectKit = useConnectKit();
+
+    // console.log();
+
+    const { signOut: UDSignOut } = useUnstoppableDomainAuth();
+
+    const { signOut: metamaskSignOut } = useMetamaskAuth();
+
+    const { signOut: tronlinkSignOut } = useTronlinkAuth();
+
+    // connectKit.particle.auth.logout();
+
+    const signOut = async () => {
+        setAppState(InitialAppState(false));
+
+        connectKit.particle.auth.logout();
+
+        UDSignOut();
+
+        metamaskSignOut();
+        tronlinkSignOut();
+
+        router.push("/");
+    };
 
     return (
         <>
@@ -224,7 +262,7 @@ export default function Dashboard() {
 
                         <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
                             <div className="flex items-center justify-between gap-x-4 lg:gap-x-6 w-full">
-                                <div className="flex gap-3 items-center">
+                                <div className="flex gap-3 justify-between items-center">
                                     <div className="h-full px-4 py-2 rounded-lg bg-gray-100">
                                         <span className="font-bold">
                                             <span className="text-gray-400 font-normal">
@@ -234,8 +272,16 @@ export default function Dashboard() {
                                         </span>
                                     </div>
                                 </div>
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => {
+                                        signOut();
+                                    }}
+                                >
+                                    Sign Out
+                                </Button>
 
-                                <ConnectButton />
+                                {/* <ConnectButton /> */}
                             </div>
                         </div>
                     </div>
