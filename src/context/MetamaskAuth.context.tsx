@@ -33,6 +33,15 @@ const DEFAULT_DATA: IMetamaskAuthContext = {
 
 const metamaskAuthContext = createContext<IMetamaskAuthContext>(DEFAULT_DATA);
 
+const checkMetamaskNetwork = async (preferredNetwork: "optimism") => {
+    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    if (preferredNetwork === "optimism" && chainId !== "0xa") {
+        toast.error("Please switch to the Optimism network");
+        return false;
+    }
+    return true;
+};
+
 export const getMetamaskAddress = async () => {
     if (!window.ethereum.isMetaMask)
         return toast.error("You need to install metamask.");
@@ -230,6 +239,12 @@ export const useMetamaskAuth = () => {
         }
     };
 
+    const optimismSignIn = async () => {
+        if (await checkMetamaskNetwork("optimism")) {
+            await signIn();
+        }
+    };
+
     const signOut = async () => {
         removeAuthToken();
     };
@@ -238,5 +253,6 @@ export const useMetamaskAuth = () => {
         auth: data,
         signIn,
         signOut,
+        optimismSignIn,
     };
 };
