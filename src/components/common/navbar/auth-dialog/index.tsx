@@ -68,7 +68,12 @@ export const AuthDialog = ({
 
     const { signIn } = useUnstoppableDomainAuth();
     // const { signIn: keplrSignIn } = useKeplrAuth();
-    const { signIn: metamaskSignIn, optimismSignIn, baseSignIn } = useMetamaskAuth();
+    const {
+        signIn: metamaskSignIn,
+        optimismSignIn,
+        baseSignIn,
+        scrollSignIn,
+    } = useMetamaskAuth();
 
     const { signIn: tronlinkSignIn } = useTronlinkAuth();
 
@@ -416,6 +421,46 @@ export const AuthDialog = ({
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 Base
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                    <TooltipProvider delayDuration={100}>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={async () => {
+                                                        try {
+                                                            setIsAuthLoading(
+                                                                true,
+                                                            );
+                                                            setAuthLoadingMessage(
+                                                                "Please allow and sign message when requested to login...",
+                                                            );
+                                                            await scrollSignIn();
+                                                        } catch (e) {
+                                                        } finally {
+                                                            setIsAuthLoading(
+                                                                false,
+                                                            );
+                                                            setAuthLoadingMessage(
+                                                                "",
+                                                            );
+                                                            setIsOpen(false);
+                                                        }
+                                                    }}
+                                                    wrapperClassname="rounded-full h-12 w-12"
+                                                    // disabled={social.disabled}
+                                                >
+                                                    <img
+                                                        src={`/img/handle/scroll.png`}
+                                                        alt=""
+                                                        className="object-contain"
+                                                    />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                Scroll
                                             </TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>

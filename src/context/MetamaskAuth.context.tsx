@@ -37,7 +37,7 @@ const checkMetamaskNetwork = async (
     preferredNetwork: "optimism" | "base" | "scroll",
 ) => {
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
-    console.log({ chainId });
+    // console.log({ chainId });
 
     if (preferredNetwork === "optimism" && chainId !== "0xa") {
         toast.error("Please switch to the Optimism network");
@@ -46,6 +46,11 @@ const checkMetamaskNetwork = async (
 
     if (preferredNetwork === "base" && chainId !== "0x2105") {
         toast.error("Please switch to the Base network");
+        return false;
+    }
+
+    if (preferredNetwork === "scroll" && chainId !== "0x82750") {
+        toast.error("Please switch to the Scroll network");
         return false;
     }
     return true;
@@ -260,6 +265,12 @@ export const useMetamaskAuth = () => {
         }
     };
 
+    const scrollSignIn = async () => {
+        if (await checkMetamaskNetwork("scroll")) {
+            await signIn();
+        }
+    };
+
     const signOut = async () => {
         removeAuthToken();
     };
@@ -270,5 +281,6 @@ export const useMetamaskAuth = () => {
         signOut,
         optimismSignIn,
         baseSignIn,
+        scrollSignIn,
     };
 };
