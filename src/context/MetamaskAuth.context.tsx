@@ -33,10 +33,19 @@ const DEFAULT_DATA: IMetamaskAuthContext = {
 
 const metamaskAuthContext = createContext<IMetamaskAuthContext>(DEFAULT_DATA);
 
-const checkMetamaskNetwork = async (preferredNetwork: "optimism") => {
+const checkMetamaskNetwork = async (
+    preferredNetwork: "optimism" | "base" | "scroll",
+) => {
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    console.log({ chainId });
+
     if (preferredNetwork === "optimism" && chainId !== "0xa") {
         toast.error("Please switch to the Optimism network");
+        return false;
+    }
+
+    if (preferredNetwork === "base" && chainId !== "0x2105") {
+        toast.error("Please switch to the Base network");
         return false;
     }
     return true;
@@ -245,6 +254,12 @@ export const useMetamaskAuth = () => {
         }
     };
 
+    const baseSignIn = async () => {
+        if (await checkMetamaskNetwork("base")) {
+            await signIn();
+        }
+    };
+
     const signOut = async () => {
         removeAuthToken();
     };
@@ -254,5 +269,6 @@ export const useMetamaskAuth = () => {
         signIn,
         signOut,
         optimismSignIn,
+        baseSignIn,
     };
 };
