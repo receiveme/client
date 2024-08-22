@@ -36,37 +36,49 @@ const metamaskAuthContext = createContext<IMetamaskAuthContext>(DEFAULT_DATA);
 const checkMetamaskNetwork = async (
     preferredNetwork: "optimism" | "base" | "scroll",
 ) => {
-    const chainId = await window.ethereum.request({ method: "eth_chainId" });
-    // console.log({ chainId });
+    try {
+        const chainId = await window.ethereum.request({
+            method: "eth_chainId",
+        });
+        // console.log({ chainId });
 
-    if (preferredNetwork === "optimism" && chainId !== "0xa") {
-        toast.error("Please switch to the Optimism network");
+        if (preferredNetwork === "optimism" && chainId !== "0xa") {
+            toast.error("Please switch to the Optimism network");
+            return false;
+        }
+
+        if (preferredNetwork === "base" && chainId !== "0x2105") {
+            toast.error("Please switch to the Base network");
+            return false;
+        }
+
+        if (preferredNetwork === "scroll" && chainId !== "0x82750") {
+            toast.error("Please switch to the Scroll network");
+            return false;
+        }
+        return true;
+    } catch (e) {
+        console.error(e);
         return false;
     }
-
-    if (preferredNetwork === "base" && chainId !== "0x2105") {
-        toast.error("Please switch to the Base network");
-        return false;
-    }
-
-    if (preferredNetwork === "scroll" && chainId !== "0x82750") {
-        toast.error("Please switch to the Scroll network");
-        return false;
-    }
-    return true;
 };
 
 export const getMetamaskAddress = async () => {
-    if (!window.ethereum.isMetaMask)
-        return toast.error("You need to install metamask.");
+    try {
+        if (!window.ethereum.isMetaMask)
+            return toast.error("You need to install metamask.");
 
-    await window["ethereum"]?.request({
-        method: "eth_requestAccounts",
-    });
+        await window["ethereum"]?.request({
+            method: "eth_requestAccounts",
+        });
 
-    const selectedAddress = window.ethereum.selectedAddress;
+        const selectedAddress = window.ethereum.selectedAddress;
 
-    return selectedAddress;
+        return selectedAddress;
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
 };
 
 export const MetamaskAuthContext = ({ children }: PropsWithChildren) => {
