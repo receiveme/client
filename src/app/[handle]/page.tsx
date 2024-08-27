@@ -8,6 +8,7 @@ import { getUserDomains as getDomains } from "@/src/actions";
 import type { Metadata, ResolvingMetadata } from "next";
 
 const getAddressFromHandle = async (domain: string) => {
+    console.log("runs on server only");
     try {
         const res = await fetch(
             `https://api.unstoppabledomains.com/resolve/domains/${domain}`,
@@ -29,9 +30,29 @@ const getAddressFromHandle = async (domain: string) => {
     }
 };
 
+const getTronAddressFromHandle = async (domain: string) => {
+    try {
+        const res = await fetch(
+            `https://app.trxdomains.xyz/api/domains/getOwner?domain=${domain}&network=mainnet`,
+        );
+        const json = await res.json();
+
+        const resolvedAddress = json?.data?.owner;
+
+        // console.log(json);
+
+        return resolvedAddress || "";
+    } catch (error) {
+        return "";
+    }
+};
+
 async function getUserByHandle(handle: string) {
     try {
-        const resolvedAddress = await getAddressFromHandle(handle);
+        const resolvedAddresses = (await Promise.all([
+            getAddressFromHandle(handle),
+            getTronAddressFromHandle(handle),
+        ])) as string[];
 
         // console.log(resolvedAddress);
 
@@ -46,7 +67,7 @@ async function getUserByHandle(handle: string) {
                         Wallet: {
                             some: {
                                 address: {
-                                    equals: resolvedAddress,
+                                    in: resolvedAddresses,
                                 },
                             },
                         },

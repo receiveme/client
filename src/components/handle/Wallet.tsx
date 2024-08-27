@@ -92,13 +92,24 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
             { address: walletAddress, selectedNetwork },
         ],
         queryFn: async () => {
-            const res = await fetch(
-                `/api/domains/resolve/multiple/${walletAddress}?chain=${selectedNetwork}`,
-            );
-            const json = await res.json();
+            if (selectedNetwork === "tron") {
+                const res = await fetch(
+                    `https://app.trxdomains.xyz/api/domains/getDomain?address=${walletAddress}&network=mainnet`,
+                );
+                const json = await res.json();
 
-            if (json?.data) {
-                return json?.data;
+                if (json?.data) {
+                    return json?.data;
+                }
+            } else {
+                const res = await fetch(
+                    `/api/domains/resolve/multiple/${walletAddress}?chain=${selectedNetwork}`,
+                );
+                const json = await res.json();
+
+                if (json?.data) {
+                    return json?.data;
+                }
             }
 
             return null;
