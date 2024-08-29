@@ -344,7 +344,7 @@ export const AuthDialog = ({
                                             </TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
-                                    <TooltipProvider delayDuration={100}>
+                                    {/* <TooltipProvider delayDuration={100}>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <Button
@@ -463,7 +463,7 @@ export const AuthDialog = ({
                                                 Scroll
                                             </TooltipContent>
                                         </Tooltip>
-                                    </TooltipProvider>
+                                    </TooltipProvider> */}
                                     <TooltipProvider delayDuration={100}>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
