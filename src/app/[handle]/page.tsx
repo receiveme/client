@@ -8,7 +8,6 @@ import { getUserDomains as getDomains } from "@/src/actions";
 import type { Metadata, ResolvingMetadata } from "next";
 
 const getAddressFromHandle = async (domain: string) => {
-    console.log("runs on server only");
     try {
         const res = await fetch(
             `https://api.unstoppabledomains.com/resolve/domains/${domain}`,
@@ -186,6 +185,8 @@ export default async function Profile({
 
     const data = await getUserByHandle(handle);
 
+    // console.log({ data });
+
     const domainData = data?.Wallet?.[0]?.address
         ? await getUserDomains(data?.Wallet?.[0]?.address)
         : {
@@ -240,8 +241,22 @@ export default async function Profile({
                         <div className="mt-4 flex w-full max-w-[650px] flex-col gap-3">
                             {/* <Wallet wallet={data.Wallet} /> */}
                             {data?.Wallet?.map((wallet: any, i: number) => {
+                                // console.log("wallet", wallet);
                                 const preferrednetworks =
                                     wallet.preferrednetworks;
+
+                                if (
+                                    wallet.network === "metamask" ||
+                                    wallet.network === "particle"
+                                ) {
+                                    if (
+                                        !wallet?.preferrednetworks?.includes(
+                                            "base",
+                                        )
+                                    ) {
+                                        preferrednetworks.push("base");
+                                    }
+                                }
 
                                 return (
                                     <div

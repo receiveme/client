@@ -95,6 +95,9 @@ export function WalletQRCodeModal({
                                                 : network.toUpperCase() ==
                                                   "MATIC"
                                                 ? "ERC20 tokens/value on Matic network to this address."
+                                                : network.toUpperCase() ==
+                                                  "BASE"
+                                                ? "ERC20 tokens/value on Base network to this address."
                                                 : ""}
                                         </p>
                                     </div>

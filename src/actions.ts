@@ -288,10 +288,10 @@ export async function createUserProfile(
                             preferrednetworks:
                                 wallets[i].walletProvider == "metamask"
                                     ? // ? ["eth", "avax", "bnb"]
-                                      ["matic", "eth"]
+                                      ["matic", "eth", "base"]
                                     : wallets[i].walletProvider == "particle"
                                     ? // ? ["eth", "avax", "bnb"]
-                                      ["matic", "eth"]
+                                      ["matic", "eth", "base"]
                                     : wallets[i].walletProvider == "tron"
                                     ? ["tron"]
                                     : ["algo"],
@@ -314,7 +314,7 @@ export async function createUserProfile(
                         address: unstoppableWalletAddress
                             ? String(unstoppableWalletAddress)
                             : String(particleWalletAddress),
-                        preferrednetworks: ["matic", "eth"], // ["eth", "avax", "bnb"],
+                        preferrednetworks: ["matic", "eth", "base"], // ["eth", "avax", "bnb"],
                     },
                 });
                 unstoppableWalletAddress
