@@ -61,6 +61,7 @@
         "tronweb": "^6.0.0-beta.3",
         "tw-merge": "^0.0.1-alpha.3",
         "uuid": "^9.0.1",
+        "viem": "^2.20.1",
         "web3": "^4.5.0"
     },
     "devDependencies": {
