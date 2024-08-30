@@ -288,10 +288,22 @@ export async function createUserProfile(
                             preferrednetworks:
                                 wallets[i].walletProvider == "metamask"
                                     ? // ? ["eth", "avax", "bnb"]
-                                      ["matic", "eth", "base"]
+                                      [
+                                          "matic",
+                                          "eth",
+                                          "base",
+                                          "scroll",
+                                          "optimism",
+                                      ]
                                     : wallets[i].walletProvider == "particle"
                                     ? // ? ["eth", "avax", "bnb"]
-                                      ["matic", "eth", "base"]
+                                      [
+                                          "matic",
+                                          "eth",
+                                          "base",
+                                          "scroll",
+                                          "optimism",
+                                      ]
                                     : wallets[i].walletProvider == "tron"
                                     ? ["tron"]
                                     : ["algo"],
@@ -314,7 +326,13 @@ export async function createUserProfile(
                         address: unstoppableWalletAddress
                             ? String(unstoppableWalletAddress)
                             : String(particleWalletAddress),
-                        preferrednetworks: ["matic", "eth", "base"], // ["eth", "avax", "bnb"],
+                        preferrednetworks: [
+                            "matic",
+                            "eth",
+                            "base",
+                            "scroll",
+                            "optimism",
+                        ], // ["eth", "avax", "bnb"],
                     },
                 });
                 unstoppableWalletAddress

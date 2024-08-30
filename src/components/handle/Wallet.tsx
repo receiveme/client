@@ -12,6 +12,8 @@ import Bnb from "../../../public/img/networks/bnb.png";
 import Matic from "../../../public/img/networks/matic.png";
 import Cosmos from "../../../public/img/networks/cosmos-outline-light.png";
 import Base from "../../../public/img/handle/base.png";
+import Scroll from "../../../public/img/handle/scroll.png";
+import Optimism from "../../../public/img/handle/optimism.png";
 // import styles from "Wallet.module.css"
 import "../../app/globals.css";
 import { useQuery } from "@tanstack/react-query";
@@ -47,6 +49,10 @@ const getNetworkImage = (network: string) => {
         ? Cosmos.src
         : network === "base"
         ? Base.src
+        : network === "scroll"
+        ? Scroll.src
+        : network === "optimism"
+        ? Optimism.src
         : "";
 };
 

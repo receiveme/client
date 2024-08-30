@@ -256,6 +256,20 @@ export default async function Profile({
                                     ) {
                                         preferrednetworks.push("base");
                                     }
+                                    if (
+                                        !wallet?.preferrednetworks?.includes(
+                                            "scroll",
+                                        )
+                                    ) {
+                                        preferrednetworks.push("scroll");
+                                    }
+                                    if (
+                                        !wallet?.preferrednetworks?.includes(
+                                            "optimism",
+                                        )
+                                    ) {
+                                        preferrednetworks.push("optimism");
+                                    }
                                 }
 
                                 return (
