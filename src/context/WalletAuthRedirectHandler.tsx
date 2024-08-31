@@ -55,6 +55,8 @@ export const WalletAuthRedirectHandler = () => {
 
     useEffect(() => {
         console.log("ran useEffect authtoken");
+        if (isParticleLoggedIn) return;
+
         if (authToken === undefined) {
             return;
         }
@@ -65,8 +67,6 @@ export const WalletAuthRedirectHandler = () => {
 
             return;
         }
-
-        if (isParticleLoggedIn) return;
 
         (async () => {
             try {
