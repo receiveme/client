@@ -8,14 +8,17 @@ import { JWT_OPTIONS } from "../../../../_constants";
 import TronWeb from "tronweb";
 import { getSiwtMessage } from "@/src/lib/utils/siwt";
 
-const verifyMetamaskSignature = (nonce: string, signature: string) => {
+export const verifyMetamaskSignature = (nonce: string, signature: string) => {
     return recoverPersonalSignature({
         data: getSiweMessage(nonce),
         signature: signature,
     });
 };
 
-const verifyTronlinkSignature = async (nonce: string, signature: string) => {
+export const verifyTronlinkSignature = async (
+    nonce: string,
+    signature: string,
+) => {
     return await TronWeb.Trx.verifyMessageV2(getSiwtMessage(nonce), signature);
 };
 
