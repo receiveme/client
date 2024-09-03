@@ -1,7 +1,27 @@
 export type AppState = {
-    userData: Record<string, any> | null; // For storing user data
-    userInfo: Record<string, any> | null; // For storing user information during onboarding and login
-    wallets: Record<string, any>[]; // For storing connected wallets information
+    userData:
+        | (Record<string, any> & {
+              userData: {
+                  Wallet: AppState["wallets"];
+              };
+          })
+        | null; // For storing user data
+    userInfo:
+        | (Record<string, any> & {
+              userData: {
+                  Wallet: AppState["wallets"];
+              };
+          })
+        | null; // For storing user information during onboarding and login
+    wallets: Array<{
+        id: string;
+        userid: string;
+        address: string;
+        network?: string;
+        created: Date;
+        preferrednetworks: Array<string>;
+        visible: boolean;
+    }>; // For storing connected wallets information
     socials: Record<string, any>[]; // For storing connected social accounts information
     globalId: string | null; // For storing a global identifier for the user
     theme?: string | null; // For storing the theme preference

@@ -20,6 +20,17 @@ import {
 } from "./WalletSettingsModal";
 import Toast from "../toast";
 import { useUnstoppableDomainAuth } from "@/src/context/UnstoppableDomainAuth.context";
+import {
+    getMetamaskAddress,
+    useMetamaskAuth,
+} from "@/src/context/MetamaskAuth.context";
+import axios from "axios";
+import toast from "react-hot-toast";
+import {
+    getTronlinkAddress,
+    useTronlinkAuth,
+} from "@/src/context/TronlinkAuth.context";
+import { useAuthToken } from "@/src/state/auth-token.atom";
 
 const SOCIALS = [
     { id: "discord", name: "Discord", image: "discord.png" },
@@ -84,6 +95,12 @@ export default function DashboardWalletsSocials() {
     const [currentWallet, setCurrentWallet] = useState(null);
 
     const { auth, signIn, signOut } = useUnstoppableDomainAuth();
+    const { signMetamaskMessage, getMetamaskNonce, verifyMetamaskSignature } =
+        useMetamaskAuth();
+    const { getTronlinkNonce, signTronlinkMessage, verifyTronlinkSignature } =
+        useTronlinkAuth();
+
+    const { authToken } = useAuthToken();
 
     const openWalletModal = async (wallet: any) => {
         setCurrentWallet(wallet);
@@ -153,108 +170,209 @@ export default function DashboardWalletsSocials() {
         setNewSocials((prevSocials) => [...prevSocials, socialsData]);
     };
 
-    function connectMetamask() {
-        return new Promise((resolve, reject) => {
-            window["ethereum"]
-                ?.request({ method: "eth_chainId" })
+    async function connectMetamask() {
+        const accountAddress = await getMetamaskAddress();
 
-                .then((chainId) => {
-                    return window["ethereum"]?.request({
-                        method: "eth_requestAccounts",
-                    });
-                })
-                .then((accounts) => {
-                    if (accounts && accounts.length > 0) {
-                        const accountAddress = accounts[0];
-                        setMetamaskAddress(accountAddress);
+        // console.log({ accountAddress });
 
-                        const existingWalletIndex =
-                            appState.userData.Wallet.findIndex(
-                                (wallet) =>
-                                    wallet.walletProvider === "metamask",
-                            );
+        if (accountAddress) {
+            const nonce = await getMetamaskNonce(accountAddress);
+            // console.log({ nonce });
 
-                        let wallets = appState.userData.Wallet;
+            const signature = await signMetamaskMessage(nonce, accountAddress);
+            // console.log({ signature });
 
-                        if (existingWalletIndex < 0) {
-                            wallets.push({
-                                walletProvider: "metamask",
-                                walletAddress: accountAddress,
-                            });
-                        }
+            const data = (
+                await axios.post(
+                    `/api/auth/wallet/nonce/${accountAddress}/metamask/add`,
+                    {
+                        signature,
+                    },
+                )
+            ).data;
 
-                        const walletData = {
-                            network: "metamask",
-                            address: accountAddress,
-                        };
+            // console.log({ data });
 
-                        // Here, we update the state before resolving the promise.
-                        setNewSocials((prevWallets) => [
-                            ...prevWallets,
-                            walletData,
-                        ]);
-                        resolve(walletData); // Resolve the promise with wallet data
-                    } else {
-                        reject(
-                            new Error("No accounts returned from Metamask."),
-                        );
-                    }
-                })
-                .catch((error) => {
-                    console.error("METAMASK ERR:", error);
-                    reject(
-                        new Error(
-                            "Metamask connection failed: " + error.message,
-                        ),
-                    );
-                });
-        });
+            if (data?.success) {
+                // window.location
+            } else {
+                toast.error(data?.message);
+            }
+        }
+
+        // console.log(accountAddress, "accountAddress")
+        // setMetamaskAddress(accountAddress);
+
+        // const existingWalletIndex = appState?.userData?.Wallet.findIndex(
+        //     (wallet) => wallet.walletProvider === "metamask",
+        // );
+
+        // let wallets = appState?.userData?.Wallet;
+
+        // if (existingWalletIndex < 0) {
+        //     wallets.push({
+        //         walletProvider: "metamask",
+        //         walletAddress: accountAddress,
+        //     });
+        // }
+
+        // const walletData = {
+        //     network: "metamask",
+        //     address: accountAddress,
+        // };
+
+        // setNewSocials((prevWallets) => [...prevWallets, walletData]);
+
+        // return new Promise((resolve, reject) => {
+        //     window["ethereum"]
+        //         ?.request({ method: "eth_chainId" })
+
+        //         .then((chainId) => {
+        //             return window["ethereum"]?.request({
+        //                 method: "eth_requestAccounts",
+        //             });
+        //         })
+        //         .then((accounts) => {
+        //             if (accounts && accounts.length > 0) {
+        //                 const accountAddress = accounts[0];
+        //                 setMetamaskAddress(accountAddress);
+
+        //                 const existingWalletIndex =
+        //                     appState?.userData?.Wallet.findIndex(
+        //                         (wallet) =>
+        //                             wallet.walletProvider === "metamask",
+        //                     );
+
+        //                 let wallets = appState?.userData?.Wallet;
+
+        //                 if (existingWalletIndex < 0) {
+        //                     wallets.push({
+        //                         walletProvider: "metamask",
+        //                         walletAddress: accountAddress,
+        //                     });
+        //                 }
+
+        //                 const walletData = {
+        //                     network: "metamask",
+        //                     address: accountAddress,
+        //                 };
+
+        //                 // Here, we update the state before resolving the promise.
+        //                 setNewSocials((prevWallets) => [
+        //                     ...prevWallets,
+        //                     walletData,
+        //                 ]);
+        //                 resolve(walletData); // Resolve the promise with wallet data
+        //             } else {
+        //                 reject(
+        //                     new Error("No accounts returned from Metamask."),
+        //                 );
+        //             }
+        //         })
+        //         .catch((error: any) => {
+        //             console.error("METAMASK ERR:", error);
+        //             reject(
+        //                 new Error(
+        //                     "Metamask connection failed: " + error?.message,
+        //                 ),
+        //             );
+        //         });
+        // });
     }
 
-    function connectTronlink() {
-        return new Promise(async (resolve, reject) => {
-            try {
-                //@ts-ignore
-                await window["tronLink"]?.request({
-                    method: "tron_requestAccounts",
-                    params: {
-                        websiteName: "receive.me",
+    // console.log(newSocials, "newSocials");
+    // console.log({ userData });
+
+    async function connectTronlink() {
+        const accountAddress = await getTronlinkAddress(true);
+
+        // console.log({ accountAddress });
+        // console.log(authToken);
+
+        if (accountAddress) {
+            const nonceData = await getTronlinkNonce(
+                accountAddress,
+                userData?.id,
+            );
+
+            const signature = await signTronlinkMessage(nonceData.data);
+            // console.log({ signature });
+
+            const data = (
+                await axios.post(
+                    `/api/auth/wallet/nonce/${accountAddress}/tron/add`,
+                    {
+                        signature,
+                        userId: userData?.id,
                     },
-                }); //@ts-ignore
+                )
+            ).data;
 
-                let tronLink = { ...(await window["tronLink"]) };
+            // console.log({ data });
 
-                // After connection
-                let account = tronLink.tronWeb.defaultAddress.base58;
-                console.log(account);
-                setTronlinkAddress(account);
-
-                const wallets = appState.userData.Wallet;
-                console.log(wallets);
-                let walletIndex = wallets.findIndex(
-                    (wallet) => wallet.walletProvider == "tronlink",
+            if (data?.success) {
+                toast.success(
+                    `Linked tronlink account: ${accountAddress} successfully.`,
                 );
+                const currentWallets = appState?.userData?.Wallet || [];
 
-                if (walletIndex < 0) {
-                    wallets.push({
-                        walletProvider: "tronlink",
-                        address: account,
-                    });
-                }
+                // console.log("current wallet -> ", currentWallets);
 
-                if (!account) return reject();
-
-                const walletData = {
-                    network: "tronlink",
-                    address: account,
-                };
-                setNewWallets((prevWallets) => [...prevWallets, walletData]);
-                return resolve(walletData);
-            } catch (e) {
-                console.log(e);
-                return reject();
+                setAppState({
+                    userData: {
+                        ...appState.userData,
+                        Wallet: [...currentWallets, data.data],
+                    },
+                });
+                // window.location
+            } else {
+                toast.error(data?.message);
             }
-        });
+        }
+
+        // return new Promise(async (resolve, reject) => {
+        //     try {
+        //         //@ts-ignore
+        //         await window["tronLink"]?.request({
+        //             method: "tron_requestAccounts",
+        //             params: {
+        //                 websiteName: "receive.me",
+        //             },
+        //         }); //@ts-ignore
+
+        //         let tronLink = { ...(await window["tronLink"]) };
+
+        //         // After connection
+        //         let account = tronLink.tronWeb.defaultAddress.base58;
+        //         console.log(account);
+        //         setTronlinkAddress(account);
+
+        //         const wallets = appState?.userData?.Wallet;
+        //         console.log(wallets);
+        //         let walletIndex = wallets.findIndex(
+        //             (wallet) => wallet.walletProvider == "tronlink",
+        //         );
+
+        //         if (walletIndex < 0) {
+        //             wallets.push({
+        //                 walletProvider: "tronlink",
+        //                 address: account,
+        //             });
+        //         }
+
+        //         if (!account) return reject();
+
+        //         const walletData = {
+        //             network: "tronlink",
+        //             address: account,
+        //         };
+        //         setNewWallets((prevWallets) => [...prevWallets, walletData]);
+        //         return resolve(walletData);
+        //     } catch (e) {
+        //         console.log(e);
+        //         return reject();
+        //     }
+        // });
     }
 
     async function connectAlgorandWallet() {
@@ -385,14 +503,14 @@ export default function DashboardWalletsSocials() {
                 isOpen={isWalletSettingsModalOpen}
                 setIsOpen={setIsWalletSettingsModalOpen}
                 wallet={currentWallet}
-                key={currentWallet}
+                // key={currentWallet?}
             />
 
             <WalletSettingsModalNonEVM
                 isOpen={isNonEVMWalletSettingsModalOpen}
                 setIsOpen={setIsNonEVMWalletSettingsModalOpen}
                 wallet={currentWallet}
-                key={currentWallet}
+                // key={currentWallet}
             />
 
             <div className="flex flex-col gap-4">
