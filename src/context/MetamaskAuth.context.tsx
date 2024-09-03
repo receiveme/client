@@ -207,13 +207,66 @@ export const useMetamaskAuth = () => {
     const { setAuthToken, removeAuthToken } = useAuthToken();
     const [appState, setAppState] = useAppState();
 
+    const getMetamaskNonce = async (metamaskAddress: string) => {
+        try {
+            const data = (
+                await axios.get(`/api/auth/wallet/nonce/${metamaskAddress}`)
+            ).data;
+
+            return data;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
+    const signMetamaskMessage = async (
+        nonce: string,
+        metamaskAddress: string,
+    ) => {
+        try {
+            const siweMessage = getSiweMessage(nonce);
+
+            const msg = `0x${Buffer.from(siweMessage, "utf8").toString("hex")}`;
+
+            const signature = await window.ethereum.request({
+                method: "personal_sign",
+                params: [msg, metamaskAddress],
+            });
+
+            return signature;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
+    const verifyMetamaskSignature = async (
+        signature: string,
+        metamaskAddress: string,
+    ) => {
+        try {
+            const data = (
+                await axios.post(
+                    `/api/auth/wallet/nonce/${metamaskAddress}/metamask`,
+                    {
+                        signature,
+                    },
+                )
+            ).data;
+
+            return data;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
     const signIn = async () => {
         try {
             const metamaskAddress = await getMetamaskAddress();
 
-            const data = (
-                await axios.get(`/api/auth/wallet/nonce/${metamaskAddress}`)
-            ).data;
+            const data = await getMetamaskNonce(metamaskAddress);
 
             setAppState({
                 walletAuth: {
@@ -233,28 +286,20 @@ export const useMetamaskAuth = () => {
                 );
             }
 
-            const siweMessage = getSiweMessage(data.data);
+            const signature = await signMetamaskMessage(
+                data.data,
+                metamaskAddress,
+            );
 
-            const msg = `0x${Buffer.from(siweMessage, "utf8").toString("hex")}`;
+            const loggedInData = await verifyMetamaskSignature(
+                signature,
+                metamaskAddress,
+            );
 
-            const signature = await window.ethereum.request({
-                method: "personal_sign",
-                params: [msg, metamaskAddress],
-            });
-
-            const loggedInData = (
-                await axios.post(
-                    `/api/auth/wallet/nonce/${metamaskAddress}/metamask`,
-                    {
-                        signature,
-                    },
-                )
-            ).data;
-
-            console.log(loggedInData);
+            // console.log(loggedInData);
 
             setAuthToken(loggedInData.data);
-            console.log("setAuthToken");
+            // console.log("setAuthToken");
 
             // router.push("/dashboard");
             setTimeout(() => {
@@ -294,5 +339,8 @@ export const useMetamaskAuth = () => {
         optimismSignIn,
         baseSignIn,
         scrollSignIn,
+        getMetamaskNonce,
+        signMetamaskMessage,
+        verifyMetamaskSignature,
     };
 };
