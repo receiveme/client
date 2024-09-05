@@ -4,7 +4,10 @@ import "../globals.css";
 import { Banner } from "@/src/components/profile/Banner";
 import EditHandleButton from "@/src/components/handle/EditButton";
 import { CollectablesDialog } from "@/src/components/handle/collectables";
-import { getUserDomains as getDomains } from "@/src/actions";
+import {
+    getUserDomains as getDomains,
+    getTronDomainsByAddress,
+} from "@/src/actions";
 import type { Metadata, ResolvingMetadata } from "next";
 
 const getAddressFromHandle = async (domain: string) => {
@@ -194,6 +197,11 @@ export default async function Profile({
               unsDomains: [],
           };
 
+    const tronNetworkWallet = data?.Wallet?.find((w) => w.network === "tron");
+    const tronDomainData = tronNetworkWallet
+        ? await getTronDomainsByAddress(tronNetworkWallet?.address)
+        : "";
+
     // let data_each_wallet: any = {};
     // let total_balance: number = 0;
 
@@ -235,7 +243,9 @@ export default async function Profile({
                         <EditHandleButton handle={data.handle} />
 
                         <div>
-                            <CollectablesDialog data={domainData} />
+                            <CollectablesDialog
+                                data={{ ...domainData, tron: tronDomainData }}
+                            />
                         </div>
 
                         <div className="mt-4 flex w-full max-w-[650px] flex-col gap-3">

@@ -14,6 +14,7 @@ interface Props {
     data?: {
         ensDomains: Array<{ domain: string; type: string; blockchain: string }>;
         unsDomains: Array<{ domain: string; type: string; blockchain: string }>;
+        tron: string;
     };
 }
 
@@ -21,7 +22,11 @@ export const CollectablesDialog = ({ data }: Props) => {
     const isLoading = !data;
 
     // console.log({ data });
-    if (data?.ensDomains.length === 0 && data?.unsDomains.length === 0) {
+    if (
+        data?.ensDomains.length === 0 &&
+        data?.unsDomains.length === 0 &&
+        !data.tron
+    ) {
         return null;
     }
 
@@ -36,11 +41,13 @@ export const CollectablesDialog = ({ data }: Props) => {
                 <DialogContent className="text-center w-full sm:max-w-md lg:max-w-md">
                     <div className="overflow-hidden">
                         <div>
-                            <img
-                                src="/img/handle/ud-logo-text.svg"
-                                className="mx-auto h-16"
-                                alt=""
-                            />
+                            {data?.unsDomains?.length !== 0 && (
+                                <img
+                                    src="/img/handle/ud-logo-text.svg"
+                                    className="mx-auto h-16"
+                                    alt=""
+                                />
+                            )}
                         </div>
                         <div className="flex gap-4 overflow-x-auto sleek-scrollbar">
                             {isLoading ? (
@@ -54,10 +61,6 @@ export const CollectablesDialog = ({ data }: Props) => {
                                         <p className="relative z-10 h-6 bg-blue-400 rounded w-3/4"></p>
                                     </div>
                                 </>
-                            ) : data?.unsDomains?.length === 0 ? (
-                                <p className="basis-full text-center">
-                                    No data found
-                                </p>
                             ) : (
                                 data?.unsDomains?.map((d) => {
                                     return (
@@ -84,51 +87,72 @@ export const CollectablesDialog = ({ data }: Props) => {
                             )}
                         </div>
                     </div>
-                    <div className="mt-6">
-                        <div>
-                            <img
-                                src="/img/handle/ens-logo-text.png"
-                                className="mx-auto h-16"
-                                alt=""
-                            />
-                        </div>
-                        <div className="flex gap-4 overflow-x-auto sleek-scrollbar">
-                            {isLoading ? (
-                                <>
-                                    <div className="basis-1/2 h-52 relative p-4 flex flex-col bg-[#0E66FC] items-start rounded-xl justify-end animate-pulse">
-                                        <div className="absolute h-10 w-10 top-4 left-4 bg-blue-400 rounded"></div>
-                                        <p className="relative z-10 h-6 bg-blue-400 rounded w-3/4"></p>
-                                    </div>
-                                    <div className="basis-1/2 h-52 relative p-4 flex flex-col bg-[#0E66FC] items-start rounded-xl justify-end animate-pulse">
-                                        <div className="absolute h-10 w-10 top-4 left-4 bg-blue-400 rounded"></div>
-                                        <p className="relative z-10 h-6 bg-blue-400 rounded w-3/4"></p>
-                                    </div>
-                                </>
-                            ) : data?.ensDomains?.length === 0 ? (
-                                <p className="basis-full text-center">
-                                    No data found
-                                </p>
-                            ) : (
-                                data?.ensDomains?.map((d) => {
-                                    return (
-                                        <div
-                                            key={d.domain}
-                                            className="h-52 basis-1/2 shrink-0 relative p-4 flex flex-col bg-gradient-to-br from-[#6E8EF5] to-[#46B7F0] items-start rounded-xl justify-end"
-                                        >
-                                            <img
-                                                src="/img/handle/ens-logo-white.svg"
-                                                className="absolute h-10 w-10 top-3 left-3 "
-                                                alt=""
-                                            />
-                                            <p className="relative z-10 text-white font-semibold text-lg">
-                                                {d.domain}
-                                            </p>
+                    {data?.ensDomains?.length !== 0 && (
+                        <div className="mt-6">
+                            <div>
+                                <img
+                                    src="/img/handle/ens-logo-text.png"
+                                    className="mx-auto h-16"
+                                    alt=""
+                                />
+                            </div>
+                            <div className="flex gap-4 overflow-x-auto sleek-scrollbar">
+                                {isLoading ? (
+                                    <>
+                                        <div className="basis-1/2 h-52 relative p-4 flex flex-col bg-[#0E66FC] items-start rounded-xl justify-end animate-pulse">
+                                            <div className="absolute h-10 w-10 top-4 left-4 bg-blue-400 rounded"></div>
+                                            <p className="relative z-10 h-6 bg-blue-400 rounded w-3/4"></p>
                                         </div>
-                                    );
-                                })
-                            )}
+                                        <div className="basis-1/2 h-52 relative p-4 flex flex-col bg-[#0E66FC] items-start rounded-xl justify-end animate-pulse">
+                                            <div className="absolute h-10 w-10 top-4 left-4 bg-blue-400 rounded"></div>
+                                            <p className="relative z-10 h-6 bg-blue-400 rounded w-3/4"></p>
+                                        </div>
+                                    </>
+                                ) : (
+                                    data?.ensDomains?.map((d) => {
+                                        return (
+                                            <div
+                                                key={d.domain}
+                                                className="h-52 basis-1/2 shrink-0 relative p-4 flex flex-col bg-gradient-to-br from-[#6E8EF5] to-[#46B7F0] items-start rounded-xl justify-end"
+                                            >
+                                                <img
+                                                    src="/img/handle/ens-logo-white.svg"
+                                                    className="absolute h-10 w-10 top-3 left-3 "
+                                                    alt=""
+                                                />
+                                                <p className="relative z-10 text-white font-semibold text-lg">
+                                                    {d.domain}
+                                                </p>
+                                            </div>
+                                        );
+                                    })
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    )}
+                    {data?.tron && (
+                        <div>
+                            <div>
+                                <img
+                                    src="/img/handle/trx-domains.png"
+                                    className="mx-auto h-16"
+                                    alt=""
+                                />
+                            </div>
+                            <div className="flex gap-4 overflow-x-auto sleek-scrollbar mt-3">
+                                <div className="h-52 basis-1/2 shrink-0 relative p-4 flex flex-col bg-gradient-to-br from-[#DF2B20] to-[#F87F73] items-start rounded-xl justify-end">
+                                    {/* <img
+                                        src="/img/handle/ens-logo-white.svg"
+                                        className="absolute h-10 w-10 top-3 left-3 "
+                                        alt=""
+                                    /> */}
+                                    <p className="relative z-10 text-white font-semibold text-lg">
+                                        {data?.tron}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </DialogContent>
             </Dialog>
         </>

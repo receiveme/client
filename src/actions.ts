@@ -507,3 +507,17 @@ export async function getUserDomains(
         return [];
     }
 }
+
+export async function getTronDomainsByAddress(tronAddress?: string) {
+    try {
+        const res = await fetch(
+            `https://app.trxdomains.xyz/api/domains/getDomain?address=${tronAddress}&network=mainnet`,
+        );
+        const json = await res.json();
+
+        return json?.data || "";
+    } catch (e) {
+        console.error(e);
+        return "";
+    }
+}
