@@ -102,16 +102,7 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
             { address: walletAddress, selectedNetwork },
         ],
         queryFn: async () => {
-            if (selectedNetwork === "tron") {
-                const res = await fetch(
-                    `https://app.trxdomains.xyz/api/domains/getDomain?address=${walletAddress}&network=mainnet`,
-                );
-                const json = await res.json();
-
-                if (json?.data) {
-                    return json?.data;
-                }
-            } else if (selectedNetwork === "base") {
+            if (selectedNetwork === "base") {
                 const basename = await getBasename(
                     walletAddress as `0x${string}`,
                 );
