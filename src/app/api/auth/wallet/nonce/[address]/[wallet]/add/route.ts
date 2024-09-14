@@ -1,26 +1,7 @@
 import prisma from "@/lib/prisma";
-import { getSiweMessage } from "@/src/lib/utils/siwe";
-import { recoverPersonalSignature } from "@metamask/eth-sig-util";
 import { randomUUID } from "crypto";
-import { sign } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
-import { JWT_OPTIONS } from "../../../../_constants";
-import TronWeb from "tronweb";
-import { getSiwtMessage } from "@/src/lib/utils/siwt";
-
-export const verifyMetamaskSignature = (nonce: string, signature: string) => {
-    return recoverPersonalSignature({
-        data: getSiweMessage(nonce),
-        signature: signature,
-    });
-};
-
-export const verifyTronlinkSignature = async (
-    nonce: string,
-    signature: string,
-) => {
-    return await TronWeb.Trx.verifyMessageV2(getSiwtMessage(nonce), signature);
-};
+import { verifyMetamaskSignature, verifyTronlinkSignature } from "../route";
 
 export const POST = async (
     req: NextRequest,
@@ -31,11 +12,11 @@ export const POST = async (
     try {
         const body = await req.json();
 
-        if (!body || !body.signature) {
+        if (!body || !body.signature || !body.userId) {
             throw new Error("Invalid request, no signature found");
         }
 
-        const user = await prisma.wallet.findFirst({
+        let user = await prisma.wallet.findFirst({
             where: {
                 address: {
                     equals: address,
@@ -47,6 +28,19 @@ export const POST = async (
             },
         });
 
+        if (body.userId) {
+            const userExists = await prisma.user.findFirst({
+                where: {
+                    id: body.userId,
+                },
+            });
+
+            if (userExists)
+                user = {
+                    user: userExists,
+                };
+        }
+
         if (!user) {
             throw new Error("User not found");
         }
@@ -55,23 +49,16 @@ export const POST = async (
 
         if (wallet === "metamask") {
             recoveredAddress = verifyMetamaskSignature(
-                user?.user.nonce,
+                user?.user.nonce!,
                 body.signature,
             );
-        } else if (wallet === "tronlink") {
+        } else if (wallet === "tron") {
             console.log("on tronlink");
             recoveredAddress = await verifyTronlinkSignature(
-                user?.user.nonce,
+                user?.user.nonce!,
                 body.signature,
             );
         }
-
-        console.log(recoveredAddress);
-
-        // recoverPersonalSignature({
-        //     data: getSiweMessage(user?.user.nonce),
-        //     signature: body.signature,
-        // });
 
         if (recoveredAddress !== address) {
             return NextResponse.json({
@@ -89,27 +76,30 @@ export const POST = async (
                 },
             });
 
-            const JWT_SECRET = process.env.JWT_SECRET;
-
-            if (!JWT_SECRET) {
-                throw new Error("No `JWT_SECRET` environment variable is set");
-            }
-
-            const data = {
-                id: user.user.id,
-                address,
-            };
-
-            const token = sign(data, JWT_SECRET, JWT_OPTIONS);
+            const createdWallet = await prisma.wallet.create({
+                data: {
+                    address,
+                    userid: user.user.id,
+                    preferrednetworks:
+                        wallet == "metamask"
+                            ? ["matic", "eth", "base", "scroll", "optimism"]
+                            : wallet == "particle"
+                            ? ["matic", "eth", "base", "scroll", "optimism"]
+                            : wallet == "tron"
+                            ? ["tron"]
+                            : ["algo"],
+                    network: wallet,
+                },
+            });
 
             return NextResponse.json({
                 success: true,
-                data: token,
-                message: "You are logged in!",
+                data: createdWallet,
+                message: "Wallet added successfully",
             });
         }
     } catch (error: any) {
-        console.log(error, "error occured");
+        console.log(error, "error occurred");
         return NextResponse.json({
             success: false,
             data: null,

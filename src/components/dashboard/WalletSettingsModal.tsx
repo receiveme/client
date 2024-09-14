@@ -1,15 +1,22 @@
 "use client";
 
 import { updateUserWallet } from "@/src/actions";
+import { useAppState } from "@/src/hooks/useAppState";
+import { AppState } from "@/src/types/state/app-state.type";
 import { Dialog, Transition } from "@headlessui/react";
+import axios from "axios";
 import { verify } from "crypto";
 import { ethers } from "ethers";
 import { Fragment, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type WalletSettingsModalProps = {
     isOpen: boolean;
     setIsOpen: any;
-    wallet: any;
+    wallet: AppState["wallets"][number] & {
+        name: string;
+        image: string;
+    };
 };
 
 type supportedWallet = {
@@ -42,7 +49,7 @@ export function WalletSettingsModal({
     // });
 
     const [selectedWallets, setSelectedWallets] = useState([]);
-    const [walletVisiblity, setWalletVisibility] = useState<boolean>(true);
+    const [walletVisibility, setWalletVisibility] = useState<boolean>(true);
     const [saved, setSaved] = useState(false);
 
     useEffect(() => {
@@ -89,7 +96,7 @@ export function WalletSettingsModal({
         preferrednetworks: SupportedWallets,
         visible: boolean,
     ) => {
-        console.log(wallet)
+        // console.log(wallet);
         const provider = new ethers.providers.Web3Provider(window["ethereum"]);
         const signer = provider.getSigner();
         const verifyMessage = await signer.signMessage(`${address}`);
@@ -97,7 +104,7 @@ export function WalletSettingsModal({
         // console.log(wallet, preferrednetworks, visible)
         // todo: send this to backend ...shods
 
-        console.log(preferrednetworks);
+        // console.log(preferrednetworks);
 
         // console.log(networks)
         const update = await updateUserWallet(
@@ -191,16 +198,16 @@ export function WalletSettingsModal({
                                                 <button
                                                     onClick={(e) =>
                                                         setWalletVisibility(
-                                                            !walletVisiblity,
+                                                            !walletVisibility,
                                                         )
                                                     }
                                                     className={`w-20 rounded-md px-2 py-1 text-sm font-semibold ${
-                                                        walletVisiblity
+                                                        walletVisibility
                                                             ? "bg-green-400 hover:bg-green-500"
                                                             : "bg-gray-200 hover:bg-gray-300"
                                                     }`}
                                                 >
-                                                    {walletVisiblity == true
+                                                    {walletVisibility == true
                                                         ? "Visible"
                                                         : "Hidden"}
                                                 </button>
@@ -257,14 +264,13 @@ export function WalletSettingsModal({
                                     </div>
 
                                     <div className="mt-4">
-                                                
                                         <button
                                             onClick={(e) =>
                                                 verifyMessageEVM(
                                                     wallet?.address,
                                                     wallet,
                                                     selectedWallets,
-                                                    walletVisiblity,
+                                                    walletVisibility,
                                                 )
                                             }
                                             type="button"
@@ -296,7 +302,7 @@ export function WalletSettingsModalNonEVM({
     setIsOpen,
     wallet,
 }: WalletSettingsModalProps) {
-    console.log(wallet);
+    // console.log({ wallet });
     function closeModal() {
         setIsOpen(false);
     }
@@ -315,7 +321,22 @@ export function WalletSettingsModalNonEVM({
     const [tronlinkAddress, setTronlinkAddress] = useState<string | null>();
     const [algorandAddress, setAlgorandAddress] = useState<string | null>();
 
-    const [walletVisiblity, setWalletVisibility] = useState<boolean>(true);
+    const [walletVisibility, setWalletVisibility] = useState<boolean>(
+        wallet?.visible,
+    );
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [appState, setAppState] = useAppState();
+
+    const isCurrentWalletConnected = Boolean(
+        appState?.userData?.Wallet.find((w) => w.address === wallet?.address),
+    );
+
+    const isOnlyOneWalletConnected = appState?.userData?.Wallet?.length === 1;
+
+    // console.log(appState, "appState123");
+    // console.log(isCurrentWalletConnected, "isCurrentWalletConnected");
 
     const existingPreferredNetworks = wallet?.preferrednetworks;
 
@@ -420,7 +441,7 @@ export function WalletSettingsModalNonEVM({
     // }
 
     const connectWallet = async (wallet: any) => {
-        console.log(wallet);
+        // console.log(wallet);
         console.log(`Connect ${wallet.name} wallet initiated`);
 
         if (wallet.id === "particle") {
@@ -429,6 +450,45 @@ export function WalletSettingsModalNonEVM({
             await connectTronlink();
         } else if (wallet.id === "algorand") {
             // await connectAlgorandWallet();
+        }
+    };
+
+    const disconnectWallet = async (
+        wallet: WalletSettingsModalProps["wallet"],
+    ) => {
+        try {
+            if (wallet?.network === "tron") {
+                setIsLoading(true);
+                const data = (
+                    await axios.post(
+                        `/api/auth/wallet/nonce/${wallet?.address}/tron/remove`,
+                        {
+                            userId: appState?.userData?.id,
+                        },
+                    )
+                ).data;
+
+                if (data?.success) {
+                    toast.success(
+                        `Successfully removed wallet with address: ${wallet?.address}`,
+                    );
+                    setAppState({
+                        userData: {
+                            ...appState.userData,
+                            Wallet: appState?.userData?.Wallet.filter(
+                                (w) => w.id !== wallet.id,
+                            ),
+                        },
+                    });
+                } else {
+                    toast.error(data?.message);
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsLoading(false);
+            closeModal();
         }
     };
 
@@ -459,10 +519,10 @@ export function WalletSettingsModalNonEVM({
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <div className="fixed inset-0 bg-black/25" />
+                        <div className="fixed inset-0 bg-black/25 z-40" />
                     </Transition.Child>
 
-                    <div className="fixed inset-0 overflow-y-auto">
+                    <div className="fixed z-40 inset-0 overflow-y-auto">
                         <div className="flex min-h-full items-center justify-center p-4 text-center">
                             <Transition.Child
                                 as={Fragment}
@@ -492,14 +552,13 @@ export function WalletSettingsModalNonEVM({
                                         <span className="text-sm text-gray">
                                             {wallet?.address}
                                         </span>
-                                        {/* <span>d fkjdjkdsfjkdsf</span> */}
 
-                                        <p className="text-sm text-start mt-2">
+                                        {/* <p className="text-sm text-center mt-2">
                                             Sign a message to verify your wallet
                                             as valid.
-                                        </p>
+                                        </p> */}
 
-                                        <div className="cursor-pointer transition-all hover:bg-gray-200 flex items-center justify-between rounded-md bg-gray-100 shadow-sm px-3 py-2">
+                                        {/* <div className="cursor-pointer transition-all hover:bg-gray-200 flex items-center justify-between rounded-md bg-gray-100 shadow-sm px-3 py-2">
                                             <div className="flex items-center">
                                                 <span className="text-sm font-semibold">
                                                     VISIBLE
@@ -508,71 +567,63 @@ export function WalletSettingsModalNonEVM({
                                             <button
                                                 onClick={(e) =>
                                                     setWalletVisibility(
-                                                        !walletVisiblity,
+                                                        !walletVisibility,
                                                     )
                                                 }
                                                 className={`w-20 rounded-md px-2 py-1 text-sm font-semibold uppercase ${
-                                                    walletVisiblity
+                                                    walletVisibility
                                                         ? "bg-green-400 hover:bg-green-500"
                                                         : "bg-gray-200 hover:bg-gray-300"
                                                 }`}
                                             >
-                                                {walletVisiblity == true
+                                                {walletVisibility == true
                                                     ? "ON"
                                                     : "OFF"}
                                             </button>
-                                        </div>
+                                        </div> */}
                                     </div>
 
                                     <div className="mt-4 gap-y-4 ">
-                                        {!tronlinkAddress ? (
-                                            <>
-                                                <button
-                                                    onClick={(e) =>
-                                                        connectWallet(wallet)
-                                                    }
-                                                    type="button"
-                                                    className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition mb-1`}
-                                                >
-                                                    Connect {wallet?.name}
-                                                </button>
-
-                                                <button
-                                                    disabled
-                                                    onClick={(e) =>
-                                                        verifyMessageTRON(
-                                                            wallet?.address,
-                                                        )
-                                                    }
-                                                    type="button"
-                                                    className={`bg-green-400 opacity-70 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
-                                                >
-                                                    Verify
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <button
-                                                    disabled
-                                                    type="button"
-                                                    className={`bg-green-400 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition mb-1 disabled opacity-70`}
-                                                >
-                                                    Connected
-                                                </button>
-
-                                                <button
-                                                    onClick={(e) =>
-                                                        verifyMessageTRON(
-                                                            wallet?.address,
-                                                        )
-                                                    }
-                                                    type="button"
-                                                    className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
-                                                >
-                                                    Verify
-                                                </button>
-                                            </>
+                                        <button
+                                            onClick={(e) => {
+                                                if (isCurrentWalletConnected) {
+                                                    disconnectWallet(wallet);
+                                                } else {
+                                                    connectWallet(wallet);
+                                                }
+                                            }}
+                                            type="button"
+                                            disabled={
+                                                isOnlyOneWalletConnected ||
+                                                isLoading
+                                            }
+                                            className={`bg-green-400 hover:bg-green-500 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition mb-1 disabled:pointer-events-none disabled:opacity-70`}
+                                        >
+                                            {isCurrentWalletConnected
+                                                ? `Disconnect${
+                                                      isLoading ? "ing..." : ""
+                                                  } ${wallet?.name}`
+                                                : `Connect ${wallet?.name}`}
+                                        </button>
+                                        {isOnlyOneWalletConnected && (
+                                            <p className="text-red-500 text-sm">
+                                                Have any other wallet connected
+                                                first, to disconnect this one
+                                            </p>
                                         )}
+
+                                        {/* <button
+                                            disabled
+                                            onClick={(e) =>
+                                                verifyMessageTRON(
+                                                    wallet?.address,
+                                                )
+                                            }
+                                            type="button"
+                                            className={`bg-green-400 opacity-70 w-full justify-center rounded-md border border-transparent px-4 py-3 text-md font-medium transition`}
+                                        >
+                                            Verify
+                                        </button> */}
 
                                         <button
                                             type="button"

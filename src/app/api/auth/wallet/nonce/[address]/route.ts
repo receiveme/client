@@ -2,14 +2,25 @@ export const dynamic = "force-dynamic";
 
 import prisma from "@/lib/prisma";
 import { randomUUID } from "crypto";
+import { verify } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
+import { JWT_OPTIONS } from "../../../_constants";
 
 export const GET = async (
     req: NextRequest,
     { params: { address } }: { params: { address: string } },
 ) => {
     try {
-        const user = await prisma.wallet.findFirst({
+        const userId = req.nextUrl.searchParams.get("userId");
+        // const authToken = req.headers.get("Authorization")?.split("Bearer ")[0];
+
+        // const JWT_SECRET = process.env.JWT_SECRET;
+
+        // if (!JWT_SECRET) {
+        //     throw new Error("No `JWT_SECRET` environment variable is set");
+        // }
+
+        let user = await prisma.wallet.findFirst({
             where: {
                 address: {
                     equals: address,
@@ -20,6 +31,20 @@ export const GET = async (
                 user: true,
             },
         });
+
+        if (userId) {
+            const userExists = await prisma.user.findFirst({
+                where: {
+                    id: userId,
+                },
+            });
+
+            if (userExists) {
+                user = {
+                    user: userExists,
+                };
+            }
+        }
 
         if (!user) {
             return NextResponse.json({

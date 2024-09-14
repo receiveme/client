@@ -193,6 +193,64 @@ export const useTronlinkAuth = () => {
     const { setAuthToken, removeAuthToken } = useAuthToken();
     const [appState, setAppState] = useAppState();
 
+    const getTronlinkNonce = async (
+        tronlinkAddress: string,
+        userId?: string,
+    ) => {
+        try {
+            const data = (
+                await axios.get(
+                    `/api/auth/wallet/nonce/${tronlinkAddress}${
+                        userId ? `?userId=${userId}` : ""
+                    }`,
+                )
+            ).data;
+
+            return data;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
+    const signTronlinkMessage = async (nonce: string) => {
+        try {
+            const siwtMessage = getSiwtMessage(nonce);
+
+            const msg = siwtMessage;
+
+            const signature = await window?.tronLink?.tronWeb.trx.signMessageV2(
+                msg,
+            );
+
+            return signature;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
+    const verifyTronlinkSignature = async (
+        signature: string,
+        tronlinkAddress: string,
+    ) => {
+        try {
+            const data = (
+                await axios.post(
+                    `/api/auth/wallet/nonce/${tronlinkAddress}/tronlink`,
+                    {
+                        signature,
+                    },
+                )
+            ).data;
+
+            return data;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
     const signIn = async () => {
         try {
             const tronlinkAddress = await getTronlinkAddress(true);
@@ -206,11 +264,9 @@ export const useTronlinkAuth = () => {
 
             if (!tronlinkAddress) return;
 
-            console.log(tronlinkAddress, "tronlinkAddress in signin");
+            // console.log(tronlinkAddress, "tronlinkAddress in signIn");
 
-            const data = (
-                await axios.get(`/api/auth/wallet/nonce/${tronlinkAddress}`)
-            ).data;
+            const data = await getTronlinkNonce(tronlinkAddress);
 
             console.log({ data });
 
@@ -218,31 +274,16 @@ export const useTronlinkAuth = () => {
                 return router.push("/onboard");
             }
 
-            const siwtMessage = getSiwtMessage(data.data);
+            const signature = await signTronlinkMessage(data.data);
 
-            // const msg = `0x${Buffer.from(siwtMessage, "utf8").toString("hex")}`;
-            const msg = siwtMessage;
-
-            // const signature = await window.ethereum.request({
-            //     method: "personal_sign",
-            //     params: [msg, tronlinkAddress],
-            // });
-            const signature = await window?.tronLink?.tronWeb.trx.signMessageV2(
-                msg,
+            const loggedInData = await verifyTronlinkSignature(
+                signature,
+                tronlinkAddress,
             );
 
-            const loggedinData = (
-                await axios.post(
-                    `/api/auth/wallet/nonce/${tronlinkAddress}/tronlink`,
-                    {
-                        signature,
-                    },
-                )
-            ).data;
+            // console.log({ loggedInData });
 
-            console.log({ loggedinData });
-
-            setAuthToken(loggedinData.data);
+            setAuthToken(loggedInData.data);
 
             setTimeout(() => {
                 // router.push("/dashboard");
@@ -261,5 +302,8 @@ export const useTronlinkAuth = () => {
         auth: data,
         signIn,
         signOut,
+        verifyTronlinkSignature,
+        signTronlinkMessage,
+        getTronlinkNonce,
     };
 };

@@ -33,17 +33,52 @@ const DEFAULT_DATA: IMetamaskAuthContext = {
 
 const metamaskAuthContext = createContext<IMetamaskAuthContext>(DEFAULT_DATA);
 
+const checkMetamaskNetwork = async (
+    preferredNetwork: "optimism" | "base" | "scroll",
+) => {
+    try {
+        const chainId = await window.ethereum.request({
+            method: "eth_chainId",
+        });
+        // console.log({ chainId });
+
+        if (preferredNetwork === "optimism" && chainId !== "0xa") {
+            toast.error("Please switch to the Optimism network");
+            return false;
+        }
+
+        if (preferredNetwork === "base" && chainId !== "0x2105") {
+            toast.error("Please switch to the Base network");
+            return false;
+        }
+
+        if (preferredNetwork === "scroll" && chainId !== "0x82750") {
+            toast.error("Please switch to the Scroll network");
+            return false;
+        }
+        return true;
+    } catch (e) {
+        console.error(e);
+        return false;
+    }
+};
+
 export const getMetamaskAddress = async () => {
-    if (!window.ethereum.isMetaMask)
-        return toast.error("You need to install metamask.");
+    try {
+        if (!window.ethereum.isMetaMask)
+            return toast.error("You need to install metamask.");
 
-    await window["ethereum"]?.request({
-        method: "eth_requestAccounts",
-    });
+        await window["ethereum"]?.request({
+            method: "eth_requestAccounts",
+        });
 
-    const selectedAddress = window.ethereum.selectedAddress;
+        const selectedAddress = window.ethereum.selectedAddress;
 
-    return selectedAddress;
+        return selectedAddress;
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
 };
 
 export const MetamaskAuthContext = ({ children }: PropsWithChildren) => {
@@ -172,13 +207,66 @@ export const useMetamaskAuth = () => {
     const { setAuthToken, removeAuthToken } = useAuthToken();
     const [appState, setAppState] = useAppState();
 
+    const getMetamaskNonce = async (metamaskAddress: string) => {
+        try {
+            const data = (
+                await axios.get(`/api/auth/wallet/nonce/${metamaskAddress}`)
+            ).data;
+
+            return data;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
+    const signMetamaskMessage = async (
+        nonce: string,
+        metamaskAddress: string,
+    ) => {
+        try {
+            const siweMessage = getSiweMessage(nonce);
+
+            const msg = `0x${Buffer.from(siweMessage, "utf8").toString("hex")}`;
+
+            const signature = await window.ethereum.request({
+                method: "personal_sign",
+                params: [msg, metamaskAddress],
+            });
+
+            return signature;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
+    const verifyMetamaskSignature = async (
+        signature: string,
+        metamaskAddress: string,
+    ) => {
+        try {
+            const data = (
+                await axios.post(
+                    `/api/auth/wallet/nonce/${metamaskAddress}/metamask`,
+                    {
+                        signature,
+                    },
+                )
+            ).data;
+
+            return data;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
     const signIn = async () => {
         try {
             const metamaskAddress = await getMetamaskAddress();
 
-            const data = (
-                await axios.get(`/api/auth/wallet/nonce/${metamaskAddress}`)
-            ).data;
+            const data = await getMetamaskNonce(metamaskAddress);
 
             setAppState({
                 walletAuth: {
@@ -198,28 +286,20 @@ export const useMetamaskAuth = () => {
                 );
             }
 
-            const siweMessage = getSiweMessage(data.data);
+            const signature = await signMetamaskMessage(
+                data.data,
+                metamaskAddress,
+            );
 
-            const msg = `0x${Buffer.from(siweMessage, "utf8").toString("hex")}`;
+            const loggedInData = await verifyMetamaskSignature(
+                signature,
+                metamaskAddress,
+            );
 
-            const signature = await window.ethereum.request({
-                method: "personal_sign",
-                params: [msg, metamaskAddress],
-            });
-
-            const loggedInData = (
-                await axios.post(
-                    `/api/auth/wallet/nonce/${metamaskAddress}/metamask`,
-                    {
-                        signature,
-                    },
-                )
-            ).data;
-
-            console.log(loggedInData);
+            // console.log(loggedInData);
 
             setAuthToken(loggedInData.data);
-            console.log("setAuthToken");
+            // console.log("setAuthToken");
 
             // router.push("/dashboard");
             setTimeout(() => {
@@ -227,6 +307,24 @@ export const useMetamaskAuth = () => {
             });
         } catch (e) {
             throw e;
+        }
+    };
+
+    const optimismSignIn = async () => {
+        if (await checkMetamaskNetwork("optimism")) {
+            await signIn();
+        }
+    };
+
+    const baseSignIn = async () => {
+        if (await checkMetamaskNetwork("base")) {
+            await signIn();
+        }
+    };
+
+    const scrollSignIn = async () => {
+        if (await checkMetamaskNetwork("scroll")) {
+            await signIn();
         }
     };
 
@@ -238,5 +336,11 @@ export const useMetamaskAuth = () => {
         auth: data,
         signIn,
         signOut,
+        optimismSignIn,
+        baseSignIn,
+        scrollSignIn,
+        getMetamaskNonce,
+        signMetamaskMessage,
+        verifyMetamaskSignature,
     };
 };

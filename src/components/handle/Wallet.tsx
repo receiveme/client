@@ -1,7 +1,7 @@
 "use client";
 
 import { IconCopy, IconQrcode } from "@tabler/icons-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Toast from "../toast";
 import { WalletQRCodeModal } from "./WalletQRCodeModal";
 import Algorand from "../../../public/img/networks/algo.png";
@@ -11,10 +11,14 @@ import Tron from "../../../public/img/networks/trx.png";
 import Bnb from "../../../public/img/networks/bnb.png";
 import Matic from "../../../public/img/networks/matic.png";
 import Cosmos from "../../../public/img/networks/cosmos-outline-light.png";
+import Base from "../../../public/img/handle/base.png";
+import Scroll from "../../../public/img/handle/scroll.png";
+import Optimism from "../../../public/img/handle/optimism.png";
 // import styles from "Wallet.module.css"
 import "../../app/globals.css";
 import { useQuery } from "@tanstack/react-query";
 import { Select } from "../select";
+import { getBasename } from "@/src/app/api/basenames";
 
 type WalletProps = {
     address: string;
@@ -43,6 +47,12 @@ const getNetworkImage = (network: string) => {
         ? Bnb.src
         : network === "cosmos"
         ? Cosmos.src
+        : network === "base"
+        ? Base.src
+        : network === "scroll"
+        ? Scroll.src
+        : network === "optimism"
+        ? Optimism.src
         : "";
 };
 
@@ -92,13 +102,21 @@ export function Wallet({ address, preferrednetwork }: WalletProps) {
             { address: walletAddress, selectedNetwork },
         ],
         queryFn: async () => {
-            const res = await fetch(
-                `/api/domains/resolve/multiple/${walletAddress}?chain=${selectedNetwork}`,
-            );
-            const json = await res.json();
+            if (selectedNetwork === "base") {
+                const basename = await getBasename(
+                    walletAddress as `0x${string}`,
+                );
 
-            if (json?.data) {
-                return json?.data;
+                return basename;
+            } else {
+                const res = await fetch(
+                    `/api/domains/resolve/multiple/${walletAddress}?chain=${selectedNetwork}`,
+                );
+                const json = await res.json();
+
+                if (json?.data) {
+                    return json?.data;
+                }
             }
 
             return null;

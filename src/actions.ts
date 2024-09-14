@@ -288,10 +288,22 @@ export async function createUserProfile(
                             preferrednetworks:
                                 wallets[i].walletProvider == "metamask"
                                     ? // ? ["eth", "avax", "bnb"]
-                                      ["matic", "eth"]
+                                      [
+                                          "matic",
+                                          "eth",
+                                          "base",
+                                          "scroll",
+                                          "optimism",
+                                      ]
                                     : wallets[i].walletProvider == "particle"
                                     ? // ? ["eth", "avax", "bnb"]
-                                      ["matic", "eth"]
+                                      [
+                                          "matic",
+                                          "eth",
+                                          "base",
+                                          "scroll",
+                                          "optimism",
+                                      ]
                                     : wallets[i].walletProvider == "tron"
                                     ? ["tron"]
                                     : ["algo"],
@@ -314,7 +326,13 @@ export async function createUserProfile(
                         address: unstoppableWalletAddress
                             ? String(unstoppableWalletAddress)
                             : String(particleWalletAddress),
-                        preferrednetworks: ["matic", "eth"], // ["eth", "avax", "bnb"],
+                        preferrednetworks: [
+                            "matic",
+                            "eth",
+                            "base",
+                            "scroll",
+                            "optimism",
+                        ], // ["eth", "avax", "bnb"],
                     },
                 });
                 unstoppableWalletAddress
@@ -487,5 +505,19 @@ export async function getUserDomains(
         return domains;
     } catch (error) {
         return [];
+    }
+}
+
+export async function getTronDomainsByAddress(tronAddress?: string) {
+    try {
+        const res = await fetch(
+            `https://app.trxdomains.xyz/api/domains/getDomain?address=${tronAddress}&network=mainnet`,
+        );
+        const json = await res.json();
+
+        return json?.data || "";
+    } catch (e) {
+        console.error(e);
+        return "";
     }
 }

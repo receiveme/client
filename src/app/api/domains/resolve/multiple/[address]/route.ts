@@ -10,6 +10,19 @@ export const GET = async (
     const all = req.nextUrl.searchParams.get("all") === "true";
 
     try {
+        if (requestedChain === "tron") {
+            const res = await fetch(
+                `https://app.trxdomains.xyz/api/domains/getDomain?address=${params.address}&network=mainnet`,
+            );
+            const json = await res.json();
+
+            console.log(json, "json");
+
+            return NextResponse.json({
+                success: true,
+                data: json?.data,
+            });
+        }
         // console.log(params.address, "requested address");
         const res = await fetch(
             `https://api.unstoppabledomains.com/resolve/owners/${address}/domains`,

@@ -4,7 +4,10 @@ import "../globals.css";
 import { Banner } from "@/src/components/profile/Banner";
 import EditHandleButton from "@/src/components/handle/EditButton";
 import { CollectablesDialog } from "@/src/components/handle/collectables";
-import { getUserDomains as getDomains } from "@/src/actions";
+import {
+    getUserDomains as getDomains,
+    getTronDomainsByAddress,
+} from "@/src/actions";
 import type { Metadata, ResolvingMetadata } from "next";
 
 const getAddressFromHandle = async (domain: string) => {
@@ -29,9 +32,29 @@ const getAddressFromHandle = async (domain: string) => {
     }
 };
 
+const getTronAddressFromHandle = async (domain: string) => {
+    try {
+        const res = await fetch(
+            `https://app.trxdomains.xyz/api/domains/getOwner?domain=${domain}&network=mainnet`,
+        );
+        const json = await res.json();
+
+        const resolvedAddress = json?.data?.owner;
+
+        // console.log(json);
+
+        return resolvedAddress || "";
+    } catch (error) {
+        return "";
+    }
+};
+
 async function getUserByHandle(handle: string) {
     try {
-        const resolvedAddress = await getAddressFromHandle(handle);
+        const resolvedAddresses = (await Promise.all([
+            getAddressFromHandle(handle),
+            getTronAddressFromHandle(handle),
+        ])) as string[];
 
         // console.log(resolvedAddress);
 
@@ -46,7 +69,7 @@ async function getUserByHandle(handle: string) {
                         Wallet: {
                             some: {
                                 address: {
-                                    equals: resolvedAddress,
+                                    in: resolvedAddresses,
                                 },
                             },
                         },
@@ -165,12 +188,19 @@ export default async function Profile({
 
     const data = await getUserByHandle(handle);
 
+    // console.log({ data });
+
     const domainData = data?.Wallet?.[0]?.address
         ? await getUserDomains(data?.Wallet?.[0]?.address)
         : {
               ensDomains: [],
               unsDomains: [],
           };
+
+    const tronNetworkWallet = data?.Wallet?.find((w) => w.network === "tron");
+    const tronDomainData = tronNetworkWallet
+        ? await getTronDomainsByAddress(tronNetworkWallet?.address)
+        : "";
 
     // let data_each_wallet: any = {};
     // let total_balance: number = 0;
@@ -213,14 +243,44 @@ export default async function Profile({
                         <EditHandleButton handle={data.handle} />
 
                         <div>
-                            <CollectablesDialog data={domainData} />
+                            <CollectablesDialog
+                                data={{ ...domainData, tron: tronDomainData }}
+                            />
                         </div>
 
                         <div className="mt-4 flex w-full max-w-[650px] flex-col gap-3">
                             {/* <Wallet wallet={data.Wallet} /> */}
                             {data?.Wallet?.map((wallet: any, i: number) => {
+                                // console.log("wallet", wallet);
                                 const preferrednetworks =
                                     wallet.preferrednetworks;
+
+                                if (
+                                    wallet.network === "metamask" ||
+                                    wallet.network === "particle"
+                                ) {
+                                    if (
+                                        !wallet?.preferrednetworks?.includes(
+                                            "base",
+                                        )
+                                    ) {
+                                        preferrednetworks.push("base");
+                                    }
+                                    if (
+                                        !wallet?.preferrednetworks?.includes(
+                                            "scroll",
+                                        )
+                                    ) {
+                                        preferrednetworks.push("scroll");
+                                    }
+                                    if (
+                                        !wallet?.preferrednetworks?.includes(
+                                            "optimism",
+                                        )
+                                    ) {
+                                        preferrednetworks.push("optimism");
+                                    }
+                                }
 
                                 return (
                                     <div
