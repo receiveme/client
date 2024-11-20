@@ -82,19 +82,19 @@ export function Banner({
 
     return (
         <div className={className}>
-            <div className={`relative rounded-xl bg-${bg ?? ""}`}>
+            <div className={`relative rounded-xl bg-${bg ?? ""} min-h-[200px]`}>
                 <div className="rounded-xl absolute w-full h-full p-4 flex flex-col justify-end items-end bg-gradient-to-t bg-opacity-20 from-black/[.54] to-transparent">
                     {/* <span className="text-white px-3 py-1 rounded-md bg-[#1c1c1c43] w-fit uppercase text-xs">
                     BALANCE <b>${(balance || 0)?.toFixed(2)}</b>
                 </span> */}
 
-                    <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center justify-between w-full flex-wrap gap-2">
                         <span className="text-3xl md:text-3xl text-white font-bold">
                             <span className="text-gray-400 font-normal">@</span>
                             {handle}
                         </span>
 
-                        <div className="flex gap-3">
+                        <div className="flex flex-wrap gap-3">
                             {domainData?.unsDomains &&
                                 domainData?.unsDomains.length > 0 && (
                                     <UnstoppableDomainHolderAwardDialog />
@@ -175,8 +175,8 @@ export function Banner({
                 </div>
                 <img
                     src={src}
-                    style={{ objectFit: "contain" }}
-                    className="rounded-xl shadow-md w-full"
+                    style={{ objectFit: "cover" }}
+                    className="rounded-xl shadow-md w-full min-h-[200px]"
                 />
             </div>
 
